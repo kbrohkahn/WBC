@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/create_event"
+        android:icon="@drawable/ic_action_new_event"
+        android:showAsAction="ifRoom"
+        android:title="@string/create_event"/>
+    <item
+        android:id="@+id/game_help"
+        android:icon="@drawable/ic_action_help"
+        android:showAsAction="ifRoom"
+        android:title="@string/activity_help"/>
+
+</menu>

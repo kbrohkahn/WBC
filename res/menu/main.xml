@@ -1,0 +1,44 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/create_event"
+        android:icon="@drawable/ic_action_event"
+        android:showAsAction="ifRoom"
+        android:title="@string/created_events"/>
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_action_search"
+        android:showAsAction="ifRoom"
+        android:title="@string/search"/>
+    <item
+        android:id="@+id/note"
+        android:icon="@drawable/ic_action_view_as_list"
+        android:showAsAction="ifRoom"
+        android:title="@string/note"/>
+    <item
+        android:id="@+id/finish"
+        android:icon="@drawable/ic_action_finish"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_finish"/>
+    <item
+        android:id="@+id/filter"
+        android:icon="@drawable/ic_action_filter"
+        android:showAsAction="ifRoom"
+        android:title="@string/filter"/>
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_action_settings"
+        android:showAsAction="ifRoom"
+        android:title="@string/settings"/>
+    <item
+        android:id="@+id/help"
+        android:icon="@drawable/ic_action_help"
+        android:showAsAction="ifRoom"
+        android:title="@string/activity_help"/>
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/ic_action_about"
+        android:showAsAction="ifRoom"
+        android:title="@string/activity_about"/>
+
+</menu>

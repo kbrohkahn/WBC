@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_margin"
+    android:minWidth="480dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/dt_title"
+        style="@style/dialog_title" />
+
+    <View style="@style/div_h" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="180dp" >
+
+        <LinearLayout
+            android:id="@+id/dt_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/dt_close"
+        style="@style/button"
+        android:layout_marginTop="0dp"
+        android:gravity="center"
+        android:text="@string/close" />
+
+</LinearLayout>

@@ -1,0 +1,780 @@
+2014-08-03~18~1775 D1/2 PC~~B~Demo~1~~Jeff Lange~Terrace 1~775
+2014-08-05~22~1775 D2/2 PC~~B~Demo~1~~Jeff Lange~Terrace 1~775
+2014-08-03~20~1775 Mulligan PC~1~B~SEM~2~~Jeff Lange~Marietta~775
+2014-08-06~9~1775 R1/4~1~B~SE~2~Y~Jeff Lange~Lampeter~775
+2014-08-02~9~18XX D1/1 PC~~B~Demo~1~~Tom McCorry~Terrace 4~8XX
+2014-08-04~16~18XX F~6~A~SE~6~~Tom McCorry~Strasburg~8XX
+2014-08-02~10~18XX H1/4 PC~6~B~HMW~6~~Tom McCorry~Limerock~8XX
+2014-08-02~17~18XX H2/4 PC~6~B~HMW~6~~Tom McCorry~Limerock~8XX
+2014-08-03~9~18XX H3/4 PC~6~B~HMW~6~~Tom McCorry~Limerock~8XX
+2014-08-03~16~18XX H4/4 PC~6~B~HMW~6~~Tom McCorry~Limerock~8XX
+2014-08-04~9~18XX SF~6~A~SE~6~~Tom McCorry~Strasburg~8XX
+2014-08-05~18~1989 D1/1~~B~Demo~1~~Henry Richardson~Terrace 1~989
+2014-08-06~9~1989 R1/4~1~B~Swiss~3~Y~Henry Richardson~Conestoga 2~989
+2014-08-07~10~7 Wonders D1/1~~B~Demo~1~~Nick Ferris~Terrace 2~7WS
+2014-08-07~13~7 Wonders R1/4~4~B~SwEl~2~~Nick Ferris~Ballroom B~7WS
+2014-08-07~15~7 Wonders R2/4~4~B~SwEl~1~Y~Nick Ferris~Ballroom B~7WS
+2014-08-04~22~A Study in Emerald 5P~~~SOG~2~~Ivan Lawson~Terrace 4~sog
+2014-08-05~21~Ace of Aces Circus 1/4~1~B~SwEl~0.25~~Dan Lawall~Hopewell~AOA
+2014-08-06~21~Ace of Aces Circus 2/4~1~B~SwEl~0.25~~Dan Lawall~Hopewell~AOA
+2014-08-07~21~Ace of Aces Circus 3/4~1~B~SwEl~0.25~~Dan Lawall~Hopewell~AOA
+2014-08-08~9~Ace of Aces Circus 4/4~1~B~SwEl~0.25~~Dan Lawall~Hopewell~AOA
+2014-08-05~20~Ace of Aces D1/2~~B~Demo~1~~Dan Lawall~Terrace 1~AOA
+2014-08-06~20~Ace of Aces D2/2~~B~Demo~1~~Dan Lawall~Terrace 1~AOA
+2014-08-09~14~Ace of Aces Final~1~A~Swiss~1.5~~Dan Lawall~Hopewell~AOA
+2014-08-04~12~Acquire D1/1~~B~Demo~1~~Cliff Ackman~Terrace 2~ACQ
+2014-08-04~13~Acquire H1/3~3~B~HMW~2~~Cliff Ackman~Vista CD~ACQ
+2014-08-05~18~Acquire H2/3~3~B~HMW~2~~Cliff Ackman~Marietta~ACQ
+2014-08-08~20~Acquire H3/3~3~B~HMW~2~~Cliff Ackman~Paradise~ACQ
+2014-08-09~15~Acquire SF/F~3~A~SE~2~Y~Cliff Ackman~Cornwall~ACQ
+2014-08-08~17~Acts of War P1/2~~~Preview~4~~James Bailey~Terrace 4~preview
+2014-08-09~10~Acts of War P2/2~~~Preview~4~~James Bailey~Terrace 2~preview
+2014-08-10~11~Adel Verpflichtet F~1~A~SE~2~~John Pack~Ballroom B~ADV
+2014-08-06~13~Adel Verpflichtet H1/4~1~C~HSW~2~~Ivan Lawson~Ballroom B~ADV
+2014-08-07~13~Adel Verpflichtet H2/4~1~C~HSW~2~~Tom DeMarco~Ballroom B~ADV
+2014-08-08~19~Adel Verpflichtet H3/4~1~C~HSW~2~~Greg Crowe~Ballroom B~ADV
+2014-08-10~9~Adel Verpflichtet H4/4~1~C~HSW~2~~John Pack~Ballroom B~ADV
+2014-08-10~11~Adel Verpflichtet SF~1~A~SE~1~~John Pack~Ballroom B~ADV
+2014-08-08~9~Advanced Civilizaton F~6~A~SE~10~~Kevin Youells~Kinderhook~ACV
+2014-08-03~9~Advanced Civilizaton H1/2 PC~6~A~HSW~8~~Kevin Youells~Kinderhook~ACV
+2014-08-06~9~Advanced Civilizaton H2/2~6~A~HSW~8~~Kevin Youells~Kinderhook~ACV
+2014-08-05~22~Afrika Korps D1/1~~B~Demo~1~~Jon Lockwood~Terrace 3~AFK
+2014-08-09~18~Afrika Korps F~2~A~SE~3~~Jonathan Lockwood~Conestoga 1~AFK
+2014-08-06~9~Afrika Korps R1/3 FF~2~B~SwEl~3~~Jonathan Lockwood~Conestoga 1~AFK
+2014-08-02~10~Afrika Korps R1/3 FF PC~2~B~SwEl~3~~Bill Morse~Heritage~AFK
+2014-08-09~14~Afrika Korps SF~2~A~SE~3~~Jonathan Lockwood~Conestoga 1~AFK
+2014-08-08~18~Age of Renaissance D1/1~~B~Demo~1~~Tedd Mullally~Terrace 7~AOR
+2014-08-09~20~Age of Renaissance Final~3~A~SE~6~~Tedd Mullally~Wheatland~AOR
+2014-08-02~18~Age of Renaissance H1/2 PC~3~B~HMWG~6~~Tedd Mullally~Kinderhook~AOR
+2014-08-08~20~Age of Renaissance H2/2~3~B~HMWG~6~~Tedd Mullally~Wheatland~AOR
+2014-08-06~13~Agricola D1/1~~B~Demo~1~~Rob Murray~Terrace 1~AGR
+2014-08-09~17~Agricola Final~3~A~SE~3~~Rob Murray~Laurel Grove~AGR
+2014-08-06~15~Agricola H1/3~3~B~HMWG~3~~Rob Murray~Ballroom B~AGR
+2014-08-07~19~Agricola H2/3~3~B~HMWG~3~~Rob Murray~Heritage~AGR
+2014-08-08~12~Agricola H3/3~3~B~HMWG~3~~Rob Murray~Ballroom B~AGR
+2014-08-08~20~Agricola SF~3~A~SE~3~~Rob Murray~Marietta~AGR
+2014-08-09~13~AHIKS Meet & Greet~~~Meeting~1~~Omar DeWitt~Hopewell~meeting
+2014-08-07~16~Air Baron D1/1~~B~Demo~1~~Craig Melton~Terrace 7~ABN
+2014-08-04~13~Air Baron H1/4~4~B~HMW~3~~Craig Melton~Limerock~ABN
+2014-08-07~17~Air Baron H2/4~4~B~HMW~3~~Craig Melton~Limerock~ABN
+2014-08-08~15~Air Baron H3/4~4~B~HMW~3~~Craig Melton~Limerock~ABN
+2014-08-09~9~Air Baron H4/4~4~B~HMW~3~~Craig Melton~Limerock~ABN
+2014-08-09~17~Air Baron SF/F~4~A~HMW~3~Y~Craig Melton~Limerock~ABN
+2014-08-06~17~Alhambra D1/1~~B~Demo~1~~Debbie Gutermuth~Terrace 1~ALH
+2014-08-06~18~Alhambra H1/2~4~B~HMW~2~~Debbie Gutermuth~Heritage~ALH
+2014-08-08~17~Alhambra H2/2~4~B~HMW~2~~Debbie Gutermuth~Heritage~ALH
+2014-08-08~19~Alhambra SF/F~4~A~HMW~2~Y~Debbie Gutermuth~Heritage~ALH
+2014-08-06~10~Amun Re D1/1~~B~Demo~1~~Alex Bove~Terrace 3~AMR
+2014-08-08~12~Amun Re F~3~A~SE~3~~Alex Bove~Limerock~AMR
+2014-08-04~17~Amun Re H1/3~3~B~HMWG~2~~Alex Bove~Vista CD~AMR
+2014-08-06~13~Amun Re H2/3~3~B~HMWG~2~~Alex Bove~Paradise~AMR
+2014-08-07~15~Amun Re H3/3~3~B~HMWG~2~~Alex Bove~Marietta~AMR
+2014-08-07~21~Amun Re SF~3~A~SE~3~~Alex Bove~Strasburg~AMR
+2014-08-06~9~Anzio R1/3 FF~1~A~SwEl~4~~Robert Frisby~Conestoga 1~ANZ
+2014-08-02~10~Anzio R1/3 FF PC~1~A~SwEl~4~~Bruno Sinigaglio~Heritage~ANZ
+2014-08-08~17~Anzio SF/F~1~A~SE~4~Y~Robert Frisby~Conestoga 1~ANZ
+2014-08-09~11~Apples to Apples Junior R1/2~1~C~SE~1~Y~Joanna Melton~Vista CD~junior
+2014-08-10~8~Armistice After Action~~~Meeting~1~~Don Greenwood~Showroom~meeting
+2014-08-06~19~Atlantic Storm D1/1~~B~Demo~1~~Ben Knight~Terrace 1~ACS
+2014-08-05~18~Atlantic Storm H1/4~4~B~HWO~2~~Ben Knight~Ballroom B~ACS
+2014-08-06~20~Atlantic Storm H2/4~4~B~HWO~2~~Ben Knight~Ballroom B~ACS
+2014-08-07~9~Atlantic Storm H3/4~4~B~HWO~2~~Ben Knight~Ballroom B~ACS
+2014-08-08~15~Atlantic Storm H4/4~4~B~HWO~2~~Ben Knight~Ballroom B~ACS
+2014-08-08~17~Atlantic Storm SF/F~4~A~SE~2~Y~Ben Knight~Ballroom B~ACS
+2014-08-09~19~Attack Sub D1/1~~B~Demo~1~~Steve Caler~Terrace 3~ATS
+2014-08-10~9~Attack Sub R1-6~2~B~SwEl~1~Y~Steve Caler~Lampeter~ATS
+2014-08-04~18~Auction & Auction Store Check-In~~~Sales~4~~Jeff Mullet~Lampeter~auction
+2014-08-05~10~Auction Begins~~~Sales~7~~Bruce Reiff~Lampeter~auction
+2014-08-05~17~Auction D1/1~~B~Demo~1~~Bruce Reiff~Terrace 5~AUC
+2014-08-05~18~Auction Mulligan~2~B~SEM~1~~Bruce Reiff~Strasburg~AUC
+2014-08-06~15~Auction R1/3~2~B~SE~1~Y~Bruce Reiff~Strasburg~AUC
+2014-08-05~9~Auction Store Opens~~~Sales~6~~Jeff Mullet~Lampeter~auction
+2014-08-06~14~Automobile D1/1~~B~Demo~1~~Greg Schmittgens~Terrace 6~AUT
+2014-08-05~18~Automobile H1/2~3~B~HMWG~3~~Greg Schmittgens~Limerock~AUT
+2014-08-06~15~Automobile H2/2~3~B~HMWG~3~~Greg Schmittgens~Limerock~AUT
+2014-08-08~12~Automobile SF/F~3~A~SE~3~Y~Greg Schmittgens~Limerock~AUT
+2014-08-02~13~Axis & Allies R1/5 PC~4~A~SwEl~5~Y~Joe Powell~Marietta~A&A
+2014-08-08~22~B17 After Action~~~Meeting~2~~David Terry~Hopewell~B17
+2014-08-07~9~B17 R1/3~6~A~Swiss~3~Y~David Terry~Paradise~B17
+2014-08-06~14~Baltimore & Ohio D1/2~~B~Demo~1~~William Wallace~Terrace 5~B&O
+2014-08-06~16~Baltimore & Ohio D2/2~~B~Demo~1~~William Wallace~Terrace 5~B&O
+2014-08-08~12~Baltimore & Ohio F~1~A~SE~3~~William Wallace~Wheatland~B&O
+2014-08-05~18~Baltimore & Ohio H1/4~1~B~HMW~3~~William Wallace~Wheatland~B&O
+2014-08-06~9~Baltimore & Ohio H2/4~1~B~HMW~3~~William Wallace~Wheatland~B&O
+2014-08-06~19~Baltimore & Ohio H3/4~1~B~HMW~3~~William Wallace~Wheatland~B&O
+2014-08-07~12~Baltimore & Ohio H4/4~1~B~HMW~3~~William Wallace~Wheatland~B&O
+2014-08-09~9~Battle Cry R1/4~3~A~SwEl~3~~Bruce Reiff~Paradise~BCY
+2014-08-09~12~Battle Cry R2/4~3~A~SwEl~1~Y~Bruce Reiff~Paradise~BCY
+2014-08-08~18~Battleline D1/1~~B~Demo~1~~Bruce Reiff~Terrace 1~BAT
+2014-08-08~19~Battleline R1/4~1~B~SwEl~2~~Bruce Reiff~Conestoga 2~BAT
+2014-08-08~21~Battleline R2/4~1~B~SwEl~1~Y~Bruce Reiff~Conestoga 2~BAT
+2014-08-07~14~Battles of the American Revolution D1/1~~B~Demo~1~~Mark Miklos~Terrace 1~BAR
+2014-08-07~16~Battles of the American Revolution Mulligan~3~B~SEM~3~~Mark Miklos~Lampeter~BAR
+2014-08-07~20~Battles of the American Revolution R1/5~3~B~SE~3~~Mark Miklos~Lampeter~BAR
+2014-08-08~9~Battles of the American Revolution R2/5~3~B~SE~5~~Mark Miklos~Lampeter~BAR
+2014-08-08~15~Battles of the American Revolution R3/5~3~B~SE~5~~Mark Miklos~Lampeter~BAR
+2014-08-08~21~Battles of the American Revolution R4/5~3~B~SE~3~~Mark Miklos~Lampeter~BAR
+2014-08-09~9~Battles of the American Revolution R5/5~3~B~SE~5~~Mark Miklos~Lampeter~BAR
+2014-08-05~18~Bitter Woods D1/1~~B~Demo~1~~Bruno Sinigaglio~Terrace 2~BWD
+2014-08-04~9~Bitter Woods R1/3 FF~3~B~SwEl~5~~Bruno Sinigaglio~Heritage~BWD
+2014-08-05~9~Bitter Woods R1/3 FF~3~B~SwEl~5~~Bruno Sinigaglio~Heritage~BWD
+2014-08-06~9~Bitter Woods R1/3 FF~3~B~SwEl~5~~Bruno Sinigaglio~Conestoga 1~BWD
+2014-08-07~9~Bitter Woods R1/3 FF~3~B~SwEl~5~~Bruno Sinigaglio~Conestoga 1~BWD
+2014-08-02~10~Bitter Woods R1/3 FF PC~3~B~SwEl~5~~Bruno Sinigaglio~Heritage~BWD
+2014-08-03~9~Bitter Woods R1/3 FF PC~3~B~SwEl~5~~Bruno Sinigaglio~Heritage~BWD
+2014-08-08~16~Bitter Woods R2/3~3~B~SE~5~~Bruno Sinigaglio~Conestoga 1~BWD
+2014-08-09~9~Bitter Woods R3/3~3~B~SE~5~~Bruno Sinigaglio~Conestoga 1~BWD
+2014-08-08~9~Blokus Junior R1/2~1~C~SE~1~Y~Daniel Broh-Kahn~Vista CD~junior
+2014-08-05~15~BPA Annual Meeting~~~Meeting~0.5~~Don Greenwood~Lampeter~meeting
+2014-08-05~20~Brass D1/1~~B~Demo~1~~Ed Kendrick~Terrace 5~BRS
+2014-08-05~21~Brass H1/3~3~B~HMWG~3~~Ed Kendrick~Limerock~BRS
+2014-08-06~20~Brass H2/3~3~B~HMWG~3~~Ed Kendrick~Marietta~BRS
+2014-08-08~9~Brass H3/3~3~B~HMWG~3~~Ed Kendrick~Limerock~BRS
+2014-08-09~14~Brass SF/F~3~A~SE~3~Y~Ed Kendrick~Wheatland~BRS
+2014-08-05~18~Brawling Battleships Steel D1/1~~B~Demo~1~~Jarett Weintraub~Terrace 6~BBS
+2014-08-08~11~Brawling Battleships Steel F~1~A~SE~3~~Jarett Weintraub~Laurel Grove~BBS
+2014-08-05~19~Brawling Battleships Steel H1/3~1~B~HMWG~3~~Jarett Weintraub~Strasburg~BBS
+2014-08-06~13~Brawling Battleships Steel H2/3~1~B~HMWG~3~~Jarett Weintraub~Ballroom A~BBS
+2014-08-07~18~Brawling Battleships Steel H3/3~1~B~HMWG~3~~Jarett Weintraub~Strasburg~BBS
+2014-08-05~18~Breakout Normandy Mulligan~4~A~SEM~5~~Andrew Cummins~Lampeter~BKN
+2014-08-06~9~Breakout Normandy R1/4~4~A~SE~5~Y~Andrew Cummins~Lampeter~BKN
+2014-08-07~9~Britannia D1/1~-~B~Demo~1~~James Jordan~Terrace 7~BRI
+2014-08-09~19~Britannia Final~4~A~SE~5~~James Jordan~Lampeter~BRI
+2014-08-04~19~Britannia H1/3~4~B~HSW~5~~James Jordan~Wheatland~BRI
+2014-08-07~10~Britannia H2/3~4~B~HSW~5~~James Jordan~Lampeter~BRI
+2014-08-08~13~Britannia H3/3~4~B~HSW~5~~James Jordan~Lampeter~BRI
+2014-08-09~9~Britannia SF~4~A~SE~5~~James Jordan~Lampeter~BRI
+2014-08-07~9~C&C Ancients R1/4~3~A~SwEl~4~~Andy Lewis~Conestoga 2~CCA
+2014-08-07~13~C&C Ancients R2/4~3~A~SwEl~3~Y~Andy Lewis~Conestoga 2~CCA
+2014-08-05~22~C&C Napoleonics Mulligan~1~A~SEM~2~~Daniel Broh-Kahn~Conestoga 1~CCN
+2014-08-09~14~C&C Napoleonics R1/5~1~A~SE~2~Y~Daniel Broh-Kahn~Conestoga 3~CCN
+2014-08-09~9~Can't Stop Junior R1/2~1~C~SE~1~Y~James & Tom Parauda~Vista CD~junior
+2014-08-06~23~Can't Stop R1/4~3~C~SE~0.5~Y~Rebecca Hebner~Ballroom B~CNS
+2014-08-04~15~Canterbury 4P~~C~SOG~2~~Keith Levy~Terrace 7~sog
+2014-08-08~10~Capo dei Capi P1/1~~~Preview~1~~Steve Finn~Terrace 2~preview
+2014-08-06~12~Carcassonne D1/1~~B~Demo~1~~Jennifer Visocnik~Terrace 2~CAR
+2014-08-06~13~Carcassonne H1/4~3~B~HMWG~1~~Jennifer Visocnik~Ballroom B~CAR
+2014-08-08~9~Carcassonne H2/4~3~B~HMWG~1~~Jennifer Visocnik~Heritage~CAR
+2014-08-08~21~Carcassonne H3/4~3~B~HMWG~1~~Jennifer Visocnik~Heritage~CAR
+2014-08-09~11~Carcassonne H4/4~3~B~HMWG~1~~Jennifer Visocnik~Heritage~CAR
+2014-08-08~18~Carcassonne Junior R1/2~1~C~SE~1~Y~Rich Shipley~Vista CD~junior
+2014-08-09~22~Carcassonne SF/F~3~A~SE~1~Y~Jennifer Visocnik~Paradise~CAR
+2014-08-09~9~Card Conquest: Hitler's Reich P1/1~~~Preview~3~~Fred Schachter~Terrace 3~preview
+2014-08-06~20~Castles of Burgundy D1/1~~B~Demo~1~~Barbara Flaxington~Terrace 6~COB
+2014-08-04~22~Castles of Burgundy H1/2~3~B~HMWG~3~~Barbara Flaxington~Paradise~COB
+2014-08-06~22~Castles of Burgundy H2/2~3~B~HMWG~3~~Barbara Flaxington~Paradise~COB
+2014-08-08~13~Castles of Burgundy SF/F~3~A~SE~3~Y~Barbara Flaxington~Paradise~COB
+2014-08-06~19~Catan: Cities & Knights D1/1~~B~Demo~1~~Christopher Gnech~Terrace 2~C&K
+2014-08-09~21~Catan: Cities & Knights F~3~A~SE~2~~Christopher Gnech~Paradise~C&K
+2014-08-06~20~Catan: Cities & Knights H1/3~3~B~HMWG~2~~Christopher Gnech~Heritage~C&K
+2014-08-08~15~Catan: Cities & Knights H2/3~3~B~HMWG~2~~Christopher Gnech~Heritage~C&K
+2014-08-09~15~Catan: Cities & Knights H3/3~3~B~HMWG~2~~Christopher Gnech~Heritage~C&K
+2014-08-09~18~Catan: Cities & Knights SF~3~A~SE~2~~Christopher Gnech~Paradise~C&K
+2014-08-08~21~Charles Roberts Awards~~~Meeting~1~~Allan Rothberg~Hopewell~meeting
+2014-08-10~7~Christian Religious Services~~~Meeting~1~~John Poniske~Showroom~meeting
+2014-08-04~17~Cinque Terre D1/1~~B~Demo~1~~Jeremy Billones~Terrace 4~CQT
+2014-08-05~18~Cinque Terre H1/2~1~B~HMW~2~~Jeremy Billones~Cornwall~CQT
+2014-08-07~13~Cinque Terre H2/2~1~B~HMW~2~~Jeremy Billones~Heritage~CQT
+2014-08-08~11~Cinque Terre SF/F~1~A~SE~2~Y~Jeremy Billones~Strasburg~CQT
+2014-08-07~9~Circus Maximus D1/1~~B~Demo~1~~Jake Jacoby~Terrace 3~CMS
+2014-08-09~19~Circus Maximus Final~5~A~SE~4~~Jake Jacoby~Conestoga 2~CMS
+2014-08-05~18~Circus Maximus H1/2~5~B~HWO~4~~Jake Jocoby~Conestoga 1~CMS
+2014-08-08~9~Circus Maximus H2/2~5~B~HWO~4~~Jake Jacoby~Conestoga 2~CMS
+2014-08-08~22~City Blocks P1/4~~~Preview~1~~Robert Stribula~Terrace 1~preview
+2014-08-08~23~City Blocks P2/4~~~Preview~1~~Robert Stribula~Terrace 1~preview
+2014-08-09~12~City Blocks P3/4~~~Preview~1~~Robert Stribula~Terrace 1~preview
+2014-08-09~13~City Blocks P4/4~~~Preview~1~~Robert Stribula~Terrace 1~preview
+2014-08-04~9~Civilization Expansion Project~~~MP Game~15~~Nathan Barhorst~Laurel Grove~cep
+2014-08-09~15~COIN series A Distant Plain F~3~A~SE~4~~Joel Tamburo~Lampeter~CIS
+2014-08-09~9~COIN series Andean Abyss SF~3~A~SE~4~~Joel Tamburo~Conestoga 2~CIS
+2014-08-04~20~COIN series Cuba Libre D1/1~~B~Demo~1~~Joel Tamburo~Terrace 5~CIS
+2014-08-05~18~COIN series Cuba Libre H1/2~3~B~HSW~4~~Joel Tamburo~Conestoga 2~CIS
+2014-08-08~13~COIN series Cuba Libre H2/2~3~B~HSW~4~~Joel Tamburo~Conestoga 2~CIS
+2014-08-05~18~Combat Commander D1/1~~B~Demo~1~~Bryan Collars~Terrace 3~CBC
+2014-08-06~9~Combat Commander R1/6~5~B~SwEl~3~Y~Bryan Collars~Conestoga 3~CBC
+2014-08-04~16~Concordia D1/2~~B~Demo~1~~Jason Levine~Terrace 6~CNC
+2014-08-09~16~Concordia D2/2~~B~Demo~1~~Jason Levine~Terrace 6~CNC
+2014-08-04~17~Concordia Mulligan~1~B~SEM~2~~Jason Levine~Ballroom B~CNC
+2014-08-09~17~Concordia R1/3~1~B~SE~2~Y~Jason Levine~Ballroom B~CNC
+2014-08-05~17~Conflict of Heroes D1/1~~B~Demo~1~~Jeff Lange~Terrace 1~COH
+2014-08-05~18~Conflict of Heroes Mulligan~1~B~SEM~2~~Jeff Lange~Conestoga 3~COH
+2014-08-06~18~Conflict of Heroes R1/4~1~B~SE~2~Y~Jeff Lange~Conestoga 2~COH
+2014-08-08~14~Conquest of Paradise D1/1~~B~Demo~1~~Kevin McPartland~Terrace 2~CQP
+2014-08-06~12~Conquest of Paradise H1/4~1~B~HSW~3~~Kevin McPartland~Limerock~CQP
+2014-08-07~21~Conquest of Paradise H2/4~1~B~HSW~3~~Kevin McPartland~Lampeter~CQP
+2014-08-08~15~Conquest of Paradise H3/4~1~B~HSW~3~~Kevin McPartland~Conestoga 2~CQP
+2014-08-09~9~Conquest of Paradise H4/4~1~B~HSW~3~~Kevin McPartland~Lampeter~CQP
+2014-08-09~12~Conquest of Paradise SF/F~1~B~HSW~3~Y~Kevin McPartland~Lampeter~CQP
+2014-08-08~17~Designing Multi-Player Games~~~Seminar~1~~Lew Pulsipher~Hopewell~seminar
+2014-08-08~16~Diplomacy D1/1~~B~Demo~1~~Thomas Haver~Terrace 5~DIP
+2014-08-08~19~Diplomacy R1/3~3~B~Swiss~5~~Thomas Haver~Kinderhook~DIP
+2014-08-09~9~Diplomacy R2/3~3~B~Swiss~5~~Thomas Haver~Kinderhook~DIP
+2014-08-09~19~Diplomacy R3/3~3~B~Swiss~5~~Thomas Haver~Kinderhook~DIP
+2014-08-05~20~Dominant Species H1/3~3~A~HMW~4~~Dave Long~Ballroom B~DSP
+2014-08-06~10~Dominant Species H2/3~3~A~HMW~4~~Dave Long~Ballroom A~DSP
+2014-08-06~16~Dominant Species H3/3~3~A~HMW~4~~Dave Long~Ballroom A~DSP
+2014-08-09~12~Dominant Species SF/F~3~A~SE~4~Y~Dave Long~Lampeter~DSP
+2014-08-07~11~Dominion D1/1~~B~Demo~1~~Nick Ferris~Terrace 2~DOM
+2014-08-08~13~Dominion QF~4~A~SE~2~~Nick Ferris~Heritage~DOM
+2014-08-07~21~Dominion R1/4~4~B~SE~2~~Nick Ferris~Ballroom B~DOM
+2014-08-09~13~Dominion SF/F~4~A~SE~2~Y~Nick Ferris~Ballroom B~DOM
+2014-08-09~9~Dune F~4~A~SE~8~~Brad Johnson~Wheatland~DUN
+2014-08-06~15~Dune H1/3~4~A~HMWG~5~~Brad Johnson~Wheatland~DUN
+2014-08-07~9~Dune H2/3~4~A~HMWG~5~~Brad Johnson~Wheatland~DUN
+2014-08-08~13~Dune H3/3~4~A~HMWG~5~~Brad Johnson~Wheatland~DUN
+2014-08-06~19~Egizia D1/1~~B~Demo~1~~Andrew Emerick~Terrace 3~EGZ
+2014-08-09~22~Egizia Final~3~A~SE~2~~Andrew Emerick~Limerock~EGZ
+2014-08-06~20~Egizia H1/2~3~B~HMWG~2~~Andrew Emerick~Marietta~EGZ
+2014-08-07~13~Egizia H2/2~3~B~HMWG~2~~Andrew Emerick~Marietta~EGZ
+2014-08-07~15~Egizia SF~3~A~SE~2~~Andrew Emerick~Marietta~EGZ
+2014-08-06~17~El Grande D1/1~~B~Demo~1~~Rob Flowers~Terrace 5~ELG
+2014-08-05~18~El Grande H1/3~3~B~HMWG~2~~Rob Flowers~Ballroom B~ELG
+2014-08-06~18~El Grande H2/3~3~B~HMWG~2~~Rob Flowers~Ballroom B~ELG
+2014-08-07~9~El Grande H3/3~3~B~HMWG~2~~Rob Flowers~Ballroom B~ELG
+2014-08-07~13~El Grande SF/F~3~A~SE~2~Y~Rob Flowers~Limerock~ELG
+2014-08-05~21~Elchfest D1/1~~B~Demo~1~~Alex Bell~Terrace 1~ELC
+2014-08-08~11~Elchfest Junior R1/4~1~C~SE~1~Y~Laurie Wojtaszczyk~Vista CD~junior
+2014-08-05~22~Elchfest R1/6~1~B~SE~0.334~Y~Alex Bell~Marietta~ELC
+2014-08-05~17~Empire Builder D1/1~~B~Demo~1~~Bob Stribula~Terrace 7~EPB
+2014-08-05~18~Empire Builder H1/3~6~B~HMWG~4~~Bob Stribula~Wheatland~EPB
+2014-08-06~9~Empire Builder H2/3~6~B~HMWG~4~~Bob Stribula~Wheatland~EPB
+2014-08-06~13~Empire Builder H3/3~6~B~HMWG~4~~Bob Stribula~Wheatland~EPB
+2014-08-07~9~Empire Builder SF/F~6~A~SE~4~Y~Bob Stribula~Wheatland~EPB
+2014-08-08~9~Empire of the Sun D1/1~~B~Demo~1~~Mark Herman~Terrace 4~EOS
+2014-08-08~10~Empire of the Sun R1/4~1~B~SE~4~Y~Mark Herman~Lampeter~EOS
+2014-08-05~23~Enemy in Sight D1/1~~B~Demo~1~~Matt Evinger~Terrace 6~EIS
+2014-08-10~12~Enemy in Sight Final~3~A~SE~3~~Matt Evinger~Lampeter~EIS
+2014-08-06~9~Enemy in Sight H1/3~3~B~HWO~3~~Matt Evinger~Strasburg~EIS
+2014-08-09~21~Enemy in Sight H2/3~3~B~HWO~3~~Matt Evinger~Lampeter~EIS
+2014-08-10~9~Enemy in Sight H3/3~3~B~HWO~3~~Matt Evinger~Lampeter~EIS
+2014-08-07~17~Ethics in Gaming~~~Seminar~1~~Joel Tamburo~Hopewell~seminar
+2014-08-08~19~Euphoria P1/1~~~Preview~2~~Tim O'Flynn~Terrace 5~preview
+2014-08-09~16~Euphrat & Tigris D1/1~~B~Demo~1~~Craig Moffitt~Terrace 7~E&T
+2014-08-07~11~Euphrat & Tigris H1/2~2~B~HSW~2~~Craig Moffitt~Limerock~E&T
+2014-08-09~17~Euphrat & Tigris H2/2~2~B~HSW~2~~Craig Moffitt~Wheatland~E&T
+2014-08-09~19~Euphrat & Tigris SF/F~2~A~SE~2~Y~Craig Moffitt~Wheatland~E&T
+2014-08-08~11~Evolution P1/4~~~Preview~1~~Luke Warren~Terrace 5~preview
+2014-08-08~22~Evolution P2/4~~~Preview~1~~Luke Warren~Terrace 5~preview
+2014-08-09~11~Evolution P3/4~~~Preview~1~~Luke Warren~Terrace 5~preview
+2014-08-09~22~Evolution P4/4~~~Preview~1~~Luke Warren~Terrace 5~preview
+2014-08-09~21~Facts In Five R1/1~2~C~SE~2~~John Corrado~Hopewell~FI5
+2014-08-07~11~Fill the Barn Junior R1/2~1~C~SE~1~Y~Charlie Hoopes~Vista CD~junior
+2014-08-06~17~Football Strategy D1/1~~B~Demo~1~~Bert Schoose~Terrace 4~FBS
+2014-08-09~20~Football Strategy Final~2~A~SE~2~~Bert Schoose~Laurel Grove~FBS
+2014-08-04~16~Football Strategy H1/2~2~B~HMSE~2~Y~Bert Schoose~Cornwall~FBS
+2014-08-06~18~Football Strategy H2/2~2~B~HMSE~2~Y~Bert Schoose~Cornwall~FBS
+2014-08-07~9~For The People D1/1~~B~Demo~1~~Mark Herman~Terrace 4~FTP
+2014-08-07~10~For the People R1/5~4~B~SE~6~Y~Mark Herman~Lampeter~FTP
+2014-08-07~21~Formula De F~3~A~SE~3~~Joshua Githens~Cornwall~FDE
+2014-08-04~19~Formula De H1/3~3~C~HMWG~3~~Joshua Githens~Marietta~FDE
+2014-08-06~11~Formula De H2/3~3~C~HMWG~3~~Joshua Githens~Marietta~FDE
+2014-08-07~18~Formula De H3/3~3~C~HMWG~3~~Joshua Githens~Paradise~FDE
+2014-08-06~15~Formula Motor Racing D1/1~~B~Demo~1~~Chris LeFevre~Terrace 4~FMR
+2014-08-05~20~Formula Motor Racing H1/3~4~B~HMW~2~~Chris LeFevre~Ballroom B~FMR
+2014-08-06~16~Formula Motor Racing H2/3~4~B~HMW~2~~Chris LeFevre~Ballroom B~FMR
+2014-08-07~9~Formula Motor Racing H3/3~4~B~HMW~2~~Chris LeFevre~Limerock~FMR
+2014-08-07~14~Formula Motor Racing Junior R1/2~1~C~SE~1~Y~Eric Freeman~Vista CD~junior
+2014-08-07~12~Formula Motor Racing SF/F~4~B~SE~2~Y~Chris LeFevre~Strasburg~FMR
+2014-08-05~14~Freaks; Nurturing Gaming Clubs~~~Seminar~1~~Greg Thatcher~Hopewell~seminar
+2014-08-08~16~Freaks; Nurturing Gaming Clubs~~~Seminar~1~~Greg Thatcher~Hopewell~seminar
+2014-08-05~9~Friedrich 4P~~~SOG~5~~Bjorn von Knorring~Terrace 7~sog
+2014-08-06~9~Friedrich 4P~~~SOG~5~~Bjorn von Knorring~Terrace 6~sog
+2014-08-04~18~Galaxy D1/2~~B~Demo~1~~Mark Mitchell~Terrace 3~GXY
+2014-08-06~17~Galaxy D2/2~~B~Demo~1~~Mark Mitchell~Terrace 3~GXY
+2014-08-04~19~Galaxy H1/4~1~B~HMWG~2~~Mark Mitchell~Limerock~GXY
+2014-08-06~18~Galaxy H2/4~1~B~HMWG~2~~Mark Mitchell~Limerock~GXY
+2014-08-06~20~Galaxy H3/4~1~B~HMWG~2~~Mark Mitchell~Limerock~GXY
+2014-08-08~9~Galaxy H4/4~1~B~HMWG~2~~Mark Mitchell~Strasburg~GXY
+2014-08-08~18~Galaxy SF/F~1~A~SE~2~Y~Mark Mitchell~Strasburg~GXY
+2014-08-05~20~Galaxy Trucker D1/1~~B~Demo~1~~David Finberg~Terrace 2~GXT
+2014-08-08~16~Galaxy Trucker F~1~A~SE~2~~David Finberg~Laurel Grove~GXT
+2014-08-05~22~Galaxy Trucker H1/3~1~B~HMW~2~~David Finberg~Ballroom A~GXT
+2014-08-06~20~Galaxy Trucker H2/3~1~B~HMW~2~~David Finberg~Ballroom A~GXT
+2014-08-07~12~Galaxy Trucker H3/3~1~B~HMW~2~~David Finberg~Conestoga 3~GXT
+2014-08-07~16~Galaxy Trucker SF~1~A~SE~2~~David Finberg~Cornwall~GXT
+2014-08-05~21~Gangsters D1/1~~B~Demo~1~~John Pack~Terrace 3~GSR
+2014-08-04~19~Gangsters H1/4~3~B~HSW~3~~John Pack~Marietta~GSR
+2014-08-05~22~Gangsters H2/4~3~B~HSW~3~~John Pack~Wheatland~GSR
+2014-08-07~23~Gangsters H3/4~3~B~HSW~3~~John Pack~Wheatland~GSR
+2014-08-09~9~Gangsters H4/4~3~B~HSW~3~~John Pack~Strasburg~GSR
+2014-08-09~20~Gangsters SF/F~3~A~SE~3~Y~John Pack~Strasburg~GSR
+2014-08-04~20~Gettysburg D1/1~~B~Demo~1~~Gregory Smith~Terrace 4~GBG
+2014-08-06~9~Gettysburg R1/3 FF~3~B~SwEl~4~~Gregory Smith~Conestoga 1~GBG
+2014-08-02~10~Gettysburg R1/3 FF PC~3~B~SwEl~4~~Bill Morse~Heritage~GBG
+2014-08-09~9~Gettysburg SF/F~3~A~SE~3~Y~Gregory Smith~Conestoga 1~GBG
+2014-08-05~14~Gipsy King 10P~~C~SOG~1~~Keith Levy~Terrace 2-3~sog
+2014-08-04~19~Global Mogul D1/2~~B~Demo~1~~Bill Crenshaw~Terrace 7~GBM
+2014-08-06~22~Global Mogul D2/2~~B~Demo~1~~Bill Crenshaw~Terrace 7~GBM
+2014-08-08~16~Global Mogul F~1~A~SE~3~~Bill Crenshaw~Laurel Grove~GBM
+2014-08-04~20~Global Mogul H1/4~1~B~HMWG~3~~Bill Crenshaw~Strasburg~GBM
+2014-08-05~22~Global Mogul H2/4~1~B~HMWG~3~~Bill Crenshaw~Strasburg~GBM
+2014-08-06~12~Global Mogul H3/4~1~B~HMWG~3~~Bill Crenshaw~Strasburg~GBM
+2014-08-07~9~Global Mogul H4/4~1~B~HMWG~3~~Bill Crenshaw~Ballroom B~GBM
+2014-08-08~9~Global Mogul SF~1~A~SE~3~~Bill Crenshaw~Ballroom B~GBM
+2014-08-04~19~Goa H1/2~3~A~HMWG~3~~Derek Glenn~Paradise~GOA
+2014-08-06~15~Goa H2/2~3~A~HMWG~3~~Derek Glenn~Paradise~GOA
+2014-08-09~17~Goa SF/F~3~A~SE~3~Y~Derek Glenn~Strasburg~GOA
+2014-08-06~9~Great Campaigns ACW D1/1~~B~Demo~1~~David Cross~Terrace 2~GCA
+2014-08-06~11~Great Campaigns ACW R1/6~3~B~SwEl~3~~David Cross~Lampeter~GCA
+2014-08-06~14~Great Campaigns ACW R2/6~3~B~SwEl~3~~David Cross~Lampeter~GCA
+2014-08-06~18~Great Campaigns ACW R3/6~3~B~SwEl~3~~David Cross~Lampeter~GCA
+2014-08-07~9~Great Campaigns ACW R4/6~3~A~SE~4~~David Cross~Laurel Grove~GCA
+2014-08-07~14~Great Campaigns ACW R5/6~3~A~SE~4~~David Cross~Laurel Grove~GCA
+2014-08-09~9~Great Campaigns ACW R6/6~3~A~SE~4~~David Cross~Laurel Grove~GCA
+2014-08-06~14~Guillotine Junior R1/2~1~C~SE~1~Y~Ray Stakenas~Vista CD~junior
+2014-08-08~12~Gunrunners P1/1~~~Preview~1~~Steve Finn~Terrace 2~preview
+2014-08-06~20~Hammer of the Scots D1/1~~B~Demo~1~~Lyman Moquin~Terrace 4~HOS
+2014-08-06~21~Hammer of the Scots Mulligan~3~B~SEM~3~~Lyman Moquin~Conestoga 2~HOS
+2014-08-07~15~Hammer of the Scots R1/4~3~B~SE~3~Y~Lyman Moquin~Lampeter~HOS
+2014-08-02~13~Hannibal R1/5 PC~6~A~Swiss~5~~Stuart Tucker~Paradise~HRC
+2014-08-02~19~Hannibal R2/5 PC~6~A~Swiss~5~Y~Stuart Tucker~Paradise~HRC
+2014-08-05~17~Here I Stand D1/2~~B~Demo~1~~Justin Rice~Terrace 6~HIS
+2014-08-07~17~Here I Stand D2/2~~B~Demo~1~~Justin Rice~Terrace 6~HIS
+2014-08-09~9~Here I Stand Final~4~A~SE~4~~Justin Rice~Wheatland~HIS
+2014-08-05~19~Here I Stand H1/2~4~B~HMWG~4~~Justin Rice~Kinderhook~HIS
+2014-08-07~19~Here I Stand H2/2~4~B~HMWG~4~~Justin Rice~Kinderhook~HIS
+2014-08-08~9~Here I Stand SF~4~A~SE~5~~Justin Rice~Kinderhook~HIS
+2014-08-06~18~Heroscape Junior R1/1~1~C~SE~1~Y~Frank Sinigaglio~Vista CD~junior
+2014-08-08~19~History Maker Baseball~~~Preview~1~~Keith Avallone~Terrace 3~preview
+2014-08-06~17~History of the World D1/1~~B~Demo~1~~Craig Yope~Terrace 6~HWD
+2014-08-09~15~History of the World Final~5~A~SE~6~~Craig Yope~Kinderhook~HWD
+2014-08-05~18~History of the World H1/2~5~B~HSW~6~~Craig Yope~Ballroom A~HWD
+2014-08-06~18~History of the World H2/2~5~B~HSW~6~~Craig Yope~Kinderhook~HWD
+2014-08-07~18~History of the World SF~5~A~SE~6~~Craig Yope~Wheatland~HWD
+2014-08-08~20~House Divided D1/1~~B~Demo~1~~Terry Coleman~Terrace 2~AHD
+2014-08-08~21~House Divided Mulligan~1~B~SEM~3~~Terry Coleman~Conestoga 3~AHD
+2014-08-09~11~House Divided R1/5~1~B~SE~3~Y~Terry Coleman~Lampeter~AHD
+2014-08-05~21~The Hunters D1/1~~B~Demo~1~~Gregory M. Smith~Terrace 2~HNT
+2014-08-07~9~Igloo Pop Junior R1/2~1~C~SE~1~Y~Jason Levine~Vista CD~junior
+2014-08-09~19~Illusions of Glory P1/1~~~Preview~3~~Fred Schachter~Terrace 2~preview
+2014-08-05~22~Ingenius H1/3~3~A~HMWG~1~~Pete Stein~Ballroom A~ING
+2014-08-07~22~Ingenius H2/3~3~A~HMWG~1~~Pete Stein~Heritage~ING
+2014-08-08~22~Ingenius H3/3~3~A~HMWG~1~~Pete Stein~Heritage~ING
+2014-08-06~11~Ingenius Junior R1/2~1~C~SE~1~Y~Chris Yaure~Vista CD~junior
+2014-08-10~9~Ingenius SF/F~3~A~SE~1~Y~Pete Stein~Marietta~ING
+2014-08-04~13~Innovation D1/1~~B~Demo~1~~Robb Effinger~Terrace 3~IOV
+2014-08-04~14~Innovation Mulligan~1~B~SEM~1~~Robb Effinger~Marietta~IOV
+2014-08-06~9~Innovation R1/5~1~B~SE~1~Y~Robb Effinger~Ballroom A~IOV
+2014-08-08~16~Institute for the Magical Arts P1/1~~~Preview~1~~Steve Finn~Terrace 2~preview
+2014-08-05~23~Ivanhoe D1/1~~B~Demo~1~~Kirk Harris~Terrace 1~IVH
+2014-08-04~23~Ivanhoe H1/3~3~B~HMW~2~~Kirk Harris~Ballroom B~IVH
+2014-08-06~23~Ivanhoe H2/3~3~B~HMW~2~~Kirk Harris~Marietta~IVH
+2014-08-08~23~Ivanhoe H3/3~3~B~HMW~2~~Kirk Harris~Marietta~IVH
+2014-08-09~21~Ivanhoe SF/F~3~A~SE~2~Y~Kirk Harris~Paradise~IVH
+2014-08-06~20~Julius Caesar D1/1~~B~Demo~1~~Justin Thompson~Terrace 3~JUC
+2014-08-07~9~Julius Caesar R1/5~2~B~SwEl~3~Y~Justin Thompson~Lampeter~JUC
+2014-08-06~20~Kaiser's Pirates D1/2~~B~Demo~1~~Tim Rogers~Terrace 7~KPR
+2014-08-08~10~Kaiser's Pirates D2/2~~B~Demo~1~~Tim Rogers~Terrace 7~KPR
+2014-08-08~13~Kaiser's Pirates H1/3~1~B~HMWG~2~~Tim Rogers~Wheatland~KPR
+2014-08-08~16~Kaiser's Pirates H2/3~1~B~HMWG~2~~Tim Rogers~Wheatland~KPR
+2014-08-08~19~Kaiser's Pirates H3/3~1~B~HMWG~2~~Tim Rogers~Wheatland~KPR
+2014-08-09~10~Kaiser's Pirates SF/F~1~A~SE~2~Y~Tim Rogers~Wheatland~KPR
+2014-08-05~13~Keyflower 3P~~~SOG~5~~Marcia Morelli~Terrace 1~sog
+2014-08-06~15~Keyflower D1/1~~B~Demo~1~~Tom DeMarco~Terrace 1~KYF
+2014-08-06~9~Keyflower H1/3~1~B~HMWG~2~~Tom DeMarco~Ballroom A~KYF
+2014-08-06~18~Keyflower H2/3~1~B~HMWG~2~~Tom DeMarco~Ballroom A~KYF
+2014-08-07~15~Keyflower H3/3~1~B~HMWG~2~~Tom DeMarco~Strasburg~KYF
+2014-08-09~13~Keyflower SF/F~1~A~SE~2~Y~Tom DeMarco~Strasburg~KYF
+2014-08-05~22~King of Tokyo D1/1~~B~Demo~1~~Rob Olsson~Terrace 2~KOT
+2014-08-05~23~King of Tokyo R1/3~1~B~SE~0.5~Y~Rob Olsson~Ballrom B~KOT
+2014-08-05~19~Koenig's Fortress Europe D1/1~~B~Demo~1~~Paul Koenig~Terrace 1~KFE
+2014-08-05~20~Koenig's Fortress Europe Mulligan~~B~SEM~6~~Paul Koenig~Lampeter~KFE
+2014-08-06~9~Koenig's Fortress Europe R1/4~1~B~SEM~6~~Paul Koenig~Lampeter~KFE
+2014-08-06~16~Kremlin D1/1~~B~Demo~1~~Steve Cuccaro~Terrace 6~KRM
+2014-08-08~13~Kremlin F~3~A~SE~3~~Steve Cuccaro~Wheatland~KRM
+2014-08-06~18~Kremlin H1/4~3~B~HMWG~3~~Steve Cuccaro~Strasburg~KRM
+2014-08-07~15~Kremlin H2/4~3~B~HMWG~3~~Steve Cuccaro~Kinderhook~KRM
+2014-08-07~19~Kremlin H3/4~3~B~HMWG~3~~Steve Cuccaro~Wheatland~KRM
+2014-08-08~9~Kremlin H4/4~3~B~HMWG~3~~Steve Cuccaro~Wheatland~KRM
+2014-08-05~16~Labyrinth D1/1~~B~Demo~1~~Jeff Burdett~Terrace 1~LBY
+2014-08-05~19~Labyrinth Mulligan~1~B~SEM~2~~Jeff Burdett~Laurel Grove~LBY
+2014-08-06~9~Labyrinth R1/5~1~B~SE~2~Y~Jeff Burdett~Lampeter~LBY
+2014-08-06~14~Last Will D1/1~~B~Demo~1~~John Corrado~Terrace 2~LWL
+2014-08-08~18~Last Will H1/2~1~B~HMWG~2~~John Corrado~Paradise~LWL
+2014-08-09~11~Last Will H2/2~1~B~HMWG~2~~John Corrado~Marietta~LWL
+2014-08-10~9~Last Will SF/F~1~A~SE~2~Y~John Corrado~Marietta~LWL
+2014-08-05~19~Le Havre D1/1~~B~Demo~1~~Kenneth Horan~Terrace 2~LHV
+2014-08-08~9~Le Havre F~3~A~HMW~3~~Kenneth Horan~Wheatland~LHV
+2014-08-05~21~Le Havre H1/2~3~B~HMW~3~~Kenneth Horan~Paradise~LHV
+2014-08-07~9~Le Havre H2/2~3~B~HMW~3~~Kenneth Horan~Heritage~LHV
+2014-08-07~16~Le Havre SF~3~A~HMW~3~~Kenneth Horan~Wheatland~LHV
+2014-08-05~19~Leaping Lemmings D1/1~~B~Demo~1~~Rick Young~Terrace 7~LLM
+2014-08-05~21~Leaping Lemmings H1/4~1~B~HSW~2~~Rick Young~Wheatland~LLM
+2014-08-06~9~Leaping Lemmings H2/4~1~B~HSW~2~~Rick Young~Limerock~LLM
+2014-08-06~21~Leaping Lemmings H3/4~1~B~HSW~2~~Rick Young~Strasburg~LLM
+2014-08-08~21~Leaping Lemmings H4/4~1~B~HSW~2~~Rick Young~Limerock~LLM
+2014-08-09~19~Leaping Lemmings SF/F~1~A~SE~2~Y~Rick Young~Ballroom B~LLM
+2014-08-07~12~Let Them Eat Shrimp P1/1~~~Preview~1~~Steve Finn~Terrace 2~preview
+2014-08-08~23~Liar's Dice R1/3~4~C~SE~0.5~Y~Jason Levine~Ballroom B~LID
+2014-08-07~21~Lincoln's War D1/1~~B~Demo~1~~John Poniske~Terrace 1~LCW
+2014-08-08~9~Lincoln's War R1/5~1~B~SwEl~3~Y~John Poniske~Lampeter~LCW
+2014-08-08~13~Lords of Baseball P1/1~~~Preview~2~~Max Jamelli~Terrace 6~preview
+2014-08-06~19~Lost Cities D1/1~~B~Demo~1~~Ivan Lawson~Terrace 4~LST
+2014-08-05~20~Lost Cities H1/3~4~B~HMW~1~~Ivan Lawson~Marietta~LST
+2014-08-07~18~Lost Cities H2/3~4~B~HMW~1~~Ivan Lawson~Heritage~LST
+2014-08-09~17~Lost Cities H3/3~4~B~HMW~1~~Ivan Lawson~Heritage~LST
+2014-08-06~9~Lost Cities Junior R1/4~1~C~SE~0.5~Y~Jarett Weintraub~Vista CD~junior
+2014-08-09~20~Lost Cities R2/6~4~A~SE~0.5~Y~Ivan Lawson~Heritage~LST
+2014-08-02~12~Manifest Destiny D1/1~~B~Demo~1~~Jeff Mullet~Terrace 6~MFD
+2014-08-07~18~Manifest Destiny F~1~A~SE~4~~Jeff Mullet~Laurel Grove~MFD
+2014-08-02~13~Manifest Destiny H1/3 PC~1~B~HMWG~4~~Jeff Mullet~Kinderhook~MFD
+2014-08-05~18~Manifest Destiny H2/3~1~B~HMWG~4~~Jeff Mullet~Lampeter~MFD
+2014-08-07~13~Manifest Destiny H2/3~1~B~HMWG~4~~Jeff Mullet~Wheatland~MFD
+2014-08-04~13~Manoeuvre R1/4~1~A~SwEl~4~~Andy Lewis~Ballroom A~MAN
+2014-08-04~17~Manoeuvre R2/4~1~A~SE~1~Y~Andy Lewis~Ballroom A~MAN
+2014-08-05~18~March Madness D1/1~~B~Demo~1~~Terry Coleman~Terrace 7~MMS
+2014-08-05~20~March Madness H1/4~3~B~HMSE~1~Y~Terry Coleman~Cornwall~MMS
+2014-08-06~9~March Madness H2/4~3~B~HMSE~1~Y~Terry Coleman~Cornwall~MMS
+2014-08-08~9~March Madness H3/4~3~B~HMSE~1~Y~Terry Coleman~Cornwall~MMS
+2014-08-08~18~March Madness H4/4~3~B~HMSE~1~Y~Terry Coleman~Cornwall~MMS
+2014-08-10~9~March Madness SF/F~3~A~SE~1~Y~Terry Coleman~Cornwall~MMS
+2014-08-04~17~Maria D1/2~~B~Demo~1~~Kaarin Engelmann~Terrace 2~MAR
+2014-08-06~17~Maria D2/2~~B~Demo~1~~Kaarin Engelmann~Terrace 2~MAR
+2014-08-09~18~Maria Final~1~A~SE~5~~Kaarin Engelmann~Lampeter~MAR
+2014-08-04~19~Maria H1/3~1~B~HSW~5~~Kaarin Engelmann~Ballroom A~MAR
+2014-08-06~19~Maria H2/3~1~B~HSW~5~~Kaarin Engelmann~Ballroom A~MAR
+2014-08-07~19~Maria H3/3~1~B~HSW~5~~Kaarin Engelmann~Lampeter~MAR
+2014-08-08~17~Maria SF~1~A~SE~5~~Kaarin Engelmann~Lampeter~MAR
+2014-08-08~12~Math Trade Exchange~~~Meeting~1~~Eric Sokolowsky~Hopewell~meeting
+2014-08-08~19~Medici H1/2~1~C~HWO~1~~Jeff Cornett~Ballroom B~MED
+2014-08-08~20~Medici H2/2~1~C~HWO~1~~Jeff Cornett~Ballroom B~MED
+2014-08-08~21~Medici SF/F~1~C~SE~1~Y~Jeff Cornett~Marietta~MED
+2014-08-07~20~Memoir '44 D1/1~~B~Demo~1~~Sam Edelston~Terrace 3~M44
+2014-08-07~21~Memoir '44 Mulligan~4~B~SEM~2~~Sam Edelston~Paradise~M44
+2014-08-08~9~Memoir '44 R1/6~4~B~SE~2~Y~Sam Edelston~Paradise~M44
+2014-08-07~11~Memoir: D-Day Landings 1/2~~~MP Game~4~~Richard Borg~Terrace 3-4~witswagers
+2014-08-07~15~Memoir: D-Day Landings 2/2~~~MP Game~4~~Richard Borg~Terrace 3-4~witswagers
+2014-08-09~14~Memoir: D-Day Mega Overlord~~~MP Game~4~~Richard Borg~Terrace 1-4~witswagers
+2014-08-09~20~Memoir: Peleliu Landings~~~MP Game~4~~Sam Edelston~Terrace 4~witswagers
+2014-08-08~23~Memoir: Push to the Roer~~~MP Game~4~~Sam Edelston~Terrace 4~witswagers
+2014-08-09~10~Memoir: Rzhev~~~MP Game~4~~Sam Edelston~Terrace 4~witswagers
+2014-08-04~14~Merchant of Venus D1/1~~B~Demo~1~~Richard Irving~Terrace 5~MOV
+2014-08-04~16~Merchant of Venus H1/3~4~B~HMWG~3~~Richard Irving~Ballroom B~MOV
+2014-08-06~9~Merchant of Venus H2/3~4~B~HMWG~3~~Richard Irving~Ballroom B~MOV
+2014-08-08~13~Merchant of Venus H3/3~4~B~HMWG~3~~Richard Irving~Marietta~MOV
+2014-08-09~9~Merchant of Venus SF/F~4~A~SE~3~Y~Richard Irving~Wheatland~MOV
+2014-08-06~20~Monsters Menace America H1/3~1~C~HMWG~2~~Bill Powers~Ballroom B~MMA
+2014-08-07~19~Monsters Menace America H2/3~1~C~HMWG~2~~Bill Powers~Cornwall~MMA
+2014-08-09~15~Monsters Menace America H3/3~1~C~HMWG~2~~Mark Love~Limerock~MMA
+2014-08-09~18~Monsters Menace America SF/F~1~A~SE~2~Y~Mark Love~Paradise~MMA
+2014-08-05~9~Montgolfiere Junior R1/2~1~C~SE~1~Y~John Poniske~Vista CD~junior
+2014-08-06~9~Mr Madison's War D1/1~~B~Demo~1~~David Stiffler~Terrace 4~MMW
+2014-08-06~10~Mr Madison's War R1/6~3~B~SwEl~3~Y~David Stiffler~Lampeter~MMW
+2014-08-07~14~Mr Madison's War R6/6~3~B~SE~3~~David Stiffler~Lampeter~MMW
+2014-08-08~12~Napoleon R1/4~1~C~SwEl~3~Y~Ron Draker~Lampeter~NAP
+2014-08-07~10~Napoleonic Wars D1/1~~B~Demo~1~~Gareth Williams~Terrace 6~NW5
+2014-08-09~18~Napoleonic Wars Final~5~A~SE~5~~Gareth Williams~Lampeter~NW5
+2014-08-04~19~Napoleonic Wars H1/3~5~A~HMWG~5~~Gareth Williams~Wheatland~NW5
+2014-08-06~19~Napoleonic Wars H2/3~5~A~HMWG~5~~Gareth Williams~Lampeter~NW5
+2014-08-07~12~Napoleonic Wars H3/3~5~C~HMWG~5~~Gareth Williams~Lampeter~NW5
+2014-08-08~18~Napoleonic Wars SF~5~A~SE~5~~Gareth Williams~Lampeter~NW5
+2014-08-09~17~Naval War D1/1~~B~Demo~1~~James Kramer~Terrace 5~NVW
+2014-08-08~14~Naval War Junior R1/2~1~C~SE~1~Y~Jim Kramer~Vista CD~junior
+2014-08-09~18~Naval War R1/2~1~B~SE~3~Y~James Kramer~Lampeter~NVW
+2014-08-07~18~Navegador D1/1~~B~Demo~1~~Anni Foasberg~Terrace 2~NVG
+2014-08-07~19~Navegador H1/3~3~B~HMW~2~~Anni Foasberg~Marietta~NVG
+2014-08-08~22~Navegador H2/3~3~B~HMW~2~~Anni Foasberg~Paradise~NVG
+2014-08-09~13~Navegador H3/3~3~B~HMW~2~~Anni Foasberg~Paradise~NVG
+2014-08-09~17~Navegador SF/F~3~A~SE~2~Y~Anni Foasberg~Marietta~NVG
+2014-08-05~9~Open Gaming~~~~8~~No Library Services~Ballroom AB~gaming
+2014-08-04~9~Open Gaming & Library~~~~15~~Paul Bean~Showroom~gaming
+2014-08-05~9~Open Gaming & Library~~~~15~~Paul Bean~Showroom~gaming
+2014-08-06~9~Open Gaming & Library~~~~15~~Paul Bean~Showroom~gaming
+2014-08-07~9~Open Gaming & Library~~~~15~~Paul Bean~Showroom~gaming
+2014-08-08~9~Open Gaming & Library~~~~15~~Paul Bean~Showroom~gaming
+2014-08-09~9~Open Gaming & Library~~~~15~~Paul Bean~Showroom~gaming
+2014-08-06~9~Panzerblitz R1/3 FF~3~C~SwEl~3~~Rick Northey~Conestoga 1~PZB
+2014-08-02~10~Panzerblitz R1/3 FF PC~3~C~SwEl~3~~Bruno Sinigaglio~Heritage~PZB
+2014-08-09~9~Panzerblitz R2/3~3~A~SE~3~~Rick Northey~Conestoga 1~PZB
+2014-08-09~15~Panzerblitz R3/3~3~A~SE~3~~Rick Northey~Conestoga 1~PZB
+2014-08-02~15~Paths of Glory R1/6 PC~6~A~SwEl~7~~Peter Gurneau~Cornwall~POG
+2014-08-03~9~Paths of Glory R2/6 PC~6~A~SwEl~7~~Peter Gurneau~Cornwall~POG
+2014-08-03~17~Paths of Glory R3/6 PC~6~A~SwEl~7~~Peter Gurneau~Cornwall~POG
+2014-08-04~9~Paths of Glory R4/6 PC~6~A~SE~7~~Peter Gurneau~Cornwall~POG
+2014-08-04~17~Paths of Glory R5/6 PC~6~A~SE~7~~Peter Gurneau~Cornwall~POG
+2014-08-05~9~Paths of Glory R6/6 PC~6~A~SE~7~~Peter Gurneau~Cornwall~POG
+2014-08-06~13~Paydirt AFC Draft~~B~Draft~1~~Harry Flawd~Hopewell~PDT
+2014-08-06~12~Paydirt D1/1~~B~Demo~1~~Harry Flawd~Terrace 3~PDT
+2014-08-10~9~Paydirt Final~3~A~SE~2~~Harry Flawd~Cornwall~PDT
+2014-08-06~14~Paydirt H1/2 AFC~3~B~HMSE~2~Y~Harry Flawd~Cornwall~PDT
+2014-08-07~9~Paydirt NFC Draft~~B~Draft~1~~Harry Flawd~Hopewell~PDT
+2014-08-07~10~Paydirt NFC H2/2~3~B~HMSE~2~Y~Harry Flawd~Cornwall~PDT
+2014-08-04~17~Pinata D1/2~~B~Demo~1~~Jennifer Thomas~Terrace 1~PNT
+2014-08-09~19~Pinata D2/2~~B~Demo~1~~Jennifer Thomas~Terrace 1~PNT
+2014-08-04~18~Pinata H1/3~1~B~HMWG~1~~Jennifer Thomas~Paradise~PNT
+2014-08-06~18~Pinata H2/3~1~B~HMWG~1~~Jennifer Thomas~Paradise~PNT
+2014-08-09~20~Pinata H3/3~1~B~HMWG~1~~Jennifer Thomas~Ballroom B~PNT
+2014-08-09~21~Pinata SF/F~1~A~SE~1~Y~Jennifer Thomas~Ballroom B~PNT
+2014-08-05~19~Pirate's Cove D1/1~~B~Demo~1~~Jason Fisher~Terrace 6~PRC
+2014-08-06~9~Pirate's Cove H1/4~4~B~HMWG~2~~Larry Lingle~Marietta~PRC
+2014-08-06~18~Pirate's Cove H2/4~4~B~HMWG~2~~Larry Lingle~Marietta~PRC
+2014-08-07~17~Pirate's Cove H3/4~4~B~HMWG~2~~Larry Lingle~Marietta~PRC
+2014-08-09~20~Pirate's Cove H4/4~4~B~HMWG~2~~Larry Lingle~Marietta~PRC
+2014-08-10~9~Pirate's Cove SF/F~4~A~SE~2~Y~Larry Lingle~Marietta~PRC
+2014-08-06~18~Power Grid D1/1~~B~Demo~1~~Kevin Broh-Kahn~Terrace 2~PGD
+2014-08-09~22~Power Grid Final~5~A~SE~3~~Kevin Broh-Kahn~Laurel Grove~PGD
+2014-08-05~18~Power Grid H1/3~5~B~HMWG~3~~Kevin Broh-Kahn~Paradise~PGD
+2014-08-06~19~Power Grid H2/3~5~B~HMWG~3~~Kevin Broh-Kahn~Paradise~PGD
+2014-08-07~22~Power Grid H3/3~5~B~HMWG~3~~Kevin Broh-Kahn~Marietta~PGD
+2014-08-09~11~Power Grid SF~5~A~SE~3~~Kevin Broh-Kahn~Cornwall~PGD
+2014-08-05~22~Princes of Florence D1/1~~B~Demo~1~~Eric Brosius~Terrace 4~POF
+2014-08-09~14~Princes of Florence F~3~A~SE~2~~Eric Brosius~Wheatland~POF
+2014-08-06~22~Princes of Florence H1/2~3~B~HMW~2~~Eric Brosius~Wheatland~POF
+2014-08-08~11~Princes of Florence H2/2~3~B~HMW~2~~Eric Brosius~Heritage~POF
+2014-08-08~22~Princes of Florence SF~3~A~SE~2~~Eric Brosius~Strasburg~POF
+2014-08-07~22~Pro Golf D1/1~~B~Demo~1~~Rob Drozd~Terrace 4~PGF
+2014-08-07~23~Pro Golf R1/2~3~B~SE~1~Y~Bruce Monnin~Hopewell~PGF
+2014-08-06~9~Puerto Rico D1/1~~B~Demo~1~~Richard Shay~Terrace 1~PRO
+2014-08-07~17~Puerto Rico H1/3~4~B~HMWG~2~~Richard Shay~Ballroom B~PRO
+2014-08-08~20~Puerto Rico H2/3~4~B~HMWG~2~~Richard Shay~Ballroom B~PRO
+2014-08-09~9~Puerto Rico H3/3~4~B~HMWG~2~~Richard Shay~Marietta~PRO
+2014-08-09~15~Puerto Rico R2/4~4~A~SE~2~~Richard Shay~Paradise~PRO
+2014-08-10~9~Puerto Rico SF/F~4~A~SE~2~Y~Richard Shay~Heritage~PRO
+2014-08-05~20~Ra D1/1~~B~Demo~1~~Stephen Scott~Terrace 6~RA!
+2014-08-04~21~Ra H1/4~5~B~HMWG~2~~Stephen Scott~Ballroom B~RA!
+2014-08-05~21~Ra H2/4~5~B~HMWG~2~~Stephen Scott~Ballroom B~RA!
+2014-08-07~17~Ra H3/4~5~B~HMWG~2~~Stephen Scott~Ballroom B~RA!
+2014-08-08~9~Ra H4/4~5~B~HMWG~2~~Stephen Scott~Ballroom B~RA!
+2014-08-08~17~Ra SF/F~5~A~SE~2~Y~Stephen Scott~Ballroom B~RA!
+2014-08-06~18~Ra: The Dice Game H1/4~4~C~HMW~1~~Scott Buckwalter~Ballroom B~RDG
+2014-08-07~9~Ra: The Dice Game H2/4~4~C~HMW~1~~Scott Buckwalter~Heritage~RDG
+2014-08-08~11~Ra: The Dice Game H3/4~4~C~HMW~1~~Scott Buckwalter~Ballroom B~RDG
+2014-08-09~12~Ra: The Dice Game H4/4~4~C~HMW~1~~Scott Buckwalter~Heritage~RDG
+2014-08-09~15~Ra: The Dice Game R2/4~4~A~SE~1~Y~Scott Buckwalter~Marietta~RDG
+2014-08-05~17~Race For the Galaxy D1/2~~B~Demo~1~~John Riston~Terrace 2~RFG
+2014-08-07~21~Race For the Galaxy D2/2~~B~Demo~1~~John Riston~Terrace 2~RFG
+2014-08-06~9~Race For the Galaxy H1/4~3~B~HMW~1~~Rob Renaud~Heritage~RFG
+2014-08-06~10~Race For the Galaxy H2/4~3~B~HMW~1~~Rob Renaud~Heritage~RFG
+2014-08-08~9~Race For the Galaxy H3/4~3~B~HMW~1~~Rob Renaud~Marietta~RFG
+2014-08-08~10~Race For the Galaxy H4/4~3~B~HMW~1~~Rob Renaud~Marietta~RFG
+2014-08-08~21~Race For the Galaxy SF/F~3~A~SE~1~Y~Rob Renaud~Cornwall~RFG
+2014-08-09~17~Rail Baron Final~5~A~SE~5~~Ron Secunda~Wheatland~RBN
+2014-08-06~18~Rail Baron H1/3~5~A~HSW~5~~Ron Secunda~Wheatland~RBN
+2014-08-07~18~Rail Baron H2/3~5~A~HSW~5~~Ron Secunda~Wheatland~RBN
+2014-08-08~9~Rail Baron H3/3~5~A~HSW~5~~Ron Secunda~Wheatland~RBN
+2014-08-08~16~Rail Baron SF~5~A~SE~5~~Ron Secunda~Wheatland~RBN
+2014-08-07~9~Rebel Raiders D1/3~~B~Demo~1~~Fred Schachter~Terrace 2~RBR
+2014-08-07~14~Rebel Raiders D2/3~~B~Demo~1~~Fred Schachter~Terrace 2~RBR
+2014-08-07~19~Rebel Raiders D3/3~~B~Demo~1~~Fred Schachter~Terrace 2~RBR
+2014-08-07~20~Rebel Raiders Mulligan~1~B~SEM~4~~Fred Schachter~Conestoga 2~RBR
+2014-08-08~9~Rebel Raiders R1/4~1~B~SE~4~Y~Fred Schachter~Lampeter~RBR
+2014-08-02~8~Registration~~~Sign-In~11~~Charles Kibler~New Holland~registration
+2014-08-03~8~Registration~~~Sign-In~12~~Charles Kibler~New Holland~registration
+2014-08-04~8~Registration~~~Sign-In~12~~Charles Kibler~New Holland~registration
+2014-08-05~8~Registration~~~Sign-In~12~~Charles Kibler~New Holland~registration
+2014-08-06~8~Registration~~~Sign-In~12~~Charles Kibler~New Holland~registration
+2014-08-07~8~Registration~~~Sign-In~12~~Charles Kibler~New Holland~registration
+2014-08-08~8~Registration~~~Sign-In~12~~Charles Kibler~New Holland~registration
+2014-08-09~8~Registration~~~Sign-In~15~~Charles Kibler~New Holland~registration
+2014-08-10~8~Registration~~~Sign-In~6~~Charles Kibler~New Holland~registration
+2014-08-06~17~Republic of Rome D1/1~~B~Demo~1~~Llew Bardecki~Terrace 7~ROR
+2014-08-08~18~Republic of Rome F~1~A~SE~6~~Llew Bardecki~Lampeter~ROR
+2014-08-06~18~Republic of Rome H1/2~1~B~HMWG~6~~Llew Bardecki~Lampeter~ROR
+2014-08-07~18~Republic of Rome H2/2~1~B~HMWG~6~~Llew Bardecki~Lampeter~ROR
+2014-08-06~12~Robo Rally D1/1~~B~Demo~1~~Marc Houde~Terrace 7~RRY
+2014-08-09~18~Robo Rally Final~5~A~SE~3~~Marc Houde~Ballroom B~RRY
+2014-08-04~15~Robo Rally H1/3~5~B~HWO~3~~Marc Houde~Wheatland~RRY
+2014-08-06~15~Robo Rally H2/3~5~B~HWO~3~~Marc Houde~Marietta~RRY
+2014-08-08~10~Robo Rally H3/3~5~B~HWO~3~~Marc Houde~Marietta~RRY
+2014-08-08~21~Robo Rally SF~5~A~SE~3~~Marc Houde~Conestoga 2~RRY
+2014-08-06~9~Russian Campaign R1/3 FF~5~A~SwEl~4~~Tom Gregorio~Conestoga 1~TRC
+2014-08-02~10~Russian Campaign R1/3 FF PC~5~A~SwEl~4~~Bill Morse~Heritage~TRC
+2014-08-09~9~Russian Campaign SF/F~5~A~SE~4~Y~Bill Morse~Conestoga 1~TRC
+2014-08-06~10~Saint Petersburg D1/1~~B~Demo~1~~Amy Rule~Terrace 4~SPG
+2014-08-06~11~Saint Petersburg H1/3~4~B~HMWG~2~~Amy Rule~Paradise~SPG
+2014-08-07~21~Saint Petersburg H2/3~4~B~HMWG~2~~Amy Rule~Conestoga 2~SPG
+2014-08-08~18~Saint Petersburg H3/3~4~B~HMWG~2~~Amy Rule~Conestoga 3~SPG
+2014-08-09~9~Saint Petersburg SF/F~4~A~SE~2~Y~Amy Rule~Cornwall~SPG
+2014-08-03~22~San Juan D1/1~~B~Demo~1~~Jeff Mullet~Terrace 3~SJN
+2014-08-04~9~San Juan R1/7~4~B~SwEl~1~Y~Jeff Mullet~Ballroom B~SJN
+2014-08-05~19~Santa Fe Rails D1/1~~B~Demo~1~~Rob Kircher~Terrace 3~SFR
+2014-08-04~21~Santa Fe Rails H1/3~1~B~HMWG~2~~Rob Kircher~Limerock~SFR
+2014-08-05~20~Santa Fe Rails H2/3~1~B~HMWG~2~~Rob Kircher~Ballroom A~SFR
+2014-08-06~20~Santa Fe Rails H3/3~1~B~HMWG~2~~Rob Kircher~Ballroom A~SFR
+2014-08-07~9~Santa Fe Rails SF/F~1~B~HMWG~2~Y~Rob Kircher~Strasburg~SFR
+2014-08-04~12~Scripts & Scribes P1/2~~~Preview~1~~Steve Finn~Terrace 4~preview
+2014-08-07~16~Scripts & Scribes P2/2~~~Preview~1~~Steve Finn~Terrace 2~preview
+2014-08-09~19~Second Season: Pro Football P1/1~~~Preview~1~~Keith Avallone~Terrace 4~preview
+2014-08-04~9~Sekigahara D1/1~~B~Demo~1~~Matt Calkins~Terrace 1~SKG
+2014-08-04~10~Sekigahara R1/5~4~B~SwEl~3~Y~Matt Calkins~Ballroom A~SKG
+2014-08-06~16~Sergeants Miniatures Game D1/1~~B~Demo~1~~Rob Belli~Terrace 4~SGM
+2014-08-06~18~Sergeants Miniatures Game H1/4~1~B~HMWG~2~~Rob Belli~Lampeter~SGM
+2014-08-07~9~Sergeants Miniatures Game H2/4~1~B~HMWG~2~~Rob Belli~Lampeter~SGM
+2014-08-07~16~Sergeants Miniatures Game H3/4~1~B~HMWG~2~~Rob Belli~Lampeter~SGM
+2014-08-08~16~Sergeants Miniatures Game H4/4~1~B~HMWG~2~~Rob Belli~Lampeter~SGM
+2014-08-08~19~Sergeants Miniatures Game R2/4~1~B~SE~2~Y~Rob Belli~Lampeter~SGM
+2014-08-08~21~Settlers of Catan D1/1~~B~Demo~1~~Rich Shipley~Terrace 3~SET
+2014-08-05~18~Settlers of Catan Junior R1/2~1~C~SE~1~Y~Tim Mossman~Vista CD~junior
+2014-08-09~9~Settlers of Catan R1/5~6~B~SwEl~2~Y~Rich Shipley~Ballroom B~SET
+2014-08-09~19~Slapshot Junior R1/2~1~C~SE~1~Y~Mark Yoshikawa~Vista CD~junior
+2014-08-09~23~Slapshot R1/3~4~C~SE~0.5~Y~Sean McCulloch~Ballroom B~SLS
+2014-08-07~14~Small World D1/1~~B~Demo~1~~Madison Sites~Terrace 6~SMW
+2014-08-07~15~Small World H1/4~3~B~HWO~2~~Madison Sites~Heritage~SMW
+2014-08-08~17~Small World H2/4~3~B~HWO~2~~Madison Sites~Ballroom B~SMW
+2014-08-09~9~Small World H3/4~3~B~HWO~2~~Madison Sites~Heritage~SMW
+2014-08-09~13~Small World H4/4~3~B~HWO~2~~Madison Sites~Heritage~SMW
+2014-08-09~18~Small World SF/F~3~A~SE~2~Y~Madison Sites~Ballroom B~SMW
+2014-08-07~13~Speed Circuit D1/1~~B~Demo~1~~Chris Long~Terrace 1~SCT
+2014-08-10~9~Speed Circuit Final~4~A~SE~4~~Chris Long~Conestoga 2~SCT
+2014-08-07~15~Speed Circuit H1/3~4~B~SwE~4~~Chris Long~Conestoga 3~SCT
+2014-08-08~9~Speed Circuit H2/3~4~B~SwE~4~~Chris Long~Conestoga 3~SCT
+2014-08-09~13~Speed Circuit H3/3~4~B~SwE~4~~Chris Long~Conestoga 2~SCT
+2014-08-05~12~Speicherstadt 10P~~C~SOG~1~~Keith Levy~Terrace 2-3~sog
+2014-08-05~17~Spyrium D1/1~~B~Demo~1~~Mike Kaltman~Terrace 3~SPY
+2014-08-06~11~Spyrium H1/2~1~B~HMWG~2~~Mike Kaltman~Ballroom A~SPY
+2014-08-08~15~Spyrium H2/2~1~B~HMWG~2~~Mike Kaltman~Strasburg~SPY
+2014-08-09~21~Spyrium SF/F~1~A~SE~2~Y~Mike Kaltman~Wheatland~SPY
+2014-08-02~10~Squad Leader R1/3 FF PC~3~B~SwEl~3~~Bruno Sinigaglio~Heritage~SQL
+2014-08-04~21~Squad Leader D1/1~~B~Demo~1~~Peter Pollard~Terrace 2~SQL
+2014-08-06~9~Squad Leader R1/3 FF~3~B~SwEl~3~~Peter Pollard~Conestoga 1~SQL
+2014-08-09~9~Squad Leader SF/F~3~A~SE~3~Y~Peter Pollard~Conestoga 1~SQL
+2014-08-05~20~Star Wars: Queen's Gambit H1/3~3~A~HMWG~2~~Buddy Sinigaglio~Conestoga 3~QGB
+2014-08-06~21~Star Wars: Queen's Gambit H2/3~3~A~HMWG~2~~Buddy Sinigaglio~Conestoga 3~QGB
+2014-08-07~21~Star Wars: Queen's Gambit H3/3~3~A~HMWG~2~~Buddy Sinigaglio~Conestoga 3~QGB
+2014-08-08~13~Star Wars: Queen's Gambit R2/5~3~A~SE~2~Y~Buddy Sinigaglio~Conestoga 3~QGB
+2014-08-07~18~Stockcar Racing D1/3~~B~Demo~1~~Mike Garton~Terrace 1~SCC
+2014-08-08~14~Stockcar Racing D2/3~~B~Demo~1~~Mike Garton~Terrace 1~SCC
+2014-08-09~10~Stockcar Racing D3/3~~B~Demo~1~~Michael Garton~Terrace 1~SCC
+2014-08-09~17~Stockcar Racing Final~3~A~SE~3~~Mike Garton~Marietta~SCC
+2014-08-07~19~Stockcar Racing H1/3~3~B~HSW~2~~Mike Garton~Marietta~SCC
+2014-08-08~15~Stockcar Racing H2/3~3~B~HSW~2~~Mike Garton~Marietta~SCC
+2014-08-09~11~Stockcar Racing H3/3~3~B~HSW~2~~Mike Garton~Marietta~SCC
+2014-08-06~12~Stone Age D1/1~~B~Demo~1~~Peter Staab~Terrace 4~STA
+2014-08-04~19~Stone Age H1/3~6~B~HWO~2~~Peter Staab~Ballroom B~STA
+2014-08-07~11~Stone Age H2/3~6~B~HWO~2~~Peter Staab~Ballroom B~STA
+2014-08-08~15~Stone Age H3/3~6~B~HWO~2~~Peter Staab~Ballroom B~STA
+2014-08-09~9~Stone Age R2/4~6~A~SE~2~Y~Peter Staab~Conestoga 3~STA
+2014-08-05~18~Superstar Baseball D1/1~~B~Demo~1~~Bill Beckman~Terrace 5~SSB
+2014-08-05~19~Superstar Baseball Draft~3~B~HMW~1~~Bill Beckman~Hopewell~SSB
+2014-08-06~9~Superstar Baseball H1/3 FF~3~B~HMW~1~~Bill Beckman~Cornwall~SSB
+2014-08-07~9~Superstar Baseball H2/3 FF~3~B~HMW~1~~Bill Beckman~Cornwall~SSB
+2014-08-08~9~Superstar Baseball H3/3 FF~3~B~HMW~1~~Bill Beckman~Cornwall~SSB
+2014-08-10~9~Superstar Baseball R2/4~3~A~SE~1~Y~Bill Beckman~Cornwall~SSB
+2014-08-05~10~Sword of Rome 5P~~~SOG~5~~Kirk Harris~Terrace 5~sog
+2014-08-05~22:30~Texas Roadhouse BPA Fundraiser Ends~~~~0~~~~
+2014-08-05~15~Texas Roadhouse BPA Fundraiser Starts~~~~0~~~~
+2014-08-08~14~The Hunters R1/1~1~B~Swiss~3~~Gregory M. Smith~Cornwall~HNT
+2014-08-03~10~Through the Ages D1/1~~B~Demo~1~~Randy Buehler~Terrace 2~AGE
+2014-08-05~10~Through the Ages F~6~A~SE~6~~Randy Buehler~Cornwall~AGE
+2014-08-03~12~Through the Ages H1/3 PC~6~B~HMWG~5~~Randy Buehler~Wheatland~AGE
+2014-08-03~18~Through the Ages H2/3 PC~6~B~HMWG~5~~Randy Buehler~Wheatland~AGE
+2014-08-04~10~Through the Ages H3/3~6~B~HMWG~5~~Randy Buehler~Wheatland~AGE
+2014-08-04~17~Through the Ages SF~6~A~SE~6~~Randy Buehler~Kinderhook~AGE
+2014-08-04~14~Thurn & Taxis D1/2~-~B~Demo~1~~Andy Latto~Terrace 4~T&T
+2014-08-05~18~Thurn & Taxis D2/2~-~B~Demo~1~~Andy Latto~Terrace 4~T&T
+2014-08-04~15~Thurn & Taxis H1/3~4~B~HMWG~2~~Andy Latto~Vista CD~T&T
+2014-08-06~11~Thurn & Taxis H2/3~4~B~HMWG~2~~Andy Latto~Heritage~T&T
+2014-08-07~11~Thurn & Taxis H3/3~4~B~HMWG~2~~Andy Latto~Marietta~T&T
+2014-08-08~9~Thurn & Taxis SF/F~4~A~SE~2~Y~Andy Latto~Laurel Grove~T&T
+2014-08-07~9~Ticket to Ride D1/1~~B~Demo~1~~Claire Brosius~Terrace 1~TTR
+2014-08-07~19~Ticket to Ride H1/3~6~B~HWO~2~~Claire Brosius~Ballroom B~TTR
+2014-08-08~13~Ticket to Ride H2/3~6~B~HWO~2~~Claire Brosius~Ballroom B~TTR
+2014-08-09~15~Ticket to Ride H3/3~6~B~HWO~2~~Claire Brosius~Ballroom B~TTR
+2014-08-09~14~Ticket to Ride Junior R1/2~1~C~SE~1~Y~Matt Beach~Vista CD~junior
+2014-08-10~9~Ticket to Ride R2/4~6~A~SE~2~Y~Claire Brosius~Ballroom B~TTR
+2014-08-05~20~Titan D1/1~~B~Demo~1~~Bruno Wolff~Terrace 4~TTN
+2014-08-09~9~Titan Final~5~A~SE~8~~Bruno Wolff~Lampeter~TTN
+2014-08-05~21~Titan H1/9~5~B~SwEl~4~~Bruno Wolff~Lampeter~TTN
+2014-08-06~9~Titan H2/9~5~B~SwEl~4~~Bruno Wolff~Lampeter~TTN
+2014-08-06~13~Titan H3/9~5~B~SwEl~4~~Bruno Wolff~Lampeter~TTN
+2014-08-06~17~Titan H4/9~5~B~SwEl~4~~Bruno Wolff~Lampeter~TTN
+2014-08-06~21~Titan H5/9~5~B~SwEl~4~~Bruno Wolff~Lampeter~TTN
+2014-08-07~9~Titan H6/9~5~B~SwEl~4~~Bruno Wolff~Lampeter~TTN
+2014-08-07~13~Titan H7/9~5~B~SwEl~4~~Bruno Wolff~Lampeter~TTN
+2014-08-07~17~Titan H8/9~5~B~SwEl~4~~Bruno Wolff~Lampeter~TTN
+2014-08-07~21~Titan H9/9~5~B~SwEl~4~~Bruno Wolff~Lampeter~TTN
+2014-08-08~9~Titan SF~5~A~SE~8~~Bruno Wolff~Lampeter~TTN
+2014-08-05~19~Titan Two D1/1~~B~Demo~1~~Rich Atwater~Terrace 4~TT2
+2014-08-05~20~Titan Two R1-5~3~B~SE~3~Y~Rich Atwater~Lampeter~TT2
+2014-08-06~17~Titan: The Arena H1/3~3~B~HMW~1~~Greg Crowe~Heritage~TTA
+2014-08-08~23~Titan: The Arena H2/3~3~B~HMW~1~~Greg Crowe~Wheatland~TTA
+2014-08-09~14~Titan: The Arena H3/3~3~B~HMW~1~~Greg Crowe~Marietta~TTA
+2014-08-05~14~Titan: The Arena Junior R1/2~1~C~SE~1~Y~Greg Crowe~Vista CD~junior
+2014-08-09~16~Titan: The Arena SF/F~3~A~SE~1~Y~Greg Crowe~Strasburg~TTA
+2014-08-06~11~Titan: The Arena D1/1~~B~Demo~1~~Greg Crowe~Terrace 4~TTA
+2014-08-06~11~Trademarks & Copyrights~~~Seminar~2~~Anthony Verna~Hopewell~seminar
+2014-08-07~18~Trains, Planes & Autos Junior R1/2~1~C~SE~1~Y~Paul Owen~Vista CD~junior
+2014-08-10~9~Trans America D1/1~~B~Demo~1~~Dave Bohnenberger~Terrace 1~TAM
+2014-08-05~11~Trans America Junior R1/2~1~C~SE~1~Y~Ewan McNay~Vista CD~junior
+2014-08-10~10~Trans America R1/3~1~B~SE~1~Y~Dave Bohnenberger~Paradise~TAM
+2014-08-08~9~Twilight Imperium F~1~A~SE~8~~Michael Buccheri~Kinderhook~TWI
+2014-08-07~9~Twilight Imperium H1/2~1~A~HWO~5~~Michael Buccheri~Kinderhook~TWI
+2014-08-07~18~Twilight Imperium H2/2~1~A~HWO~5~~Michael Buccheri~Wheatland~TWI
+2014-08-07~21~Twilight Struggle D1/1~~B~Demo~1~~George Young~Terrace 4~TWS
+2014-08-08~9~Twilight Struggle R1/6~1~B~Swiss~3~Y~George Young~Lampeter~TWS
+2014-08-05~21~Tzolk'in D1/2~~B~Demo~1~~Chris Yaure~Terrace 4~TZK
+2014-08-06~21~Tzolk'in D2/2~~B~Demo~1~~Chris Yaure~Terrace 4~TZK
+2014-08-05~22~Tzolk'in Mulligan~1~B~SEM~2~~Chris Yaure~Paradise~TZK
+2014-08-06~22~Tzolk'in R1/3~1~B~SE~2~Y~Chris Yaure~Heritage~TZK
+2014-08-04~14~Union Pacific R1/3~1~B~SwEl~4~~Max Jamelli~Ballroom B~UNP
+2014-08-04~18~Union Pacific R2/3~1~B~SwEl~2~Y~Max Jamelli~Ballroom B~UNP
+2014-08-07~9~Up Front R1/8~4~A~SwEl~2~Y~Jim Burnett~Lampeter~UPF
+2014-08-05~20~Vegas Showdown D1/1~~B~Demo~1~~Eric Freeman~Terrace 3~VSD
+2014-08-08~15~Vegas Showdown F~4~A~SE~2~~Eric Freeman~Laurel Grove~VSD
+2014-08-04~23~Vegas Showdown H1/3~4~B~HMWG~2~~Eric Freeman~Vista CD~VSD
+2014-08-06~9~Vegas Showdown H2/3~4~B~HMWG~2~~Eric Freeman~Ballroom B~VSD
+2014-08-07~9~Vegas Showdown H3/3~4~B~HMWG~2~~Eric Freeman~Conestoga 3~VSD
+2014-08-07~19~Vegas Showdown SF~4~A~SE~2~~Eric Freeman~Conestoga 3~VSD
+2014-08-08~10~Vendors Area Opens~~~Sales~8~~Vendors~Ballroom A~auction
+2014-08-09~10~Vendors Area Opens~~~Sales~8~~Vendors~Ballroom A~auction
+2014-08-10~10~Vendors Area Opens~~~Sales~4~~Vendors~Ballroom A~auction
+2014-08-03~9~Victory in the Pacific R1/8 PC~6~A~SwEl~5~Y~Charles Drozd~Marietta~VIP
+2014-08-03~10~Virgin Queen D1/1~~B~Demo~1~~Ed Beach~Terrace 5~VGQ
+2014-08-04~16~Virgin Queen F~5~A~SE~5~~Ed Beach~Kinderhook~VGQ
+2014-08-03~12~Virgin Queen H1/2 PC~5~B~HMWG~5~~Ed Beach~Wheatland~VGQ
+2014-08-03~18~Virgin Queen H2/2 PC~5~B~HMWG~5~~Ed Beach~Kinderhook~VGQ
+2014-08-04~9~Virgin Queen SF~5~A~SE~5~~Ed Beach~Kinderhook~VGQ
+2014-08-09~10~Wallenstein 5P~~~SOG~2~~Ivan Lawson~Terrace 7~sog
+2014-08-07~9~War At Sea R1/8~4~A~SwEl~2~Y~Vince Meconi~Lampeter~WAS
+2014-08-02~14~War of the Ring Mulligan PC~4~A~SEM~5~~Kevin Wojtaszczyk~Marietta~WOR
+2014-08-02~19~War of the Ring R1/5 PC~4~A~SE~5~Y~Kevin Wojtaszczyk~Marietta~WOR
+2014-08-04~9~Warriors of God D1/1~~B~Demo~1~~Terry Coleman~Terrace 3~WOG
+2014-08-03~19~Warriors of God Mulligan PC~3~B~SEM~4~~Bruce Monnin~Paradise~WOG
+2014-08-04~10~Warriors of God R1/5~3~B~SE~4~Y~Bruce Monnin~Paradise~WOG
+2014-08-07~19~Washington's War D1/1~~B~Demo~1~~Keith Wixson~Terrace 1~WWR
+2014-08-09~9~Washington's War R1/7~4~B~SwEl~2~Y~Keith Wixson~Lampeter~WWR
+2014-08-06~9~Waterloo R1/3 FF~4~A~SwEl~4~~Marty Musella~Conestoga 1~WAT
+2014-08-02~10~Waterloo R1/3 FF PC~4~A~SwEl~4~~Bill Morse~Heritage~WAT
+2014-08-09~10~Waterloo SF/F~4~A~SE~4~Y~Marty Musella~Conestoga 1~WAT
+2014-08-06~14~WBC 2016 Venue Presentation~~~Seminar~0.5~~John Hess~Hopewell~seminar
+2014-08-06~15~WBC 2016 Venue Presentation~~~Seminar~0.5~~John Hess~Hopewell~seminar
+2014-08-06~16~WBC 2016 Venue Presentation~~~Seminar~0.5~~John Hess~Hopewell~seminar
+2014-08-06~17~WBC 2016 Venue Presentation~~~Seminar~0.5~~John Hess~Hopewell~seminar
+2014-08-06~19~WBC 2016 Venue Presentation~~~Seminar~0.5~~John Hess~Hopewell~seminar
+2014-08-06~20~WBC 2016 Venue Presentation~~~Seminar~0.5~~John Hess~Hopewell~seminar
+2014-08-07~10~WBC 2016 Venue Presentation~~~Seminar~0.5~~John Hess~Hopewell~seminar
+2014-08-07~11~WBC 2016 Venue Presentation~~~Seminar~0.5~~John Hess~Hopewell~seminar
+2014-08-07~13~WBC 2016 Venue Presentation~~~Seminar~0.5~~John Hess~Hopewell~seminar
+2014-08-07~14~WBC 2016 Venue Presentation~~~Seminar~0.5~~John Hess~Hopewell~seminar
+2014-08-07~15~WBC 2016 Venue Presentation~~~Seminar~0.5~~John Hess~Hopewell~seminar
+2014-08-05~17~WBC Legion XXIV Rollcall~~~Meeting~0.5~~Ken Whitesell~Hopewell~meeting
+2014-08-07~10~WBC: The Board Game P1/3~~~Preview~1~~Byron Collars~Terrace 1~preview
+2014-08-07~16~WBC: The Board Game P2/3~~~Preview~1~~Byron Collars~Terrace 1~preview
+2014-08-09~11~WBC: The Board Game P3/3~~~Preview~1~~Byron Collars~Terrace 1~preview
+2014-08-04~11~Wellington D1/1~~B~Demo~1~~Patrick Duffy~Terrace 7~WLL
+2014-08-07~18~Wellington F~1~A~SE~5~~Patrick Duffy~Lampeter~WLL
+2014-08-04~13~Wellington H1/2~1~B~HSW~5~~Patrick Duffy~Wheatland~WLL
+2014-08-05~18~Wellington H2/2~1~B~HSW~5~~Patrick Duffy~Lampeter~WLL
+2014-08-06~13~Wellington SF~1~A~SE~5~~Patrick Duffy~Lampeter~WLL
+2014-08-05~17~Wilderness War D1/1~~B~Demo~1~~Keith Wixson~Terrace 4~WNW
+2014-08-05~19~Wilderness War Mulligan~3~B~SEM~4~~Keith Wixson~Lampeter~WNW
+2014-08-06~9~Wilderness War R1/4~3~B~SE~4~Y~Keith Wixson~Lampeter~WNW
+2014-08-05~22~Win, Place & Show D1/1~~B~Demo~1~~Jim Burnett~Terrace 7~WPS
+2014-08-09~19~Win, Place & Show Final~1~A~SE~3~~Jim Burnett~Cornwall~WPS
+2014-08-03~19~Win, Place & Show H1/4 PC~1~B~HWO~3~~Jim Burnett~Wheatland~WPS
+2014-08-05~23~Win, Place & Show H2/4~1~B~HWO~3~~Jim Burnett~Cornwall~WPS
+2014-08-08~9~Win, Place & Show H3/4~1~B~HWO~3~~Jim Burnett~Ballroom B~WPS
+2014-08-09~16~Win, Place & Show H4/4~1~B~HWO~3~~Jim Burnett~Cornwall~WPS
+2014-08-08~18~Wits & Wagers 1/1~~~MP Game~2~~Luke Warren~Hopewell~witswagers
+2014-08-06~10~Wooden Ships & Iron Men D1/1~~B~Demo~1~~Tim Hitchings~Terrace 1~WSM
+2014-08-06~9~Wooden Ships & Iron Men R1/3 FF~1~B~SwEl~2~~Tim Hitchings~Conestoga 1~WSM
+2014-08-02~10~Wooden Ships & Iron Men R1/3 FF PC~1~B~SwEl~2~~Bruno Sinigaglio~Heritage~WSM
+2014-08-09~19~Wooden Ships & Iron Men SF/F~1~A~SE~2~Y~Tim Hitchings~Conestoga 1~WSM
+2014-08-09~23~World At War Aftermath~~~Meeting~1~~Randy Scheers~Hopewell~WAW
+2014-08-05~18~World At War R1/1~6~A~Other~65~~Randy Scheers~Lampeter~WAW
+2014-08-04~10~Yedo 5P~~C~SOG~4~~Keith Levy~Terrace 6~sog
+2014-08-04~22~Yspahan D1/2~~B~Demo~1~~Chris Yaure~Terrace 7~YSP
+2014-08-09~18~Yspahan D2/2~~B~Demo~1~~Chris Yaure~Terrace 7~YSP
+2014-08-04~23~Yspahan Mulligan~1~B~SEM~1~~Chris Yaure~Marietta~YSP
+2014-08-09~19~Yspahan R1/4~1~B~SE~1~~Chris Yaure~Heritage~YSP
+2014-08-10~9~Yspahan R2/4~1~A~SE~1~Y~Chris Yaure~Heritage~YSP

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="junior">#278B43</color>
+    <color name="open_tournament">#F37029</color>
+    <color name="non_tournament">#004688</color>
+    <color name="seminar">#6B0B68</color>
+    <color name="qualify">#ED2024</color>
+    <color name="divider">#000000</color>
+
+    <!-- list -->
+    <color name="item_focused">#7FBFFF</color>
+    <color name="item_pressed">#007fFF</color>
+    <color name="item_selected">@color/action_bar</color>
+    <color name="group_default">@color/default_button_enabled</color>
+    <color name="group_focused">@color/action_bar</color>
+    <color name="group_pressed">@color/default_button_pressed</color>
+    <color name="ended_light">#cccccc</color>
+    <color name="ended_dark">#aaaaaa</color>
+    <color name="current_light">#E5FFE5</color>
+    <color name="current_dark">#BFFFBF</color>
+    <color name="future_light">#FFFFE5</color>
+    <color name="future_dark">#FFFFBF</color>
+
+    <!-- action bar -->
+    <color name="action_bar">#eFBFBF</color>
+    <color name="drop_down">@color/default_button_disabled</color>
+    <color name="activity_back">#f2f8FF</color>
+
+    <!-- buttons -->
+    <color name="default_button_pressed">#600000</color>
+    <color name="default_button_disabled">@color/action_bar</color>
+    <color name="default_button_enabled">#990000</color>
+
+</resources>
