@@ -1,13 +1,12 @@
 package org.boardgamers.wbc;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
@@ -15,45 +14,60 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ScheduleFragment extends Fragment {
+public class Summary extends FragmentActivity {
 	final static String TAG="Schedule Fragment";
 
 	private ExpandListAdapter listAdapter;
 	private ExpandableListView listView;
 
-	private int dayID;
+	private String[] dayStrings;
+
+	private ArrayList<EventGroup> summaryList;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	    Bundle savedInstanceState) {
-		View view=inflater
-		    .inflate(R.layout.schedule_fragment, container, false);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-		dayID=getArguments().getInt("current_day");
-		listAdapter=new ExpandListAdapter(this.getActivity(),
-		    ScheduleActivity.dayList.get(dayID));
+		setContentView(R.layout.summary);
+		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		listView=(ExpandableListView) view.findViewById(R.id.sf_schedule);
+		String summaryFormat=getIntent().getStringExtra("format");
+
+		// get summary list
+		dayStrings=getResources().getStringArray(R.array.days);
+
+		summaryList=new ArrayList<EventGroup>(dayStrings.length);
+		for (int i=0; i<dayStrings.length; i++) {
+			for (int j=0; j<20; j++) {
+				summaryList.add(new EventGroup(j+7, i*24+j+7, new ArrayList<Event>()));
+			}
+		}
+
+		ArrayList<Event> group;
+		Event event;
+		for (int i=0; i<ScheduleActivity.dayList.size(); i++) {
+			for (int j=0; j<ScheduleActivity.dayList.get(i).size(); j++) {
+				group=ScheduleActivity.dayList.get(i).get(j).events;
+
+				for (int k=0; k<group.size(); k++) {
+					event=group.get(k);
+
+					if (event.starred&&summaryFormat.equalsIgnoreCase("Starred")
+					    ||event.format.equalsIgnoreCase(summaryFormat))
+						summaryList.get(i*19+j).events.add(event);
+				}
+			}
+		}
+
+		listAdapter=new ExpandListAdapter(this, summaryList);
+
+		listView=(ExpandableListView) findViewById(R.id.summary_list_view);
 		listView.setAdapter(listAdapter);
-		listView.setDividerHeight(0);
 
 		expandAll(0);
-
-		return view;
-	}
-
-	@Override
-	public void onResume() {
-		MyApp.updateTime(getResources());
-		if (dayID==MyApp.day)
-			listView.setSelectedGroup(MyApp.hour-5);
-
-		listAdapter.notifyDataSetChanged();
-
-		super.onResume();
 	}
 
 	public void expandAll(int start) {
@@ -66,34 +80,22 @@ public class ScheduleFragment extends Fragment {
 			listView.collapseGroup(i);
 	}
 
-	public void selectGame(int gID, String eID) {
-		MyApp.SELECTED_GAME_ID=gID;
-		MyApp.SELECTED_EVENT_ID=eID;
-
-		Intent intent=new Intent(getActivity(), TournamentActivity.class);
-		startActivity(intent);
-	}
-
 	class ExpandListAdapter extends BaseExpandableListAdapter {
-		private final ArrayList<EventGroup> hours;
 		private final LayoutInflater inflater;
 
 		public ExpandListAdapter(Context c, ArrayList<EventGroup> h) {
-			hours=h;
 			inflater=LayoutInflater.from(c);
 		}
 
-		public void addItem(Event e, EventGroup h) {
-			if (!hours.contains(h)) {
-				hours.add(h);
-			}
-			int index=hours.indexOf(h);
-			hours.get(index).events.add(e);
+		@Override
+		public Object getChild(int arg0, int arg1) {
+			return summaryList.get(arg0).events.get(arg1);
 		}
 
 		@Override
-		public Object getChild(int groupPosition, int childPosition) {
-			return hours.get(groupPosition).events.get(childPosition);
+		public long getChildId(int arg0, int arg1) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 
 		@Override
@@ -151,17 +153,6 @@ public class ScheduleFragment extends Fragment {
 				}
 			});
 
-			final int group=groupPosition;
-			ImageView starIV=(ImageView) view.findViewById(R.id.si_star);
-			starIV.setImageResource(event.starred ? R.drawable.star_on
-			    : R.drawable.star_off);
-			starIV.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					changeEventStar(event, !event.starred, group);
-				}
-			});
-
 			boolean started=event.day*24+event.hour<=MyApp.day*24+MyApp.hour;
 			boolean ended=event.day*24+event.hour+event.totalDuration<=MyApp.day
 			    *24+MyApp.hour;
@@ -183,27 +174,28 @@ public class ScheduleFragment extends Fragment {
 					view.setBackgroundResource(R.drawable.future_dark);
 			}
 
-			final int tID=event.tournamentID;
-			final String eID=event.identifier;
-			view.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					selectGame(tID, eID);
-				}
-			});
-
 			return view;
 		}
 
-		public void showMapDialog(String room) {
-			Intent intent=new Intent(getActivity(), Map.class);
-			intent.putExtra("room", room);
-			startActivity(intent);
+		@Override
+		public int getChildrenCount(int arg0) {
+			return summaryList.get(arg0).events.size();
 		}
 
 		@Override
-		public Object getGroup(int groupPosition) {
-			return hours.get(groupPosition);
+		public Object getGroup(int arg0) {
+			return summaryList.get(arg0);
+		}
+
+		@Override
+		public int getGroupCount() {
+			return summaryList.size();
+		}
+
+		@Override
+		public long getGroupId(int arg0) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 
 		@Override
@@ -214,7 +206,7 @@ public class ScheduleFragment extends Fragment {
 
 			TextView name=(TextView) view.findViewById(R.id.sg_name);
 
-			SharedPreferences settings=getActivity().getSharedPreferences(
+			SharedPreferences settings=getSharedPreferences(
 			    getResources().getString(R.string.sp_file_name),
 			    Context.MODE_PRIVATE);
 
@@ -230,8 +222,6 @@ public class ScheduleFragment extends Fragment {
 
 			if (groupPosition>0) {
 				int i;
-
-				// group is 7pm or 8pm : only search events starting today
 				if (groupPosition<3)
 					i=dayID;
 				else
@@ -289,56 +279,22 @@ public class ScheduleFragment extends Fragment {
 		}
 
 		@Override
-		public int getChildrenCount(int groupPosition) {
-			return hours.get(groupPosition).events.size();
-		}
-
-		@Override
-		public int getGroupCount() {
-			return hours.size();
-		}
-
-		@Override
-		public long getGroupId(int groupPosition) {
-			return hours.get(groupPosition).ID;
-		}
-
-		@Override
 		public boolean hasStableIds() {
+			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
-		public boolean isChildSelectable(int groupPosition, int childPosition) {
+		public boolean isChildSelectable(int arg0, int arg1) {
+			// TODO Auto-generated method stub
 			return false;
 		}
 
-		@Override
-		public long getChildId(int groupPosition, int childPosition) {
-			return childPosition;
-		}
 	}
 
-	public void changeEventStar(Event event, boolean starred, int groupPosition) {
-		// update event's star
-		if (groupPosition==0) {
-			// if in first group, need to find original event
-			List<Event> events=ScheduleActivity.dayList.get(event.day).get(
-			    event.hour-6).events;
-			for (int i=0; i<events.size(); i++) {
-				Event temp=events.get(i);
-				if (temp.identifier.equalsIgnoreCase(event.identifier)) {
-					temp.starred=starred;
-					break;
-				}
-			}
-		} else
-			event.starred=starred;
-		if (starred)
-			ScheduleActivity.addStarredEvent(event);
-		else
-			ScheduleActivity.removeStarredEvent(event.identifier, event.day);
-
-		listAdapter.notifyDataSetChanged();
+	public void showMapDialog(String room) {
+		Intent intent=new Intent(this, Map.class);
+		intent.putExtra("room", room);
+		startActivity(intent);
 	}
 }

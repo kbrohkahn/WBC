@@ -40,9 +40,8 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 		dayStrings=context.getResources().getStringArray(R.array.days);
 
 		ArrayList<EventGroup> temp;
-
 		ScheduleActivity.dayList=new ArrayList<ArrayList<EventGroup>>(
-				dayStrings.length);
+		    dayStrings.length);
 		for (int i=0; i<dayStrings.length; i++) {
 			temp=new ArrayList<EventGroup>();
 			temp.add(new EventGroup(0, i*24, new ArrayList<Event>()));
@@ -51,9 +50,9 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 				temp.add(new EventGroup(j+7, i*24+j+7, new ArrayList<Event>()));
 			}
 			ScheduleActivity.dayList.add(temp);
-
-			super.onPreExecute();
 		}
+
+		super.onPreExecute();
 	}
 
 	@Override
@@ -61,8 +60,8 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 		final Resources resources=context.getResources();
 
 		SharedPreferences sp=context.getSharedPreferences(
-				resources.getString(R.string.sp_file_name),
-				Context.MODE_PRIVATE);
+		    resources.getString(R.string.sp_file_name),
+		    Context.MODE_PRIVATE);
 		String userEventPrefString=resources.getString(R.string.sp_user_event);
 		String starPrefString=resources.getString(R.string.sp_event_starred);
 
@@ -84,7 +83,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 
 		tournamentID=0;
 		tournament=new Tournament(tournamentID, tournamentTitle,
-				tournamentLabel, false, 0, "Me");
+		    tournamentLabel, false, 0, "Me");
 		tournament.visible=sp.getBoolean("vis_"+tournamentTitle, true);
 		tournament.finish=sp.getInt("fin_"+tournamentTitle, 0);
 
@@ -105,7 +104,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 
 			identifier=String.valueOf(day*24+hour)+eventTitle;
 			event=new Event(identifier, 0, day, hour, eventTitle, "", "",
-					false, duration, false, duration, location);
+			    false, duration, false, duration, location);
 			event.starred=sp.getBoolean(starPrefString+identifier, false);
 
 			ScheduleActivity.dayList.get(day).get(hour-6).events.add(0, event);
@@ -117,7 +116,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 
 		// get events (may need update)
 		int scheduleVersion=sp.getInt(
-				resources.getString(R.string.sp_2014_schedule_version), -1);
+		    resources.getString(R.string.sp_2014_schedule_version), -1);
 		int newVersion=scheduleVersion;
 
 		InputStream is=null;
@@ -134,10 +133,10 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 			is=context.getAssets().open("schedule2014.txt");
 		} catch (IOException e2) {
 			Toast.makeText(
-					context,
-					"ERROR: Could not find schedule file,"
-							+"contact dev@boardgamers.org for help.",
-					Toast.LENGTH_LONG).show();
+			    context,
+			    "ERROR: Could not find schedule file,"
+			        +"contact dev@boardgamers.org for help.",
+			    Toast.LENGTH_LONG).show();
 			e2.printStackTrace();
 			return -1;
 		}
@@ -145,10 +144,10 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 			isr=new InputStreamReader(is);
 		} catch (IllegalStateException e1) {
 			Toast.makeText(
-					context,
-					"ERROR: Could not open schedule file,"
-							+"contact dev@boardgamers.org for help.",
-					Toast.LENGTH_LONG).show();
+			    context,
+			    "ERROR: Could not open schedule file,"
+			        +"contact dev@boardgamers.org for help.",
+			    Toast.LENGTH_LONG).show();
 			e1.printStackTrace();
 			return -1;
 		}
@@ -162,11 +161,11 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 
 		try {
 			final String preExtraStrings[]= { " AFC", " NFC", " FF", " PC",
-					" Circus", " After Action", " Aftermath" };
+			    " Circus", " After Action", " Aftermath" };
 			final String postExtraStrings[]= { " Demo" };
 
 			final String daysForParsing[]=context.getResources()
-					.getStringArray(R.array.daysForParsing);
+			    .getStringArray(R.array.daysForParsing);
 
 			while ((line=reader.readLine())!=null) {
 				rowData=line.split("~");
@@ -220,7 +219,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 
 					// duration
 					if (rowData[6].equalsIgnoreCase("")
-							||rowData[6].equalsIgnoreCase("-"))
+					    ||rowData[6].equalsIgnoreCase("-"))
 						duration=0;
 					else
 						duration=Double.valueOf(rowData[6]);
@@ -247,7 +246,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 					index=temp.indexOf(eventExtraString);
 					if (index>-1) {
 						temp=temp.substring(0, index)
-								+temp.substring(index+eventExtraString.length());
+						    +temp.substring(index+eventExtraString.length());
 					}
 				}
 
@@ -266,9 +265,9 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 				}
 
 				if (eventTitle.indexOf("Junior")>-1
-						||eventTitle.indexOf("COIN series")==0
-						||format.equalsIgnoreCase("SOG")
-						||format.equalsIgnoreCase("Preview")) {
+				    ||eventTitle.indexOf("COIN series")==0
+				    ||format.equalsIgnoreCase("SOG")
+				    ||format.equalsIgnoreCase("Preview")) {
 					tournamentTitle=temp;
 					tournamentLabel="-";
 
@@ -292,9 +291,9 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 
 					// search for non tournament main titles
 					String[] nonTournamentStrings= { "Open Gaming",
-							"Registration", "Vendors Area", "World at War",
-							"Wits & Wagers", "Texas Roadhouse BPA Fundraiser",
-							"Memoir: D-Day" };
+					    "Registration", "Vendors Area", "World at War",
+					    "Wits & Wagers", "Texas Roadhouse BPA Fundraiser",
+					    "Memoir: D-Day" };
 					for (int i=0; i<nonTournamentStrings.length; i++) {
 						if (temp.indexOf(nonTournamentStrings[i])==0) {
 							tournamentTitle=nonTournamentStrings[i];
@@ -306,9 +305,9 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 				// check if last 5 in list contains this tournament
 				tournamentID=-1;
 				for (index=Math.max(0, tournaments.size()-5); index<tournaments
-						.size(); index++) {
+				    .size(); index++) {
 					if (tournaments.get(index).title
-							.equalsIgnoreCase(tournamentTitle)) {
+					    .equalsIgnoreCase(tournamentTitle)) {
 						tournamentID=index;
 						break;
 					}
@@ -326,10 +325,10 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 				} else {
 					tournamentID=tournaments.size();
 					tournament=new Tournament(tournamentID, tournamentTitle,
-							tournamentLabel, isTournamentEvent, prize, gm);
+					    tournamentLabel, isTournamentEvent, prize, gm);
 
 					tournament.visible=sp.getBoolean("vis_"+tournamentTitle,
-							true);
+					    true);
 					tournament.finish=sp.getInt("fin_"+tournamentTitle, 0);
 
 					tournaments.add(tournament);
@@ -365,12 +364,12 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 						qualify=true;
 						totalDuration*=2;
 					} else if (continuous&&shortEventTitle.indexOf("R")==0
-							&&shortEventTitle.indexOf("/")>-1) {
+					    &&shortEventTitle.indexOf("/")>-1) {
 						int dividerIndex=shortEventTitle.indexOf("/");
 						int startRound=Integer.valueOf(shortEventTitle
-								.substring(1, dividerIndex));
+						    .substring(1, dividerIndex));
 						int endRound=Integer.valueOf(shortEventTitle
-								.substring(dividerIndex+1));
+						    .substring(dividerIndex+1));
 
 						int currentTime=hour;
 						for (int round=0; round<endRound-startRound; round++) {
@@ -380,7 +379,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 							if (currentTime>24) {
 								if (currentTime>=24+9)
 									Log.d(TAG, "Event "+eventTitle
-											+" goes past 9");
+									    +" goes past 9");
 								totalDuration+=9-(currentTime-24);
 								currentTime=9;
 							}
@@ -399,8 +398,8 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 								index=temp.indexOf(eventExtraString);
 								if (index>-1) {
 									temp=temp.substring(0, index)
-											+temp.substring(index
-													+eventExtraString.length());
+									    +temp.substring(index
+									        +eventExtraString.length());
 								}
 							}
 
@@ -416,12 +415,12 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 									else {
 
 										int prevStartRound=Integer
-												.valueOf(shortEventTitle
-														.substring(1,
-																dividerIndex));
+										    .valueOf(shortEventTitle
+										        .substring(1,
+										            dividerIndex));
 
 										int realNumRounds=startRound
-												-prevStartRound;
+										    -prevStartRound;
 
 										currentTime=hour;
 										prevEvent.totalDuration=0;
@@ -433,8 +432,8 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 											if (currentTime>24) {
 												if (currentTime>=24+9)
 													Log.d(TAG, "Event "
-															+prevEvent.title
-															+" goes past 9");
+													    +prevEvent.title
+													    +" goes past 9");
 												prevEvent.totalDuration+=9-(currentTime-24);
 												currentTime=9;
 											}
@@ -445,27 +444,27 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 									}
 
 									List<Event> searchList=ScheduleActivity.dayList
-											.get(prevEvent.day).get(
-													prevEvent.hour-6).events;
+									    .get(prevEvent.day).get(
+									        prevEvent.hour-6).events;
 									for (int i=0; i<searchList.size(); i++) {
 										if (searchList.get(i).identifier
-												.equalsIgnoreCase(prevEvent.identifier))
+										    .equalsIgnoreCase(prevEvent.identifier))
 											searchList.get(i).totalDuration=prevEvent.totalDuration;
 									}
 
 									searchList=ScheduleActivity.dayList.get(
-											prevEvent.day).get(0).events;
+									    prevEvent.day).get(0).events;
 									for (int i=0; i<searchList.size(); i++) {
 										if (searchList.get(i).identifier
-												.equalsIgnoreCase(prevEvent.identifier))
+										    .equalsIgnoreCase(prevEvent.identifier))
 											searchList.get(i).totalDuration=prevEvent.totalDuration;
 									}
 
 									Log.d(TAG,
-											"Event "
-													+prevEvent.title
-													+" duration changed to "
-													+String.valueOf(prevEvent.totalDuration));
+									    "Event "
+									        +prevEvent.title
+									        +" duration changed to "
+									        +String.valueOf(prevEvent.totalDuration));
 								}
 							}
 						}
@@ -482,11 +481,11 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 				identifier=String.valueOf(day*24+hour)+eventTitle;
 
 				event=new Event(identifier, tournamentID, day, hour,
-						eventTitle, eClass, format, qualify, duration,
-						continuous, totalDuration, location);
+				    eventTitle, eClass, format, qualify, duration,
+				    continuous, totalDuration, location);
 
 				event.starred=sp.getBoolean(starPrefString+event.identifier,
-						false);
+				    false);
 
 				prevEvent=event;
 
@@ -494,14 +493,11 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 				change="";
 
 				/*
-				 * if
-				 * (event.title.equalsIgnoreCase("Age of Renaissance H1/3 PC"))
-				 * { int newDay=5;
+				 * if (event.title.equalsIgnoreCase("Age of Renaissance H1/3 PC")) { int
+				 * newDay=5;
 				 * 
-				 * if (scheduleVersion<0) {
-				 * change=event.title+": Day changed from "
-				 * +dayStrings[event.day]+" to " +dayStrings[newDay];
-				 * newVersion=0; }
+				 * if (scheduleVersion<0) { change=event.title+": Day changed from "
+				 * +dayStrings[event.day]+" to " +dayStrings[newDay]; newVersion=0; }
 				 * 
 				 * event.day=newDay; }
 				 */
@@ -511,13 +507,13 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 
 				// LOAD INTO LIST
 				ArrayList<Event> searchList=ScheduleActivity.dayList.get(
-						event.day).get(event.hour-6).events;
+				    event.day).get(event.hour-6).events;
 				if (eventTitle.indexOf("Junior")>-1) {
 					index=0;
 					for (; index<searchList.size(); index++) {
 						tempEvent=searchList.get(index);
 						if (tempEvent.title.indexOf("Junior")==-1
-								&&tempEvent.tournamentID>0)
+						    &&tempEvent.tournamentID>0)
 							break;
 					}
 				} else if (!isTournamentEvent||format.equalsIgnoreCase("Demo")) {
@@ -525,8 +521,8 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 					for (; index<searchList.size(); index++) {
 						tempEvent=searchList.get(index);
 						if (tempEvent.eClass.length()>0
-								&&tempEvent.title.indexOf("Junior")==-1
-								&&!tempEvent.format.equalsIgnoreCase("Demo"))
+						    &&tempEvent.title.indexOf("Junior")==-1
+						    &&!tempEvent.format.equalsIgnoreCase("Demo"))
 							break;
 					}
 				} else if (event.qualify) {
@@ -541,7 +537,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 				}
 
 				ScheduleActivity.dayList.get(event.day).get(event.hour-6).events
-						.add(index, event);
+				    .add(index, event);
 
 				if (event.starred)
 					ScheduleActivity.addStarredEvent(event);
@@ -559,17 +555,17 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 			// save update version
 			SharedPreferences.Editor editor=sp.edit();
 			editor.putInt(
-					resources.getString(R.string.sp_2014_schedule_version),
-					newVersion);
+			    resources.getString(R.string.sp_2014_schedule_version),
+			    newVersion);
 			editor.commit();
 
 		} catch (IOException e) {
 
 			Toast.makeText(
-					context,
-					"ERROR: Could not parse schedule file,"
-							+"contact dev@boardgamers.org for help.",
-					Toast.LENGTH_LONG).show();
+			    context,
+			    "ERROR: Could not parse schedule file,"
+			        +"contact dev@boardgamers.org for help.",
+			    Toast.LENGTH_LONG).show();
 			e.printStackTrace();
 			return -1;
 		}
@@ -577,12 +573,12 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 		MyApp.allTournaments=tournaments;
 
 		Log.d(TAG, "Finished load, "+String.valueOf(tournamentID)
-				+" total tournaments and "+String.valueOf(lineNum)
-				+" total events");
+		    +" total tournaments and "+String.valueOf(lineNum)
+		    +" total events");
 		Log.d(TAG, "Of total, "+String.valueOf(numTournaments)
-				+" are tournaments, "+String.valueOf(numJuniors)
-				+" are juniors, "+String.valueOf(numPreviews)+" are previews, "
-				+String.valueOf(numSeminars)+" are seminars, ");
+		    +" are tournaments, "+String.valueOf(numJuniors)
+		    +" are juniors, "+String.valueOf(numPreviews)+" are previews, "
+		    +String.valueOf(numSeminars)+" are seminars, ");
 
 		return 1;
 	}

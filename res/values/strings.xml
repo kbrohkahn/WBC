@@ -84,6 +84,7 @@
     <!-- SEARCH DIALOG -->
     <string name="ds_tournament">Tournament</string>
     <string name="ds_tournament_hint">Enter tournament</string>
+    <string name="ds_formats">Formats</string>
     <string name="ds_rooms">Room</string>
 
     <!-- DELETE DIALOG -->

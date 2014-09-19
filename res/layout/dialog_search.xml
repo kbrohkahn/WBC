@@ -64,6 +64,28 @@
                 style="@style/medium_text"
                 android:layout_marginTop="@dimen/text_margin_large"
                 android:gravity="center"
+                android:text="@string/ds_formats" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Spinner
+                    android:id="@+id/ds_formats"
+                    style="@style/medium_text"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/ds_search_format" />
+
+                <ImageButton
+                    android:id="@+id/ds_search_format"
+                    style="@style/enter_button"
+                    android:contentDescription="@string/ds_rooms" />
+            </RelativeLayout>
+
+            <TextView
+                style="@style/medium_text"
+                android:layout_marginTop="@dimen/text_margin_large"
+                android:gravity="center"
                 android:text="@string/ds_rooms" />
 
             <RelativeLayout

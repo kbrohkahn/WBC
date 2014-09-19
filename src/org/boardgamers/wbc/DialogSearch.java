@@ -24,9 +24,11 @@ import android.widget.Toast;
 public class DialogSearch extends DialogFragment {
 	private ImageButton eventSearch;
 	private ImageButton eventInputSearch;
+	private ImageButton formatSearch;
 	private ImageButton roomSearch;
 
 	private Spinner eventsSpinner;
+	private Spinner formatsSpinner;
 	private Spinner roomsSpinner;
 	private AutoCompleteTextView eventACTV;
 
@@ -39,7 +41,7 @@ public class DialogSearch extends DialogFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	    Bundle savedInstanceState) {
 		View view=inflater.inflate(R.layout.dialog_search, container);
 
 		final String[] tournamentTitles=new String[MyApp.allTournaments.size()];
@@ -47,49 +49,45 @@ public class DialogSearch extends DialogFragment {
 			tournamentTitles[i]=MyApp.allTournaments.get(i).title;
 
 		eventACTV=(AutoCompleteTextView) view
-				.findViewById(R.id.ds_tournament_input);
+		    .findViewById(R.id.ds_tournament_input);
 		ArrayAdapter<String> tvAdapter=new ArrayAdapter<String>(getActivity(),
-				android.R.layout.simple_spinner_dropdown_item, tournamentTitles);
+		    android.R.layout.simple_spinner_dropdown_item, tournamentTitles);
 		tvAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		    .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		eventACTV.setAdapter(tvAdapter);
 		eventACTV.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void afterTextChanged(Editable arg0) {
 				eventInputSearch.setEnabled(eventACTV.getText().toString()
-						.length()>0);
-
+				    .length()>0);
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
+			    int arg2, int arg3) {
 				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
+			    int arg3) {
 				// TODO Auto-generated method stub
-
 			}
-
 		});
 
 		eventsSpinner=(Spinner) view.findViewById(R.id.ds_tournament);
 		ArrayAdapter<String> titleAdapter=new ArrayAdapter<String>(
-				getActivity(), android.R.layout.simple_spinner_item,
-				tournamentTitles);
+		    getActivity(), android.R.layout.simple_spinner_item,
+		    tournamentTitles);
 		titleAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		    .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		eventsSpinner.setAdapter(titleAdapter);
 		eventsSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
+			    int arg2, long arg3) {
 				eventACTV.getText().clear();
 			}
 
@@ -99,16 +97,14 @@ public class DialogSearch extends DialogFragment {
 
 		eventSearch=(ImageButton) view.findViewById(R.id.ds_search_event);
 		eventSearch.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				selectGame(eventsSpinner.getSelectedItemPosition());
-
 			}
 		});
 
 		eventInputSearch=(ImageButton) view
-				.findViewById(R.id.ds_search_event_input);
+		    .findViewById(R.id.ds_search_event_input);
 		eventInputSearch.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -126,10 +122,10 @@ public class DialogSearch extends DialogFragment {
 					selectGame(index);
 				else
 					Toast.makeText(getActivity(), "No such tournament",
-							Toast.LENGTH_SHORT).show();
+					    Toast.LENGTH_SHORT).show();
 
 				InputMethodManager imm=(InputMethodManager) getActivity()
-						.getSystemService(Context.INPUT_METHOD_SERVICE);
+				    .getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(eventACTV.getWindowToken(), 0);
 
 				eventACTV.getText().clear();
@@ -138,32 +134,48 @@ public class DialogSearch extends DialogFragment {
 		});
 		eventInputSearch.setEnabled(false);
 
+		// formats search
+		final String[] formats=new String[] { "Demo", "Meeting", "MP Game",
+		    "Preview",
+		    "Sales", "Seminar", "Sign-In", "SOG" };
+		ArrayAdapter<String> formatAdapter=new ArrayAdapter<String>(
+		    getActivity(), android.R.layout.simple_spinner_item, formats);
+		formatAdapter
+		    .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+		formatsSpinner=(Spinner) view.findViewById(R.id.ds_formats);
+		formatsSpinner.setAdapter(formatAdapter);
+
+		formatSearch=(ImageButton) view.findViewById(R.id.ds_search_format);
+		formatSearch.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				viewFormat(formats[formatsSpinner.getSelectedItemPosition()]);
+			}
+		});
+
 		// room search
 		roomsSpinner=(Spinner) view.findViewById(R.id.ds_rooms);
 		ArrayAdapter<CharSequence> roomAdapter=ArrayAdapter.createFromResource(
-				getActivity(), R.array.rooms_available,
-				android.R.layout.simple_spinner_item);
+		    getActivity(), R.array.rooms_available,
+		    android.R.layout.simple_spinner_item);
 		roomAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		    .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		roomsSpinner.setAdapter(roomAdapter);
 
 		roomSearch=(ImageButton) view.findViewById(R.id.ds_search_room);
 		roomSearch.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				showMapDialog((String) roomsSpinner.getSelectedItem());
-
 			}
 		});
 
 		Button close=(Button) view.findViewById(R.id.ds_close);
 		close.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				closeDialog();
-
 			}
 		});
 
@@ -174,6 +186,14 @@ public class DialogSearch extends DialogFragment {
 		MyApp.SELECTED_GAME_ID=g;
 
 		Intent intent=new Intent(getActivity(), TournamentActivity.class);
+		startActivity(intent);
+
+		closeDialog();
+	}
+
+	public void viewFormat(String f) {
+		Intent intent=new Intent(getActivity(), Summary.class);
+		intent.putExtra("format", f);
 		startActivity(intent);
 
 		closeDialog();

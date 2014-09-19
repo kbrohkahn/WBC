@@ -10,21 +10,21 @@ import android.widget.ImageView;
 public class Map extends Activity {
 	// private final String TAG="Map Dialog";
 	final private int[] upstairsIDs= { R.drawable.room_conestoga_1,
-			R.drawable.room_conestoga_2, R.drawable.room_conestoga_3,
-			R.drawable.room_good_spirits_bar, R.drawable.room_heritage,
-			R.drawable.room_lampeter, R.drawable.room_laurel_grove,
-			R.drawable.room_open_gaming_pavilion, R.drawable.room_showroom,
-			R.drawable.room_vistas_cd, R.drawable.room_wheatland };
+	    R.drawable.room_conestoga_2, R.drawable.room_conestoga_3,
+	    R.drawable.room_good_spirits_bar, R.drawable.room_heritage,
+	    R.drawable.room_lampeter, R.drawable.room_laurel_grove,
+	    R.drawable.room_open_gaming_pavilion, R.drawable.room_showroom,
+	    R.drawable.room_vistas_cd, R.drawable.room_wheatland };
 	final private int[] downstairsIDs= { R.drawable.room_ballroom_b_corridor,
-			R.drawable.room_ballroom_a, R.drawable.room_ballrooms_a_and_b,
-			R.drawable.room_ballroom_b, R.drawable.room_cornwall,
-			R.drawable.room_hopewell, R.drawable.room_kinderhook,
-			R.drawable.room_limerock, R.drawable.room_marietta,
-			R.drawable.room_new_holland, R.drawable.room_paradise,
-			R.drawable.room_strasburg, R.drawable.room_terrace,
-			R.drawable.room_terrace, R.drawable.room_terrace,
-			R.drawable.room_terrace, R.drawable.room_terrace,
-			R.drawable.room_terrace, R.drawable.room_terrace };
+	    R.drawable.room_ballroom_a, R.drawable.room_ballrooms_a_and_b,
+	    R.drawable.room_ballroom_b, R.drawable.room_cornwall,
+	    R.drawable.room_hopewell, R.drawable.room_kinderhook,
+	    R.drawable.room_limerock, R.drawable.room_marietta,
+	    R.drawable.room_new_holland, R.drawable.room_paradise,
+	    R.drawable.room_strasburg, R.drawable.room_terrace,
+	    R.drawable.room_terrace, R.drawable.room_terrace,
+	    R.drawable.room_terrace, R.drawable.room_terrace,
+	    R.drawable.room_terrace, R.drawable.room_terrace };
 
 	public String[] roomsUpstairs;
 	public String[] roomsDownstairs;
@@ -42,7 +42,6 @@ public class Map extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.map);
-
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
