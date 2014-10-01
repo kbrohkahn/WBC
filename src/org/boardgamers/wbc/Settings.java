@@ -28,227 +28,228 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 public class Settings extends FragmentActivity {
-	private final int TYPE_VIBRATE=0;
-	private final int TYPE_RING=1;
-	private final int TYPE_BOTH=2;
+  private final int TYPE_VIBRATE = 0;
+  private final int TYPE_RING = 1;
+  private final int TYPE_BOTH = 2;
 
-	private RadioGroup notifyType;
-	private NumberPicker notifyTime;
-	private CheckBox notifyCB;
+  private RadioGroup notifyType;
+  private NumberPicker notifyTime;
+  private CheckBox notifyCB;
 
-	private Button shareButton;
+  private Button shareButton;
 
-	// private Switch hour;
+  // private Switch hour;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// load action bar
-		final ActionBar ab=getActionBar();
-		ab.setHomeButtonEnabled(true);
-		ab.setDisplayHomeAsUpEnabled(true);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-		super.onCreate(savedInstanceState);
+    setContentView(R.layout.settings);
 
-		setContentView(R.layout.settings);
+    // load action bar
+    final ActionBar ab = getActionBar();
+    ab.setHomeButtonEnabled(true);
+    ab.setDisplayHomeAsUpEnabled(true);
 
-		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    getWindow().setSoftInputMode(
+        WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-		notifyCB=(CheckBox) findViewById(R.id.settings_notify);
-		notifyType=(RadioGroup) findViewById(R.id.settings_notify_type);
+    notifyCB = (CheckBox) findViewById(R.id.settings_notify);
+    notifyType = (RadioGroup) findViewById(R.id.settings_notify_type);
 
-		notifyTime=(NumberPicker) findViewById(R.id.settings_notify_time);
-		notifyTime.setMaxValue(60);
+    notifyTime = (NumberPicker) findViewById(R.id.settings_notify_time);
+    notifyTime.setMaxValue(60);
 
-		shareButton=(Button) findViewById(R.id.share);
-		shareButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				share();
-			}
-		});
+    shareButton = (Button) findViewById(R.id.share);
+    shareButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        share();
+      }
+    });
 
-		// hour=(Switch) findViewById(R.id.settings_hour);
+    // hour=(Switch) findViewById(R.id.settings_hour);
 
-		loadSettings();
+    loadSettings();
 
-	}
+  }
 
-	public void share() {
-		final Resources resources=getResources();
+  public void share() {
+    final Resources resources = getResources();
 
-		SharedPreferences sp=getSharedPreferences(
-				resources.getString(R.string.sp_file_name),
-				Context.MODE_PRIVATE);
-		String starPrefString=resources.getString(R.string.sp_event_starred);
+    SharedPreferences sp = getSharedPreferences(
+        resources.getString(R.string.sp_file_name),
+        Context.MODE_PRIVATE);
+    String starPrefString = resources.getString(R.string.sp_event_starred);
 
-		// get starred events string
-		String starredEvents="";
+    // get starred events string
+    String starredEvents = "";
 
-		Event event;
-		int i=0;
-		for (; i<MyApp.dayList.size(); i++) {
-			for (int j=1; j<MyApp.dayList.get(i).size(); j++) {
-				for (int k=0; k<MyApp.dayList.get(i).get(j).events
-						.size(); k++) {
-					event=MyApp.dayList.get(i).get(j).events.get(k);
-					starredEvents+=sp.getBoolean(starPrefString
-							+event.identifier, false) ? "1" : "0";
+    Event event;
+    int i = 0;
+    for (; i < MyApp.dayList.size(); i++) {
+      for (int j = 1; j < MyApp.dayList.get(i).size(); j++) {
+        for (int k = 0; k < MyApp.dayList.get(i).get(j).events
+            .size(); k++) {
+          event = MyApp.dayList.get(i).get(j).events.get(k);
+          starredEvents += sp.getBoolean(starPrefString
+              + event.identifier, false) ? "1" : "0";
 
-				}
-			}
-		}
-		// get user event strings
-		String userEventPrefString=resources.getString(R.string.sp_user_event);
+        }
+      }
+    }
 
-		List<String> userEvents=new ArrayList<String>();
-		String userEvent;
-		for (i=0;; i++) {
-			userEvent=sp.getString(userEventPrefString+String.valueOf(i), "");
+    // get user event strings
+    String userEventPrefString = resources.getString(R.string.sp_user_event);
 
-			if (userEvent.equalsIgnoreCase(""))
-				break;
+    List<String> userEvents = new ArrayList<String>();
+    String userEvent;
+    for (i = 0; ; i++) {
+      userEvent = sp.getString(userEventPrefString + String.valueOf(i), "");
 
-			userEvents.add(userEvent);
+      if (userEvent.equalsIgnoreCase(""))
+        break;
 
-			starredEvents+=sp.getBoolean(
-					starPrefString+String.valueOf(MyApp.NUM_EVENTS+i), false);
-		}
+      userEvents.add(userEvent);
 
-		String userName="";
+      starredEvents += sp.getBoolean(
+          starPrefString + String.valueOf(MyApp.NUM_EVENTS + i), false);
+    }
 
-		Pattern emailPattern=Patterns.EMAIL_ADDRESS;
-		Account[] accounts=AccountManager.get(this).getAccounts();
-		for (Account account : accounts) {
-			if (emailPattern.matcher(account.name).matches()) {
-				userName=account.name;
-				break;
-			}
-		}
+    String userName = "";
 
-		String fileName="wbc2014schedule_"+userName;
+    Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+    Account[] accounts = AccountManager.get(this).getAccounts();
+    for (Account account : accounts) {
+      if (emailPattern.matcher(account.name).matches()) {
+        userName = account.name;
+        break;
+      }
+    }
 
-		FileOutputStream os=null;
+    String fileName = "wbc2014schedule_" + userName;
 
-		try {
-			os=openFileOutput(fileName, Context.MODE_PRIVATE);
-		} catch (FileNotFoundException e) {
-			Toast.makeText(
-					this,
-					"ERROR: Could not create output file,"
-							+"contact dev@boardgamers.org for help.",
-					Toast.LENGTH_LONG).show();
-			e.printStackTrace();
-		}
+    FileOutputStream os = null;
 
-		try {
-			os.write(userName.getBytes());
-			os.write("\n".getBytes());
-			for (i=0; i<userEvents.size(); i++) {
-				os.write(userEvents.get(i).getBytes());
-			}
-			os.write("\n".getBytes());
-			os.write(starredEvents.getBytes());
+    try {
+      os = openFileOutput(fileName, Context.MODE_PRIVATE);
+    } catch (FileNotFoundException e) {
+      Toast.makeText(
+          this,
+          "ERROR: Could not create output file,"
+              + "contact dev@boardgamers.org for help.",
+          Toast.LENGTH_LONG).show();
+      e.printStackTrace();
+    }
 
-			os.close();
-		} catch (IOException e) {
-			Toast.makeText(
-					this,
-					"ERROR: Could not write to output file,"
-							+"contact dev@boardgamers.org for help.",
-					Toast.LENGTH_LONG).show();
-			e.printStackTrace();
-		}
+    try {
+      os.write(userName.getBytes());
+      os.write("\n".getBytes());
+      for (i = 0; i < userEvents.size(); i++) {
+        os.write(userEvents.get(i).getBytes());
+      }
+      os.write("\n".getBytes());
+      os.write(starredEvents.getBytes());
 
-		Intent intent=new Intent(Intent.ACTION_SEND);
-		// intent.setType("document/*");
+      os.close();
+    } catch (IOException e) {
+      Toast.makeText(
+          this,
+          "ERROR: Could not write to output file,"
+              + "contact dev@boardgamers.org for help.",
+          Toast.LENGTH_LONG).show();
+      e.printStackTrace();
+    }
 
-	}
+    Intent intent = new Intent(Intent.ACTION_SEND);
+    // intent.setType("document/*");
 
-	public void loadSettings() {
-		SharedPreferences settings=getSharedPreferences(getResources()
-				.getString(R.string.sp_file_name), Context.MODE_PRIVATE);
+  }
 
-		notifyCB.setChecked(settings.getBoolean("notify_starred", false));
-		notifyTime.setValue(settings.getInt("notify_time", 5));
+  public void loadSettings() {
+    SharedPreferences settings = getSharedPreferences(getResources()
+        .getString(R.string.sp_file_name), Context.MODE_PRIVATE);
 
-		int typeID;
-		switch (settings.getInt("notify_type", TYPE_BOTH)) {
-		case TYPE_VIBRATE:
-			typeID=R.id.settings_notify_vibrate;
-			break;
-		case TYPE_RING:
-			typeID=R.id.settings_notify_ring;
-			break;
-		case TYPE_BOTH:
-			typeID=R.id.settings_notify_both;
-			break;
-		default:
-			typeID=-1;
-			break;
-		}
+    notifyCB.setChecked(settings.getBoolean("notify_starred", false));
+    notifyTime.setValue(settings.getInt("notify_time", 5));
 
-		notifyType.check(typeID);
+    int typeID;
+    switch (settings.getInt("notify_type", TYPE_BOTH)) {
+      case TYPE_VIBRATE:
+        typeID = R.id.settings_notify_vibrate;
+        break;
+      case TYPE_RING:
+        typeID = R.id.settings_notify_ring;
+        break;
+      case TYPE_BOTH:
+        typeID = R.id.settings_notify_both;
+        break;
+      default:
+        typeID = -1;
+        break;
+    }
 
-		// hour.setActivated(settings.getBoolean("24_hour", true));
+    notifyType.check(typeID);
 
-	}
+    // hour.setActivated(settings.getBoolean("24_hour", true));
 
-	@Override
-	protected void onPause() {
-		final Resources resources=getResources();
+  }
 
-		SharedPreferences.Editor editor=getSharedPreferences(
-				resources.getString(R.string.sp_file_name),
-				Context.MODE_PRIVATE).edit();
+  @Override
+  protected void onPause() {
+    final Resources resources = getResources();
 
-		editor.putBoolean(resources.getString(R.string.sp_notify_starred),
-				notifyCB.isChecked());
-		editor.putInt(resources.getString(R.string.sp_notify_time),
-				notifyTime.getValue());
+    SharedPreferences.Editor editor = getSharedPreferences(
+        resources.getString(R.string.sp_file_name),
+        Context.MODE_PRIVATE).edit();
 
-		int type;
-		switch (notifyType.getCheckedRadioButtonId()) {
-		case R.id.settings_notify_vibrate:
-			type=TYPE_VIBRATE;
-			break;
-		case R.id.settings_notify_ring:
-			type=TYPE_RING;
-			break;
-		case R.id.settings_notify_both:
-			type=TYPE_BOTH;
-			break;
-		default:
-			type=-1;
-			break;
-		}
+    editor.putBoolean(resources.getString(R.string.sp_notify_starred),
+        notifyCB.isChecked());
+    editor.putInt(resources.getString(R.string.sp_notify_time),
+        notifyTime.getValue());
 
-		// editor.putBoolean("24_hour", hour.isActivated());
-		editor.putInt(resources.getString(R.string.sp_notify_type), type);
-		editor.commit();
+    int type;
+    switch (notifyType.getCheckedRadioButtonId()) {
+      case R.id.settings_notify_vibrate:
+        type = TYPE_VIBRATE;
+        break;
+      case R.id.settings_notify_ring:
+        type = TYPE_RING;
+        break;
+      case R.id.settings_notify_both:
+        type = TYPE_BOTH;
+        break;
+      default:
+        type = -1;
+        break;
+    }
 
-		// stop service
-		Intent intent=new Intent(this, NotificationService.class);
-		stopService(intent);
+    // editor.putBoolean("24_hour", hour.isActivated());
+    editor.putInt(resources.getString(R.string.sp_notify_type), type);
+    editor.commit();
 
-		// start service if notifyCB is checked
-		if (notifyCB.isChecked()) {
-			Log.d("", "service starting");
-			startService(intent);
-		}
-		super.onPause();
-	}
+    // stop service
+    Intent intent = new Intent(this, NotificationService.class);
+    stopService(intent);
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+    // start service if notifyCB is checked
+    if (notifyCB.isChecked()) {
+      Log.d("", "service starting");
+      startService(intent);
+    }
+    super.onPause();
+  }
 
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        finish();
+        return true;
+
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
 
 }

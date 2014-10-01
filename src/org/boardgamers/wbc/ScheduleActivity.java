@@ -16,166 +16,164 @@ import android.widget.SpinnerAdapter;
 
 public class ScheduleActivity extends FragmentActivity implements
     ActionBar.OnNavigationListener {
-	// private static String TAG="Schedule Activity";
+  // private static String TAG="Schedule Activity";
 
-	private DayPagerAdapter pageAdapter;
-	private ViewPager viewPager;
+  private DayPagerAdapter pageAdapter;
+  private ViewPager viewPager;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_main);
+    setContentView(R.layout.activity_main);
 
-		// load action bar
-		final ActionBar ab=getActionBar();
-		ab.setDisplayShowTitleEnabled(false);
-		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+    // load action bar
+    final ActionBar ab = getActionBar();
+    ab.setDisplayShowTitleEnabled(false);
+    ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		// setup page adapter and view pager for action bar
-		pageAdapter=new DayPagerAdapter(getFragmentManager());
-		viewPager=(ViewPager) findViewById(R.id.pager);
-		viewPager.setAdapter(pageAdapter);
-		// viewPager.setOffscreenPageLimit(1);
-		viewPager
-		    .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-			    @Override
-			    public void onPageSelected(int position) {
-				    ab.setSelectedNavigationItem(position);
-			    }
-		    });
+    // setup page adapter and view pager for action bar
+    pageAdapter = new DayPagerAdapter(getFragmentManager());
+    viewPager = (ViewPager) findViewById(R.id.pager);
+    viewPager.setAdapter(pageAdapter);
+    // viewPager.setOffscreenPageLimit(1);
+    viewPager
+        .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+          @Override
+          public void onPageSelected(int position) {
+            ab.setSelectedNavigationItem(position);
+          }
+        });
 
-		SpinnerAdapter mSpinnerAdapter=ArrayAdapter.createFromResource(this,
-		    R.array.days, android.R.layout.simple_spinner_dropdown_item);
+    SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this,
+        R.array.days, android.R.layout.simple_spinner_dropdown_item);
 
-		ab.setListNavigationCallbacks(mSpinnerAdapter, this);
+    ab.setListNavigationCallbacks(mSpinnerAdapter, this);
 
-		// set viewpager to current day
-		if (MyApp.day>-1)
-			viewPager.setCurrentItem(MyApp.day);
+    // set viewpager to current day
+    if (MyApp.day > -1)
+      viewPager.setCurrentItem(MyApp.day);
 
-	}
+  }
 
-	@Override
-	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		viewPager.setCurrentItem(itemPosition);
-		return false;
-	}
+  @Override
+  public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+    viewPager.setCurrentItem(itemPosition);
+    return false;
+  }
 
-	@Override
-	protected void onResume() {
-		pageAdapter.notifyDataSetChanged();
-		super.onResume();
-	}
+  @Override
+  protected void onResume() {
+    pageAdapter.notifyDataSetChanged();
+    super.onResume();
+  }
 
-	@Override
-	protected void onPause() {
-		// save starred states for all events
-		SharedPreferences.Editor editor=getSharedPreferences(
-		    getResources().getString(R.string.sp_file_name),
-		    Context.MODE_PRIVATE).edit();
-		String starPrefString=getResources().getString(R.string.sp_event_starred);
+  @Override
+  protected void onPause() {
+    // save starred states for all events
+    SharedPreferences.Editor editor = getSharedPreferences(
+        getResources().getString(R.string.sp_file_name),
+        Context.MODE_PRIVATE).edit();
+    String starPrefString = getResources().getString(R.string.sp_event_starred);
 
-		int numDays=getResources().getStringArray(R.array.days).length;
-		for (int d=0; d<numDays; d++) {
-			for (int i=1; i<18; i++) {
-				List<Event> events=MyApp.dayList.get(d).get(i).events;
-				Event event;
-				for (int j=0; j<events.size(); j++) {
-					event=events.get(j);
-					editor.putBoolean(starPrefString+event.identifier, event.starred);
-				}
-			}
-		}
-		editor.commit();
+    int numDays = getResources().getStringArray(R.array.days).length;
+    for (int d = 0; d < numDays; d++) {
+      for (int i = 1; i < 18; i++) {
+        List<Event> events = MyApp.dayList.get(d).get(i).events;
+        Event event;
+        for (int j = 0; j < events.size(); j++) {
+          event = events.get(j);
+          editor.putBoolean(starPrefString + event.identifier, event.starred);
+        }
+      }
+    }
+    editor.commit();
 
-		super.onPause();
-	}
+    super.onPause();
+  }
 
-	/**
-	 * Add starred event to "My Events" group in list
-	 * 
-	 * @param event
-	 */
-	public static void addStarredEvent(Event event) {
-		List<Event> myEvents=MyApp.dayList.get(event.day).get(0).events;
+  /**
+   * Add starred event to "My Events" group in list
+   *
+   * @param event
+   */
+  public static void addStarredEvent(Event event) {
+    List<Event> myEvents = MyApp.dayList.get(event.day).get(0).events;
 
-		Event starredEvent=new Event(event.identifier, event.tournamentID,
-		    event.day, event.hour, event.title, event.eClass, event.format,
-		    event.qualify, event.duration, event.continuous,
-		    event.totalDuration, event.location);
-		starredEvent.starred=true;
-		// get position in starred list to add (time, then title)
-		int index=0;
-		for (Event eTemp : myEvents) {
-			if (starredEvent.hour<eTemp.hour
-			    ||(starredEvent.hour==eTemp.hour&&starredEvent.title
-			        .compareToIgnoreCase(eTemp.title)==1))
-				break;
-			else
-				index++;
-		}
-		MyApp.dayList.get(event.day).get(0).events.add(index,
-		    starredEvent);
+    Event starredEvent = new Event(event.identifier, event.tournamentID,
+        event.day, event.hour, event.title, event.eClass, event.format,
+        event.qualify, event.duration, event.continuous,
+        event.totalDuration, event.location);
+    starredEvent.starred = true;
+    // get position in starred list to add (time, then title)
+    int index = 0;
+    for (Event eTemp : myEvents) {
+      if (starredEvent.hour < eTemp.hour
+          || (starredEvent.hour == eTemp.hour && starredEvent.title
+          .compareToIgnoreCase(eTemp.title) == 1))
+        break;
+      else
+        index++;
+    }
+    MyApp.dayList.get(event.day).get(0).events.add(index,
+        starredEvent);
 
-		myEvents = Summary.summaryList[event.day];
-		index=0;
-		for (Event eTemp : myEvents) {
-			if (starredEvent.hour<eTemp.hour
-			    ||(starredEvent.hour==eTemp.hour&&starredEvent.title
-			        .compareToIgnoreCase(eTemp.title)==1))
-				break;
-			else
-				index++;
-		}
+    myEvents = Summary.summaryList[event.day];
+    index = 0;
+    for (Event eTemp : myEvents) {
+      if (starredEvent.hour < eTemp.hour
+          || (starredEvent.hour == eTemp.hour && starredEvent.title
+          .compareToIgnoreCase(eTemp.title) == 1))
+        break;
+      else
+        index++;
+    }
 
-		// TODO add subsequent events
-		myEvents.add(event, index)
-	}
+    // TODO add subsequent events
+    myEvents.add(event, index)
+  }
 
-	/**
-	 * Remove starred event from "My Events" group in list
-	 * 
-	 * @param id
-	 *          - event id
-	 * @param day
-	 *          - event's day, used to find which my events group
-	 */
-	public static void removeStarredEvent(String identifier, int day) {
-		List<Event> myEvents=MyApp.dayList.get(day).get(0).events;
-		for (Event tempE : myEvents) {
-			if (tempE.identifier.equalsIgnoreCase(identifier)) {
-				myEvents.remove(tempE);
-				break;
-			}
-		}
+  /**
+   * Remove starred event from "My Events" group in list
+   *
+   * @param id  - event id
+   * @param day - event's day, used to find which my events group
+   */
+  public static void removeStarredEvent(String identifier, int day) {
+    List<Event> myEvents = MyApp.dayList.get(day).get(0).events;
+    for (Event tempE : myEvents) {
+      if (tempE.identifier.equalsIgnoreCase(identifier)) {
+        myEvents.remove(tempE);
+        break;
+      }
+    }
 
-		myEvents = Summary.summaryList[day];
-		for (Event eTemp : myEvents) {
-			if (tempE.identifier.equalsIgnoreCase(identifier)) {
-				myEvents.remove(tempE);
-				break;
-			}
-		}
-	}
+    myEvents = Summary.summaryList[day];
+    for (Event eTemp : myEvents) {
+      if (tempE.identifier.equalsIgnoreCase(identifier)) {
+        myEvents.remove(tempE);
+        break;
+      }
+    }
+  }
 
-	public static class DayPagerAdapter extends FragmentPagerAdapter {
-		public DayPagerAdapter(FragmentManager fragmentManager) {
-			super(fragmentManager);
-		}
+  public static class DayPagerAdapter extends FragmentPagerAdapter {
+    public DayPagerAdapter(FragmentManager fragmentManager) {
+      super(fragmentManager);
+    }
 
-		@Override
-		public Fragment getItem(int arg0) {
-			Fragment f=new ScheduleFragment();
-			Bundle args=new Bundle();
-			args.putInt("current_day", arg0);
-			f.setArguments(args);
-			return f;
-		}
+    @Override
+    public Fragment getItem(int arg0) {
+      Fragment f = new ScheduleFragment();
+      Bundle args = new Bundle();
+      args.putInt("current_day", arg0);
+      f.setArguments(args);
+      return f;
+    }
 
-		@Override
-		public int getCount() {
-			return MyApp.dayList.size();
-		}
-	}
+    @Override
+    public int getCount() {
+      return MyApp.dayList.size();
+    }
+  }
 }

@@ -2,27 +2,27 @@ package org.boardgamers.wbc;
 
 public class Tournament {
 
-	public int ID;
+  public int ID;
 
-	public String title;
-	public String label;
-	public boolean isTournament;
+  public String title;
+  public String label;
+  public boolean isTournament;
 
-	public int prize;
-	public String gm;
+  public int prize;
+  public String gm;
 
-	public boolean visible;
-	public int finish;
+  public boolean visible;
+  public int finish;
 
-	public Tournament(int id, String t, String l, boolean i, int p, String g) {
-		ID=id;
+  public Tournament(int id, String t, String l, boolean i, int p, String g) {
+    ID = id;
 
-		title=t;
-		label=l;
-		isTournament=i;
+    title = t;
+    label = l;
+    isTournament = i;
 
-		prize=p;
-		gm=g;
+    prize = p;
+    gm = g;
 
-	}
+  }
 }

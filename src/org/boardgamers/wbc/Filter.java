@@ -14,110 +14,110 @@ import android.widget.LinearLayout;
 
 public class Filter extends FragmentActivity {
 
-	final String TAG="Filter Dialog";
-	private static CheckBox[] tournamentCBs;
+  final String TAG = "Filter Dialog";
+  private static CheckBox[] tournamentCBs;
 
-	private Boolean[] isTournament;
+  private Boolean[] isTournament;
 
-	@Override
-	protected void onCreate(Bundle arg0) {
+  @Override
+  protected void onCreate(Bundle arg0) {
 
-		setContentView(R.layout.filter);
+    setContentView(R.layout.filter);
 
-		isTournament=new Boolean[MyApp.allTournaments.size()];
-		for (int i=0; i<isTournament.length; i++)
-			isTournament[i]=MyApp.allTournaments.get(i).isTournament;
+    isTournament = new Boolean[MyApp.allTournaments.size()];
+    for (int i = 0; i < isTournament.length; i++)
+      isTournament[i] = MyApp.allTournaments.get(i).isTournament;
 
-		// set up checkboxes
-		LinearLayout checkBoxLayout=(LinearLayout) findViewById(R.id.filter_layout);
-		checkBoxLayout.removeAllViews();
-		tournamentCBs=new CheckBox[isTournament.length];
+    // set up checkboxes
+    LinearLayout checkBoxLayout = (LinearLayout) findViewById(R.id.filter_layout);
+    checkBoxLayout.removeAllViews();
+    tournamentCBs = new CheckBox[isTournament.length];
 
-		CheckBox temp;
-		Tournament tournament;
-		for (int i=0; i<isTournament.length; i++) {
+    CheckBox temp;
+    Tournament tournament;
+    for (int i = 0; i < isTournament.length; i++) {
 
-			tournament=MyApp.allTournaments.get(i);
-			temp=new CheckBox(this);
-			temp.setText(tournament.title);
-			temp.setTextAppearance(this, R.style.medium_text);
-			temp.setChecked(tournament.visible);
+      tournament = MyApp.allTournaments.get(i);
+      temp = new CheckBox(this);
+      temp.setText(tournament.title);
+      temp.setTextAppearance(this, R.style.medium_text);
+      temp.setChecked(tournament.visible);
 
-			temp.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+      temp.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView,
-						boolean isChecked) {
-					// TODO Auto-generated method stub
-				}
-			});
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView,
+                                     boolean isChecked) {
+          // TODO Auto-generated method stub
+        }
+      });
 
-			tournamentCBs[i]=temp;
+      tournamentCBs[i] = temp;
 
-		}
+    }
 
-		// add checkboxes
-		for (int i=0; i<tournamentCBs.length; i++)
-			checkBoxLayout.addView(tournamentCBs[i]);
+    // add checkboxes
+    for (int i = 0; i < tournamentCBs.length; i++)
+      checkBoxLayout.addView(tournamentCBs[i]);
 
-		super.onCreate(arg0);
-	}
+    super.onCreate(arg0);
+  }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater=getMenuInflater();
-		inflater.inflate(R.menu.filter, menu);
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.filter, menu);
 
-		return true;
-	}
+    return true;
+  }
 
-	@Override
-	protected void onPause() {
-		SharedPreferences.Editor editor=getSharedPreferences(
-				getResources().getString(R.string.sp_file_name),
-				Context.MODE_PRIVATE).edit();
+  @Override
+  protected void onPause() {
+    SharedPreferences.Editor editor = getSharedPreferences(
+        getResources().getString(R.string.sp_file_name),
+        Context.MODE_PRIVATE).edit();
 
-		boolean checked;
-		for (int i=0; i<tournamentCBs.length; i++) {
-			checked=tournamentCBs[i].isChecked();
-			editor.putBoolean("vis_"+MyApp.allTournaments.get(i).title, checked);
-			MyApp.allTournaments.get(i).visible=checked;
-		}
+    boolean checked;
+    for (int i = 0; i < tournamentCBs.length; i++) {
+      checked = tournamentCBs[i].isChecked();
+      editor.putBoolean("vis_" + MyApp.allTournaments.get(i).title, checked);
+      MyApp.allTournaments.get(i).visible = checked;
+    }
 
-		editor.commit();
+    editor.commit();
 
-		super.onPause();
-	}
+    super.onPause();
+  }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.select_all:
-			for (CheckBox cb : tournamentCBs) {
-				cb.setChecked(true);
-			}
-			return true;
-		case R.id.deselect_all:
-			for (CheckBox cb : tournamentCBs) {
-				cb.setChecked(false);
-			}
-			return true;
-		case R.id.select_non_tournament:
-			for (int i=0; i<tournamentCBs.length; i++) {
-				if (!isTournament[i])
-					tournamentCBs[i].setChecked(true);
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.select_all:
+        for (CheckBox cb : tournamentCBs) {
+          cb.setChecked(true);
+        }
+        return true;
+      case R.id.deselect_all:
+        for (CheckBox cb : tournamentCBs) {
+          cb.setChecked(false);
+        }
+        return true;
+      case R.id.select_non_tournament:
+        for (int i = 0; i < tournamentCBs.length; i++) {
+          if (!isTournament[i])
+            tournamentCBs[i].setChecked(true);
 
-			}
-			return true;
-		case R.id.deselect_non_tournament:
-			for (int i=0; i<tournamentCBs.length; i++) {
-				if (!isTournament[i])
-					tournamentCBs[i].setChecked(false);
+        }
+        return true;
+      case R.id.deselect_non_tournament:
+        for (int i = 0; i < tournamentCBs.length; i++) {
+          if (!isTournament[i])
+            tournamentCBs[i].setChecked(false);
 
-			}
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+        }
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
 }
