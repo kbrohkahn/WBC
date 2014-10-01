@@ -46,6 +46,10 @@
             android:label="@string/activity_tournament" >
         </activity>
         <activity
+            android:name=".Summary"
+            android:label="@string/my_summary" >
+        </activity>
+        <activity
             android:name=".Filter"
             android:label="@string/activity_filter" >
         </activity>

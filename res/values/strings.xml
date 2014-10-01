@@ -20,6 +20,8 @@
     <string name="save">Save</string>
     <string name="clear">Clear</string>
     <string name="share">Share</string>
+    <string name="all_events">All Events</string>
+    <string name="my_summary">My WBC</string>
     <string name="menu_finish">My Finishes</string>
     <string name="note">Event Notes</string>
     <string name="search">Search</string>

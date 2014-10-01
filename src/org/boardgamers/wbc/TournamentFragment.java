@@ -126,11 +126,11 @@ public class TournamentFragment extends Fragment {
 		hasClass=false;
 
 		Event event;
-		for (int i=0; i<ScheduleActivity.dayList.size(); i++) {
-			for (int j=1; j<ScheduleActivity.dayList.get(i).size(); j++) {
-				for (int k=0; k<ScheduleActivity.dayList.get(i).get(j).events
+		for (int i=0; i<MyApp.dayList.size(); i++) {
+			for (int j=1; j<MyApp.dayList.get(i).size(); j++) {
+				for (int k=0; k<MyApp.dayList.get(i).get(j).events
 				    .size(); k++) {
-					event=ScheduleActivity.dayList.get(i).get(j).events.get(k);
+					event=MyApp.dayList.get(i).get(j).events.get(k);
 					if (event.tournamentID==tournament.ID) {
 						events.add(event);
 
@@ -150,7 +150,7 @@ public class TournamentFragment extends Fragment {
 		gameClassDivider.setVisibility(hasClass ? View.VISIBLE : View.GONE);
 		gameClass.setVisibility(hasClass ? View.VISIBLE : View.GONE);
 
-		listAdapter=new EventListAdapter(activity, events);
+		listAdapter=new EventListAdapter();
 		listView.setAdapter(listAdapter);
 		listView.setDividerHeight(0);
 
@@ -283,17 +283,11 @@ public class TournamentFragment extends Fragment {
 	}
 
 	public class EventListAdapter extends BaseAdapter {
+		private final LayoutInflater inflater;;
 
-		private final Activity activity;
-		private final List<Event> events;
-		private LayoutInflater inflater=null;
-
-		public EventListAdapter(Activity a, List<Event> e) {
-			activity=a;
-			events=e;
+		public EventListAdapter() {
 			inflater=(LayoutInflater) activity
 			    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
 		}
 
 		@Override
@@ -502,7 +496,7 @@ public class TournamentFragment extends Fragment {
 		editor.commit();
 
 		// update in schedule activity
-		ArrayList<Event> eventList=ScheduleActivity.dayList.get(event.day).get(
+		ArrayList<Event> eventList=MyApp.dayList.get(event.day).get(
 		    event.hour-6).events;
 		for (Event tempE : eventList) {
 			if (tempE.identifier==event.identifier) {
@@ -675,20 +669,20 @@ public class TournamentFragment extends Fragment {
 				event=events.remove(index);
 
 				// delete from dayList (hour)
-				List<Event> scheduleEvents=ScheduleActivity.dayList.get(
+				List<Event> scheduleEvents=MyApp.dayList.get(
 				    event.day).get(event.hour-6).events;
 
 				for (int j=0; j<scheduleEvents.size(); j++) {
 					if (scheduleEvents.get(j).identifier
 					    .equalsIgnoreCase(event.identifier)) {
-						ScheduleActivity.dayList.get(event.day).get(
+						MyApp.dayList.get(event.day).get(
 						    event.hour-6).events.remove(j);
 						break;
 					}
 				}
 				// delete from dayList (starred)
 				if (event.starred) {
-					scheduleEvents=ScheduleActivity.dayList.get(event.day).get(
+					scheduleEvents=MyApp.dayList.get(event.day).get(
 					    0).events;
 					for (int j=0; j<scheduleEvents.size(); j++) {
 						if (scheduleEvents.get(j).identifier
@@ -916,7 +910,7 @@ public class TournamentFragment extends Fragment {
 
 					MyApp.SELECTED_EVENT_ID=identifier;
 
-					ScheduleActivity.dayList.get(day).get(hour-6).events.add(0,
+					MyApp.dayList.get(day).get(hour-6).events.add(0,
 					    newEvent);
 
 				}
@@ -1022,7 +1016,7 @@ public class TournamentFragment extends Fragment {
 			events.add(index, editedEvent);
 
 			// remove old event from schedule
-			List<Event> events=ScheduleActivity.dayList.get(event.day).get(
+			List<Event> events=MyApp.dayList.get(event.day).get(
 			    oldTime-6).events;
 			for (int i=0; i<events.size(); i++) {
 				if (events.get(i).identifier.equalsIgnoreCase(event.identifier)) {
@@ -1032,7 +1026,7 @@ public class TournamentFragment extends Fragment {
 			}
 
 			// add new event to schedule
-			ScheduleActivity.dayList.get(event.day).get(hour-6).events.add(0,
+			MyApp.dayList.get(event.day).get(hour-6).events.add(0,
 			    editedEvent);
 
 			// check for starred event

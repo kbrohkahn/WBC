@@ -40,7 +40,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 		dayStrings=context.getResources().getStringArray(R.array.days);
 
 		ArrayList<EventGroup> temp;
-		ScheduleActivity.dayList=new ArrayList<ArrayList<EventGroup>>(
+		MyApp.dayList=new ArrayList<ArrayList<EventGroup>>(
 		    dayStrings.length);
 		for (int i=0; i<dayStrings.length; i++) {
 			temp=new ArrayList<EventGroup>();
@@ -49,7 +49,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 			for (int j=0; j<18; j++) {
 				temp.add(new EventGroup(j+7, i*24+j+7, new ArrayList<Event>()));
 			}
-			ScheduleActivity.dayList.add(temp);
+			MyApp.dayList.add(temp);
 		}
 
 		super.onPreExecute();
@@ -107,7 +107,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 			    false, duration, false, duration, location);
 			event.starred=sp.getBoolean(starPrefString+identifier, false);
 
-			ScheduleActivity.dayList.get(day).get(hour-6).events.add(0, event);
+			MyApp.dayList.get(day).get(hour-6).events.add(0, event);
 			if (event.starred)
 				ScheduleActivity.addStarredEvent(event);
 		}
@@ -443,7 +443,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 										}
 									}
 
-									List<Event> searchList=ScheduleActivity.dayList
+									List<Event> searchList=MyApp.dayList
 									    .get(prevEvent.day).get(
 									        prevEvent.hour-6).events;
 									for (int i=0; i<searchList.size(); i++) {
@@ -452,7 +452,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 											searchList.get(i).totalDuration=prevEvent.totalDuration;
 									}
 
-									searchList=ScheduleActivity.dayList.get(
+									searchList=MyApp.dayList.get(
 									    prevEvent.day).get(0).events;
 									for (int i=0; i<searchList.size(); i++) {
 										if (searchList.get(i).identifier
@@ -506,7 +506,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 					allChanges+="\t"+change+"\n\n";
 
 				// LOAD INTO LIST
-				ArrayList<Event> searchList=ScheduleActivity.dayList.get(
+				ArrayList<Event> searchList=MyApp.dayList.get(
 				    event.day).get(event.hour-6).events;
 				if (eventTitle.indexOf("Junior")>-1) {
 					index=0;
@@ -536,7 +536,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 					}
 				}
 
-				ScheduleActivity.dayList.get(event.day).get(event.hour-6).events
+				MyApp.dayList.get(event.day).get(event.hour-6).events
 				    .add(index, event);
 
 				if (event.starred)
@@ -586,7 +586,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 	@Override
 	protected void onPostExecute(Integer result) {
 		if (activity!=null) {
-			Intent intent=new Intent(context, ScheduleActivity.class);
+			Intent intent=new Intent(context, Summary.class);
 			intent.putExtra("changes", allChanges);
 			context.startActivity(intent);
 			activity.finish();
@@ -595,5 +595,4 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 			NotificationService.checkEvents(context);
 		}
 	}
-
 }

@@ -77,8 +77,8 @@ public class NotificationService extends Service {
 		Event event=null;
 		String eventsString="";
 
-		for (int i=0; i<ScheduleActivity.dayList.size(); i++) {
-			List<Event> events=ScheduleActivity.dayList.get(i).get(0).events;
+		for (int i=0; i<MyApp.dayList.size(); i++) {
+			List<Event> events=MyApp.dayList.get(i).get(0).events;
 			for (int k=0; k<events.size(); k++) {
 				event=events.get(k);
 

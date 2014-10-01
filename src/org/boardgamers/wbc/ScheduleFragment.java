@@ -34,7 +34,7 @@ public class ScheduleFragment extends Fragment {
 
 		dayID=getArguments().getInt("current_day");
 		listAdapter=new ExpandListAdapter(this.getActivity(),
-		    ScheduleActivity.dayList.get(dayID));
+		    MyApp.dayList.get(dayID));
 
 		listView=(ExpandableListView) view.findViewById(R.id.sf_schedule);
 		listView.setAdapter(listAdapter);
@@ -143,7 +143,6 @@ public class ScheduleFragment extends Fragment {
 			locationText.setSpan(new UnderlineSpan(), 0, locationText.length(),
 			    0);
 			location.setText(locationText);
-
 			location.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -238,7 +237,7 @@ public class ScheduleFragment extends Fragment {
 					i=0;
 
 				for (; i<=dayID; i++) {
-					for (Event event : ScheduleActivity.dayList.get(i).get(0).events) {
+					for (Event event : MyApp.dayList.get(i).get(0).events) {
 						// check if starred event has started
 						if (i*24+event.hour<=dayID*24+groupPosition+6) {
 							// check if starred event ends after this hour
@@ -323,7 +322,7 @@ public class ScheduleFragment extends Fragment {
 		// update event's star
 		if (groupPosition==0) {
 			// if in first group, need to find original event
-			List<Event> events=ScheduleActivity.dayList.get(event.day).get(
+			List<Event> events=MyApp.dayList.get(event.day).get(
 			    event.hour-6).events;
 			for (int i=0; i<events.size(); i++) {
 				Event temp=events.get(i);
