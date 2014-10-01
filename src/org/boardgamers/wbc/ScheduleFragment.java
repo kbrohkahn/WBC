@@ -21,7 +21,7 @@ import android.widget.TextView;
 public class ScheduleFragment extends Fragment {
 	final static String TAG="Schedule Fragment";
 
-	private ExpandListAdapter listAdapter;
+	private ScheduleListAdapter listAdapter;
 	private ExpandableListView listView;
 
 	private int dayID;
@@ -33,7 +33,7 @@ public class ScheduleFragment extends Fragment {
 		    .inflate(R.layout.schedule_fragment, container, false);
 
 		dayID=getArguments().getInt("current_day");
-		listAdapter=new ExpandListAdapter(this.getActivity(),
+		listAdapter=new ScheduleListAdapter(this.getActivity(),
 		    MyApp.dayList.get(dayID));
 
 		listView=(ExpandableListView) view.findViewById(R.id.sf_schedule);
@@ -74,26 +74,16 @@ public class ScheduleFragment extends Fragment {
 		startActivity(intent);
 	}
 
-	class ExpandListAdapter extends BaseExpandableListAdapter {
-		private final ArrayList<EventGroup> hours;
+	class ScheduleListAdapter extends BaseExpandableListAdapter {
 		private final LayoutInflater inflater;
 
-		public ExpandListAdapter(Context c, ArrayList<EventGroup> h) {
-			hours=h;
+		public ScheduleListAdapter(Context c) {
 			inflater=LayoutInflater.from(c);
-		}
-
-		public void addItem(Event e, EventGroup h) {
-			if (!hours.contains(h)) {
-				hours.add(h);
-			}
-			int index=hours.indexOf(h);
-			hours.get(index).events.add(e);
 		}
 
 		@Override
 		public Object getChild(int groupPosition, int childPosition) {
-			return hours.get(groupPosition).events.get(childPosition);
+			return MyApp.dayList[dayID].get(groupPosition).get(childPosition);
 		}
 
 		@Override
@@ -202,7 +192,7 @@ public class ScheduleFragment extends Fragment {
 
 		@Override
 		public Object getGroup(int groupPosition) {
-			return hours.get(groupPosition);
+			return MyApp.dayList[dayID].get(groupPosition);
 		}
 
 		@Override
@@ -253,7 +243,7 @@ public class ScheduleFragment extends Fragment {
 			name.setText(groupTitle.substring(0, groupTitle.length()-2));
 			name.setSelected(true);
 
-			int id=0;
+			int id;
 			if (!isExpanded)
 				id=R.drawable.list_group_closed;
 			else
@@ -289,17 +279,17 @@ public class ScheduleFragment extends Fragment {
 
 		@Override
 		public int getChildrenCount(int groupPosition) {
-			return hours.get(groupPosition).events.size();
+			return MyApp.dayList[dayID].get(groupPosition).events.size();
 		}
 
 		@Override
 		public int getGroupCount() {
-			return hours.size();
+			return MyApp.dayList[dayID].size();
 		}
 
 		@Override
 		public long getGroupId(int groupPosition) {
-			return hours.get(groupPosition).ID;
+			return MyApp.dayList[dayID].get(groupPosition).ID;
 		}
 
 		@Override

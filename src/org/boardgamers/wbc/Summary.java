@@ -35,14 +35,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Summary extends FragmentActivity {
-	final static String TAG="Schedule Fragment";
+	final static String TAG="Summary Actviity";
 
 	private static String dialogText;
 	private static String dialogTitle;
 
-	private static SummaryListAdapter listAdapter;
-	private ListView listView;
-	private ArrayList<Object> summaryList;
+	private SummaryListAdapter listAdapter;
+	private ExpandableListView listView;
+	private static ArrayList<Event>[] summaryList;
+	private String[] dayStrings;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +53,20 @@ public class Summary extends FragmentActivity {
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		String[] dayStrings=getResources().getStringArray(R.array.days);
+		dayStrings=getResources().getStringArray(R.array.days);
 
-		summaryList=new ArrayList<Object>();
+		summaryList=new ArrayList<Event>[dayStrings.length;
 		for (int i=0; i<dayStrings.length; i++) {
-			summaryList.add(dayStrings[i]);
-
+			summaryList[i] = new ArrayList<Event>();
 			ArrayList<Event> group=MyApp.dayList.get(i).get(0).events;
 			for (int j=0; j<group.size(); j++) {
-				summaryList.add(group.get(j));
+				summary[i].add(group.get(j));
 			}
 		}
 
-		listAdapter=new SummaryListAdapter();
+		listAdapter=new ExpandableListAdapter();
 
-		listView=(ListView) findViewById(R.id.summary_list_view);
+		listView=(ExpandableListView) findViewById(R.id.summary_list_view);
 		listView.setAdapter(listAdapter);
 		listView.setDividerHeight(0);
 
@@ -147,7 +147,13 @@ public class Summary extends FragmentActivity {
 		}
 	}
 
-	class SummaryListAdapter extends BaseAdapter {
+	@Override
+	public void onResume() {
+		listAdapter.notifyDataSetChanged();
+		super.onResume();
+	}
+
+	class SummaryListAdapter extends BaseExpandableListAdapter {
 		private final LayoutInflater inflater;
 
 		public SummaryListAdapter() {
@@ -156,134 +162,186 @@ public class Summary extends FragmentActivity {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
+		public Object getChild(int groupPosition, int childPosition) {
+			return summaryList[groupPosition].get(childPosition);
+		}
 
-			View view=null;
-			if (summaryList.get(position).getClass().equals(String.class)) {
-				// TODO day label
-				view=inflater.inflate(R.layout.summary_day_label, null);
+		@Override
+		public View getChildView(int groupPosition, int childPosition,
+		    boolean isLastChild, View view, ViewGroup parent) {
+			final Event event=(Event) getChild(groupPosition, childPosition);
 
-				TextView title=(TextView) view.findViewById(R.id.summary_day_text);
-				title.setText((String) summaryList.get(position));
+			int tColor=MyApp.getTextColor(event);
+			int tType=MyApp.getTextStyle(event);
 
-			}
-			else if (summaryList.get(position).getClass().equals(Event.class)) {
-				view=inflater.inflate(R.layout.schedule_item, null);
-				view.setVisibility(View.VISIBLE);
+			view=inflater.inflate(R.layout.schedule_item, parent, false);
 
-				final Event event=(Event) summaryList.get(position);
-				int tColor=MyApp.getTextColor(event);
-				int tType=MyApp.getTextStyle(event);
-
-				TextView title=(TextView) view.findViewById(R.id.si_name);
+			TextView title=(TextView) view.findViewById(R.id.si_name);
+			if (groupPosition==0)
 				title.setText(String.valueOf(event.hour)+" - "+event.title);
-				title.setTypeface(null, tType);
-				title.setTextColor(tColor);
+			else
+				title.setText(event.title);
+			title.setTypeface(null, tType);
+			title.setTextColor(tColor);
 
-				if (event.title.indexOf("Junior")>-1) {
-					title.setCompoundDrawablesWithIntrinsicBounds(
-					    R.drawable.junior_icon, 0, 0, 0);
-				}
-
-				TextView duration=(TextView) view.findViewById(R.id.si_duration);
-				duration.setText(String.valueOf(event.duration));
-				duration.setTypeface(null, tType);
-				duration.setTextColor(tColor);
-
-				if (event.continuous) {
-					duration.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-					    R.drawable.continuous_icon, 0);
-				}
-
-				TextView location=(TextView) view.findViewById(R.id.si_location);
-				location.setTypeface(null, tType);
-				location.setTextColor(tColor);
-
-				SpannableString locationText=new SpannableString(event.location);
-				locationText.setSpan(new UnderlineSpan(), 0, locationText.length(),
-				    0);
-				location.setText(locationText);
-				location.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						showMapDialog(event.location);
-					}
-				});
-
-				final int pos=position;
-				ImageView starIV=(ImageView) view.findViewById(R.id.si_star);
-				starIV.setImageResource(event.starred ? R.drawable.star_on
-				    : R.drawable.star_off);
-				starIV.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						removeEventStar(pos);
-					}
-				});
-
-				boolean started=event.day*24+event.hour<=MyApp.day*24+MyApp.hour;
-				boolean ended=event.day*24+event.hour+event.totalDuration<=MyApp.day
-				    *24+MyApp.hour;
-				boolean happening=started&&!ended;
-
-				if (position%2==0) {
-					if (ended)
-						view.setBackgroundResource(R.drawable.ended_light);
-					else if (happening)
-						view.setBackgroundResource(R.drawable.current_light);
-					else
-						view.setBackgroundResource(R.drawable.future_light);
-				} else {
-					if (ended)
-						view.setBackgroundResource(R.drawable.ended_dark);
-					else if (happening)
-						view.setBackgroundResource(R.drawable.current_dark);
-					else
-						view.setBackgroundResource(R.drawable.future_dark);
-				}
-
-				final int tID=event.tournamentID;
-				final String eID=event.identifier;
-				view.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						selectGame(tID, eID);
-					}
-				});
+			if (event.title.indexOf("Junior")>-1) {
+				title.setCompoundDrawablesWithIntrinsicBounds(
+				    R.drawable.junior_icon, 0, 0, 0);
 			}
+
+			TextView duration=(TextView) view.findViewById(R.id.si_duration);
+			duration.setText(String.valueOf(event.duration));
+			duration.setTypeface(null, tType);
+			duration.setTextColor(tColor);
+
+			if (event.continuous) {
+				duration.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+				    R.drawable.continuous_icon, 0);
+			}
+
+			TextView location=(TextView) view.findViewById(R.id.si_location);
+			location.setTypeface(null, tType);
+			location.setTextColor(tColor);
+
+			SpannableString locationText=new SpannableString(event.location);
+			locationText.setSpan(new UnderlineSpan(), 0, locationText.length(),
+			    0);
+			location.setText(locationText);
+			location.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					showMapDialog(event.location);
+				}
+			});
+
+			ImageView starIV=(ImageView) view.findViewById(R.id.si_star);
+			starIV.setImageResource(event.starred ? R.drawable.star_on
+			    : R.drawable.star_off);
+			starIV.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					removeEventStar(event);
+				}
+			});
+
+			boolean started=event.day*24+event.hour<=MyApp.day*24+MyApp.hour;
+			boolean ended=event.day*24+event.hour+event.totalDuration<=MyApp.day
+			    *24+MyApp.hour;
+			boolean happening=started&&!ended;
+
+			if (childPosition%2==0) {
+				if (ended)
+					view.setBackgroundResource(R.drawable.ended_light);
+				else if (happening)
+					view.setBackgroundResource(R.drawable.current_light);
+				else
+					view.setBackgroundResource(R.drawable.future_light);
+			} else {
+				if (ended)
+					view.setBackgroundResource(R.drawable.ended_dark);
+				else if (happening)
+					view.setBackgroundResource(R.drawable.current_dark);
+				else
+					view.setBackgroundResource(R.drawable.future_dark);
+			}
+
+			final int tID=event.tournamentID;
+			final String eID=event.identifier;
+			view.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					selectGame(tID, eID);
+				}
+			});
+
+			return view;
+		}
+
+		public void showMapDialog(String room) {
+			Intent intent=new Intent(getActivity(), Map.class);
+			intent.putExtra("room", room);
+			startActivity(intent);
+		}
+
+		@Override
+		public Object getGroup(int groupPosition) {
+			return summaryList[groupPosition].get(groupPosition);
+		}
+
+		@Override
+		public View getGroupView(final int groupPosition,
+		    final boolean isExpanded, View view, ViewGroup parent) {
+			if (view==null)
+				view=inflater.inflate(R.layout.schedule_group, parent, false);
+
+			String groupTitle=dayStrings[groupPosition];
+			TextView name=(TextView) view.findViewById(R.id.sg_name);			
+			name.setText(groupTitle.substring(0, groupTitle.length()-2));
+
+			int id;
+			if (!isExpanded)
+				id=R.drawable.list_group_closed;
+			else
+				id=R.drawable.list_group_open;
+
+			name.setCompoundDrawablePadding(5);
+			name.setCompoundDrawablesWithIntrinsicBounds(id, 0, 0, 0);
+
+			view.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (isExpanded)
+						listView.collapseGroup(groupPosition);
+					else
+						listView.expandGroup(groupPosition);
+				}
+			});
 			return view;
 		}
 
 		@Override
-		public int getCount() {
-			return summaryList.size();
+		public int getChildrenCount(int groupPosition) {
+			return MyApp.dayList[dayID].get(groupPosition).events.size();
 		}
 
 		@Override
-		public Object getItem(int position) {
-			return summaryList.get(position);
+		public int getGroupCount() {
+			return MyApp.dayList[dayID].size();
 		}
 
 		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return 0;
+		public long getGroupId(int groupPosition) {
+			return MyApp.dayList[dayID].get(groupPosition).ID;
 		}
 
+		@Override
+		public boolean hasStableIds() {
+			return false;
+		}
+
+		@Override
+		public boolean isChildSelectable(int groupPosition, int childPosition) {
+			return false;
+		}
+
+		@Override
+		public long getChildId(int groupPosition, int childPosition) {
+			return childPosition;
+		}
 	}
 
-	public void showMapDialog(String room) {
-		Intent intent=new Intent(this, Map.class);
-		intent.putExtra("room", room);
-		startActivity(intent);
-	}
-
-	public void removeEventStar(int position) {
-		Event event=(Event) summaryList.remove(position);
-
+	public void removeEventStar(Event event) {
+		// remove from summary list
+		List<Event> searchList = summaryList[event.day];
+		for (int i=0; i<searchList.size(); i++) {
+			if (searchList.get(i).identifier.equalsIgnoreCase(event.identifier)) {
+				searchList.remove(i);
+			}
+		}
+		
 		// remove from "My Events" in day list
-		List<Event> searchList=MyApp.dayList.get(event.day).get(0).events;
+		searchList=MyApp.dayList.get(event.day).get(0).events;
 		for (Event tempE : searchList) {
 			if (tempE.identifier.equalsIgnoreCase(event.identifier)) {
 				MyApp.dayList.get(event.day).get(0).events.remove(tempE);
@@ -299,7 +357,6 @@ public class Summary extends FragmentActivity {
 				break;
 			}
 		}
-
 		listAdapter.notifyDataSetChanged();
 	}
 
@@ -431,9 +488,7 @@ public class Summary extends FragmentActivity {
 					dismiss();
 				}
 			});
-
 			return view;
-
 		}
 	}
 

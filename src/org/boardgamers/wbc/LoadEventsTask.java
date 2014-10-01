@@ -39,19 +39,16 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 	protected void onPreExecute() {
 		dayStrings=context.getResources().getStringArray(R.array.days);
 
-		ArrayList<EventGroup> temp;
-		MyApp.dayList=new ArrayList<ArrayList<EventGroup>>(
-		    dayStrings.length);
+		ArrayList<ArrayList<Event>> temp;
+		MyApp.dayList=new ArrayList<ArrayList<Event>>[
+		    dayStrings.length];
 		for (int i=0; i<dayStrings.length; i++) {
-			temp=new ArrayList<EventGroup>();
-			temp.add(new EventGroup(0, i*24, new ArrayList<Event>()));
-
-			for (int j=0; j<18; j++) {
-				temp.add(new EventGroup(j+7, i*24+j+7, new ArrayList<Event>()));
+			temp=new ArrayList<ArrayList<Event>>();
+			for (int j=0; j<19; j++) {
+				temp.add(new ArrayList<Event>());
 			}
 			MyApp.dayList.add(temp);
 		}
-
 		super.onPreExecute();
 	}
 

@@ -23,7 +23,6 @@ public class ScheduleActivity extends FragmentActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main);
@@ -119,6 +118,19 @@ public class ScheduleActivity extends FragmentActivity implements
 		MyApp.dayList.get(event.day).get(0).events.add(index,
 		    starredEvent);
 
+		myEvents = Summary.summaryList[event.day];
+		index=0;
+		for (Event eTemp : myEvents) {
+			if (starredEvent.hour<eTemp.hour
+			    ||(starredEvent.hour==eTemp.hour&&starredEvent.title
+			        .compareToIgnoreCase(eTemp.title)==1))
+				break;
+			else
+				index++;
+		}
+
+		// TODO add subsequent events
+		myEvents.add(event, index)
 	}
 
 	/**
@@ -133,7 +145,15 @@ public class ScheduleActivity extends FragmentActivity implements
 		List<Event> myEvents=MyApp.dayList.get(day).get(0).events;
 		for (Event tempE : myEvents) {
 			if (tempE.identifier.equalsIgnoreCase(identifier)) {
-				MyApp.dayList.get(day).get(0).events.remove(tempE);
+				myEvents.remove(tempE);
+				break;
+			}
+		}
+
+		myEvents = Summary.summaryList[day];
+		for (Event eTemp : myEvents) {
+			if (tempE.identifier.equalsIgnoreCase(identifier)) {
+				myEvents.remove(tempE);
 				break;
 			}
 		}
@@ -147,7 +167,6 @@ public class ScheduleActivity extends FragmentActivity implements
 		@Override
 		public Fragment getItem(int arg0) {
 			Fragment f=new ScheduleFragment();
-
 			Bundle args=new Bundle();
 			args.putInt("current_day", arg0);
 			f.setArguments(args);
@@ -159,5 +178,4 @@ public class ScheduleActivity extends FragmentActivity implements
 			return MyApp.dayList.size();
 		}
 	}
-
 }

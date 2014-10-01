@@ -29,7 +29,7 @@ public class MyApp extends Application {
 	public static int hour;
 
 	public static List<Tournament> allTournaments;
-	public static ArrayList<ArrayList<EventGroup>> dayList;
+	public static ArrayList<ArrayList<Event>>[] dayList;
 
 	public static void updateTime(Resources resources) {
 		String[] daysForParsing=resources
