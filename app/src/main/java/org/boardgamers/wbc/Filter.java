@@ -57,8 +57,8 @@ public class Filter extends FragmentActivity {
     }
 
     // add checkboxes
-    for (int i = 0; i < tournamentCBs.length; i++)
-      checkBoxLayout.addView(tournamentCBs[i]);
+    for (CheckBox checkBox : tournamentCBs)
+      checkBoxLayout.addView(checkBox);
 
     super.onCreate(arg0);
   }
@@ -84,7 +84,7 @@ public class Filter extends FragmentActivity {
       MyApp.allTournaments.get(i).visible = checked;
     }
 
-    editor.commit();
+    editor.apply();
 
     super.onPause();
   }

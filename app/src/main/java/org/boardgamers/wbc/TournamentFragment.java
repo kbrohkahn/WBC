@@ -271,7 +271,7 @@ public class TournamentFragment extends Fragment {
                 getResources().getString(R.string.sp_file_name),
                 Context.MODE_PRIVATE).edit();
         editor.putInt("fin_" + tournament.title, i);
-        editor.commit();
+        editor.apply();
 
         MyApp.allTournaments.get(tournament.ID).finish = i;
         break;
@@ -494,7 +494,7 @@ public class TournamentFragment extends Fragment {
     editor.putBoolean(
         context.getResources().getString(R.string.sp_event_starred)
             + event.identifier, starred);
-    editor.commit();
+    editor.apply();
 
     // update in schedule activity
     ArrayList<Event> eventList = MyApp.dayList.get(event.day).get(
@@ -1087,7 +1087,7 @@ public class TournamentFragment extends Fragment {
     }
 
     editor.putString(userEventPrefString + String.valueOf(i), "");
-    editor.commit();
+    editor.apply();
 
   }
 

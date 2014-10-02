@@ -1,15 +1,15 @@
 package org.boardgamers.wbc;
 
+import android.app.Application;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-
-import android.app.Application;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Typeface;
 
 public class MyApp extends Application {
 	// private static final String TAG="MyApp";
@@ -57,7 +57,7 @@ public class MyApp extends Application {
 	public static int getTextColor(Event event) {
 		if (event.qualify)
 			return COLOR_QUALIFY;
-		else if (event.title.indexOf("Junior")>-1)
+		else if (event.title.contains("Junior"))
 			return COLOR_JUNIOR;
 		else if (event.format.equalsIgnoreCase("Seminar"))
 			return COLOR_SEMINAR;
@@ -74,7 +74,7 @@ public class MyApp extends Application {
 	public static int getTextStyle(Event event) {
 		if (event.qualify)
 			return Typeface.BOLD;
-		else if (event.title.indexOf("Junior")>-1)
+		else if (event.title.contains("Junior"))
 			return Typeface.NORMAL;
 		else if (event.eClass.length()==0
 		    ||event.format.equalsIgnoreCase("Demo"))

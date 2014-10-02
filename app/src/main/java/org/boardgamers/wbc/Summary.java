@@ -1,8 +1,5 @@
 package org.boardgamers.wbc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -34,6 +31,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Summary extends FragmentActivity {
 	final static String TAG="Summary Actviity";
 
@@ -51,7 +51,6 @@ public class Summary extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.summary);
-		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		dayStrings=getResources().getStringArray(R.array.days);
@@ -129,7 +128,7 @@ public class Summary extends FragmentActivity {
 
 		SharedPreferences.Editor editor=sp.edit();
 		editor.putInt("last_app_version", versionCode);
-		editor.commit();
+		editor.apply();
 
 		dialogText=getIntent().getStringExtra("changes");
 		dialogTitle="Schedule Changes";
@@ -176,7 +175,7 @@ public class Summary extends FragmentActivity {
 			title.setTypeface(null, tType);
 			title.setTextColor(tColor);
 
-			if (event.title.indexOf("Junior")>-1) {
+			if (event.title.contains("Junior")) {
 				title.setCompoundDrawablesWithIntrinsicBounds(
 				    R.drawable.junior_icon, 0, 0, 0);
 			}
@@ -453,7 +452,7 @@ public class Summary extends FragmentActivity {
 							textView.setText(event.title+": "+noteString);
 							textView.setTextAppearance(context,
 							    R.style.medium_text);
-							textView.setGravity(Gravity.LEFT);
+							textView.setGravity(Gravity.START);
 							textView.setPadding(padding, padding, padding,
 							    padding);
 
@@ -553,7 +552,7 @@ public class Summary extends FragmentActivity {
 					textView=new TextView(context);
 					textView.setText(finishString);
 					textView.setTextAppearance(context, R.style.medium_text);
-					textView.setGravity(Gravity.LEFT);
+					textView.setGravity(Gravity.START);
 					textView.setPadding(padding, padding, padding, padding);
 
 					if (tournament.finish<=tournament.prize)

@@ -3,12 +3,15 @@ package org.boardgamers.wbc;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class Map extends Activity {
-  // private final String TAG="Map Dialog";
+  private final String TAG="Map Activity";
+
   final private int[] upstairsIDs = {R.drawable.room_conestoga_1,
       R.drawable.room_conestoga_2, R.drawable.room_conestoga_3,
       R.drawable.room_good_spirits_bar, R.drawable.room_heritage,
@@ -42,8 +45,14 @@ public class Map extends Activity {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.map);
-    getActionBar().setHomeButtonEnabled(true);
-    getActionBar().setDisplayHomeAsUpEnabled(true);
+
+    try {
+      getActionBar().setDisplayHomeAsUpEnabled(true);
+      getActionBar().setHomeButtonEnabled(true);
+    } catch (NullPointerException e) {
+      Toast.makeText(this, "Error: cannot set home button enabled", Toast.LENGTH_SHORT).show();
+      Log.d(TAG, "Error: cannot set home button enabled");
+    }
 
     upstairsIV = (ImageView) findViewById(R.id.map_upstairs_overlay);
     downstairsIV = (ImageView) findViewById(R.id.map_downstairs_overlay);

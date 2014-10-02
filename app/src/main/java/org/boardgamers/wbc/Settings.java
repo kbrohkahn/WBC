@@ -1,15 +1,7 @@
 package org.boardgamers.wbc;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,7 +19,16 @@ import android.widget.NumberPicker;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
 public class Settings extends FragmentActivity {
+  private final String TAG = "Settings";
+
   private final int TYPE_VIBRATE = 0;
   private final int TYPE_RING = 1;
   private final int TYPE_BOTH = 2;
@@ -36,7 +37,6 @@ public class Settings extends FragmentActivity {
   private NumberPicker notifyTime;
   private CheckBox notifyCB;
 
-  private Button shareButton;
 
   // private Switch hour;
 
@@ -47,9 +47,13 @@ public class Settings extends FragmentActivity {
     setContentView(R.layout.settings);
 
     // load action bar
-    final ActionBar ab = getActionBar();
-    ab.setHomeButtonEnabled(true);
-    ab.setDisplayHomeAsUpEnabled(true);
+    try {
+      getActionBar().setDisplayHomeAsUpEnabled(true);
+      getActionBar().setHomeButtonEnabled(true);
+    } catch (NullPointerException e) {
+      Toast.makeText(this, "Error: cannot set home button enabled", Toast.LENGTH_SHORT).show();
+      Log.d(TAG, "Error: cannot set home button enabled");
+    }
 
     getWindow().setSoftInputMode(
         WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -60,7 +64,7 @@ public class Settings extends FragmentActivity {
     notifyTime = (NumberPicker) findViewById(R.id.settings_notify_time);
     notifyTime.setMaxValue(60);
 
-    shareButton = (Button) findViewById(R.id.share);
+    Button shareButton = (Button) findViewById(R.id.share);
     shareButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -226,7 +230,7 @@ public class Settings extends FragmentActivity {
 
     // editor.putBoolean("24_hour", hour.isActivated());
     editor.putInt(resources.getString(R.string.sp_notify_type), type);
-    editor.commit();
+    editor.apply();
 
     // stop service
     Intent intent = new Intent(this, NotificationService.class);

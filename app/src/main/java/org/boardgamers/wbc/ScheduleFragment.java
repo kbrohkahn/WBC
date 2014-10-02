@@ -1,7 +1,5 @@
 package org.boardgamers.wbc;
 
-import java.util.List;
-
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +14,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.List;
 
 public class ScheduleFragment extends Fragment {
 	final static String TAG="Schedule Fragment";
@@ -108,7 +108,7 @@ public class ScheduleFragment extends Fragment {
 			title.setTypeface(null, tType);
 			title.setTextColor(tColor);
 
-			if (event.title.indexOf("Junior")>-1) {
+			if (event.title.contains("Junior")) {
 				title.setCompoundDrawablesWithIntrinsicBounds(
 				    R.drawable.junior_icon, 0, 0, 0);
 			}

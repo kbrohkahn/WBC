@@ -1,12 +1,5 @@
 package org.boardgamers.wbc;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,14 +9,19 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 	private final static String TAG="Load Events Task";
 
 	private String allChanges="";
 	private final Context context;
 	private final Activity activity;
-
-	private String[] dayStrings;
 
 	public LoadEventsTask(Activity a) {
 		activity=a;
@@ -37,7 +35,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 
 	@Override
 	protected void onPreExecute() {
-		dayStrings=context.getResources().getStringArray(R.array.days);
+		String[] dayStrings=context.getResources().getStringArray(R.array.days);
 
 		ArrayList<ArrayList<Event>> temp;
 		MyApp.dayList=new ArrayList<ArrayList<ArrayList<Event>>>(dayStrings.length);
@@ -194,7 +192,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 				// time
 				boolean halfPast=false;
 				tempString=rowData[1];
-				if (rowData[1].indexOf(":30")>-1) {
+				if (rowData[1].contains(":30")) {
 					Log.d(TAG, rowData[2]+" starts at half past");
 					tempString=tempString.substring(0, tempString.length()-3);
 					halfPast=true;
@@ -270,7 +268,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 					}
 				}
 
-				if (eventTitle.indexOf("Junior")>-1
+				if (eventTitle.contains("Junior")
 				    ||eventTitle.indexOf("COIN series")==0
 				    ||format.equalsIgnoreCase("SOG")
 				    ||format.equalsIgnoreCase("Preview")) {
@@ -341,7 +339,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 
 					if (format.equalsIgnoreCase("Preview"))
 						numPreviews++;
-					else if (eventTitle.indexOf("Junior")>-1)
+					else if (eventTitle.contains("Junior"))
 						numJuniors++;
 					else if (format.equalsIgnoreCase("Seminar"))
 						numSeminars++;
@@ -370,7 +368,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 						qualify=true;
 						totalDuration*=2;
 					} else if (continuous&&shortEventTitle.indexOf("R")==0
-					    &&shortEventTitle.indexOf("/")>-1) {
+					    &&shortEventTitle.contains("/")) {
 						int dividerIndex=shortEventTitle.indexOf("/");
 						int startRound=Integer.valueOf(shortEventTitle
 						    .substring(1, dividerIndex));
@@ -514,11 +512,11 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 				// LOAD INTO LIST
 				ArrayList<Event> searchList=MyApp.dayList.get(
 				    event.day).get(event.hour-6);
-				if (eventTitle.indexOf("Junior")>-1) {
+				if (eventTitle.contains("Junior")) {
 					index=0;
 					for (; index<searchList.size(); index++) {
 						tempEvent=searchList.get(index);
-						if (tempEvent.title.indexOf("Junior")==-1
+						if (!tempEvent.title.contains("Junior")
 						    &&tempEvent.tournamentID>0)
 							break;
 					}
@@ -527,7 +525,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 					for (; index<searchList.size(); index++) {
 						tempEvent=searchList.get(index);
 						if (tempEvent.eClass.length()>0
-						    &&tempEvent.title.indexOf("Junior")==-1
+						    &&!tempEvent.title.contains("Junior")
 						    &&!tempEvent.format.equalsIgnoreCase("Demo"))
 							break;
 					}
@@ -563,7 +561,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 			editor.putInt(
 			    resources.getString(R.string.sp_2014_schedule_version),
 			    newVersion);
-			editor.commit();
+			editor.apply();
 
 		} catch (IOException e) {
 

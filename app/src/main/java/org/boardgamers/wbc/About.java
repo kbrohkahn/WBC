@@ -1,15 +1,17 @@
 package org.boardgamers.wbc;
 
+import android.app.Activity;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-
-import android.app.Activity;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.widget.TextView;
 
 public class About extends Activity {
   final String TAG = "About";
@@ -20,7 +22,12 @@ public class About extends Activity {
 
     setContentView(R.layout.about);
 
-    getActionBar().setHomeButtonEnabled(true);
+    try {
+      getActionBar().setHomeButtonEnabled(true);
+    } catch (NullPointerException e) {
+      Toast.makeText(this, "Error: cannot set home button enabled", Toast.LENGTH_SHORT).show();
+      Log.d(TAG, "Error: cannot set home button enabled");
+    }
     getActionBar().setDisplayHomeAsUpEnabled(true);
 
     TextView appVersion = (TextView) findViewById(R.id.about_app_version);

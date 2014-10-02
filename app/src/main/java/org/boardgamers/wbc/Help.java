@@ -2,9 +2,11 @@ package org.boardgamers.wbc;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Help extends Activity {
   final String TAG = "Help";
@@ -35,9 +37,13 @@ public class Help extends Activity {
 
     setContentView(R.layout.help);
 
-    getActionBar().setHomeButtonEnabled(true);
-    getActionBar().setDisplayHomeAsUpEnabled(true);
-
+    try {
+      getActionBar().setDisplayHomeAsUpEnabled(true);
+      getActionBar().setHomeButtonEnabled(true);
+    } catch (NullPointerException e) {
+      Toast.makeText(this, "Error: cannot set home button enabled", Toast.LENGTH_SHORT).show();
+      Log.d(TAG, "Error: cannot set home button enabled");
+    }
     final int numCategories = aboutHeaderIDs.length;
 
     aboutTexts = new TextView[numCategories];

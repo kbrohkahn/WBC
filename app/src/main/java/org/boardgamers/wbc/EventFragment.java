@@ -35,8 +35,6 @@ public class EventFragment extends Fragment {
   private static EditText noteET;
   private static String note;
 
-  private Button share;
-  private Button clear;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,7 +57,7 @@ public class EventFragment extends Fragment {
       }
     });
 
-    share = (Button) view.findViewById(R.id.ef_share);
+    Button share = (Button) view.findViewById(R.id.ef_share);
     share.setOnClickListener(new View.OnClickListener() {
 
       @Override
@@ -69,7 +67,7 @@ public class EventFragment extends Fragment {
       }
     });
 
-    clear = (Button) view.findViewById(R.id.ef_clear);
+    Button clear = (Button) view.findViewById(R.id.ef_clear);
     clear.setOnClickListener(new View.OnClickListener() {
 
       @Override
@@ -202,7 +200,7 @@ public class EventFragment extends Fragment {
 
     editor.putString(getResources().getString(R.string.sp_event_note)
         + event.identifier, note);
-    editor.commit();
+    editor.apply();
 
     // TODO desel editText
     InputMethodManager imm = (InputMethodManager) getActivity()

@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/WorldBoardgamingChampionships.iml" filepath="$PROJECT_DIR$/WorldBoardgamingChampionships.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/world-boardgaming-championships.iml" filepath="$PROJECT_DIR$/world-boardgaming-championships.iml" />
     </modules>
   </component>
 </project>

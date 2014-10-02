@@ -1,7 +1,5 @@
 package org.boardgamers.wbc;
 
-import java.util.List;
-
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -11,12 +9,16 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
+
+import java.util.List;
 
 public class ScheduleActivity extends FragmentActivity implements
     ActionBar.OnNavigationListener {
-	// private static String TAG="Schedule Activity";
+	private static String TAG="Schedule Activity";
 
 	private DayPagerAdapter pageAdapter;
 	private ViewPager viewPager;
@@ -28,27 +30,32 @@ public class ScheduleActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 
 		// load action bar
-		final ActionBar ab=getActionBar();
-		ab.setDisplayShowTitleEnabled(false);
-		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+    try {
+      getActionBar().setDisplayHomeAsUpEnabled(true);
+      getActionBar().setHomeButtonEnabled(true);
+    } catch (NullPointerException e) {
+      Toast.makeText(this, "Error: cannot set home button enabled", Toast.LENGTH_SHORT).show();
+      Log.d(TAG, "Error: cannot set home button enabled");
+    }    getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
 		// setup page adapter and view pager for action bar
 		pageAdapter=new DayPagerAdapter(getFragmentManager());
 		viewPager=(ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(pageAdapter);
+
 		// viewPager.setOffscreenPageLimit(1);
 		viewPager
 		    .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			    @Override
 			    public void onPageSelected(int position) {
-				    ab.setSelectedNavigationItem(position);
+				    getActionBar().setSelectedNavigationItem(position);
 			    }
 		    });
 
 		SpinnerAdapter mSpinnerAdapter=ArrayAdapter.createFromResource(this,
 		    R.array.days, android.R.layout.simple_spinner_dropdown_item);
 
-		ab.setListNavigationCallbacks(mSpinnerAdapter, this);
+		getActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
 
 		// set viewpager to current day
 		if (MyApp.day>-1)
@@ -80,14 +87,12 @@ public class ScheduleActivity extends FragmentActivity implements
 		for (int d=0; d<numDays; d++) {
 			for (int i=1; i<18; i++) {
 				List<Event> events=MyApp.dayList.get(d).get(i);
-				Event event;
-				for (int j=0; j<events.size(); j++) {
-					event=events.get(j);
+        for (Event event:events) {
 					editor.putBoolean(starPrefString+event.identifier, event.starred);
 				}
 			}
 		}
-		editor.commit();
+    editor.apply();
 
 		super.onPause();
 	}
@@ -95,7 +100,7 @@ public class ScheduleActivity extends FragmentActivity implements
 	/**
 	 * Add starred event to "My Events" group in list
 	 * 
-	 * @param event
+	 * @param event - Event that was starred
 	 */
 	public static void addStarredEvent(Event event) {
 		List<Event> myEvents=MyApp.dayList.get(event.day).get(0);
@@ -136,7 +141,7 @@ public class ScheduleActivity extends FragmentActivity implements
 	/**
 	 * Remove starred event from "My Events" group in list
 	 * 
-	 * @param id
+	 * @param identifier
 	 *          - event id
 	 * @param day
 	 *          - event's day, used to find which my events group

@@ -22,10 +22,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 public class DialogSearch extends DialogFragment {
-  private ImageButton eventSearch;
   private ImageButton eventInputSearch;
-  private ImageButton formatSearch;
-  private ImageButton roomSearch;
 
   private Spinner eventsSpinner;
   private Spinner formatsSpinner;
@@ -96,7 +93,7 @@ public class DialogSearch extends DialogFragment {
       }
     });
 
-    eventSearch = (ImageButton) view.findViewById(R.id.ds_search_event);
+    ImageButton eventSearch = (ImageButton) view.findViewById(R.id.ds_search_event);
     eventSearch.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -147,7 +144,7 @@ public class DialogSearch extends DialogFragment {
     formatsSpinner = (Spinner) view.findViewById(R.id.ds_formats);
     formatsSpinner.setAdapter(formatAdapter);
 
-    formatSearch = (ImageButton) view.findViewById(R.id.ds_search_format);
+    ImageButton formatSearch = (ImageButton) view.findViewById(R.id.ds_search_format);
     formatSearch.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -164,7 +161,7 @@ public class DialogSearch extends DialogFragment {
         .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     roomsSpinner.setAdapter(roomAdapter);
 
-    roomSearch = (ImageButton) view.findViewById(R.id.ds_search_room);
+    ImageButton roomSearch = (ImageButton) view.findViewById(R.id.ds_search_room);
     roomSearch.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
