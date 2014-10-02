@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/world-boardgaming-championships.iml" filepath="$PROJECT_DIR$/.idea/world-boardgaming-championships.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WorldBoardgamingChampionships.iml" filepath="$PROJECT_DIR$/WorldBoardgamingChampionships.iml" />
     </modules>
   </component>
 </project>
