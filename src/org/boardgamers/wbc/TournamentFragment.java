@@ -50,7 +50,7 @@ public class TournamentFragment extends Fragment {
   private static String[] dayStrings;
 
   private Tournament tournament;
-  public static ArrayList<Event> events;
+  public static ArrayList<Event> tournamentEvents;
 
   private static Activity activity;
 
@@ -120,7 +120,7 @@ public class TournamentFragment extends Fragment {
     tournament = MyApp.allTournaments.get(MyApp.SELECTED_GAME_ID);
 
     // get events
-    events = new ArrayList<Event>();
+    tournamentEvents = new ArrayList<Event>();
 
     hasFormat = false;
     hasClass = false;
@@ -128,11 +128,11 @@ public class TournamentFragment extends Fragment {
     Event event;
     for (int i = 0; i < MyApp.dayList.size(); i++) {
       for (int j = 1; j < MyApp.dayList.get(i).size(); j++) {
-        for (int k = 0; k < MyApp.dayList.get(i).get(j).events
+        for (int k = 0; k < MyApp.dayList.get(i).get(j)
             .size(); k++) {
-          event = MyApp.dayList.get(i).get(j).events.get(k);
+          event = MyApp.dayList.get(i).get(j).get(k);
           if (event.tournamentID == tournament.ID) {
-            events.add(event);
+            tournamentEvents.add(event);
 
             if (event.format.length() > 0)
               hasFormat = true;
@@ -162,7 +162,7 @@ public class TournamentFragment extends Fragment {
       final String label = tournament.label;
 
       // get tournament variables from last event
-      Event lastEvent = events.get(events.size() - 1);
+      Event lastEvent = tournamentEvents.get(tournamentEvents.size() - 1);
 
       // check for finish if event is tournament
       if (lastEvent.eClass.length() > 0) {
@@ -293,7 +293,7 @@ public class TournamentFragment extends Fragment {
 
     @Override
     public int getCount() {
-      return events.size();
+      return tournamentEvents.size();
     }
 
     @Override
@@ -311,7 +311,7 @@ public class TournamentFragment extends Fragment {
       if (view == null)
         view = inflater.inflate(R.layout.tournament_item, null);
 
-      final Event event = events.get(position);
+      final Event event = tournamentEvents.get(position);
 
       boolean started = event.day * 24 + event.hour <= MyApp.day * 24 + MyApp.hour;
       boolean ended = event.day * 24 + event.hour + event.totalDuration <= MyApp.day
@@ -477,8 +477,8 @@ public class TournamentFragment extends Fragment {
                                      Activity context, boolean checkAllStar) {
 
     Event event = null;
-    for (int i = 0; i < events.size(); i++) {
-      event = events.get(i);
+    for (int i = 0; i < tournamentEvents.size(); i++) {
+      event = tournamentEvents.get(i);
       if (event.identifier.equalsIgnoreCase(id))
         break;
     }
@@ -498,7 +498,7 @@ public class TournamentFragment extends Fragment {
 
     // update in schedule activity
     ArrayList<Event> eventList = MyApp.dayList.get(event.day).get(
-        event.hour - 6).events;
+        event.hour - 6);
     for (Event tempE : eventList) {
       if (tempE.identifier == event.identifier) {
         tempE.starred = starred;
@@ -524,7 +524,7 @@ public class TournamentFragment extends Fragment {
 
   public static void checkAllStar() {
     allStarred = true;
-    for (Event tEvent : events) {
+    for (Event tEvent : tournamentEvents) {
       if (!tEvent.starred) {
         allStarred = false;
         break;
@@ -561,7 +561,7 @@ public class TournamentFragment extends Fragment {
 
     setGameStar();
 
-    for (Event event : events) {
+    for (Event event : tournamentEvents) {
       if (event.starred ^ allStarred) {
         changeEventStar(event.identifier, allStarred, activity, false);
       }
@@ -603,19 +603,19 @@ public class TournamentFragment extends Fragment {
           .inflate(R.layout.dialog_delete, container, false);
 
       EVENT_INDEX = 0;
-      for (; EVENT_INDEX < events.size(); EVENT_INDEX++) {
-        if (events.get(EVENT_INDEX).identifier
+      for (; EVENT_INDEX < tournamentEvents.size(); EVENT_INDEX++) {
+        if (tournamentEvents.get(EVENT_INDEX).identifier
             .equalsIgnoreCase(MyApp.SELECTED_EVENT_ID))
           break;
       }
 
-      ALL_EVENTS = EVENT_INDEX == events.size();
+      ALL_EVENTS = EVENT_INDEX == tournamentEvents.size();
 
       String string;
       if (ALL_EVENTS)
         string = "all your events?";
       else {
-        Event event = events.get(EVENT_INDEX);
+        Event event = tournamentEvents.get(EVENT_INDEX);
         String day = getResources().getStringArray(R.array.days)[event.day];
 
         SharedPreferences settings = getActivity().getSharedPreferences(
@@ -666,25 +666,25 @@ public class TournamentFragment extends Fragment {
         index = 0;
       else
         index = EVENT_INDEX;
-      while (index < events.size()) {
-        event = events.remove(index);
+      while (index < tournamentEvents.size()) {
+        event = tournamentEvents.remove(index);
 
         // delete from dayList (hour)
         List<Event> scheduleEvents = MyApp.dayList.get(
-            event.day).get(event.hour - 6).events;
+            event.day).get(event.hour - 6);
 
         for (int j = 0; j < scheduleEvents.size(); j++) {
           if (scheduleEvents.get(j).identifier
               .equalsIgnoreCase(event.identifier)) {
             MyApp.dayList.get(event.day).get(
-                event.hour - 6).events.remove(j);
+                event.hour - 6).remove(j);
             break;
           }
         }
         // delete from dayList (starred)
         if (event.starred) {
           scheduleEvents = MyApp.dayList.get(event.day).get(
-              0).events;
+              0);
           for (int j = 0; j < scheduleEvents.size(); j++) {
             if (scheduleEvents.get(j).identifier
                 .equalsIgnoreCase(event.identifier)) {
@@ -697,18 +697,18 @@ public class TournamentFragment extends Fragment {
         // eventsDB.deleteEvent(event.ID);
 
         if (!ALL_EVENTS)
-          index = events.size();
+          index = tournamentEvents.size();
 
       }
 
-      if (events.size() == 0) {
+      if (tournamentEvents.size() == 0) {
         activity.finish();
       } else {
 
         if (EVENT_INDEX == 0)
           EVENT_INDEX++;
 
-        MyApp.SELECTED_EVENT_ID = events.get(EVENT_INDEX - 1).identifier;
+        MyApp.SELECTED_EVENT_ID = tournamentEvents.get(EVENT_INDEX - 1).identifier;
         listAdapter.notifyDataSetChanged();
 
         EventFragment fragment = (EventFragment) activity
@@ -899,8 +899,8 @@ public class TournamentFragment extends Fragment {
               false, duration, false, duration, location);
 
           int index = 0;
-          for (; index < events.size(); index++) {
-            tempEvent = events.get(index);
+          for (; index < tournamentEvents.size(); index++) {
+            tempEvent = tournamentEvents.get(index);
             if ((tempEvent.day * 24 + tempEvent.hour > newEvent.day * 24
                 + newEvent.hour)
                 || (tempEvent.day * 24 + tempEvent.hour == newEvent.day
@@ -909,13 +909,13 @@ public class TournamentFragment extends Fragment {
               break;
           }
 
-          events.add(index, newEvent);
+          tournamentEvents.add(index, newEvent);
 
           changeEventStar(newEvent.identifier, true, activity, false);
 
           MyApp.SELECTED_EVENT_ID = identifier;
 
-          MyApp.dayList.get(day).get(hour - 6).events.add(0,
+          MyApp.dayList.get(day).get(hour - 6).add(0,
               newEvent);
 
         }
@@ -952,8 +952,8 @@ public class TournamentFragment extends Fragment {
       daysLL.setVisibility(View.GONE);
 
       event = null;
-      for (int i = 0; i < events.size(); i++) {
-        event = events.get(i);
+      for (int i = 0; i < tournamentEvents.size(); i++) {
+        event = tournamentEvents.get(i);
         if (event.identifier.equalsIgnoreCase(MyApp.SELECTED_EVENT_ID))
           break;
       }
@@ -993,13 +993,13 @@ public class TournamentFragment extends Fragment {
       // remove event from global list and edit
 
       int index = 0;
-      for (; index < events.size(); index++) {
-        if (events.get(index).identifier
+      for (; index < tournamentEvents.size(); index++) {
+        if (tournamentEvents.get(index).identifier
             .equalsIgnoreCase(MyApp.SELECTED_EVENT_ID))
           break;
       }
 
-      Event editedEvent = events.remove(index);
+      Event editedEvent = tournamentEvents.remove(index);
       editedEvent.hour = hour;
       editedEvent.title = title;
       editedEvent.duration = duration;
@@ -1008,8 +1008,8 @@ public class TournamentFragment extends Fragment {
       // add edited event to tournament list
       Event tempEvent;
       index = 0;
-      for (; index < events.size(); index++) {
-        tempEvent = events.get(index);
+      for (; index < tournamentEvents.size(); index++) {
+        tempEvent = tournamentEvents.get(index);
         if ((tempEvent.day * 24 + tempEvent.hour > editedEvent.day * 24
             + editedEvent.hour)
             || (tempEvent.day * 24 + tempEvent.hour == editedEvent.day * 24
@@ -1018,11 +1018,11 @@ public class TournamentFragment extends Fragment {
           break;
 
       }
-      events.add(index, editedEvent);
+      tournamentEvents.add(index, editedEvent);
 
       // remove old event from schedule
       List<Event> events = MyApp.dayList.get(event.day).get(
-          oldTime - 6).events;
+          oldTime - 6);
       for (int i = 0; i < events.size(); i++) {
         if (events.get(i).identifier.equalsIgnoreCase(event.identifier)) {
           events.remove(i);
@@ -1031,7 +1031,7 @@ public class TournamentFragment extends Fragment {
       }
 
       // add new event to schedule
-      MyApp.dayList.get(event.day).get(hour - 6).events.add(0,
+      MyApp.dayList.get(event.day).get(hour - 6).add(0,
           editedEvent);
 
       // check for starred event
@@ -1072,8 +1072,8 @@ public class TournamentFragment extends Fragment {
     String breakCharacter = "~";
 
     int i = 0;
-    for (; i < events.size(); i++) {
-      event = events.get(i);
+    for (; i < tournamentEvents.size(); i++) {
+      event = tournamentEvents.get(i);
 
       saveString = String.valueOf(event.day) + breakCharacter
           + String.valueOf(event.hour) + breakCharacter + event.title

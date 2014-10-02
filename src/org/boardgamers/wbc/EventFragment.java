@@ -101,8 +101,8 @@ public class EventFragment extends Fragment {
 
   public static void setEvent(final Activity activity) {
     event = null;
-    for (int i = 0; i < TournamentFragment.events.size(); i++) {
-      event = TournamentFragment.events.get(i);
+    for (int i = 0; i < TournamentFragment.tournamentEvents.size(); i++) {
+      event = TournamentFragment.tournamentEvents.get(i);
       if (event.identifier.equalsIgnoreCase(MyApp.SELECTED_EVENT_ID))
         break;
     }

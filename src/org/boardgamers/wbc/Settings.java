@@ -89,9 +89,9 @@ public class Settings extends FragmentActivity {
     int i = 0;
     for (; i < MyApp.dayList.size(); i++) {
       for (int j = 1; j < MyApp.dayList.get(i).size(); j++) {
-        for (int k = 0; k < MyApp.dayList.get(i).get(j).events
+        for (int k = 0; k < MyApp.dayList.get(i).get(j)
             .size(); k++) {
-          event = MyApp.dayList.get(i).get(j).events.get(k);
+          event = MyApp.dayList.get(i).get(j).get(k);
           starredEvents += sp.getBoolean(starPrefString
               + event.identifier, false) ? "1" : "0";
 
