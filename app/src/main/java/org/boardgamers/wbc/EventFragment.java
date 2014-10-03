@@ -67,8 +67,7 @@ public class EventFragment extends Fragment {
     location.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        showMap(activity, event.location);
-
+        MainActivity.openMap(activity, event.location);
       }
     });
 
@@ -78,9 +77,7 @@ public class EventFragment extends Fragment {
     } else
       minute = "00";
 
-    String[] days = activity.getResources().getStringArray(R.array.days);
-
-    time.setText(days[event.day] + ", " + String.valueOf(event.hour) + "00 to "
+    time.setText(MainActivity.dayStrings[event.day] + ", " + String.valueOf(event.hour) + "00 to "
         + String.valueOf((event.hour + (int) event.duration) + minute));
     time.setTypeface(null, tType);
     time.setTextColor(tColor);
@@ -101,9 +98,9 @@ public class EventFragment extends Fragment {
             + event.identifier, "");
     noteET.setText(note);
 
-    boolean started = event.day * 24 + event.hour <= MainActivity.day * 24 + MainActivity.hour;
-    boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.day * 24
-        + MainActivity.hour;
+    boolean started = event.day * 24 + event.hour <= MainActivity.currentDay * 24 + MainActivity.currentHour;
+    boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.currentDay * 24
+        + MainActivity.currentHour;
     boolean happening = started && !ended;
 
     if (ended)
@@ -112,13 +109,6 @@ public class EventFragment extends Fragment {
       timeLayout.setBackgroundResource(R.drawable.current_light);
     else
       timeLayout.setBackgroundResource(R.drawable.future_light);
-
-  }
-
-  public static void showMap(Activity a, String room) {
-    Intent intent = new Intent(a, MapFragment.class);
-    intent.putExtra("room", room);
-    a.startActivity(intent);
 
   }
 

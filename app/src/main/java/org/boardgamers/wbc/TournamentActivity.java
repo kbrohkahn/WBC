@@ -45,7 +45,7 @@ public class TournamentActivity extends FragmentActivity {
         TournamentFragment.showCreateDialog();
         return true;
       case R.id.game_help:
-        Intent intent = new Intent(this, HelpFragment.class);
+        Intent intent = new Intent(this, HelpActivity.class);
         startActivity(intent);
         return true;
       case android.R.id.home:

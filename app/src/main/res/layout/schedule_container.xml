@@ -4,10 +4,10 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <fragment
-    android:id="@+id/gameFragment"
-    class="org.boardgamers.wbc.TournamentFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"></fragment>
+  <include layout="@layout/schedule_header" />
 
+  <android.support.v4.view.ViewPager
+    android:id="@+id/pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
 </LinearLayout>

@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/star"
-        android:padding="@dimen/list_margin" />
+        android:padding="@dimen/activity_margin" />
 
     <TextView
         android:id="@+id/gi_name"
@@ -38,7 +38,7 @@
             style="@style/list_item"
             android:layout_width="wrap_content"
             android:layout_centerInParent="true"
-            android:drawablePadding="@dimen/continuous_padding" />
+            android:drawablePadding="@dimen/small_padding" />
     </RelativeLayout>
 
     <TextView
@@ -54,7 +54,7 @@
     <TextView
         android:id="@+id/gi_location"
         style="@style/list_item"
-        android:layout_marginRight="@dimen/list_margin"
+        android:layout_marginRight="@dimen/activity_margin"
         android:layout_weight="4"
         android:gravity="center_vertical|right"
         android:text="@string/location" />
@@ -63,7 +63,7 @@
         android:id="@+id/gi_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/list_margin"
+        android:layout_marginRight="@dimen/activity_margin"
         android:background="@drawable/edit_icon"
         android:contentDescription="@string/edit" />
 
@@ -71,7 +71,7 @@
         android:id="@+id/gi_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/list_margin"
+        android:layout_marginRight="@dimen/activity_margin"
         android:background="@drawable/delete_icon"
         android:contentDescription="@string/delete" />
 

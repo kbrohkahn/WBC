@@ -1,11 +1,11 @@
 <resources>
 
-    <dimen name="list_margin">4dp</dimen>
+    <dimen name="activity_margin">4dp</dimen>
     <dimen name="text_margin_small">12dp</dimen>
     <dimen name="text_margin_large">24dp</dimen>
     <dimen name="ce_time_margin">4dp</dimen>
     <dimen name="default_margin">4dp</dimen>
-    <dimen name="continuous_padding">4dp</dimen>
+    <dimen name="small_padding">4dp</dimen>
     <dimen name="map_margin_upstairs_land">12dp</dimen>
     <dimen name="map_margin_downstairs_land">24dp</dimen>
     <dimen name="map_margin_upstairs_port">0dp</dimen>

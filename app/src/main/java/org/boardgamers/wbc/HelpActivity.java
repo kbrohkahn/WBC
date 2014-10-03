@@ -1,13 +1,16 @@
 package org.boardgamers.wbc;
 
-import android.app.Fragment;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class HelpFragment extends Fragment {
+public class HelpActivity extends Activity {
   final static int[] aboutHeaderIDs = {R.id.about_app_header,
       R.id.about_schedule_header, R.id.about_dates_header,
       R.id.about_times_header, R.id.about_heats_rounds_header,
@@ -34,22 +37,28 @@ public class HelpFragment extends Fragment {
   TextView[] aboutTexts;
   TextView[] aboutHeaders;
 
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.help, container, false);
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    setContentView(R.layout.help);
+
+    // enable home button for navigation drawer
+    final ActionBar ab = getActionBar();
+    if (ab != null) {
+      ab.setDisplayHomeAsUpEnabled(true);
+      ab.setHomeButtonEnabled(true);
+    } else
+      Log.d(TAG, "Could not get action bar");
 
     final int numCategories = aboutHeaderIDs.length;
 
     aboutTexts = new TextView[numCategories];
     aboutHeaders = new TextView[numCategories];
     for (int i = 0; i < numCategories; i++) {
-      aboutTexts[i] = (TextView) view.findViewById(aboutTextIDs[i]);
-      aboutHeaders[i] = (TextView) view.findViewById(aboutHeaderIDs[i]);
+      aboutTexts[i] = (TextView) findViewById(aboutTextIDs[i]);
+      aboutHeaders[i] = (TextView) findViewById(aboutHeaderIDs[i]);
       aboutHeaders[i].setOnClickListener(headerListener);
     }
-
-    return view;
   }
 
   public void selectHeader(int id) {
@@ -60,16 +69,37 @@ public class HelpFragment extends Fragment {
     }
 
     boolean vis = aboutTexts[index].isShown();
-
     if (vis) {
       aboutHeaders[index].setCompoundDrawablesWithIntrinsicBounds(
           R.drawable.list_group_closed, 0, 0, 0);
+      aboutHeaders[index].setBackgroundResource(R.drawable.group_collapsed);
       aboutTexts[index].setVisibility(View.GONE);
     } else {
       aboutHeaders[index].setCompoundDrawablesWithIntrinsicBounds(
           R.drawable.list_group_open, 0, 0, 0);
+      aboutHeaders[index].setBackgroundResource(R.drawable.group_expanded);
       aboutTexts[index].setVisibility(View.VISIBLE);
     }
+  }
 
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.close, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_close:
+        finish();
+        return true;
+      case android.R.id.home:
+        finish();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 }

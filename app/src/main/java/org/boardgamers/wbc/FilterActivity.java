@@ -1,13 +1,15 @@
 package org.boardgamers.wbc;
 
-import android.app.Fragment;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -15,23 +17,31 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class FilterFragment extends Fragment {
+public class FilterActivity extends Activity {
 
   private static CheckBox[] tournamentCBs;
   final String TAG = "Filter Dialog";
   private Boolean[] isTournament;
 
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.filter, container, false);
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    setContentView(R.layout.filter);
+
+    // enable home button for navigation drawer
+    final ActionBar ab = getActionBar();
+    if (ab != null) {
+      ab.setDisplayHomeAsUpEnabled(true);
+      ab.setHomeButtonEnabled(true);
+    } else
+      Log.d(TAG, "Could not get action bar");
 
     isTournament = new Boolean[MainActivity.allTournaments.size()];
     for (int i = 0; i < isTournament.length; i++)
       isTournament[i] = MainActivity.allTournaments.get(i).isTournament;
 
     // select all image button
-    ImageButton selectAll = (ImageButton) view.findViewById(R.id.filter_select_all);
+    ImageButton selectAll = (ImageButton) findViewById(R.id.filter_select_all);
     selectAll.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -43,19 +53,18 @@ public class FilterFragment extends Fragment {
     selectAll.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
-        Toast.makeText(getActivity(),
-            getResources().getString(R.string.select_all), Toast.LENGTH_SHORT).show();
+        showToast(getResources().getString(R.string.select_all));
         return false;
       }
     });
 
     // select non tournament image button
-    ImageButton selectNonTournament = (ImageButton) view.findViewById(R.id.filter_select_non_tournament);
+    ImageButton selectNonTournament = (ImageButton) findViewById(R.id.filter_select_non_tournament);
     selectNonTournament.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         for (int i = 0; i < tournamentCBs.length; i++) {
-          if (!isTournament[i])
+          if (isTournament[i])
             tournamentCBs[i].setChecked(true);
 
         }
@@ -64,14 +73,13 @@ public class FilterFragment extends Fragment {
     selectNonTournament.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
-        Toast.makeText(getActivity(),
-            getResources().getString(R.string.select_non_tournament), Toast.LENGTH_SHORT).show();
+        showToast(getResources().getString(R.string.select_tournament));
         return false;
       }
     });
 
     // deselect all image button
-    ImageButton deselectAll = (ImageButton) view.findViewById(R.id.filter_deselect_all);
+    ImageButton deselectAll = (ImageButton) findViewById(R.id.filter_deselect_all);
     deselectAll.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -84,19 +92,18 @@ public class FilterFragment extends Fragment {
     deselectAll.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
-        Toast.makeText(getActivity(),
-            getResources().getString(R.string.deselect_all), Toast.LENGTH_SHORT).show();
+        showToast(getResources().getString(R.string.deselect_all));
         return false;
       }
     });
 
     // deselect non tournament image button
-    ImageButton deselectNonTournament = (ImageButton) view.findViewById(R.id.filter_deselect_non_tournament);
+    ImageButton deselectNonTournament = (ImageButton) findViewById(R.id.filter_deselect_tournament);
     deselectNonTournament.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         for (int i = 0; i < tournamentCBs.length; i++) {
-          if (!isTournament[i])
+          if (isTournament[i])
             tournamentCBs[i].setChecked(false);
         }
       }
@@ -104,14 +111,13 @@ public class FilterFragment extends Fragment {
     deselectNonTournament.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
-        Toast.makeText(getActivity(),
-            getResources().getString(R.string.deselect_non_tournament), Toast.LENGTH_SHORT).show();
+        showToast(getResources().getString(R.string.deselect_tournament));
         return false;
       }
     });
 
     // set up checkboxes
-    LinearLayout checkBoxLayout = (LinearLayout) view.findViewById(R.id.filter_layout);
+    LinearLayout checkBoxLayout = (LinearLayout) findViewById(R.id.filter_layout);
     checkBoxLayout.removeAllViews();
     tournamentCBs = new CheckBox[isTournament.length];
 
@@ -119,9 +125,9 @@ public class FilterFragment extends Fragment {
     Tournament tournament;
     for (int i = 0; i < isTournament.length; i++) {
       tournament = MainActivity.allTournaments.get(i);
-      temp = new CheckBox(getActivity());
+      temp = new CheckBox(this);
       temp.setText(tournament.title);
-      temp.setTextAppearance(getActivity(), R.style.medium_text);
+      temp.setTextAppearance(this, R.style.medium_text);
       temp.setChecked(tournament.visible);
 
       temp.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -140,13 +146,17 @@ public class FilterFragment extends Fragment {
     for (CheckBox checkBox : tournamentCBs)
       checkBoxLayout.addView(checkBox);
 
-    return view;
+  }
+
+
+  private void showToast(String string) {
+    Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
   }
 
 
   @Override
   public void onPause() {
-    SharedPreferences.Editor editor = getActivity().getSharedPreferences(
+    SharedPreferences.Editor editor = getSharedPreferences(
         getResources().getString(R.string.sp_file_name),
         Context.MODE_PRIVATE).edit();
 
@@ -162,4 +172,24 @@ public class FilterFragment extends Fragment {
     super.onPause();
   }
 
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.close, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_close:
+        finish();
+        return true;
+      case android.R.id.home:
+        finish();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
 }

@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
 
-	<TextView
-		android:id="@+id/sg_name"
-		style="@style/event_group"/>
+  <View style="@style/div_h" />
 
-</RelativeLayout>
+  <TextView
+    android:id="@+id/sg_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"
+    android:gravity="center_horizontal"
+    android:marqueeRepeatLimit="marquee_forever"
+    android:padding="@dimen/small_padding"
+    android:scrollHorizontally="true"
+    android:singleLine="true"
+    android:textColor="#ffffff"
+    android:textSize="14sp"
+    android:textStyle="italic" />
+
+</LinearLayout>

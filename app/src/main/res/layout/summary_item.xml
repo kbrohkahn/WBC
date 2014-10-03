@@ -4,16 +4,14 @@
   android:layout_height="wrap_content"
   android:orientation="vertical">
 
-  <View style="@style/div_h" />
+  <include layout="@layout/schedule_item"/>
 
   <TextView
-    android:id="@+id/summary_day_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:padding="@dimen/text_margin_small"
-    android:textColor="#ffffff"
-    android:textSize="20sp"
-    android:textStyle="bold|italic"/>
+    android:lines="2"
+    android:padding="@dimen/activity_margin"
+    android:id="@+id/summary_event_note"/>
+
 
 </LinearLayout>

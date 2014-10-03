@@ -1,49 +1,57 @@
 package org.boardgamers.wbc;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class SearchFragment extends Fragment {
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.search, container);
+public class SearchActivity extends Activity {
+  private final String TAG = "Search";
+
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    setContentView(R.layout.search);
+
+    // enable home button for navigation drawer
+    final ActionBar ab = getActionBar();
+    if (ab != null) {
+      ab.setDisplayHomeAsUpEnabled(true);
+      ab.setHomeButtonEnabled(true);
+    } else
+      Log.d(TAG, "Could not get action bar");
 
     final String[] tournamentTitles = new String[MainActivity.allTournaments.size()];
     for (int i = 0; i < tournamentTitles.length; i++)
       tournamentTitles[i] = MainActivity.allTournaments.get(i).title;
 
     // load views
-    final AutoCompleteTextView eventACTV = (AutoCompleteTextView) view
-        .findViewById(R.id.ds_tournament_input);
-    final ImageButton eventInputSearchButton = (ImageButton) view
-        .findViewById(R.id.ds_search_event_input);
-    final Spinner eventsSpinner = (Spinner) view.findViewById(R.id.ds_tournament);
-    ImageButton eventSearchButton = (ImageButton) view.findViewById(R.id.ds_search_event);
-    final Spinner formatsSpinner = (Spinner) view.findViewById(R.id.ds_formats);
-    final Spinner roomsSpinner = (Spinner) view.findViewById(R.id.ds_rooms);
-    ImageButton roomSearchButton = (ImageButton) view.findViewById(R.id.ds_search_room);
-    ImageButton formatSearchButton = (ImageButton) view.findViewById(R.id.ds_search_format);
+    final AutoCompleteTextView eventACTV = (AutoCompleteTextView) findViewById(R.id.ds_tournament_input);
+    final ImageButton eventInputSearchButton = (ImageButton) findViewById(R.id.ds_search_event_input);
+    final Spinner eventsSpinner = (Spinner) findViewById(R.id.ds_tournament);
+    ImageButton eventSearchButton = (ImageButton) findViewById(R.id.ds_search_event);
+    final Spinner formatsSpinner = (Spinner) findViewById(R.id.ds_formats);
+    final Spinner roomsSpinner = (Spinner) findViewById(R.id.ds_rooms);
+    ImageButton roomSearchButton = (ImageButton) findViewById(R.id.ds_search_room);
+    ImageButton formatSearchButton = (ImageButton) findViewById(R.id.ds_search_format);
 
     // setup event auto complete text view
-    ArrayAdapter<String> tvAdapter = new ArrayAdapter<String>(getActivity(),
+    ArrayAdapter<String> tvAdapter = new ArrayAdapter<String>(this,
         android.R.layout.simple_spinner_dropdown_item, tournamentTitles);
     tvAdapter
         .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -84,11 +92,9 @@ public class SearchFragment extends Fragment {
         if (index < tournamentTitles.length)
           selectGame(index);
         else
-          Toast.makeText(getActivity(), "No such tournament",
-              Toast.LENGTH_SHORT).show();
+          showToast("No such tournament");
 
-        InputMethodManager imm = (InputMethodManager) getActivity()
-            .getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(eventACTV.getWindowToken(), 0);
 
         eventACTV.getText().clear();
@@ -100,12 +106,12 @@ public class SearchFragment extends Fragment {
 
     // setup events spinner
     ArrayAdapter<String> titleAdapter = new ArrayAdapter<String>(
-        getActivity(), android.R.layout.simple_spinner_item,
+        this, android.R.layout.simple_spinner_item,
         tournamentTitles);
     titleAdapter
         .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     eventsSpinner.setAdapter(titleAdapter);
-    eventsSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+    eventsSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
 
       @Override
       public void onItemSelected(AdapterView<?> arg0, View arg1,
@@ -128,7 +134,7 @@ public class SearchFragment extends Fragment {
 
     // formats search
     ArrayAdapter<CharSequence> formatAdapter =
-        ArrayAdapter.createFromResource(getActivity(),
+        ArrayAdapter.createFromResource(this,
             R.array.search_formats, android.R.layout.simple_spinner_item);
     formatAdapter
         .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -145,7 +151,7 @@ public class SearchFragment extends Fragment {
 
     // setup rooms spinner
     ArrayAdapter<CharSequence> roomAdapter = ArrayAdapter.createFromResource(
-        getActivity(), R.array.rooms_available,
+        this, R.array.rooms_available,
         android.R.layout.simple_spinner_item);
     roomAdapter
         .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -155,26 +161,45 @@ public class SearchFragment extends Fragment {
     roomSearchButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        showMapDialog((String) roomsSpinner.getSelectedItem());
+        showMap((String) roomsSpinner.getSelectedItem());
       }
     });
+  }
 
-    return view;
+  public void showMap(String room) {
+    MainActivity.openMap(this, room);
+    finish();
+  }
+
+  private void showToast(String string) {
+    Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
   }
 
   public void selectGame(int g) {
     MainActivity.SELECTED_GAME_ID = g;
-    Intent intent = new Intent(getActivity(), TournamentActivity.class);
+    Intent intent = new Intent(this, TournamentActivity.class);
     startActivity(intent);
+    finish();
   }
 
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.close, menu);
+    return true;
+  }
 
-  public void showMapDialog(String room) {
-    MapFragment fragment = new MapFragment();
-    fragment.roomString = room;
-    FragmentManager fragmentManager = getFragmentManager();
-    FragmentTransaction ft = fragmentManager.beginTransaction()
-        .replace(R.id.content_frame, fragment);
-    ft.commit();
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_close:
+        finish();
+        return true;
+      case android.R.id.home:
+        finish();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 }

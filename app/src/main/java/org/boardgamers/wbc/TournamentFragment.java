@@ -44,7 +44,6 @@ import java.util.List;
 public class TournamentFragment extends Fragment {
   private static final String TAG = "Game Fragment";
   public static ArrayList<Event> tournamentEvents;
-  private static String[] dayStrings;
   private static Activity activity;
   private static ImageView starGame;
   private static EventListAdapter listAdapter;
@@ -83,15 +82,6 @@ public class TournamentFragment extends Fragment {
 
     listAdapter.notifyDataSetChanged();
 
-    // save in sp
-    SharedPreferences.Editor editor = context.getSharedPreferences(
-        context.getResources().getString(R.string.sp_file_name),
-        Context.MODE_PRIVATE).edit();
-    editor.putBoolean(
-        context.getResources().getString(R.string.sp_event_starred)
-            + event.identifier, starred);
-    editor.apply();
-
     // update in schedule activity
     ArrayList<Event> eventList = MainActivity.dayList.get(event.day).get(
         event.hour - 6);
@@ -102,9 +92,9 @@ public class TournamentFragment extends Fragment {
       }
     }
     if (starred)
-      ScheduleActivity.addStarredEvent(event);
+      MainActivity.addStarredEvent(event);
     else
-      ScheduleActivity.removeStarredEvent(event.identifier, event.day);
+      MainActivity.removeStarredEvent(event.identifier, event.day);
 
     // update in event fragment
     EventFragment fragment = (EventFragment) activity.getFragmentManager()
@@ -126,9 +116,7 @@ public class TournamentFragment extends Fragment {
         break;
       }
     }
-
     setGameStar();
-
   }
 
   public static void setGameStar() {
@@ -163,10 +151,8 @@ public class TournamentFragment extends Fragment {
           event.starred);
 
     }
-
     editor.putString(userEventPrefString + String.valueOf(i), "");
     editor.apply();
-
   }
 
   public static void showCreateDialog() {
@@ -184,7 +170,6 @@ public class TournamentFragment extends Fragment {
     activity = getActivity();
 
     final Resources resources = getResources();
-    dayStrings = resources.getStringArray(R.array.days);
 
     gameGM = (TextView) view.findViewById(R.id.gf_gm);
     listView = (ListView) view.findViewById(R.id.gf_events);
@@ -209,12 +194,16 @@ public class TournamentFragment extends Fragment {
     setGame();
 
     return view;
-
   }
 
   public void setGame() {
-    tournament = MainActivity.allTournaments.get(MainActivity.SELECTED_GAME_ID);
-
+    int id = MainActivity.SELECTED_GAME_ID;
+    String[] formatStrings = getResources().getStringArray(R.array.search_formats);
+    if (id < 1000)
+      tournament = MainActivity.allTournaments.get(id);
+    else {
+      tournament = new Tournament(id, formatStrings[id-1000], "N/A", false, 0, "N/A");
+    }
     // get events
     tournamentEvents = new ArrayList<Event>();
 
@@ -227,20 +216,21 @@ public class TournamentFragment extends Fragment {
         for (int k = 0; k < MainActivity.dayList.get(i).get(j)
             .size(); k++) {
           event = MainActivity.dayList.get(i).get(j).get(k);
-          if (event.tournamentID == tournament.ID) {
+          if (id < 1000 && event.tournamentID == tournament.ID) {
             tournamentEvents.add(event);
 
             if (event.format.length() > 0)
               hasFormat = true;
             if (event.eClass.length() > 0)
               hasClass = true;
-
+          } else if (id >= 1000 && event.format.equalsIgnoreCase(formatStrings[id-1000])) {
+            tournamentEvents.add(event);
           }
         }
       }
     }
 
-    Log.d(TAG, hasClass ? "Has class" : "");
+    Log.d(TAG, hasClass ? "Has class" : "No class");
     gameFormatDivider.setVisibility(hasFormat ? View.VISIBLE : View.GONE);
     gameFormat.setVisibility(hasFormat ? View.VISIBLE : View.GONE);
     gameClassDivider.setVisibility(hasClass ? View.VISIBLE : View.GONE);
@@ -251,9 +241,7 @@ public class TournamentFragment extends Fragment {
     listView.setDividerHeight(0);
 
     boolean userEvents = tournament.ID == 0;
-
     boolean started = false;
-
     if (!userEvents) {
       final String label = tournament.label;
 
@@ -264,8 +252,8 @@ public class TournamentFragment extends Fragment {
       if (lastEvent.eClass.length() > 0) {
 
         // if last event started, allow finish
-        started = lastEvent.day * 24 + lastEvent.hour <= MainActivity.day * 24
-            + MainActivity.hour;
+        started = lastEvent.day * 24 + lastEvent.hour <= MainActivity.currentDay * 24
+            + MainActivity.currentHour;
 
         // links available for tournament
         previewLink.setVisibility(View.VISIBLE);
@@ -374,14 +362,7 @@ public class TournamentFragment extends Fragment {
       }
     }
 
-    // TODO Auto-generated method stub
     super.onPause();
-  }
-
-  public void showMap(String room) {
-    Intent intent = new Intent(getActivity(), MapFragment.class);
-    intent.putExtra("room", room);
-    startActivity(intent);
   }
 
   public void selectEvent(String eID) {
@@ -513,7 +494,7 @@ public class TournamentFragment extends Fragment {
       while (index < tournamentEvents.size()) {
         event = tournamentEvents.remove(index);
 
-        // delete from dayList (hour)
+        // delete from dayList (currentHour)
         List<Event> scheduleEvents = MainActivity.dayList.get(
             event.day).get(event.hour - 6);
 
@@ -693,10 +674,10 @@ public class TournamentFragment extends Fragment {
         }
       });
 
-      days = new CheckBox[dayStrings.length];
-      for (int i = 0; i < dayStrings.length; i++) {
+      days = new CheckBox[MainActivity.dayStrings.length];
+      for (int i = 0; i < MainActivity.dayStrings.length; i++) {
         days[i] = (CheckBox) view.findViewById(ceDayIDs[i]);
-        days[i].setText(dayStrings[i]);
+        days[i].setText(MainActivity.dayStrings[i]);
         days[i].setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
           @Override
@@ -880,9 +861,9 @@ public class TournamentFragment extends Fragment {
 
       // check for starred event
       if (event.starred) {
-        ScheduleActivity
+        MainActivity
             .removeStarredEvent(event.identifier, event.day);
-        ScheduleActivity.addStarredEvent(editedEvent);
+        MainActivity.addStarredEvent(editedEvent);
       }
 
       MainActivity.SELECTED_EVENT_ID = event.identifier;
@@ -895,16 +876,12 @@ public class TournamentFragment extends Fragment {
       if (fragment != null && fragment.isInLayout()) {
         EventFragment.setEvent(activity);
       }
-
       saveUserEvents(activity);
-
     }
-
   }
 
   public class EventListAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
-    ;
 
     public EventListAdapter() {
       inflater = (LayoutInflater) activity
@@ -933,9 +910,9 @@ public class TournamentFragment extends Fragment {
 
       final Event event = tournamentEvents.get(position);
 
-      boolean started = event.day * 24 + event.hour <= MainActivity.day * 24 + MainActivity.hour;
-      boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.day
-          * 24 + MainActivity.hour;
+      boolean started = event.day * 24 + event.hour <= MainActivity.currentDay * 24 + MainActivity.currentHour;
+      boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.currentDay
+          * 24 + MainActivity.currentHour;
       boolean happening = started && !ended;
 
       EventFragment fragment = (EventFragment) getFragmentManager()
@@ -972,7 +949,7 @@ public class TournamentFragment extends Fragment {
       TextView day = (TextView) view.findViewById(R.id.gi_date);
       day.setTypeface(null, tType);
       day.setTextColor(tColor);
-      day.setText(dayStrings[event.day]);
+      day.setText(MainActivity.dayStrings[event.day]);
 
       TextView time = (TextView) view.findViewById(R.id.gi_time);
       time.setTypeface(null, tType);
@@ -1023,8 +1000,7 @@ public class TournamentFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-          showMap(event.location);
-
+          MainActivity.openMap(getActivity(), event.location);
         }
       });
 

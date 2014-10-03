@@ -37,7 +37,7 @@ public class EventActivity extends FragmentActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.event_help:
-        Intent intent = new Intent(this, HelpFragment.class);
+        Intent intent = new Intent(this, HelpActivity.class);
         startActivity(intent);
         return true;
       case android.R.id.home:

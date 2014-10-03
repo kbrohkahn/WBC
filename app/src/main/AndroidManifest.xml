@@ -4,10 +4,6 @@
     android:versionCode="12"
     android:versionName="1.031" >
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="20" />
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -33,19 +29,42 @@
 			    </intent-filter>
 		    </activity>
 
-        <activity
-            android:name=".ScheduleActivity"
-            android:label="@string/activity_schedule" >
-        </activity>
-        <activity
-            android:name=".TournamentActivity"
-            android:label="@string/activity_tournament" >
-        </activity>
+      <activity
+        android:name=".TournamentActivity"
+        android:label="@string/activity_tournament" >
+      </activity>
         <activity
             android:name=".EventActivity"
             android:label="@string/activity_event"
             android:windowSoftInputMode="stateUnchanged" >
         </activity>
+
+      <activity
+        android:name=".MapActivity"
+        android:label="@string/map" >
+      </activity>
+      <activity
+        android:name=".SearchActivity"
+        android:windowSoftInputMode="stateHidden"
+        android:label="@string/activity_search" >
+      </activity>
+      <activity
+        android:name=".FilterActivity"
+        android:label="@string/activity_filter" >
+      </activity>
+      <activity
+        android:name=".HelpActivity"
+        android:label="@string/activity_help" >
+      </activity>
+      <activity
+        android:name=".AboutActivity"
+        android:label="@string/activity_about" >
+      </activity>
+      <activity
+        android:name=".SettingsActivity"
+        android:windowSoftInputMode="stateHidden"
+        android:label="@string/activity_settings" >
+      </activity>
     </application>
 
 </manifest>

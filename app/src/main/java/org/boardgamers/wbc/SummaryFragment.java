@@ -3,6 +3,7 @@ package org.boardgamers.wbc;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -23,18 +24,22 @@ public class SummaryFragment extends Fragment {
   public static ArrayList<ArrayList<Event>> summaryList;
   private static SummaryListAdapter listAdapter;
   private ExpandableListView listView;
-  private String[] dayStrings;
-
+  private SharedPreferences sp;
+  private String notePrefString;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.summary, container, false);
 
-    dayStrings = getResources().getStringArray(R.array.days);
+    // load preferences, needed for notes
+    sp = getActivity().getSharedPreferences(getActivity()
+            .getResources().getString(R.string.sp_file_name),
+        Context.MODE_PRIVATE);
+    notePrefString = getActivity().getResources().getString(R.string.sp_event_note);
 
-    SummaryFragment.summaryList = new ArrayList<ArrayList<Event>>(dayStrings.length);
-    for (int i = 0; i < dayStrings.length; i++) {
+    SummaryFragment.summaryList = new ArrayList<ArrayList<Event>>(MainActivity.dayStrings.length);
+    for (int i = 0; i < MainActivity.dayStrings.length; i++) {
       SummaryFragment.summaryList.add(new ArrayList<Event>());
     }
 
@@ -67,9 +72,9 @@ public class SummaryFragment extends Fragment {
     }
     listAdapter.notifyDataSetChanged();
 
-    // get time and go to current day
-    if (MainActivity.day > -1)
-      listView.setSelectedGroup(MainActivity.day);
+    // get time and go to current currentDay
+    if (MainActivity.currentDay > -1)
+      listView.setSelectedGroup(MainActivity.currentDay);
 
     super.onResume();
   }
@@ -83,7 +88,7 @@ public class SummaryFragment extends Fragment {
       }
     }
 
-    // remove from "My Events" in day list
+    // remove from "My Events" in currentDay list
     searchList = MainActivity.dayList.get(event.day).get(0);
     for (Event tempE : searchList) {
       if (tempE.identifier.equalsIgnoreCase(event.identifier)) {
@@ -92,7 +97,7 @@ public class SummaryFragment extends Fragment {
       }
     }
 
-    // remove from day list
+    // remove from currentDay list
     searchList = MainActivity.dayList.get(event.day).get(event.hour - 6);
     for (Event tempE : searchList) {
       if (tempE.identifier.equalsIgnoreCase(event.identifier)) {
@@ -124,7 +129,7 @@ public class SummaryFragment extends Fragment {
       int tColor = MainActivity.getTextColor(event);
       int tType = MainActivity.getTextStyle(event);
 
-      view = inflater.inflate(R.layout.schedule_item, parent, false);
+      view = inflater.inflate(R.layout.summary_item, parent, false);
 
       TextView title = (TextView) view.findViewById(R.id.si_name);
       title.setText(String.valueOf(event.hour) + " - " + event.title);
@@ -140,6 +145,7 @@ public class SummaryFragment extends Fragment {
       duration.setText(String.valueOf(event.duration));
       duration.setTypeface(null, tType);
       duration.setTextColor(tColor);
+
 
       if (event.continuous) {
         duration.setCompoundDrawablesWithIntrinsicBounds(0, 0,
@@ -157,9 +163,16 @@ public class SummaryFragment extends Fragment {
       location.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          MainActivity.showMapDialog(getActivity().getFragmentManager(), event.location);
+          MainActivity.openMap(getActivity(), event.location);
         }
       });
+
+      TextView note = (TextView) view.findViewById(R.id.summary_event_note);
+      note.setTypeface(null, tType);
+      note.setTextColor(tColor);
+
+      String noteString = sp.getString(notePrefString + event.identifier, "");
+      note.setText(noteString == null ? "No note" : noteString);
 
       ImageView starIV = (ImageView) view.findViewById(R.id.si_star);
       starIV.setImageResource(event.starred ? R.drawable.star_on
@@ -171,9 +184,9 @@ public class SummaryFragment extends Fragment {
         }
       });
 
-      boolean started = event.day * 24 + event.hour <= MainActivity.day * 24 + MainActivity.hour;
-      boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.day
-          * 24 + MainActivity.hour;
+      boolean started = event.day * 24 + event.hour <= MainActivity.currentDay * 24 + MainActivity.currentHour;
+      boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.currentDay
+          * 24 + MainActivity.currentHour;
       boolean happening = started && !ended;
 
       if (childPosition % 2 == 0) {
@@ -215,7 +228,7 @@ public class SummaryFragment extends Fragment {
       if (view == null)
         view = inflater.inflate(R.layout.summary_day_label, parent, false);
 
-      String groupTitle = dayStrings[groupPosition];
+      String groupTitle = MainActivity.dayStrings[groupPosition];
       TextView name = (TextView) view.findViewById(R.id.summary_day_text);
       name.setText(groupTitle);
 

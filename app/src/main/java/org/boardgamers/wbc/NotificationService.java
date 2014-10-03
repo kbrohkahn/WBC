@@ -7,12 +7,16 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -22,76 +26,69 @@ import java.util.TimerTask;
 public class NotificationService extends Service {
   private final static String TAG = "Notification Service";
 
-  private static int type;
-  private static int time;
+  private static int notificationType;
+  private static int notificationTime;
 
-  private static Context context;
   private final Timer timer = new Timer();
 
-  public static void checkEvents(Context context) {
-    String[] daysForParsing = context.getResources()
-        .getStringArray(R.array.daysForParsing);
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+    SharedPreferences settings = getSharedPreferences(
+        getResources().getString(R.string.sp_file_name), MODE_PRIVATE);
 
+    if (!settings.getBoolean(
+        getResources().getString(R.string.sp_notify_starred), false)) {
+      this.stopSelf();
+      return super.onStartCommand(intent, flags, startId);
+    }
+
+    notificationTime = settings.getInt(getResources().getString(R.string.sp_notify_time), 5);
+    notificationType = settings.getInt(getResources().getString(R.string.sp_notify_type), 2);
+
+    // TODO set first execution for the first day
     Calendar c = Calendar.getInstance();
-    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd",
-        Locale.US);
-    String dateString = dateFormatter.format(c.getTime());
+    c.set(Calendar.YEAR, 2015);
+    c.set(Calendar.MONTH, Calendar.AUGUST);
+    c.set(Calendar.DAY_OF_MONTH, 2);
+    c.set(Calendar.HOUR_OF_DAY, 6);
+    c.set(Calendar.MINUTE, 60 - notificationTime);
+    c.set(Calendar.SECOND, 0);
 
-    // get day
-    int day = -1;
-    for (int i = 0; i < daysForParsing.length; i++) {
-      if (daysForParsing[i].equalsIgnoreCase(dateString)) {
-        day = i;
-        break;
-      }
-    }
+    Log.d(TAG, "First exec at " + c.getTime().toString());
 
-    if (day == -1)
-      return;
+    timer.scheduleAtFixedRate(new NotifyEvents(), c.getTime(), 60 * 60 * 1000);
 
-    // get hour
-    int hour = c.get(Calendar.HOUR_OF_DAY);
-
-    String eventsString = "";
-
-    // TODO search preferences for starred events
-
-    if (eventsString.length() > 0) {
-      eventsString = eventsString.substring(0, eventsString.length() - 2);
-
-      Log.d(TAG, "Events now: " + eventsString);
-      sendNotification(eventsString);
-    }
+    return super.onStartCommand(intent, flags, startId);
   }
 
-  public static void sendNotification(String s) {
+  private void sendNotification(String s) {
     int TYPE_VIBRATE = 0;
     int TYPE_RING = 1;
     int TYPE_BOTH = 2;
 
     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-        context);
+        this);
     mBuilder.setContentTitle("WBC Events starting")
-        .setContentText(s + " in " + String.valueOf(time) + " minutes!")
+        .setContentText(s + " in " + String.valueOf(notificationTime) + " minutes!")
         .setSmallIcon(R.drawable.ic_notification).setAutoCancel(true);
 
-    if (type == TYPE_VIBRATE)
+    if (notificationType == TYPE_VIBRATE)
       mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
-    else if (type == TYPE_RING)
+    else if (notificationType == TYPE_RING)
       mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-    else if (type == TYPE_BOTH)
+    else if (notificationType == TYPE_BOTH)
       mBuilder.setDefaults(Notification.DEFAULT_ALL);
 
     // Creates an explicit intent for an Activity in your app
-    Intent resultIntent = new Intent(context, SummaryFragment.class);
-    TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+    Intent resultIntent = new Intent(this, SummaryFragment.class);
+    TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
     stackBuilder.addParentStack(SummaryFragment.class);
     stackBuilder.addNextIntent(resultIntent);
 
     PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
         PendingIntent.FLAG_UPDATE_CURRENT);
     mBuilder.setContentIntent(resultPendingIntent);
-    NotificationManager mNotificationManager = (NotificationManager) context
+    NotificationManager mNotificationManager = (NotificationManager) this
         .getSystemService(Context.NOTIFICATION_SERVICE);
     // mId allows you to update the notification later on.
     mNotificationManager.notify(0, mBuilder.build());
@@ -99,40 +96,135 @@ public class NotificationService extends Service {
     Log.d(TAG, "Notifying");
   }
 
-  @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
-    final Resources resources = getResources();
-
-    context = this;
-
-    SharedPreferences settings = getSharedPreferences(
-        resources.getString(R.string.sp_file_name), MODE_PRIVATE);
-
-    if (!settings.getBoolean(
-        resources.getString(R.string.sp_notify_starred), false)) {
-      this.stopSelf();
-      return super.onStartCommand(intent, flags, startId);
-    }
-
-    time = settings.getInt(resources.getString(R.string.sp_notify_time), 5);
-    type = settings.getInt(resources.getString(R.string.sp_notify_type), 2);
+  private void checkEvents() {
+    String[] daysForParsing = this.getResources()
+        .getStringArray(R.array.daysForParsing);
 
     Calendar c = Calendar.getInstance();
-    int currentMin = c.get(Calendar.MINUTE);
+    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd",
+        Locale.US);
+    String dateString = dateFormatter.format(c.getTime());
 
-    c.set(Calendar.MINUTE, 60 - time);
-    c.set(Calendar.SECOND, 0);
-
-    if (currentMin >= 60 - time) {
-      int currentHour = c.get(Calendar.HOUR);
-      c.set(Calendar.HOUR, currentHour + 1);
+    // get currentDay
+    int currentDay = -1;
+    for (int i = 0; i < daysForParsing.length; i++) {
+      if (daysForParsing[i].equalsIgnoreCase(dateString)) {
+        currentDay = i;
+        break;
+      }
     }
-    long msHour = 60 * 60 * 1000;
 
-    Log.d(TAG, "First exec at " + c.getTime().toString());
-    timer.scheduleAtFixedRate(new NotifyEvents(), c.getTime(), msHour);
+    // return if
+    if (currentDay == -1)
+      return;
 
-    return super.onStartCommand(intent, flags, startId);
+    // get currentHour
+    int currentHour = c.get(Calendar.HOUR_OF_DAY);
+
+    // load preferences for user events and starred events
+    SharedPreferences sp = getSharedPreferences(
+        getResources().getString(R.string.sp_file_name),
+        Context.MODE_PRIVATE);
+    String userEventPrefString = getResources().getString(R.string.sp_user_event);
+    String starPrefString = getResources().getString(R.string.sp_event_starred);
+
+    String eventsString = "";
+
+    /***** CHECK USER EVENTS *******/
+    String identifier, row, eventTitle, tempString;
+    String[] rowData;
+    int index, day, hour;
+    for (index = 0; ; index++) {
+      row = sp.getString(userEventPrefString + String.valueOf(index), "");
+      if (row.equalsIgnoreCase(""))
+        break;
+
+      rowData = row.split("~");
+
+      day = Integer.valueOf(rowData[0]);
+      hour = Integer.valueOf(rowData[1]);
+      eventTitle = rowData[2];
+
+      identifier = String.valueOf(day * 24 + hour) + "_" + eventTitle;
+      // if event is starred, add to notification string
+      if (sp.getBoolean(starPrefString + identifier, false) &&
+          currentDay * 24 + currentHour + 1 == day * 24 + currentHour)
+        eventsString += eventTitle + ", ";
+    }
+
+    /***** CHECK ALL EVENTS *******/
+
+    // load schedule file
+    InputStream is;
+    try {
+      is = getAssets().open("schedule2014.txt");
+    } catch (IOException e2) {
+      Toast.makeText(this, "ERROR: Could not find schedule file, " +
+          "contact dev@boardgamers.org for help.", Toast.LENGTH_SHORT).show();
+      e2.printStackTrace();
+      return;
+    }
+
+    // read schedule file
+    InputStreamReader isr;
+    try {
+      isr = new InputStreamReader(is);
+    } catch (IllegalStateException e1) {
+      Toast.makeText(this, "ERROR: Could not open schedule file " +
+          "contact dev@boardgamers.org for help.", Toast.LENGTH_SHORT).show();
+      e1.printStackTrace();
+      return;
+    }
+
+    // parse schedule file
+    BufferedReader reader = new BufferedReader(isr);
+    String line;
+    try {
+      while ((line = reader.readLine()) != null) {
+        rowData = line.split("~");
+
+        // currentDay
+        tempString = rowData[0];
+        for (index = 0; index < daysForParsing.length; index++) {
+          if (daysForParsing[index].equalsIgnoreCase(tempString))
+            break;
+        }
+        if (index == -1) {
+          Log.d(TAG, "Unknown date: " + rowData[2] + " in " + line);
+          index = 0;
+        }
+        day = index;
+
+        // title
+        eventTitle = rowData[2];
+
+        // time
+        tempString = rowData[1];
+        if (rowData[1].contains(":30")) {
+          Log.d(TAG, rowData[2] + " starts at half past");
+          tempString = tempString.substring(0, tempString.length() - 3);
+        }
+
+        hour = Integer.valueOf(tempString);
+
+        identifier = String.valueOf(day * 24 + hour) + "_" + eventTitle;
+        // if event is starred, add to notification string
+        if (sp.getBoolean(starPrefString + identifier, false) &&
+            currentDay * 24 + currentHour + 1 == day * 24 + currentHour)
+          eventsString += eventTitle + ", ";
+
+      }
+    } catch (IOException e) {
+      Toast.makeText(this, "ERROR: Could not read schedule file " +
+          "contact dev@boardgamers.org for help.", Toast.LENGTH_SHORT).show();
+    }
+
+    if (eventsString.length() > 0) {
+      eventsString = eventsString.substring(0, eventsString.length() - 2);
+
+      Log.d(TAG, "Events now: " + eventsString);
+      sendNotification(eventsString);
+    }
   }
 
   @Override
@@ -150,9 +242,7 @@ public class NotificationService extends Service {
     @Override
     public void run() {
       Log.d(TAG, "Checking events");
-      new LoadEventsTask(context).execute(null, null, null);
-
+      checkEvents();
     }
   }
-
 }

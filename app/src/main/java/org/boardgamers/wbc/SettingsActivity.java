@@ -2,7 +2,8 @@ package org.boardgamers.wbc;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.Fragment;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,9 +11,10 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.NumberPicker;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class SettingsFragment extends Fragment {
+public class SettingsActivity extends Activity {
   private final String TAG = "Settings";
 
   private final int TYPE_VIBRATE = 0;
@@ -37,20 +39,29 @@ public class SettingsFragment extends Fragment {
   private NumberPicker notifyTime;
   private CheckBox notifyCB;
 
-  // private Switch hour;
+  // private Switch currentHour;
 
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.settings, container, false);
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    setContentView(R.layout.settings);
+
+    // enable home button for navigation drawer
+    final ActionBar ab = getActionBar();
+    if (ab != null) {
+      ab.setDisplayHomeAsUpEnabled(true);
+      ab.setHomeButtonEnabled(true);
+    } else
+      Log.d(TAG, "Could not get action bar");
 
 
-    notifyCB = (CheckBox) view.findViewById(R.id.settings_notify);
-    notifyType = (RadioGroup) view.findViewById(R.id.settings_notify_type);
+    notifyCB = (CheckBox) findViewById(R.id.settings_notify);
+    notifyType = (RadioGroup) findViewById(R.id.settings_notify_type);
 
-    notifyTime = (NumberPicker) view.findViewById(R.id.settings_notify_time);
+    notifyTime = (NumberPicker) findViewById(R.id.settings_notify_time);
     notifyTime.setMaxValue(60);
 
-    Button shareButton = (Button) view.findViewById(R.id.share);
+    Button shareButton = (Button) findViewById(R.id.share);
     shareButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -58,17 +69,15 @@ public class SettingsFragment extends Fragment {
       }
     });
 
-    // hour=(Switch) findViewById(R.id.settings_hour);
+    // currentHour=(Switch) findViewById(R.id.settings_hour);
 
     loadSettings();
-
-    return view;
   }
 
   public void share() {
     final Resources resources = getResources();
 
-    SharedPreferences sp = getActivity().getSharedPreferences(
+    SharedPreferences sp = getSharedPreferences(
         resources.getString(R.string.sp_file_name),
         Context.MODE_PRIVATE);
     String starPrefString = resources.getString(R.string.sp_event_starred);
@@ -110,7 +119,7 @@ public class SettingsFragment extends Fragment {
     String userName = "";
 
     Pattern emailPattern = Patterns.EMAIL_ADDRESS;
-    Account[] accounts = AccountManager.get(getActivity()).getAccounts();
+    Account[] accounts = AccountManager.get(this).getAccounts();
     for (Account account : accounts) {
       if (emailPattern.matcher(account.name).matches()) {
         userName = account.name;
@@ -124,10 +133,10 @@ public class SettingsFragment extends Fragment {
 
 
     try {
-      os = getActivity().openFileOutput(fileName, Context.MODE_PRIVATE);
+      os = this.openFileOutput(fileName, Context.MODE_PRIVATE);
     } catch (FileNotFoundException e) {
       Toast.makeText(
-          getActivity(),
+          this,
           "ERROR: Could not create output file,"
               + "contact dev@boardgamers.org for help.",
           Toast.LENGTH_LONG).show();
@@ -146,7 +155,7 @@ public class SettingsFragment extends Fragment {
       os.close();
     } catch (IOException e) {
       Toast.makeText(
-          getActivity(),
+          this,
           "ERROR: Could not write to output file,"
               + "contact dev@boardgamers.org for help.",
           Toast.LENGTH_LONG).show();
@@ -161,7 +170,7 @@ public class SettingsFragment extends Fragment {
   }
 
   public void loadSettings() {
-    SharedPreferences settings = getActivity().getSharedPreferences(getResources()
+    SharedPreferences settings = this.getSharedPreferences(getResources()
         .getString(R.string.sp_file_name), Context.MODE_PRIVATE);
 
     notifyCB.setChecked(settings.getBoolean("notify_starred", false));
@@ -185,7 +194,7 @@ public class SettingsFragment extends Fragment {
 
     notifyType.check(typeID);
 
-    // hour.setActivated(settings.getBoolean("24_hour", true));
+    // currentHour.setActivated(settings.getBoolean("24_hour", true));
 
   }
 
@@ -193,7 +202,7 @@ public class SettingsFragment extends Fragment {
   public void onPause() {
     final Resources resources = getResources();
 
-    SharedPreferences.Editor editor = getActivity().getSharedPreferences(
+    SharedPreferences.Editor editor = this.getSharedPreferences(
         resources.getString(R.string.sp_file_name),
         Context.MODE_PRIVATE).edit();
 
@@ -218,19 +227,40 @@ public class SettingsFragment extends Fragment {
         break;
     }
 
-    // editor.putBoolean("24_hour", hour.isActivated());
+    // editor.putBoolean("24_hour", currentHour.isActivated());
     editor.putInt(resources.getString(R.string.sp_notify_type), type);
     editor.apply();
 
     // stop service
-    Intent intent = new Intent(getActivity(), NotificationService.class);
-    getActivity().stopService(intent);
+    Intent intent = new Intent(this, NotificationService.class);
+    this.stopService(intent);
 
     // start service if notifyCB is checked
     if (notifyCB.isChecked()) {
       Log.d("", "service starting");
-      getActivity().startService(intent);
+      this.startService(intent);
     }
     super.onPause();
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.close, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_close:
+        finish();
+        return true;
+      case android.R.id.home:
+        finish();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 }

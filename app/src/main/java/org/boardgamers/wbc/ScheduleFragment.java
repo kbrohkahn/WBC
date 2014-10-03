@@ -44,8 +44,8 @@ public class ScheduleFragment extends Fragment {
 
   @Override
   public void onResume() {
-    if (dayID == MainActivity.day)
-      listView.setSelectedGroup(MainActivity.hour - 5);
+    if (dayID == MainActivity.currentDay)
+      listView.setSelectedGroup(MainActivity.currentHour - 5);
 
     listAdapter.notifyDataSetChanged();
 
@@ -78,9 +78,9 @@ public class ScheduleFragment extends Fragment {
     } else
       event.starred = starred;
     if (starred)
-      ScheduleActivity.addStarredEvent(event);
+      MainActivity.addStarredEvent(event);
     else
-      ScheduleActivity.removeStarredEvent(event.identifier, event.day);
+      MainActivity.removeStarredEvent(event.identifier, event.day);
 
     listAdapter.notifyDataSetChanged();
   }
@@ -148,7 +148,7 @@ public class ScheduleFragment extends Fragment {
       location.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          MainActivity.showMapDialog(getActivity().getFragmentManager(), event.location);
+          MainActivity.openMap(getActivity(), event.location);
         }
       });
 
@@ -163,9 +163,9 @@ public class ScheduleFragment extends Fragment {
         }
       });
 
-      boolean started = event.day * 24 + event.hour <= MainActivity.day * 24 + MainActivity.hour;
-      boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.day
-          * 24 + MainActivity.hour;
+      boolean started = event.day * 24 + event.hour <= MainActivity.currentDay * 24 + MainActivity.currentHour;
+      boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.currentDay
+          * 24 + MainActivity.currentHour;
       boolean happening = started && !ended;
 
       if (childPosition % 2 == 0) {
@@ -236,7 +236,7 @@ public class ScheduleFragment extends Fragment {
           for (Event event : MainActivity.dayList.get(i).get(0)) {
             // check if starred event has started
             if (i * 24 + event.hour <= dayID * 24 + groupPosition + 6) {
-              // check if starred event ends after this hour
+              // check if starred event ends after this currentHour
 
               if (i * 24 + event.hour + event.totalDuration > dayID * 24
                   + groupPosition + 6) {

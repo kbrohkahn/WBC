@@ -1,14 +1,18 @@
 package org.boardgamers.wbc;
 
-import android.app.Fragment;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.LayoutInflater;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
-public class MapFragment extends Fragment {
+public class MapActivity extends Activity {
   private final String TAG = "Map Activity";
 
   final private int[] upstairsIDs = {R.drawable.room_conestoga_1,
@@ -40,16 +44,25 @@ public class MapFragment extends Fragment {
   private Handler handler;
   private boolean on;
 
+
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.map, container);
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
+    setContentView(R.layout.map);
 
-    upstairsIV = (ImageView) view.findViewById(R.id.map_upstairs_overlay);
-    downstairsIV = (ImageView) view.findViewById(R.id.map_downstairs_overlay);
+    // enable home button for navigation drawer
+    final ActionBar ab = getActionBar();
+    if (ab != null) {
+      ab.setDisplayHomeAsUpEnabled(true);
+      ab.setHomeButtonEnabled(true);
+    } else
+      Log.d(TAG, "Could not get action bar");
 
+    upstairsIV = (ImageView) findViewById(R.id.map_upstairs_overlay);
+    downstairsIV = (ImageView) findViewById(R.id.map_downstairs_overlay);
 
+    roomString = getIntent().getStringExtra("roomName");
     roomID = -1;
     String[] roomsDownstairs = getResources().getStringArray(R.array.rooms_downstairs);
     for (int i = 0; i < roomsDownstairs.length; i++) {
@@ -68,7 +81,7 @@ public class MapFragment extends Fragment {
     }
 
     if (roomID > -1) {
-      getActivity().setTitle(roomString);
+      setTitle(roomString);
       handler = new Handler();
 
       if (roomID >= 50)
@@ -77,9 +90,8 @@ public class MapFragment extends Fragment {
         downstairsIV.setImageResource(downstairsIDs[roomID]);
       on = true;
     } else
-      getActivity().setTitle("Hotel Map");
+      setTitle(getResources().getString(R.string.map));
 
-    return view;
   }
 
   @Override
@@ -112,5 +124,26 @@ public class MapFragment extends Fragment {
       handler.removeCallbacks(runnable);
 
     super.onPause();
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.close, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_close:
+        finish();
+        return true;
+      case android.R.id.home:
+        finish();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 }

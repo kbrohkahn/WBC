@@ -4,7 +4,6 @@
     <style name="AppTheme" parent="@android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/ActionBar</item>
         <item name="android:actionBarItemBackground">@drawable/action_bar_tab</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView</item>
     </style>
 
     <style name="NoActionBar" parent="AppTheme">
@@ -14,11 +13,6 @@
 
     <style name="ActionBar" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:background">@color/action_bar</item>
-    </style>
-
-    <style name="DropDownListView" parent="@android:style/Widget.Holo.ListView.DropDown">
-        <item name="android:background">@color/drop_down</item>
-        <item name="android:listSelector">@drawable/action_bar_tab</item>
     </style>
 
 </resources>
