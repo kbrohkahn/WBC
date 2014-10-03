@@ -60,6 +60,8 @@ public class MainActivity extends Activity {
   public static int NUM_EVENTS;
   public static List<Tournament> allTournaments;
   public static ArrayList<ArrayList<ArrayList<Event>>> dayList;
+  public static boolean listReady = false;
+  public static String[] dayStrings;
   private static int COLOR_JUNIOR;
   private static int COLOR_SEMINAR;
   private static int COLOR_QUALIFY;
@@ -74,8 +76,6 @@ public class MainActivity extends Activity {
   private ListView drawerList;
   private CharSequence drawerTitle;
   private CharSequence actionBarTitle;
-  public static boolean listReady = false;
-  public static String[] dayStrings;
 
   /**
    * Add starred event to "My Events" group in list
@@ -138,7 +138,7 @@ public class MainActivity extends Activity {
   }
 
   /**
-   * @param c - calling context
+   * @param c    - calling context
    * @param room - string containing name of selected room
    */
   public static void openMap(Context c, String room) {
@@ -449,7 +449,7 @@ public class MainActivity extends Activity {
     ft.commit();
 
     // Highlight the selected item, update the title, and close the drawer
-
+drawerList.setSelection(position);
     drawerList.setItemChecked(position, true);
     setActionBarTitle(actionBarTitle);
     drawerLayout.closeDrawer(drawerList);
@@ -461,6 +461,22 @@ public class MainActivity extends Activity {
       ab.setTitle(title);
     else
       Log.d(TAG, "Error: Could not get action bar");
+  }
+
+  public void taskFinished() {
+    // Insert the fragment by replacing any existing fragment
+    SummaryFragment summaryFragment = new SummaryFragment();
+    FragmentManager fragmentManager = getFragmentManager();
+    fragmentManager.beginTransaction()
+        .add(R.id.content_frame, summaryFragment)
+        .commit();
+    MainActivity.listReady = true;
+
+    invalidateOptionsMenu();
+  }
+
+  public void showToast(String string) {
+    Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
   }
 
   /**
@@ -521,22 +537,6 @@ public class MainActivity extends Activity {
     }
   }
 
-  public void taskFinished() {
-    // Insert the fragment by replacing any existing fragment
-    SummaryFragment summaryFragment = new SummaryFragment();
-    FragmentManager fragmentManager =getFragmentManager();
-    fragmentManager.beginTransaction()
-        .add(R.id.content_frame, summaryFragment)
-        .commit();
-    MainActivity.listReady = true;
-
-    invalidateOptionsMenu();
-  }
-
-  public void showToast(String string) {
-    Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
-  }
-
   /**
    * Load Events Task to load schedule
    */
@@ -544,7 +544,7 @@ public class MainActivity extends Activity {
     private final static String TAG = "Load Events Task";
 
     @Override
-    protected void  onPreExecute() {
+    protected void onPreExecute() {
 
       ArrayList<ArrayList<Event>> temp;
       dayList = new ArrayList<ArrayList<ArrayList<Event>>>(dayStrings.length);
@@ -634,7 +634,7 @@ public class MainActivity extends Activity {
       try {
         is = getAssets().open("schedule2014.txt");
       } catch (IOException e2) {
-            showToast(
+        showToast(
             "ERROR: Could not find schedule file,"
                 + "contact dev@boardgamers.org for help.");
         e2.printStackTrace();
@@ -1079,8 +1079,8 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onPostExecute(Integer result) {
-        taskFinished();
-        super.onPostExecute(result);
+      taskFinished();
+      super.onPostExecute(result);
     }
   }
 }

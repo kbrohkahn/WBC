@@ -70,13 +70,9 @@ public class HelpActivity extends Activity {
 
     boolean vis = aboutTexts[index].isShown();
     if (vis) {
-      aboutHeaders[index].setCompoundDrawablesWithIntrinsicBounds(
-          R.drawable.list_group_closed, 0, 0, 0);
       aboutHeaders[index].setBackgroundResource(R.drawable.group_collapsed);
       aboutTexts[index].setVisibility(View.GONE);
     } else {
-      aboutHeaders[index].setCompoundDrawablesWithIntrinsicBounds(
-          R.drawable.list_group_open, 0, 0, 0);
       aboutHeaders[index].setBackgroundResource(R.drawable.group_expanded);
       aboutTexts[index].setVisibility(View.VISIBLE);
     }

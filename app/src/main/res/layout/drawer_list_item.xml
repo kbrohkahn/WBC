@@ -4,8 +4,8 @@
   android:id="@+id/drawer_title"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="@drawable/drawer_list_item"
+  android:background="@drawable/action_bar_tab"
   android:gravity="start"
   android:padding="8dp"
-  android:textColor="#111111"
+  android:textColor="@color/menu_text"
   android:textSize="20sp" />

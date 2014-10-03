@@ -202,7 +202,7 @@ public class TournamentFragment extends Fragment {
     if (id < 1000)
       tournament = MainActivity.allTournaments.get(id);
     else {
-      tournament = new Tournament(id, formatStrings[id-1000], "N/A", false, 0, "N/A");
+      tournament = new Tournament(id, formatStrings[id - 1000], "N/A", false, 0, "N/A");
     }
     // get events
     tournamentEvents = new ArrayList<Event>();
@@ -223,7 +223,7 @@ public class TournamentFragment extends Fragment {
               hasFormat = true;
             if (event.eClass.length() > 0)
               hasClass = true;
-          } else if (id >= 1000 && event.format.equalsIgnoreCase(formatStrings[id-1000])) {
+          } else if (id >= 1000 && event.format.equalsIgnoreCase(formatStrings[id - 1000])) {
             tournamentEvents.add(event);
           }
         }
