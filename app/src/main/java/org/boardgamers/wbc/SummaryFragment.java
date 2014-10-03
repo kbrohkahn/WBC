@@ -1,10 +1,12 @@
 package org.boardgamers.wbc;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +52,12 @@ public class SummaryFragment extends Fragment {
 
   @Override
   public void onResume() {
+    final ActionBar ab = getActivity().getActionBar();
+    if (ab != null)
+      ab.setTitle("My WBC");
+    else
+      Log.d(TAG, "Error: Could not get action bar");
+
     summaryList = new ArrayList<ArrayList<Event>>(MainActivity.dayList.size());
     for (int i = 0; i < MainActivity.dayList.size(); i++) {
       summaryList.add(new ArrayList<Event>());
@@ -119,10 +127,7 @@ public class SummaryFragment extends Fragment {
       view = inflater.inflate(R.layout.schedule_item, parent, false);
 
       TextView title = (TextView) view.findViewById(R.id.si_name);
-      if (groupPosition == 0)
-        title.setText(String.valueOf(event.hour) + " - " + event.title);
-      else
-        title.setText(event.title);
+      title.setText(String.valueOf(event.hour) + " - " + event.title);
       title.setTypeface(null, tType);
       title.setTextColor(tColor);
 

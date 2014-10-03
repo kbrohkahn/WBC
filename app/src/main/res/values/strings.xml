@@ -115,11 +115,10 @@
 	<string-array name="drawer_titles">
 		<item>My WBC</item>
 		<item>Full Schedule</item>
-		<item>Search</item>
-		<item>Filter Schedule</item>
 		<item>My Created Events</item>
 		<item>My Finishes</item>
 		<item>My Notes</item>
+		<item>Schedule Filter</item>
 		<item>Settings</item>
 		<item>Help</item>
 		<item>About</item>

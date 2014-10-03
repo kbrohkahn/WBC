@@ -23,6 +23,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,7 +156,7 @@ public class MainActivity extends Activity {
       ab.setDisplayHomeAsUpEnabled(true);
       ab.setHomeButtonEnabled(true);
     } else
-      Log.d(TAG, "Error: Could not get action bar");
+      Log.d(TAG, "Could not get action bar");
 
 
     // load navigation drawer
@@ -168,7 +170,7 @@ public class MainActivity extends Activity {
     drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
     drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-        R.drawable.selected, R.string.open_drawer, R.string.close_drawer) {
+        R.drawable.ic_drawer, R.string.open_drawer, R.string.close_drawer) {
 
       public void onDrawerClosed(View view) {
         super.onDrawerClosed(view);
@@ -290,9 +292,42 @@ public class MainActivity extends Activity {
     super.onResume();
   }
 
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.main, menu);
+    return true;
+  }
+
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    return (drawerToggle.onOptionsItemSelected(item)) || super.onOptionsItemSelected(item);
+
+if (drawerToggle.onOptionsItemSelected(item))
+  return true;
+
+    Fragment fragment;
+    switch (item.getItemId()) {
+      case R.id.menu_search:
+        fragment = new SearchFragment();
+        break;
+      default:
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    FragmentManager fragmentManager = getFragmentManager();
+    FragmentTransaction ft = fragmentManager.beginTransaction()
+        .replace(R.id.content_frame, fragment);
+    ft.addToBackStack("Summary");
+    ft.commit();
+
+    // Highlight the selected item, update the title, and close the drawer
+//    actionBarTitle = drawerTitles[position];
+    setActionBarTitle(actionBarTitle);
+    drawerLayout.closeDrawer(drawerList);
+    return true;
   }
 
   /**
@@ -309,31 +344,28 @@ public class MainActivity extends Activity {
         startActivity(new Intent(this, ScheduleActivity.class));
         return;
       case 2:
-        fragment = new SearchFragment();
-        break;
-      case 3:
-        fragment = new FilterFragment();
-        break;
-      case 4:
         SELECTED_GAME_ID = 0;
         SELECTED_EVENT_ID = "";
 
         Intent intent = new Intent(this, TournamentActivity.class);
         startActivity(intent);
         return;
-      case 5:
+      case 3:
         fragment = new FinishesFragment();
         break;
-      case 6:
+      case 4:
         fragment = new NotesFragment();
         break;
-      case 7:
+      case 5:
+        fragment = new FilterFragment();
+        break;
+      case 6:
         fragment = new SettingsFragment();
         break;
-      case 8:
+      case 7:
         fragment = new HelpFragment();
         break;
-      case 9:
+      case 8:
         fragment = new AboutFragment();
         break;
       default:
@@ -344,7 +376,8 @@ public class MainActivity extends Activity {
     FragmentManager fragmentManager = getFragmentManager();
     FragmentTransaction ft = fragmentManager.beginTransaction()
         .replace(R.id.content_frame, fragment);
-    ft.addToBackStack("Summary");
+
+    //ft.addToBackStack("Summary");
     ft.commit();
 
     // Highlight the selected item, update the title, and close the drawer
