@@ -8,26 +8,31 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,12 +40,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Summary extends FragmentActivity {
-	final static String TAG="Summary Actviity";
+	final static String TAG="Summary Activity";
 
-	private static String dialogText;
+  private String[] mPlanetTitles;
+  private DrawerLayout mDrawerLayout;
+  private ActionBarDrawerToggle mDrawerToggle;
+  private ListView mDrawerList;
+  private CharSequence mDrawerTitle;
+  private CharSequence mTitle;
+
+  private static String dialogText;
 	private static String dialogTitle;
 
-	private SummaryListAdapter listAdapter;
+	private static SummaryListAdapter listAdapter;
 	private ExpandableListView listView;
 	public static ArrayList<ArrayList<Event>> summaryList;
 
@@ -51,48 +63,85 @@ public class Summary extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.summary);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		dayStrings=getResources().getStringArray(R.array.days);
+    // get resources
+    MyApp.COLOR_JUNIOR = getResources().getColor(R.color.junior);
+    MyApp.COLOR_SEMINAR = getResources().getColor(R.color.seminar);
+    MyApp.COLOR_QUALIFY = getResources().getColor(R.color.qualify);
+    MyApp.COLOR_NON_TOURNAMENT = getResources().getColor(R.color.non_tournament);
+    MyApp.COLOR_OPEN_TOURNAMENT = getResources().getColor(R.color.open_tournament);
 
+    dayStrings=getResources().getStringArray(R.array.days);
+
+    // load drawer
+    mPlanetTitles = getResources().getStringArray(R.array.drawer_titles);
+    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    mDrawerList = (ListView) findViewById(R.id.left_drawer);
+    mTitle = mDrawerTitle = getTitle();
+
+    // Set the adapter for the list view
+    mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+        R.layout.drawer_list_item, mPlanetTitles));
+    // Set the list's click listener
+    mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+        R.drawable.selected, R.string.open_drawer, R.string.close_drawer) {
+
+      /** Called when a drawer has settled in a completely closed state. */
+      public void onDrawerClosed(View view) {
+        super.onDrawerClosed(view);
+        getActionBar().setTitle(mTitle);
+        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+      }
+
+      /** Called when a drawer has settled in a completely open state. */
+      public void onDrawerOpened(View drawerView) {
+        super.onDrawerOpened(drawerView);
+        getActionBar().setTitle(mDrawerTitle);
+        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+      }
+    };
+
+    // Set the drawer toggle as the DrawerListener
+    mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+
+    getActionBar().setDisplayHomeAsUpEnabled(true);
+    getActionBar().setHomeButtonEnabled(true);
+
+
+    // initiate list
+    summaryList=new ArrayList<ArrayList<Event>>(dayStrings.length);
+    for (int i=0; i<dayStrings.length; i++) {
+      summaryList.add(new ArrayList<Event>());
+    }
+
+    // initiate main day list
+    ArrayList<ArrayList<Event>> temp;
+    MyApp.dayList=new ArrayList<ArrayList<ArrayList<Event>>>(dayStrings.length);
+    for (int i=0; i<dayStrings.length; i++) {
+      temp=new ArrayList<ArrayList<Event>>();
+      for (int j=0; j<19; j++) {
+        temp.add(new ArrayList<Event>());
+      }
+      MyApp.dayList.add(temp);
+    }
+
+    // setup list adapter and list view
 		listAdapter=new SummaryListAdapter();
 
 		listView=(ExpandableListView) findViewById(R.id.summary_list_view);
 		listView.setAdapter(listAdapter);
 		listView.setDividerHeight(0);
+    for (int i=0; i<listAdapter.getGroupCount(); i++)
+      listView.expandGroup(i);
 
-		MyApp.updateTime(getResources());
 
-		SharedPreferences sp=getSharedPreferences(
+    SharedPreferences sp=getSharedPreferences(
 		    getResources().getString(R.string.sp_file_name),
 		    Context.MODE_PRIVATE);
-
 		int version=sp.getInt("last_app_version", 0);
-
-		// alert to notify of broken ids
-		if (version<11) {
-			AlertDialog.Builder eventIdAlertBuilder=new AlertDialog.Builder(
-			    this);
-			eventIdAlertBuilder
-			    .setMessage(
-			        "Due to schedule changes and source fixes, "
-			            +"we had to change the way starred events are saved. "
-			            +"All event stars and notes will be saved differently, "
-			            +"and data from previous app versions is now obsolete. "
-			            +"We are sorry for the inconvenience, "
-			            +"but this was necessary to ensure that all events "
-			            +"will have unique identifiers throughout schedule "
-			            +"variations in the future.").setTitle(
-			        "Notice");
-			eventIdAlertBuilder.setNeutralButton("OK",
-			    new DialogInterface.OnClickListener() {
-				    @Override
-				    public void onClick(DialogInterface dialog, int which) {
-					    dialog.dismiss();
-				    }
-			    });
-			eventIdAlertBuilder.create().show();
-		}
 
 		// alert to notify dev@boardgamers.org for questions
 		if (version<12) {
@@ -130,19 +179,52 @@ public class Summary extends FragmentActivity {
 		editor.putInt("last_app_version", versionCode);
 		editor.apply();
 
-		dialogText=getIntent().getStringExtra("changes");
+    dialogText = "";
+		// TODO dialogText=getIntent().getStringExtra("changes");
 		dialogTitle="Schedule Changes";
 		if (!dialogText.equalsIgnoreCase("")) {
 			DialogText dc=new DialogText();
 			dc.show(getFragmentManager(), "changes_dialog");
 		}
+
+    new LoadEventsTask(this).execute(null, null, null);
+  }
+
+
+  @Override
+  protected void onPostCreate(Bundle savedInstanceState) {
+    super.onPostCreate(savedInstanceState);
+    // Sync the toggle state after onRestoreInstanceState has occurred.
+    mDrawerToggle.syncState();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    mDrawerToggle.onConfigurationChanged(newConfig);
+  }
+
+
+  @Override
+	public void onResume() {
+    updateList();
+    MyApp.updateTime(getResources());
+    if (MyApp.day > -1)
+      listView.setSelectedGroup(MyApp.day);
+
+    super.onResume();
 	}
 
-	@Override
-	public void onResume() {
-		listAdapter.notifyDataSetChanged();
-		super.onResume();
-	}
+  public static void updateList() {
+    summaryList=new ArrayList<ArrayList<Event>>(MyApp.dayList.size());
+    for (int i=0; i<MyApp.dayList.size(); i++) {
+      summaryList.add(new ArrayList<Event>());
+      for (Event event: MyApp.dayList.get(i).get(0)) {
+        summaryList.get(i).add(event);
+      }
+    }
+    listAdapter.notifyDataSetChanged();
+  }
 
 	class SummaryListAdapter extends BaseExpandableListAdapter {
 		private final LayoutInflater inflater;
@@ -257,31 +339,17 @@ public class Summary extends FragmentActivity {
 		public View getGroupView(final int groupPosition,
 		    final boolean isExpanded, View view, ViewGroup parent) {
 			if (view==null)
-				view=inflater.inflate(R.layout.schedule_group, parent, false);
+				view=inflater.inflate(R.layout.summary_day_label, parent, false);
 
 			String groupTitle=dayStrings[groupPosition];
-			TextView name=(TextView) view.findViewById(R.id.sg_name);
-			name.setText(groupTitle.substring(0, groupTitle.length()-2));
+			TextView name=(TextView) view.findViewById(R.id.summary_day_text);
+			name.setText(groupTitle);
 
-			int id;
-			if (!isExpanded)
-				id=R.drawable.list_group_closed;
-			else
-				id=R.drawable.list_group_open;
+      if (isExpanded)
+        view.setBackgroundResource(R.drawable.group_expanded);
+      else
+        view.setBackgroundResource(R.drawable.group_collapsed);
 
-			name.setCompoundDrawablePadding(5);
-			name.setCompoundDrawablesWithIntrinsicBounds(id, 0, 0, 0);
-
-			view.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					if (isExpanded)
-						listView.collapseGroup(groupPosition);
-					else
-						listView.expandGroup(groupPosition);
-				}
-			});
 			return view;
 		}
 
@@ -307,13 +375,11 @@ public class Summary extends FragmentActivity {
 
 		@Override
 		public long getGroupId(int groupPosition) {
-			// TODO Auto-generated method stub
-			return 0;
+			return groupPosition;
 		}
 
 		@Override
 		public boolean hasStableIds() {
-			// TODO Auto-generated method stub
 			return false;
 		}
 	}
@@ -323,6 +389,14 @@ public class Summary extends FragmentActivity {
 		intent.putExtra("room", room);
 		startActivity(intent);
 	}
+
+  public void selectGame(int gID, String eID) {
+    MyApp.SELECTED_GAME_ID=gID;
+    MyApp.SELECTED_EVENT_ID=eID;
+
+    Intent intent=new Intent(this, TournamentActivity.class);
+    startActivity(intent);
+  }
 
 	public void removeEventStar(Event event) {
 		// remove from summary list
@@ -594,60 +668,84 @@ public class Summary extends FragmentActivity {
 	 * ************************ MENU **************************
 	 */
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater=getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
-
-		return true;
-	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.all_events:
-			startActivity(new Intent(this, ScheduleActivity.class));
-			return true;
-		case R.id.create_event:
-			MyApp.SELECTED_GAME_ID=0;
-			MyApp.SELECTED_EVENT_ID="";
+    // Pass the event to ActionBarDrawerToggle, if it returns
+    // true, then it has handled the app icon touch event
+    if (mDrawerToggle.onOptionsItemSelected(item)) {
+      return true;
+    }
+    // Handle your other action bar items...
 
-			Intent intent=new Intent(this, TournamentActivity.class);
-			startActivity(intent);
-			return true;
-		case R.id.search:
-			new DialogSearch().show(getFragmentManager(), "search_dialog");
-			return true;
-		case R.id.settings:
-			startActivity(new Intent(this, Settings.class));
-			return true;
-		case R.id.filter:
-			startActivity(new Intent(this, Filter.class));
-			return true;
-		case R.id.finish:
-			new DialogFinish().show(getFragmentManager(), "finish_dialog");
-			return true;
-		case R.id.note:
-			new DialogNotes().show(getFragmentManager(), "notes_dialog");
-			return true;
-		case R.id.help:
-			Intent helpIntent=new Intent(this, Help.class);
-			startActivity(helpIntent);
-			return true;
-		case R.id.about:
-			Intent aboutIntent=new Intent(this, About.class);
-			startActivity(aboutIntent);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		return super.onOptionsItemSelected(item);
 	}
 
-	public void selectGame(int gID, String eID) {
-		MyApp.SELECTED_GAME_ID=gID;
-		MyApp.SELECTED_EVENT_ID=eID;
 
-		Intent intent=new Intent(this, TournamentActivity.class);
-		startActivity(intent);
-	}
+  /* Called whenever we call invalidateOptionsMenu() */
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    // If the nav drawer is open, hide action items related to the content view
+    boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+    //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+    return super.onPrepareOptionsMenu(menu);
+  }
+
+  private class DrawerItemClickListener implements ListView.OnItemClickListener {
+    @Override
+    public void onItemClick(AdapterView parent, View view, int position, long id) {
+      selectItem(position);
+    }
+  }
+
+  /** Swaps fragments in the main content view */
+  private void selectItem(int position) {
+    switch (position) {
+      case 0:
+        startActivity(new Intent(this, ScheduleActivity.class));
+        break;
+      case 1:
+        MyApp.SELECTED_GAME_ID=0;
+        MyApp.SELECTED_EVENT_ID="";
+
+        Intent intent=new Intent(this, TournamentActivity.class);
+        startActivity(intent);
+        break;
+      case 2:
+        new DialogSearch().show(getFragmentManager(), "search_dialog");
+        break;
+      case 3:
+        startActivity(new Intent(this, Settings.class));
+        break;
+      case 4:
+        startActivity(new Intent(this, Filter.class));
+        break;
+      case 5:
+        new DialogFinish().show(getFragmentManager(), "finish_dialog");
+        break;
+      case 6:
+        new DialogNotes().show(getFragmentManager(), "notes_dialog");
+        break;
+      case 7:
+        Intent helpIntent=new Intent(this, Help.class);
+        startActivity(helpIntent);
+        break;
+      case 8:
+        Intent aboutIntent=new Intent(this, About.class);
+        startActivity(aboutIntent);
+        break;
+    }
+    // Highlight the selected item, update the mTitle, and close the drawer
+    mDrawerList.setItemChecked(position, true);
+    setTitle(mPlanetTitles[position]);
+    mDrawerLayout.closeDrawer(mDrawerList);
+  }
+
+  @Override
+  public void setTitle(CharSequence title) {
+    mTitle = title;
+    getActionBar().setTitle(mTitle);
+  }
+
+
 }

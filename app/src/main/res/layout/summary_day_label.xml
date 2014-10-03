@@ -7,7 +7,6 @@
         android:id="@+id/summary_day_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/summary_day_background"
         android:gravity="center"
         android:padding="@dimen/text_margin_small"
         android:textColor="#ffffff"

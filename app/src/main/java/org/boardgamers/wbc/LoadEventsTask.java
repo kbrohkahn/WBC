@@ -2,7 +2,6 @@ package org.boardgamers.wbc;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -31,32 +30,6 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 	public LoadEventsTask(Context c) {
 		context=c;
 		activity=null;
-	}
-
-	@Override
-	protected void onPreExecute() {
-		String[] dayStrings=context.getResources().getStringArray(R.array.days);
-
-		ArrayList<ArrayList<Event>> temp;
-		MyApp.dayList=new ArrayList<ArrayList<ArrayList<Event>>>(dayStrings.length);
-		for (int i=0; i<dayStrings.length; i++) {
-			temp=new ArrayList<ArrayList<Event>>();
-			for (int j=0; j<19; j++) {
-				temp.add(new ArrayList<Event>());
-			}
-			MyApp.dayList.add(temp);
-		}
-
-		Summary.summaryList=new ArrayList<ArrayList<Event>>(dayStrings.length);
-		for (int i=0; i<dayStrings.length; i++) {
-			Summary.summaryList.add(new ArrayList<Event>());
-			ArrayList<Event> group=MyApp.dayList.get(i).get(0);
-			for (int j=0; j<group.size(); j++) {
-				Summary.summaryList.get(i).add(group.get(j));
-			}
-		}
-
-		super.onPreExecute();
 	}
 
 	@Override
@@ -298,9 +271,9 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 					    "Registration", "Vendors Area", "World at War",
 					    "Wits & Wagers", "Texas Roadhouse BPA Fundraiser",
 					    "Memoir: D-Day" };
-					for (int i=0; i<nonTournamentStrings.length; i++) {
-						if (temp.indexOf(nonTournamentStrings[i])==0) {
-							tournamentTitle=nonTournamentStrings[i];
+					for (String nonTournamentString:nonTournamentStrings) {
+						if (temp.indexOf(nonTournamentString)==0) {
+							tournamentTitle=nonTournamentString;
 							break;
 						}
 					}
@@ -450,18 +423,18 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 									List<Event> searchList=MyApp.dayList
 									    .get(prevEvent.day).get(
 									        prevEvent.hour-6);
-									for (int i=0; i<searchList.size(); i++) {
-										if (searchList.get(i).identifier
+									for (Event searchEvent:searchList) {
+										if (searchEvent.identifier
 										    .equalsIgnoreCase(prevEvent.identifier))
-											searchList.get(i).totalDuration=prevEvent.totalDuration;
+                      searchEvent.totalDuration=prevEvent.totalDuration;
 									}
 
 									searchList=MyApp.dayList.get(
 									    prevEvent.day).get(0);
-									for (int i=0; i<searchList.size(); i++) {
-										if (searchList.get(i).identifier
+                  for (Event searchEvent:searchList) {
+										if (searchEvent.identifier
 										    .equalsIgnoreCase(prevEvent.identifier))
-											searchList.get(i).totalDuration=prevEvent.totalDuration;
+                      searchEvent.totalDuration=prevEvent.totalDuration;
 									}
 
 									Log.d(TAG,
@@ -590,10 +563,7 @@ public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 	@Override
 	protected void onPostExecute(Integer result) {
 		if (activity!=null) {
-			Intent intent=new Intent(context, Summary.class);
-			intent.putExtra("changes", allChanges);
-			context.startActivity(intent);
-			activity.finish();
+      Summary.updateList();
 			super.onPostExecute(result);
 		} else {
 			NotificationService.checkEvents(context);

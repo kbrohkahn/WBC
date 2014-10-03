@@ -76,7 +76,8 @@ public class ScheduleFragment extends Fragment {
 		private final LayoutInflater inflater;
 
 		public ScheduleListAdapter(Context c) {
-			inflater=LayoutInflater.from(c);
+      inflater=(LayoutInflater)
+          c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		}
 
 		@Override
@@ -241,36 +242,34 @@ public class ScheduleFragment extends Fragment {
 			name.setText(groupTitle.substring(0, groupTitle.length()-2));
 			name.setSelected(true);
 
-			int id;
-			if (!isExpanded)
-				id=R.drawable.list_group_closed;
-			else
-				id=R.drawable.list_group_open;
 
-			name.setCompoundDrawablePadding(5);
-			name.setCompoundDrawablesWithIntrinsicBounds(id, 0, 0, 0);
+      view.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          if (isExpanded)
+            listView.collapseGroup(groupPosition);
+          else
+            listView.expandGroup(groupPosition);
+        }
+      });
 
-			view.setOnClickListener(new View.OnClickListener() {
+      view.setOnLongClickListener(new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+          if (isExpanded)
+            collapseAll(groupPosition);
+          else
+            expandAll(groupPosition);
+          return false;
+        }
+      });
 
-				@Override
-				public void onClick(View v) {
-					if (isExpanded)
-						listView.collapseGroup(groupPosition);
-					else
-						listView.expandGroup(groupPosition);
-				}
-			});
+      if (isExpanded)
+        view.setBackgroundResource(R.drawable.group_expanded);
+      else
+        view.setBackgroundResource(R.drawable.group_collapsed);
 
-			view.setOnLongClickListener(new View.OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					if (isExpanded)
-						collapseAll(groupPosition);
-					else
-						expandAll(groupPosition);
-					return false;
-				}
-			});
+
 
 			return view;
 		}

@@ -1,10 +1,5 @@
 package org.boardgamers.wbc;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,6 +12,11 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class NotificationService extends Service {
 	private final static String TAG="Notification Service";
@@ -74,14 +74,11 @@ public class NotificationService extends Service {
 
 	public static void checkEvents(Context context) {
 		MyApp.updateTime(context.getResources());
-		Event event=null;
 		String eventsString="";
 
 		for (int i=0; i<MyApp.dayList.size(); i++) {
 			List<Event> events=MyApp.dayList.get(i).get(0);
-			for (int k=0; k<events.size(); k++) {
-				event=events.get(k);
-
+			for (Event event:events) {
 				boolean starting=event.day*24+event.hour==MyApp.day*24
 				    +MyApp.hour+1;
 				if (starting)
@@ -116,9 +113,9 @@ public class NotificationService extends Service {
 			mBuilder.setDefaults(Notification.DEFAULT_ALL);
 
 		// Creates an explicit intent for an Activity in your app
-		Intent resultIntent=new Intent(context, SplashScreen.class);
+		Intent resultIntent=new Intent(context, Summary.class);
 		TaskStackBuilder stackBuilder=TaskStackBuilder.create(context);
-		stackBuilder.addParentStack(SplashScreen.class);
+		stackBuilder.addParentStack(Summary.class);
 		stackBuilder.addNextIntent(resultIntent);
 
 		PendingIntent resultPendingIntent=stackBuilder.getPendingIntent(0,
