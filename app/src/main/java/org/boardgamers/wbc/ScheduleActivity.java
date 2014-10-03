@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -24,6 +23,50 @@ public class ScheduleActivity extends FragmentActivity implements
   private DayPagerAdapter pageAdapter;
   private ViewPager viewPager;
 
+  /**
+   * Add starred event to "My Events" group in list
+   *
+   * @param event - Event that was starred
+   */
+  public static void addStarredEvent(Event event) {
+    List<Event> myEvents = MainActivity.dayList.get(event.day).get(0);
+
+    Event starredEvent = new Event(event.identifier, event.tournamentID,
+        event.day, event.hour, event.title, event.eClass, event.format,
+        event.qualify, event.duration, event.continuous,
+        event.totalDuration, event.location);
+    starredEvent.starred = true;
+    // get position in starred list to add (time, then title)
+    int index = 0;
+    for (Event eTemp : myEvents) {
+      if (starredEvent.hour < eTemp.hour
+          || (starredEvent.hour == eTemp.hour && starredEvent.title
+          .compareToIgnoreCase(eTemp.title) == 1))
+        break;
+      else
+        index++;
+    }
+    MainActivity.dayList.get(event.day).get(0).add(index,
+        starredEvent);
+
+  }
+
+  /**
+   * Remove starred event from "My Events" group in list
+   *
+   * @param identifier - event id
+   * @param day        - event's day, used to find which my events group
+   */
+  public static void removeStarredEvent(String identifier, int day) {
+    List<Event> myEvents = MainActivity.dayList.get(day).get(0);
+    for (Event tempE : myEvents) {
+      if (tempE.identifier.equalsIgnoreCase(identifier)) {
+        myEvents.remove(tempE);
+        break;
+      }
+    }
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -31,13 +74,13 @@ public class ScheduleActivity extends FragmentActivity implements
     setContentView(R.layout.activity_main);
 
     // load action bar
-    try {
-      getActionBar().setDisplayHomeAsUpEnabled(true);
-      getActionBar().setHomeButtonEnabled(true);
-    } catch (NullPointerException e) {
-      Toast.makeText(this, "Error: cannot set home button enabled", Toast.LENGTH_SHORT).show();
-      Log.d(TAG, "Error: cannot set home button enabled");
-    }
+    final ActionBar ab = getActionBar();
+    if (ab != null) {
+      ab.setDisplayHomeAsUpEnabled(true);
+      ab.setHomeButtonEnabled(true);
+    } else
+      Log.d(TAG, "No action bar found");
+
     getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
     // setup page adapter and view pager for action bar
@@ -60,8 +103,8 @@ public class ScheduleActivity extends FragmentActivity implements
     getActionBar().setListNavigationCallbacks(mSpinnerAdapter, this);
 
     // set viewpager to current day
-    if (MyApp.day > -1)
-      viewPager.setCurrentItem(MyApp.day);
+    if (MainActivity.day > -1)
+      viewPager.setCurrentItem(MainActivity.day);
 
   }
 
@@ -88,7 +131,7 @@ public class ScheduleActivity extends FragmentActivity implements
     int numDays = getResources().getStringArray(R.array.days).length;
     for (int d = 0; d < numDays; d++) {
       for (int i = 1; i < 18; i++) {
-        List<Event> events = MyApp.dayList.get(d).get(i);
+        List<Event> events = MainActivity.dayList.get(d).get(i);
         for (Event event : events) {
           editor.putBoolean(starPrefString + event.identifier, event.starred);
         }
@@ -99,47 +142,14 @@ public class ScheduleActivity extends FragmentActivity implements
     super.onPause();
   }
 
-  /**
-   * Add starred event to "My Events" group in list
-   *
-   * @param event - Event that was starred
-   */
-  public static void addStarredEvent(Event event) {
-    List<Event> myEvents = MyApp.dayList.get(event.day).get(0);
-
-    Event starredEvent = new Event(event.identifier, event.tournamentID,
-        event.day, event.hour, event.title, event.eClass, event.format,
-        event.qualify, event.duration, event.continuous,
-        event.totalDuration, event.location);
-    starredEvent.starred = true;
-    // get position in starred list to add (time, then title)
-    int index = 0;
-    for (Event eTemp : myEvents) {
-      if (starredEvent.hour < eTemp.hour
-          || (starredEvent.hour == eTemp.hour && starredEvent.title
-          .compareToIgnoreCase(eTemp.title) == 1))
-        break;
-      else
-        index++;
-    }
-    MyApp.dayList.get(event.day).get(0).add(index,
-        starredEvent);
-
-  }
-
-  /**
-   * Remove starred event from "My Events" group in list
-   *
-   * @param identifier - event id
-   * @param day        - event's day, used to find which my events group
-   */
-  public static void removeStarredEvent(String identifier, int day) {
-    List<Event> myEvents = MyApp.dayList.get(day).get(0);
-    for (Event tempE : myEvents) {
-      if (tempE.identifier.equalsIgnoreCase(identifier)) {
-        myEvents.remove(tempE);
-        break;
-      }
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        finish();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
     }
   }
 
@@ -159,18 +169,7 @@ public class ScheduleActivity extends FragmentActivity implements
 
     @Override
     public int getCount() {
-      return MyApp.dayList.size();
-    }
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home:
-        finish();
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
+      return MainActivity.dayList.size();
     }
   }
 }

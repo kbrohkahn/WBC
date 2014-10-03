@@ -21,92 +21,26 @@ import android.widget.TextView;
 
 public class EventFragment extends Fragment {
   private final static String TAG = "Event Fragment";
-
+  public static ImageView star;
   private static Event event;
-
   private static RelativeLayout timeLayout;
-
   private static TextView eFormat;
   private static TextView eClass;
   private static TextView location;
   private static TextView time;
-
-  public static ImageView star;
   private static EditText noteET;
   private static String note;
-
-
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.event_fragment, container, false);
-
-    timeLayout = (RelativeLayout) view.findViewById(R.id.ef_time_layout);
-    eFormat = (TextView) view.findViewById(R.id.ef_format);
-    eClass = (TextView) view.findViewById(R.id.ef_class);
-    location = (TextView) view.findViewById(R.id.ef_location);
-    time = (TextView) view.findViewById(R.id.ef_time);
-
-    star = (ImageView) view.findViewById(R.id.ef_star);
-    star.setOnClickListener(new View.OnClickListener() {
-
-      @Override
-      public void onClick(View v) {
-        changeEventStar(!event.starred);
-
-      }
-    });
-
-    Button share = (Button) view.findViewById(R.id.ef_share);
-    share.setOnClickListener(new View.OnClickListener() {
-
-      @Override
-      public void onClick(View v) {
-        share();
-
-      }
-    });
-
-    Button clear = (Button) view.findViewById(R.id.ef_clear);
-    clear.setOnClickListener(new View.OnClickListener() {
-
-      @Override
-      public void onClick(View v) {
-        noteET.getText().clear();
-
-      }
-    });
-
-    noteET = (EditText) view.findViewById(R.id.ef_note);
-
-    final Activity activity = getActivity();
-    if (!MyApp.SELECTED_EVENT_ID.equalsIgnoreCase(""))
-      setEvent(activity);
-
-    return view;
-
-  }
-
-  public void changeEventStar(boolean starred) {
-    event.starred = starred;
-    star.setImageResource(starred ? R.drawable.star_on
-        : R.drawable.star_off);
-
-    TournamentFragment.changeEventStar(event.identifier, starred,
-        getActivity(), true);
-
-  }
 
   public static void setEvent(final Activity activity) {
     event = null;
     for (int i = 0; i < TournamentFragment.tournamentEvents.size(); i++) {
       event = TournamentFragment.tournamentEvents.get(i);
-      if (event.identifier.equalsIgnoreCase(MyApp.SELECTED_EVENT_ID))
+      if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID))
         break;
     }
 
-    int tColor = MyApp.getTextColor(event);
-    int tType = MyApp.getTextStyle(event);
+    int tColor = MainActivity.getTextColor(event);
+    int tType = MainActivity.getTextStyle(event);
 
     TournamentFragment fragment = (TournamentFragment) activity
         .getFragmentManager().findFragmentById(R.id.gameFragment);
@@ -167,9 +101,9 @@ public class EventFragment extends Fragment {
             + event.identifier, "");
     noteET.setText(note);
 
-    boolean started = event.day * 24 + event.hour <= MyApp.day * 24 + MyApp.hour;
-    boolean ended = event.day * 24 + event.hour + event.totalDuration <= MyApp.day * 24
-        + MyApp.hour;
+    boolean started = event.day * 24 + event.hour <= MainActivity.day * 24 + MainActivity.hour;
+    boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.day * 24
+        + MainActivity.hour;
     boolean happening = started && !ended;
 
     if (ended)
@@ -182,9 +116,70 @@ public class EventFragment extends Fragment {
   }
 
   public static void showMap(Activity a, String room) {
-    Intent intent = new Intent(a, Map.class);
+    Intent intent = new Intent(a, MapFragment.class);
     intent.putExtra("room", room);
     a.startActivity(intent);
+
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+    View view = inflater.inflate(R.layout.event_fragment, container, false);
+
+    timeLayout = (RelativeLayout) view.findViewById(R.id.ef_time_layout);
+    eFormat = (TextView) view.findViewById(R.id.ef_format);
+    eClass = (TextView) view.findViewById(R.id.ef_class);
+    location = (TextView) view.findViewById(R.id.ef_location);
+    time = (TextView) view.findViewById(R.id.ef_time);
+
+    star = (ImageView) view.findViewById(R.id.ef_star);
+    star.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        changeEventStar(!event.starred);
+
+      }
+    });
+
+    Button share = (Button) view.findViewById(R.id.ef_share);
+    share.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        share();
+
+      }
+    });
+
+    Button clear = (Button) view.findViewById(R.id.ef_clear);
+    clear.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        noteET.getText().clear();
+
+      }
+    });
+
+    noteET = (EditText) view.findViewById(R.id.ef_note);
+
+    final Activity activity = getActivity();
+    if (!MainActivity.SELECTED_EVENT_ID.equalsIgnoreCase(""))
+      setEvent(activity);
+
+    return view;
+
+  }
+
+  public void changeEventStar(boolean starred) {
+    event.starred = starred;
+    star.setImageResource(starred ? R.drawable.star_on
+        : R.drawable.star_off);
+
+    TournamentFragment.changeEventStar(event.identifier, starred,
+        getActivity(), true);
 
   }
 

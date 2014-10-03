@@ -2,17 +2,17 @@ package org.boardgamers.wbc;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.NumberPicker;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class Settings extends FragmentActivity {
+public class SettingsFragment extends Fragment {
   private final String TAG = "Settings";
 
   private final int TYPE_VIBRATE = 0;
@@ -37,34 +37,20 @@ public class Settings extends FragmentActivity {
   private NumberPicker notifyTime;
   private CheckBox notifyCB;
 
-
   // private Switch hour;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+    View view = inflater.inflate(R.layout.settings, container, false);
 
-    setContentView(R.layout.settings);
 
-    // load action bar
-    try {
-      getActionBar().setDisplayHomeAsUpEnabled(true);
-      getActionBar().setHomeButtonEnabled(true);
-    } catch (NullPointerException e) {
-      Toast.makeText(this, "Error: cannot set home button enabled", Toast.LENGTH_SHORT).show();
-      Log.d(TAG, "Error: cannot set home button enabled");
-    }
+    notifyCB = (CheckBox) view.findViewById(R.id.settings_notify);
+    notifyType = (RadioGroup) view.findViewById(R.id.settings_notify_type);
 
-    getWindow().setSoftInputMode(
-        WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
-    notifyCB = (CheckBox) findViewById(R.id.settings_notify);
-    notifyType = (RadioGroup) findViewById(R.id.settings_notify_type);
-
-    notifyTime = (NumberPicker) findViewById(R.id.settings_notify_time);
+    notifyTime = (NumberPicker) view.findViewById(R.id.settings_notify_time);
     notifyTime.setMaxValue(60);
 
-    Button shareButton = (Button) findViewById(R.id.share);
+    Button shareButton = (Button) view.findViewById(R.id.share);
     shareButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -76,12 +62,13 @@ public class Settings extends FragmentActivity {
 
     loadSettings();
 
+    return view;
   }
 
   public void share() {
     final Resources resources = getResources();
 
-    SharedPreferences sp = getSharedPreferences(
+    SharedPreferences sp = getActivity().getSharedPreferences(
         resources.getString(R.string.sp_file_name),
         Context.MODE_PRIVATE);
     String starPrefString = resources.getString(R.string.sp_event_starred);
@@ -91,11 +78,11 @@ public class Settings extends FragmentActivity {
 
     Event event;
     int i = 0;
-    for (; i < MyApp.dayList.size(); i++) {
-      for (int j = 1; j < MyApp.dayList.get(i).size(); j++) {
-        for (int k = 0; k < MyApp.dayList.get(i).get(j)
+    for (; i < MainActivity.dayList.size(); i++) {
+      for (int j = 1; j < MainActivity.dayList.get(i).size(); j++) {
+        for (int k = 0; k < MainActivity.dayList.get(i).get(j)
             .size(); k++) {
-          event = MyApp.dayList.get(i).get(j).get(k);
+          event = MainActivity.dayList.get(i).get(j).get(k);
           starredEvents += sp.getBoolean(starPrefString
               + event.identifier, false) ? "1" : "0";
 
@@ -117,13 +104,13 @@ public class Settings extends FragmentActivity {
       userEvents.add(userEvent);
 
       starredEvents += sp.getBoolean(
-          starPrefString + String.valueOf(MyApp.NUM_EVENTS + i), false);
+          starPrefString + String.valueOf(MainActivity.NUM_EVENTS + i), false);
     }
 
     String userName = "";
 
     Pattern emailPattern = Patterns.EMAIL_ADDRESS;
-    Account[] accounts = AccountManager.get(this).getAccounts();
+    Account[] accounts = AccountManager.get(getActivity()).getAccounts();
     for (Account account : accounts) {
       if (emailPattern.matcher(account.name).matches()) {
         userName = account.name;
@@ -135,11 +122,12 @@ public class Settings extends FragmentActivity {
 
     FileOutputStream os = null;
 
+
     try {
-      os = openFileOutput(fileName, Context.MODE_PRIVATE);
+      os = getActivity().openFileOutput(fileName, Context.MODE_PRIVATE);
     } catch (FileNotFoundException e) {
       Toast.makeText(
-          this,
+          getActivity(),
           "ERROR: Could not create output file,"
               + "contact dev@boardgamers.org for help.",
           Toast.LENGTH_LONG).show();
@@ -158,20 +146,22 @@ public class Settings extends FragmentActivity {
       os.close();
     } catch (IOException e) {
       Toast.makeText(
-          this,
+          getActivity(),
           "ERROR: Could not write to output file,"
               + "contact dev@boardgamers.org for help.",
           Toast.LENGTH_LONG).show();
       e.printStackTrace();
+    } catch (NullPointerException e) {
+      Log.d(TAG, "Error: Could not get bytes from user name");
     }
 
-    Intent intent = new Intent(Intent.ACTION_SEND);
+    // Intent intent = new Intent(Intent.ACTION_SEND);
     // intent.setType("document/*");
 
   }
 
   public void loadSettings() {
-    SharedPreferences settings = getSharedPreferences(getResources()
+    SharedPreferences settings = getActivity().getSharedPreferences(getResources()
         .getString(R.string.sp_file_name), Context.MODE_PRIVATE);
 
     notifyCB.setChecked(settings.getBoolean("notify_starred", false));
@@ -200,10 +190,10 @@ public class Settings extends FragmentActivity {
   }
 
   @Override
-  protected void onPause() {
+  public void onPause() {
     final Resources resources = getResources();
 
-    SharedPreferences.Editor editor = getSharedPreferences(
+    SharedPreferences.Editor editor = getActivity().getSharedPreferences(
         resources.getString(R.string.sp_file_name),
         Context.MODE_PRIVATE).edit();
 
@@ -233,27 +223,14 @@ public class Settings extends FragmentActivity {
     editor.apply();
 
     // stop service
-    Intent intent = new Intent(this, NotificationService.class);
-    stopService(intent);
+    Intent intent = new Intent(getActivity(), NotificationService.class);
+    getActivity().stopService(intent);
 
     // start service if notifyCB is checked
     if (notifyCB.isChecked()) {
       Log.d("", "service starting");
-      startService(intent);
+      getActivity().startService(intent);
     }
     super.onPause();
   }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home:
-        finish();
-        return true;
-
-      default:
-        return super.onOptionsItemSelected(item);
-    }
-  }
-
 }

@@ -1,8 +1,5 @@
 package org.boardgamers.wbc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -41,44 +38,143 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TournamentFragment extends Fragment {
   private static final String TAG = "Game Fragment";
-
+  public static ArrayList<Event> tournamentEvents;
+  private static String[] dayStrings;
+  private static Activity activity;
+  private static ImageView starGame;
+  private static EventListAdapter listAdapter;
+  private static boolean allStarred;
   private final int[] finishIDs = {R.id.gf_finish_0, R.id.gf_finish_1,
       R.id.gf_finish_2, R.id.gf_finish_3, R.id.gf_finish_4,
       R.id.gf_finish_5, R.id.gf_finish_6};
-  private static String[] dayStrings;
-
   private Tournament tournament;
-  public static ArrayList<Event> tournamentEvents;
-
-  private static Activity activity;
-
   private boolean hasFormat;
   private boolean hasClass;
-
   private TextView gameGM;
   private TextView gameFormat;
   private TextView gameClass;
-
-  private static ImageView starGame;
   private ImageButton editGame;
   private ImageButton deleteGame;
-
   private View gameFormatDivider;
   private View gameClassDivider;
-
   private TextView previewLink;
   private TextView reportLink;
-
-  private static EventListAdapter listAdapter;
   private ListView listView;
-
   private LinearLayout finishLayout;
   private RadioGroup finishGroup;
   private RadioButton[] finishButtons;
 
-  private static boolean allStarred;
+  public static void changeEventStar(String id, boolean starred,
+                                     Activity context, boolean checkAllStar) {
+
+    Event event = null;
+    for (int i = 0; i < tournamentEvents.size(); i++) {
+      event = tournamentEvents.get(i);
+      if (event.identifier.equalsIgnoreCase(id))
+        break;
+    }
+
+    event.starred = starred;
+
+    listAdapter.notifyDataSetChanged();
+
+    // save in sp
+    SharedPreferences.Editor editor = context.getSharedPreferences(
+        context.getResources().getString(R.string.sp_file_name),
+        Context.MODE_PRIVATE).edit();
+    editor.putBoolean(
+        context.getResources().getString(R.string.sp_event_starred)
+            + event.identifier, starred);
+    editor.apply();
+
+    // update in schedule activity
+    ArrayList<Event> eventList = MainActivity.dayList.get(event.day).get(
+        event.hour - 6);
+    for (Event tempE : eventList) {
+      if (tempE.identifier.equalsIgnoreCase(event.identifier)) {
+        tempE.starred = starred;
+        break;
+      }
+    }
+    if (starred)
+      ScheduleActivity.addStarredEvent(event);
+    else
+      ScheduleActivity.removeStarredEvent(event.identifier, event.day);
+
+    // update in event fragment
+    EventFragment fragment = (EventFragment) activity.getFragmentManager()
+        .findFragmentById(R.id.eventFragment);
+    if (fragment != null && fragment.isInLayout() && MainActivity.SELECTED_EVENT_ID.equalsIgnoreCase(id)) {
+      EventFragment.star.setImageResource(starred ? R.drawable.star_on
+          : R.drawable.star_off);
+    }
+
+    if (checkAllStar)
+      checkAllStar();
+  }
+
+  public static void checkAllStar() {
+    allStarred = true;
+    for (Event tEvent : tournamentEvents) {
+      if (!tEvent.starred) {
+        allStarred = false;
+        break;
+      }
+    }
+
+    setGameStar();
+
+  }
+
+  public static void setGameStar() {
+    starGame.setImageResource(allStarred ? R.drawable.star_on
+        : R.drawable.star_off);
+  }
+
+  public static void saveUserEvents(Context context) {
+    final Resources resources = context.getResources();
+
+    SharedPreferences.Editor editor = context.getSharedPreferences(
+        resources.getString(R.string.sp_file_name),
+        Context.MODE_PRIVATE).edit();
+    String userEventPrefString = resources.getString(R.string.sp_user_event);
+    String starPrefString = resources.getString(R.string.sp_event_starred);
+
+    String saveString;
+    Event event;
+    String breakCharacter = "~";
+
+    int i = 0;
+    for (; i < tournamentEvents.size(); i++) {
+      event = tournamentEvents.get(i);
+
+      saveString = String.valueOf(event.day) + breakCharacter
+          + String.valueOf(event.hour) + breakCharacter + event.title
+          + breakCharacter + String.valueOf(event.duration)
+          + breakCharacter + event.location;
+      editor.putString(userEventPrefString + String.valueOf(i), saveString);
+      editor.putBoolean(
+          starPrefString + String.valueOf(MainActivity.NUM_EVENTS + i),
+          event.starred);
+
+    }
+
+    editor.putString(userEventPrefString + String.valueOf(i), "");
+    editor.apply();
+
+  }
+
+  public static void showCreateDialog() {
+    DialogCreateEvent editNameDialog = new DialogCreateEvent();
+    editNameDialog.show(activity.getFragmentManager(),
+        "create_event_dialog");
+
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,7 +213,7 @@ public class TournamentFragment extends Fragment {
   }
 
   public void setGame() {
-    tournament = MyApp.allTournaments.get(MyApp.SELECTED_GAME_ID);
+    tournament = MainActivity.allTournaments.get(MainActivity.SELECTED_GAME_ID);
 
     // get events
     tournamentEvents = new ArrayList<Event>();
@@ -126,11 +222,11 @@ public class TournamentFragment extends Fragment {
     hasClass = false;
 
     Event event;
-    for (int i = 0; i < MyApp.dayList.size(); i++) {
-      for (int j = 1; j < MyApp.dayList.get(i).size(); j++) {
-        for (int k = 0; k < MyApp.dayList.get(i).get(j)
+    for (int i = 0; i < MainActivity.dayList.size(); i++) {
+      for (int j = 1; j < MainActivity.dayList.get(i).size(); j++) {
+        for (int k = 0; k < MainActivity.dayList.get(i).get(j)
             .size(); k++) {
-          event = MyApp.dayList.get(i).get(j).get(k);
+          event = MainActivity.dayList.get(i).get(j).get(k);
           if (event.tournamentID == tournament.ID) {
             tournamentEvents.add(event);
 
@@ -168,8 +264,8 @@ public class TournamentFragment extends Fragment {
       if (lastEvent.eClass.length() > 0) {
 
         // if last event started, allow finish
-        started = lastEvent.day * 24 + lastEvent.hour <= MyApp.day * 24
-            + MyApp.hour;
+        started = lastEvent.day * 24 + lastEvent.hour <= MainActivity.day * 24
+            + MainActivity.hour;
 
         // links available for tournament
         previewLink.setVisibility(View.VISIBLE);
@@ -273,7 +369,7 @@ public class TournamentFragment extends Fragment {
         editor.putInt("fin_" + tournament.title, i);
         editor.apply();
 
-        MyApp.allTournaments.get(tournament.ID).finish = i;
+        MainActivity.allTournaments.get(tournament.ID).finish = i;
         break;
       }
     }
@@ -282,266 +378,14 @@ public class TournamentFragment extends Fragment {
     super.onPause();
   }
 
-  public class EventListAdapter extends BaseAdapter {
-    private final LayoutInflater inflater;
-    ;
-
-    public EventListAdapter() {
-      inflater = (LayoutInflater) activity
-          .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-
-    @Override
-    public int getCount() {
-      return tournamentEvents.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-      return position;
-    }
-
-    @Override
-    public long getItemId(int position) {
-      return position;
-    }
-
-    @Override
-    public View getView(int position, View view, ViewGroup parent) {
-      if (view == null)
-        view = inflater.inflate(R.layout.tournament_item, null);
-
-      final Event event = tournamentEvents.get(position);
-
-      boolean started = event.day * 24 + event.hour <= MyApp.day * 24 + MyApp.hour;
-      boolean ended = event.day * 24 + event.hour + event.totalDuration <= MyApp.day
-          * 24 + MyApp.hour;
-      boolean happening = started && !ended;
-
-      EventFragment fragment = (EventFragment) getFragmentManager()
-          .findFragmentById(R.id.eventFragment);
-      if (fragment != null
-          && fragment.isInLayout()
-          && event.identifier
-          .equalsIgnoreCase(MyApp.SELECTED_EVENT_ID))
-        view.setBackgroundResource(R.drawable.selected);
-      else if (position % 2 == 0) {
-        if (ended)
-          view.setBackgroundResource(R.drawable.ended_light);
-        else if (happening)
-          view.setBackgroundResource(R.drawable.current_light);
-        else
-          view.setBackgroundResource(R.drawable.future_light);
-      } else {
-        if (ended)
-          view.setBackgroundResource(R.drawable.ended_dark);
-        else if (happening)
-          view.setBackgroundResource(R.drawable.current_dark);
-        else
-          view.setBackgroundResource(R.drawable.future_dark);
-      }
-
-      int tColor = MyApp.getTextColor(event);
-      int tType = MyApp.getTextStyle(event);
-
-      TextView title = (TextView) view.findViewById(R.id.gi_name);
-      title.setTypeface(null, tType);
-      title.setTextColor(tColor);
-      title.setText(event.title);
-
-      TextView day = (TextView) view.findViewById(R.id.gi_date);
-      day.setTypeface(null, tType);
-      day.setTextColor(tColor);
-      day.setText(dayStrings[event.day]);
-
-      TextView time = (TextView) view.findViewById(R.id.gi_time);
-      time.setTypeface(null, tType);
-      time.setTextColor(tColor);
-      time.setText(String.valueOf(event.hour));
-
-      LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0,
-          LinearLayout.LayoutParams.MATCH_PARENT, 0);
-
-      TextView eClass = (TextView) view.findViewById(R.id.gi_class);
-      if (hasClass) {
-        eClass.setVisibility(View.VISIBLE);
-        eClass.setTypeface(null, tType);
-        eClass.setTextColor(tColor);
-        eClass.setText(event.eClass);
-      } else
-        eClass.setLayoutParams(lp);
-
-      TextView format = (TextView) view.findViewById(R.id.gi_format);
-      if (hasFormat) {
-        format.setVisibility(View.VISIBLE);
-        format.setTypeface(null, tType);
-        format.setTextColor(tColor);
-        format.setText(event.format);
-      } else
-        format.setLayoutParams(lp);
-
-      TextView duration = (TextView) view.findViewById(R.id.gi_duration);
-      duration.setTypeface(null, tType);
-      duration.setTextColor(tColor);
-      duration.setText(String.valueOf(event.duration));
-
-      if (event.continuous) {
-        duration.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-            R.drawable.continuous_icon, 0);
-      }
-
-      TextView location = (TextView) view.findViewById(R.id.gi_location);
-      location.setTypeface(null, tType);
-      location.setTextColor(tColor);
-
-      SpannableString locationText = new SpannableString(event.location);
-      locationText.setSpan(new UnderlineSpan(), 0, locationText.length(),
-          0);
-      location.setText(locationText);
-
-      location.setOnClickListener(new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-          showMap(event.location);
-
-        }
-      });
-
-      ImageView star = (ImageView) view.findViewById(R.id.gi_star);
-      if (event.starred)
-        star.setImageResource(R.drawable.star_on);
-      else
-        star.setImageResource(R.drawable.star_off);
-
-      star.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          changeEventStar(event.identifier, !event.starred, activity,
-              true);
-
-        }
-      });
-
-      ImageButton delete = (ImageButton) view.findViewById(R.id.gi_delete);
-      ImageButton edit = (ImageButton) view.findViewById(R.id.gi_edit);
-      if (tournament.ID == 0) {
-
-        edit.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            editEvent(event.identifier);
-
-          }
-        });
-
-        delete.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            deleteEvents(event.identifier);
-
-          }
-        });
-        format.setVisibility(View.GONE);
-        eClass.setVisibility(View.GONE);
-
-      } else {
-        edit.setOnClickListener(null);
-        edit.setVisibility(View.GONE);
-
-        delete.setOnClickListener(null);
-        delete.setVisibility(View.GONE);
-
-        format.setVisibility(View.VISIBLE);
-        eClass.setVisibility(View.VISIBLE);
-
-      }
-
-      view.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          selectEvent(event.identifier);
-        }
-      });
-      return view;
-    }
-  }
-
   public void showMap(String room) {
-    Intent intent = new Intent(getActivity(), Map.class);
+    Intent intent = new Intent(getActivity(), MapFragment.class);
     intent.putExtra("room", room);
     startActivity(intent);
   }
 
-  public static void changeEventStar(String id, boolean starred,
-                                     Activity context, boolean checkAllStar) {
-
-    Event event = null;
-    for (int i = 0; i < tournamentEvents.size(); i++) {
-      event = tournamentEvents.get(i);
-      if (event.identifier.equalsIgnoreCase(id))
-        break;
-    }
-
-    event.starred = starred;
-
-    listAdapter.notifyDataSetChanged();
-
-    // save in sp
-    SharedPreferences.Editor editor = context.getSharedPreferences(
-        context.getResources().getString(R.string.sp_file_name),
-        Context.MODE_PRIVATE).edit();
-    editor.putBoolean(
-        context.getResources().getString(R.string.sp_event_starred)
-            + event.identifier, starred);
-    editor.apply();
-
-    // update in schedule activity
-    ArrayList<Event> eventList = MyApp.dayList.get(event.day).get(
-        event.hour - 6);
-    for (Event tempE : eventList) {
-      if (tempE.identifier == event.identifier) {
-        tempE.starred = starred;
-        break;
-      }
-    }
-    if (starred)
-      ScheduleActivity.addStarredEvent(event);
-    else
-      ScheduleActivity.removeStarredEvent(event.identifier, event.day);
-
-    // update in event fragment
-    EventFragment fragment = (EventFragment) activity.getFragmentManager()
-        .findFragmentById(R.id.eventFragment);
-    if (fragment != null && fragment.isInLayout() && MyApp.SELECTED_EVENT_ID == id) {
-      EventFragment.star.setImageResource(starred ? R.drawable.star_on
-          : R.drawable.star_off);
-    }
-
-    if (checkAllStar)
-      checkAllStar();
-  }
-
-  public static void checkAllStar() {
-    allStarred = true;
-    for (Event tEvent : tournamentEvents) {
-      if (!tEvent.starred) {
-        allStarred = false;
-        break;
-      }
-    }
-
-    setGameStar();
-
-  }
-
-  public static void setGameStar() {
-    starGame.setImageResource(allStarred ? R.drawable.star_on
-        : R.drawable.star_off);
-  }
-
   public void selectEvent(String eID) {
-    MyApp.SELECTED_EVENT_ID = eID;
+    MainActivity.SELECTED_EVENT_ID = eID;
     listAdapter.notifyDataSetChanged();
 
     EventFragment fragment = (EventFragment) getFragmentManager()
@@ -570,14 +414,14 @@ public class TournamentFragment extends Fragment {
   }
 
   public void editEvent(String identifier) {
-    MyApp.SELECTED_EVENT_ID = identifier;
+    MainActivity.SELECTED_EVENT_ID = identifier;
 
     DialogEditEvent editNameDialog = new DialogEditEvent();
     editNameDialog.show(activity.getFragmentManager(), "edit_event_dialog");
   }
 
   public void deleteEvents(String identifier) {
-    MyApp.SELECTED_EVENT_ID = identifier;
+    MainActivity.SELECTED_EVENT_ID = identifier;
 
     DialogDelete deleteDialog = new DialogDelete();
     deleteDialog.show(activity.getFragmentManager(), "delete_dialog");
@@ -605,7 +449,7 @@ public class TournamentFragment extends Fragment {
       EVENT_INDEX = 0;
       for (; EVENT_INDEX < tournamentEvents.size(); EVENT_INDEX++) {
         if (tournamentEvents.get(EVENT_INDEX).identifier
-            .equalsIgnoreCase(MyApp.SELECTED_EVENT_ID))
+            .equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID))
           break;
       }
 
@@ -670,20 +514,20 @@ public class TournamentFragment extends Fragment {
         event = tournamentEvents.remove(index);
 
         // delete from dayList (hour)
-        List<Event> scheduleEvents = MyApp.dayList.get(
+        List<Event> scheduleEvents = MainActivity.dayList.get(
             event.day).get(event.hour - 6);
 
         for (int j = 0; j < scheduleEvents.size(); j++) {
           if (scheduleEvents.get(j).identifier
               .equalsIgnoreCase(event.identifier)) {
-            MyApp.dayList.get(event.day).get(
+            MainActivity.dayList.get(event.day).get(
                 event.hour - 6).remove(j);
             break;
           }
         }
         // delete from dayList (starred)
         if (event.starred) {
-          scheduleEvents = MyApp.dayList.get(event.day).get(
+          scheduleEvents = MainActivity.dayList.get(event.day).get(
               0);
           for (int j = 0; j < scheduleEvents.size(); j++) {
             if (scheduleEvents.get(j).identifier
@@ -708,7 +552,7 @@ public class TournamentFragment extends Fragment {
         if (EVENT_INDEX == 0)
           EVENT_INDEX++;
 
-        MyApp.SELECTED_EVENT_ID = tournamentEvents.get(EVENT_INDEX - 1).identifier;
+        MainActivity.SELECTED_EVENT_ID = tournamentEvents.get(EVENT_INDEX - 1).identifier;
         listAdapter.notifyDataSetChanged();
 
         EventFragment fragment = (EventFragment) activity
@@ -913,9 +757,9 @@ public class TournamentFragment extends Fragment {
 
           changeEventStar(newEvent.identifier, true, activity, false);
 
-          MyApp.SELECTED_EVENT_ID = identifier;
+          MainActivity.SELECTED_EVENT_ID = identifier;
 
-          MyApp.dayList.get(day).get(hour - 6).add(0,
+          MainActivity.dayList.get(day).get(hour - 6).add(0,
               newEvent);
 
         }
@@ -954,7 +798,7 @@ public class TournamentFragment extends Fragment {
       event = null;
       for (int i = 0; i < tournamentEvents.size(); i++) {
         event = tournamentEvents.get(i);
-        if (event.identifier.equalsIgnoreCase(MyApp.SELECTED_EVENT_ID))
+        if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID))
           break;
       }
 
@@ -995,7 +839,7 @@ public class TournamentFragment extends Fragment {
       int index = 0;
       for (; index < tournamentEvents.size(); index++) {
         if (tournamentEvents.get(index).identifier
-            .equalsIgnoreCase(MyApp.SELECTED_EVENT_ID))
+            .equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID))
           break;
       }
 
@@ -1021,7 +865,7 @@ public class TournamentFragment extends Fragment {
       tournamentEvents.add(index, editedEvent);
 
       // remove old event from schedule
-      List<Event> events = MyApp.dayList.get(event.day).get(
+      List<Event> events = MainActivity.dayList.get(event.day).get(
           oldTime - 6);
       for (int i = 0; i < events.size(); i++) {
         if (events.get(i).identifier.equalsIgnoreCase(event.identifier)) {
@@ -1031,7 +875,7 @@ public class TournamentFragment extends Fragment {
       }
 
       // add new event to schedule
-      MyApp.dayList.get(event.day).get(hour - 6).add(0,
+      MainActivity.dayList.get(event.day).get(hour - 6).add(0,
           editedEvent);
 
       // check for starred event
@@ -1041,7 +885,7 @@ public class TournamentFragment extends Fragment {
         ScheduleActivity.addStarredEvent(editedEvent);
       }
 
-      MyApp.SELECTED_EVENT_ID = event.identifier;
+      MainActivity.SELECTED_EVENT_ID = event.identifier;
 
       listAdapter.notifyDataSetChanged();
 
@@ -1058,43 +902,188 @@ public class TournamentFragment extends Fragment {
 
   }
 
-  public static void saveUserEvents(Context context) {
-    final Resources resources = context.getResources();
+  public class EventListAdapter extends BaseAdapter {
+    private final LayoutInflater inflater;
+    ;
 
-    SharedPreferences.Editor editor = context.getSharedPreferences(
-        resources.getString(R.string.sp_file_name),
-        Context.MODE_PRIVATE).edit();
-    String userEventPrefString = resources.getString(R.string.sp_user_event);
-    String starPrefString = resources.getString(R.string.sp_event_starred);
-
-    String saveString;
-    Event event;
-    String breakCharacter = "~";
-
-    int i = 0;
-    for (; i < tournamentEvents.size(); i++) {
-      event = tournamentEvents.get(i);
-
-      saveString = String.valueOf(event.day) + breakCharacter
-          + String.valueOf(event.hour) + breakCharacter + event.title
-          + breakCharacter + String.valueOf(event.duration)
-          + breakCharacter + event.location;
-      editor.putString(userEventPrefString + String.valueOf(i), saveString);
-      editor.putBoolean(
-          starPrefString + String.valueOf(MyApp.NUM_EVENTS + i),
-          event.starred);
-
+    public EventListAdapter() {
+      inflater = (LayoutInflater) activity
+          .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    editor.putString(userEventPrefString + String.valueOf(i), "");
-    editor.apply();
+    @Override
+    public int getCount() {
+      return tournamentEvents.size();
+    }
 
-  }
+    @Override
+    public Object getItem(int position) {
+      return position;
+    }
 
-  public static void showCreateDialog() {
-    DialogCreateEvent editNameDialog = new DialogCreateEvent();
-    editNameDialog.show(activity.getFragmentManager(),
-        "create_event_dialog");
+    @Override
+    public long getItemId(int position) {
+      return position;
+    }
 
+    @Override
+    public View getView(int position, View view, ViewGroup parent) {
+      if (view == null)
+        view = inflater.inflate(R.layout.tournament_item, null);
+
+      final Event event = tournamentEvents.get(position);
+
+      boolean started = event.day * 24 + event.hour <= MainActivity.day * 24 + MainActivity.hour;
+      boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.day
+          * 24 + MainActivity.hour;
+      boolean happening = started && !ended;
+
+      EventFragment fragment = (EventFragment) getFragmentManager()
+          .findFragmentById(R.id.eventFragment);
+      if (fragment != null
+          && fragment.isInLayout()
+          && event.identifier
+          .equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID))
+        view.setBackgroundResource(R.drawable.selected);
+      else if (position % 2 == 0) {
+        if (ended)
+          view.setBackgroundResource(R.drawable.ended_light);
+        else if (happening)
+          view.setBackgroundResource(R.drawable.current_light);
+        else
+          view.setBackgroundResource(R.drawable.future_light);
+      } else {
+        if (ended)
+          view.setBackgroundResource(R.drawable.ended_dark);
+        else if (happening)
+          view.setBackgroundResource(R.drawable.current_dark);
+        else
+          view.setBackgroundResource(R.drawable.future_dark);
+      }
+
+      int tColor = MainActivity.getTextColor(event);
+      int tType = MainActivity.getTextStyle(event);
+
+      TextView title = (TextView) view.findViewById(R.id.gi_name);
+      title.setTypeface(null, tType);
+      title.setTextColor(tColor);
+      title.setText(event.title);
+
+      TextView day = (TextView) view.findViewById(R.id.gi_date);
+      day.setTypeface(null, tType);
+      day.setTextColor(tColor);
+      day.setText(dayStrings[event.day]);
+
+      TextView time = (TextView) view.findViewById(R.id.gi_time);
+      time.setTypeface(null, tType);
+      time.setTextColor(tColor);
+      time.setText(String.valueOf(event.hour));
+
+      LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0,
+          LinearLayout.LayoutParams.MATCH_PARENT, 0);
+
+      TextView eClass = (TextView) view.findViewById(R.id.gi_class);
+      if (hasClass) {
+        eClass.setVisibility(View.VISIBLE);
+        eClass.setTypeface(null, tType);
+        eClass.setTextColor(tColor);
+        eClass.setText(event.eClass);
+      } else
+        eClass.setLayoutParams(lp);
+
+      TextView format = (TextView) view.findViewById(R.id.gi_format);
+      if (hasFormat) {
+        format.setVisibility(View.VISIBLE);
+        format.setTypeface(null, tType);
+        format.setTextColor(tColor);
+        format.setText(event.format);
+      } else
+        format.setLayoutParams(lp);
+
+      TextView duration = (TextView) view.findViewById(R.id.gi_duration);
+      duration.setTypeface(null, tType);
+      duration.setTextColor(tColor);
+      duration.setText(String.valueOf(event.duration));
+
+      if (event.continuous) {
+        duration.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+            R.drawable.continuous_icon, 0);
+      }
+
+      TextView location = (TextView) view.findViewById(R.id.gi_location);
+      location.setTypeface(null, tType);
+      location.setTextColor(tColor);
+
+      SpannableString locationText = new SpannableString(event.location);
+      locationText.setSpan(new UnderlineSpan(), 0, locationText.length(),
+          0);
+      location.setText(locationText);
+
+      location.setOnClickListener(new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+          showMap(event.location);
+
+        }
+      });
+
+      ImageView star = (ImageView) view.findViewById(R.id.gi_star);
+      if (event.starred)
+        star.setImageResource(R.drawable.star_on);
+      else
+        star.setImageResource(R.drawable.star_off);
+
+      star.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          changeEventStar(event.identifier, !event.starred, activity,
+              true);
+
+        }
+      });
+
+      ImageButton delete = (ImageButton) view.findViewById(R.id.gi_delete);
+      ImageButton edit = (ImageButton) view.findViewById(R.id.gi_edit);
+      if (tournament.ID == 0) {
+
+        edit.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            editEvent(event.identifier);
+
+          }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            deleteEvents(event.identifier);
+
+          }
+        });
+        format.setVisibility(View.GONE);
+        eClass.setVisibility(View.GONE);
+
+      } else {
+        edit.setOnClickListener(null);
+        edit.setVisibility(View.GONE);
+
+        delete.setOnClickListener(null);
+        delete.setVisibility(View.GONE);
+
+        format.setVisibility(View.VISIBLE);
+        eClass.setVisibility(View.VISIBLE);
+
+      }
+
+      view.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          selectEvent(event.identifier);
+        }
+      });
+      return view;
+    }
   }
 }

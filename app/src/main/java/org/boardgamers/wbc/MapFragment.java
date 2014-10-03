@@ -1,16 +1,15 @@
 package org.boardgamers.wbc;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-public class Map extends Activity {
-  private final String TAG="Map Activity";
+public class MapFragment extends Fragment {
+  private final String TAG = "Map Activity";
 
   final private int[] upstairsIDs = {R.drawable.room_conestoga_1,
       R.drawable.room_conestoga_2, R.drawable.room_conestoga_3,
@@ -28,56 +27,48 @@ public class Map extends Activity {
       R.drawable.room_terrace, R.drawable.room_terrace,
       R.drawable.room_terrace, R.drawable.room_terrace,
       R.drawable.room_terrace, R.drawable.room_terrace};
-
-  public String[] roomsUpstairs;
-  public String[] roomsDownstairs;
-
+  public String roomString;
+  Runnable runnable = new Runnable() {
+    @Override
+    public void run() {
+      setRoom();
+    }
+  };
   private ImageView upstairsIV;
   private ImageView downstairsIV;
-
-  int roomID;
+  private int roomID;
   private Handler handler;
-
   private boolean on;
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+    View view = inflater.inflate(R.layout.map, container);
 
-    setContentView(R.layout.map);
 
-    try {
-      getActionBar().setDisplayHomeAsUpEnabled(true);
-      getActionBar().setHomeButtonEnabled(true);
-    } catch (NullPointerException e) {
-      Toast.makeText(this, "Error: cannot set home button enabled", Toast.LENGTH_SHORT).show();
-      Log.d(TAG, "Error: cannot set home button enabled");
-    }
+    upstairsIV = (ImageView) view.findViewById(R.id.map_upstairs_overlay);
+    downstairsIV = (ImageView) view.findViewById(R.id.map_downstairs_overlay);
 
-    upstairsIV = (ImageView) findViewById(R.id.map_upstairs_overlay);
-    downstairsIV = (ImageView) findViewById(R.id.map_downstairs_overlay);
-
-    String room = getIntent().getStringExtra("room");
 
     roomID = -1;
-    roomsDownstairs = getResources().getStringArray(R.array.rooms_downstairs);
+    String[] roomsDownstairs = getResources().getStringArray(R.array.rooms_downstairs);
     for (int i = 0; i < roomsDownstairs.length; i++) {
-      if (roomsDownstairs[i].equalsIgnoreCase(room)) {
+      if (roomsDownstairs[i].equalsIgnoreCase(roomString)) {
         roomID = i;
         break;
       }
     }
 
-    roomsUpstairs = getResources().getStringArray(R.array.rooms_upstairs);
+    String[] roomsUpstairs = getResources().getStringArray(R.array.rooms_upstairs);
     for (int i = 0; i < roomsUpstairs.length; i++) {
-      if (roomsUpstairs[i].equalsIgnoreCase(room)) {
+      if (roomsUpstairs[i].equalsIgnoreCase(roomString)) {
         roomID = 50 + i;
         break;
       }
     }
 
     if (roomID > -1) {
-      setTitle(room);
+      getActivity().setTitle(roomString);
       handler = new Handler();
 
       if (roomID >= 50)
@@ -86,11 +77,13 @@ public class Map extends Activity {
         downstairsIV.setImageResource(downstairsIDs[roomID]);
       on = true;
     } else
-      setTitle("Hotel Map");
+      getActivity().setTitle("Hotel Map");
+
+    return view;
   }
 
   @Override
-  protected void onResume() {
+  public void onResume() {
     if (roomID > -1) {
       refreshRoom();
     }
@@ -113,31 +106,11 @@ public class Map extends Activity {
     handler.postDelayed(runnable, 500);
   }
 
-  Runnable runnable = new Runnable() {
-    @Override
-    public void run() {
-      setRoom();
-    }
-  };
-
   @Override
-  protected void onPause() {
+  public void onPause() {
     if (roomID > -1)
       handler.removeCallbacks(runnable);
 
     super.onPause();
   }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home:
-        finish();
-        return true;
-
-      default:
-        return super.onOptionsItemSelected(item);
-    }
-  }
-
 }

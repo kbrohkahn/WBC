@@ -25,13 +25,14 @@
             android:enabled="true" >
         </service>
 		    <activity
-			    android:name=".Summary"
+			    android:name=".MainActivity"
 			    android:label="@string/my_summary" >
 			    <intent-filter>
 				    <action android:name="android.intent.action.MAIN" />
 				    <category android:name="android.intent.category.LAUNCHER" />
 			    </intent-filter>
 		    </activity>
+
         <activity
             android:name=".ScheduleActivity"
             android:label="@string/activity_schedule" >
@@ -39,26 +40,6 @@
         <activity
             android:name=".TournamentActivity"
             android:label="@string/activity_tournament" >
-        </activity>
-        <activity
-            android:name=".Filter"
-            android:label="@string/activity_filter" >
-        </activity>
-        <activity
-            android:name=".Settings"
-            android:label="@string/activity_settings" >
-        </activity>
-        <activity
-            android:name=".Map"
-            android:label="@string/activity_map" >
-        </activity>
-        <activity
-            android:name=".Help"
-            android:label="@string/activity_help" >
-        </activity>
-        <activity
-            android:name=".About"
-            android:label="@string/activity_about" >
         </activity>
         <activity
             android:name=".EventActivity"

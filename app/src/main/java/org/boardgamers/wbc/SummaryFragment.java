@@ -2,7 +2,6 @@ package org.boardgamers.wbc;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -14,88 +13,99 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ScheduleFragment extends Fragment {
-  final static String TAG = "Schedule Fragment";
-
-  private ScheduleListAdapter listAdapter;
+public class SummaryFragment extends Fragment {
+  final static String TAG = "Summary Activity";
+  public static ArrayList<ArrayList<Event>> summaryList;
+  private static SummaryListAdapter listAdapter;
   private ExpandableListView listView;
+  private String[] dayStrings;
 
-  private int dayID;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    View view = inflater
-        .inflate(R.layout.schedule_fragment, container, false);
+    View view = inflater.inflate(R.layout.summary, container, false);
 
-    dayID = getArguments().getInt("current_day");
-    listAdapter = new ScheduleListAdapter(this.getActivity());
+    dayStrings = getResources().getStringArray(R.array.days);
 
-    listView = (ExpandableListView) view.findViewById(R.id.sf_schedule);
+    SummaryFragment.summaryList = new ArrayList<ArrayList<Event>>(dayStrings.length);
+    for (int i = 0; i < dayStrings.length; i++) {
+      SummaryFragment.summaryList.add(new ArrayList<Event>());
+    }
+
+    // setup list adapter and list view
+    listAdapter = new SummaryListAdapter();
+
+    listView = (ExpandableListView) view.findViewById(R.id.summary_list_view);
     listView.setAdapter(listAdapter);
     listView.setDividerHeight(0);
-
-    expandAll(0);
+    for (int i = 0; i < listAdapter.getGroupCount(); i++)
+      listView.expandGroup(i);
 
     return view;
   }
 
   @Override
   public void onResume() {
-    if (dayID == MainActivity.day)
-      listView.setSelectedGroup(MainActivity.hour - 5);
-
+    summaryList = new ArrayList<ArrayList<Event>>(MainActivity.dayList.size());
+    for (int i = 0; i < MainActivity.dayList.size(); i++) {
+      summaryList.add(new ArrayList<Event>());
+      for (Event event : MainActivity.dayList.get(i).get(0)) {
+        summaryList.get(i).add(event);
+      }
+    }
     listAdapter.notifyDataSetChanged();
+
+    // get time and go to current day
+    if (MainActivity.day > -1)
+      listView.setSelectedGroup(MainActivity.day);
 
     super.onResume();
   }
 
-  public void expandAll(int start) {
-    for (int i = start; i < listAdapter.getGroupCount(); i++)
-      listView.expandGroup(i);
-  }
-
-  public void collapseAll(int start) {
-    for (int i = start; i < listAdapter.getGroupCount(); i++)
-      listView.collapseGroup(i);
-  }
-
-  public void changeEventStar(Event event, boolean starred, int groupPosition) {
-    // update event's star
-    if (groupPosition == 0) {
-      // if in first group, need to find original event
-      List<Event> events = MainActivity.dayList.get(event.day).get(
-          event.hour - 6);
-      for (int i = 0; i < events.size(); i++) {
-        Event temp = events.get(i);
-        if (temp.identifier.equalsIgnoreCase(event.identifier)) {
-          temp.starred = starred;
-          break;
-        }
+  public void removeEventStar(Event event) {
+    // remove from summary list
+    List<Event> searchList = summaryList.get(event.day);
+    for (int i = 0; i < searchList.size(); i++) {
+      if (searchList.get(i).identifier.equalsIgnoreCase(event.identifier)) {
+        searchList.remove(i);
       }
-    } else
-      event.starred = starred;
-    if (starred)
-      ScheduleActivity.addStarredEvent(event);
-    else
-      ScheduleActivity.removeStarredEvent(event.identifier, event.day);
+    }
 
+    // remove from "My Events" in day list
+    searchList = MainActivity.dayList.get(event.day).get(0);
+    for (Event tempE : searchList) {
+      if (tempE.identifier.equalsIgnoreCase(event.identifier)) {
+        MainActivity.dayList.get(event.day).get(0).remove(tempE);
+        break;
+      }
+    }
+
+    // remove from day list
+    searchList = MainActivity.dayList.get(event.day).get(event.hour - 6);
+    for (Event tempE : searchList) {
+      if (tempE.identifier.equalsIgnoreCase(event.identifier)) {
+        tempE.starred = false;
+        break;
+      }
+    }
     listAdapter.notifyDataSetChanged();
   }
 
-  class ScheduleListAdapter extends BaseExpandableListAdapter {
+  class SummaryListAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
 
-    public ScheduleListAdapter(Context c) {
+    public SummaryListAdapter() {
       inflater = (LayoutInflater)
-          c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+          getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-      return MainActivity.dayList.get(dayID).get(groupPosition).get(childPosition);
+      return summaryList.get(groupPosition).get(childPosition);
     }
 
     @Override
@@ -106,13 +116,7 @@ public class ScheduleFragment extends Fragment {
       int tColor = MainActivity.getTextColor(event);
       int tType = MainActivity.getTextStyle(event);
 
-      if (event.starred
-          || MainActivity.allTournaments.get(event.tournamentID).visible)
-        view = inflater.inflate(R.layout.schedule_item, parent, false);
-      else
-        return inflater.inflate(R.layout.schedule_gone, parent, false);
-
-      view.setVisibility(View.VISIBLE);
+      view = inflater.inflate(R.layout.schedule_item, parent, false);
 
       TextView title = (TextView) view.findViewById(R.id.si_name);
       if (groupPosition == 0)
@@ -152,14 +156,13 @@ public class ScheduleFragment extends Fragment {
         }
       });
 
-      final int group = groupPosition;
       ImageView starIV = (ImageView) view.findViewById(R.id.si_star);
       starIV.setImageResource(event.starred ? R.drawable.star_on
           : R.drawable.star_off);
       starIV.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          changeEventStar(event, !event.starred, group);
+          removeEventStar(event);
         }
       });
 
@@ -198,96 +201,35 @@ public class ScheduleFragment extends Fragment {
 
     @Override
     public Object getGroup(int groupPosition) {
-      return MainActivity.dayList.get(dayID).get(groupPosition);
+      return summaryList.get(groupPosition).get(groupPosition);
     }
 
     @Override
     public View getGroupView(final int groupPosition,
                              final boolean isExpanded, View view, ViewGroup parent) {
       if (view == null)
-        view = inflater.inflate(R.layout.schedule_group, parent, false);
+        view = inflater.inflate(R.layout.summary_day_label, parent, false);
 
-      TextView name = (TextView) view.findViewById(R.id.sg_name);
-
-      SharedPreferences settings = getActivity().getSharedPreferences(
-          getResources().getString(R.string.sp_file_name),
-          Context.MODE_PRIVATE);
-
-      boolean hours24 = settings.getBoolean("24_hour", true);
-      int hoursID = (hours24 ? R.array.hours_24 : R.array.hours_12);
-      String[] hours = getResources().getStringArray(hoursID);
-
-      String groupTitle;
-      if (groupPosition == 0)
-        groupTitle = "My Events: ";
-      else
-        groupTitle = hours[groupPosition - 1] + ": ";
-
-      if (groupPosition > 0) {
-        int i;
-
-        // group is 7pm or 8pm : only search events starting today
-        if (groupPosition < 3)
-          i = dayID;
-        else
-          i = 0;
-
-        for (; i <= dayID; i++) {
-          for (Event event : MainActivity.dayList.get(i).get(0)) {
-            // check if starred event has started
-            if (i * 24 + event.hour <= dayID * 24 + groupPosition + 6) {
-              // check if starred event ends after this hour
-
-              if (i * 24 + event.hour + event.totalDuration > dayID * 24
-                  + groupPosition + 6) {
-                groupTitle += event.title + ", ";
-              }
-            }
-          }
-        }
-      }
-      name.setText(groupTitle.substring(0, groupTitle.length() - 2));
-      name.setSelected(true);
-
-
-      view.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          if (isExpanded)
-            listView.collapseGroup(groupPosition);
-          else
-            listView.expandGroup(groupPosition);
-        }
-      });
-
-      view.setOnLongClickListener(new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-          if (isExpanded)
-            collapseAll(groupPosition);
-          else
-            expandAll(groupPosition);
-          return false;
-        }
-      });
+      String groupTitle = dayStrings[groupPosition];
+      TextView name = (TextView) view.findViewById(R.id.summary_day_text);
+      name.setText(groupTitle);
 
       if (isExpanded)
         view.setBackgroundResource(R.drawable.group_expanded);
       else
         view.setBackgroundResource(R.drawable.group_collapsed);
 
-
       return view;
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-      return MainActivity.dayList.get(dayID).get(groupPosition).size();
+      return summaryList.get(groupPosition).size();
     }
 
     @Override
     public int getGroupCount() {
-      return MainActivity.dayList.get(dayID).size();
+      return summaryList.size();
     }
 
     @Override
@@ -302,13 +244,11 @@ public class ScheduleFragment extends Fragment {
 
     @Override
     public long getGroupId(int groupPosition) {
-      // TODO Auto-generated method stub
-      return 0;
+      return groupPosition;
     }
 
     @Override
     public boolean hasStableIds() {
-      // TODO Auto-generated method stub
       return false;
     }
   }

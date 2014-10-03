@@ -113,12 +113,13 @@
 
 	<!-- ARRAYS -->
 	<string-array name="drawer_titles">
-		<item>All Events</item>
-		<item>Created Events</item>
+		<item>My WBC</item>
+		<item>Full Schedule</item>
 		<item>Search</item>
+		<item>Filter Schedule</item>
+		<item>My Created Events</item>
 		<item>My Finishes</item>
 		<item>My Notes</item>
-		<item>Filter</item>
 		<item>Settings</item>
 		<item>Help</item>
 		<item>About</item>
@@ -163,6 +164,15 @@
 		<item>2200</item>
 		<item>2300</item>
 		<item>2400</item>
+	</string-array>
+	<string-array name="search_formats">
+		<item>Demo</item>
+		<item>Meeting</item>
+		<item>Preview</item>
+		<item>Sales</item>
+		<item>Seminar</item>
+		<item>Sign-In</item>
+		<item>SOG</item>
 	</string-array>
 	<string-array name="duration">
 		<item>1</item>

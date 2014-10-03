@@ -1,15 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/activity_back" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="@dimen/default_margin"
+              android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/filter_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin"
-        android:orientation="vertical" >
-    </LinearLayout>
 
-</ScrollView>
+	<LinearLayout
+		style="?android:buttonBarStyle"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
+		<ImageButton
+			android:id="@+id/filter_select_all"
+			style="?android:buttonBarButtonStyle"
+			android:layout_width="0dip"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:contentDescription="@string/select_all" />
+
+		<ImageButton
+			android:id="@+id/filter_select_non_tournament"
+			style="?android:buttonBarButtonStyle"
+			android:layout_width="0dip"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:contentDescription="@string/select_non_tournament"/>
+
+		<ImageButton
+			android:id="@+id/filter_deselect_all"
+			style="?android:buttonBarButtonStyle"
+			android:layout_width="0dip"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:contentDescription="@string/deselect_all"/>
+
+		<ImageButton
+			android:id="@+id/filter_deselect_non_tournament"
+			style="?android:buttonBarButtonStyle"
+			android:layout_width="0dip"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:contentDescription="@string/deselect_non_tournament"/>
+	</LinearLayout>
+
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/activity_back">
+
+		<LinearLayout
+			android:id="@+id/filter_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+		</LinearLayout>
+
+	</ScrollView>
+</LinearLayout>

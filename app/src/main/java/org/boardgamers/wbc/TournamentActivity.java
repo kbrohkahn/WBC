@@ -33,7 +33,7 @@ public class TournamentActivity extends FragmentActivity {
     MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.game, menu);
 
-    if (MyApp.SELECTED_GAME_ID > 0)
+    if (MainActivity.SELECTED_GAME_ID > 0)
       menu.getItem(0).setVisible(false);
     return true;
   }
@@ -45,7 +45,7 @@ public class TournamentActivity extends FragmentActivity {
         TournamentFragment.showCreateDialog();
         return true;
       case R.id.game_help:
-        Intent intent = new Intent(this, Help.class);
+        Intent intent = new Intent(this, HelpFragment.class);
         startActivity(intent);
         return true;
       case android.R.id.home:
