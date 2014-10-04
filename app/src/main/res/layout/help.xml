@@ -1,155 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+	>
 
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
 
-    <TextView
-      android:id="@+id/about_app_header"
-      style="@style/help_header"
-      android:text="@string/about_app_header" />
+		<TextView
+			android:id="@+id/about_app_header"
+			style="@style/help_header"
+			android:text="@string/about_app_header"/>
 
-    <TextView
-      android:id="@+id/about_app_text"
-      style="@style/help_text"
-      android:autoLink="email"
-      android:text="@string/about_app_text" />
+		<TextView
+			android:id="@+id/about_app_text"
+			style="@style/help_text"
+			android:autoLink="email"
+			android:text="@string/about_app_text"/>
 
-    <TextView
-      android:id="@+id/about_schedule_header"
-      style="@style/help_header"
-      android:text="@string/about_schedule_header" />
+		<TextView
+			android:id="@+id/about_schedule_header"
+			style="@style/help_header"
+			android:text="@string/about_schedule_header"/>
 
-    <TextView
-      android:id="@+id/about_schedule_text"
-      style="@style/help_text"
-      android:text="@string/about_schedule_text" />
+		<TextView
+			android:id="@+id/about_schedule_text"
+			style="@style/help_text"
+			android:text="@string/about_schedule_text"/>
 
-    <TextView
-      android:id="@+id/about_dates_header"
-      style="@style/help_header"
-      android:text="@string/about_dates_header" />
+		<TextView
+			android:id="@+id/about_dates_header"
+			style="@style/help_header"
+			android:text="@string/about_dates_header"/>
 
-    <TextView
-      android:id="@+id/about_dates_text"
-      style="@style/help_text"
-      android:text="@string/about_dates_text" />
+		<TextView
+			android:id="@+id/about_dates_text"
+			style="@style/help_text"
+			android:text="@string/about_dates_text"/>
 
-    <TextView
-      android:id="@+id/about_times_header"
-      style="@style/help_header"
-      android:text="@string/about_times_header" />
+		<TextView
+			android:id="@+id/about_times_header"
+			style="@style/help_header"
+			android:text="@string/about_times_header"/>
 
-    <TextView
-      android:id="@+id/about_times_text"
-      style="@style/help_text"
-      android:text="@string/about_times_text" />
+		<TextView
+			android:id="@+id/about_times_text"
+			style="@style/help_text"
+			android:text="@string/about_times_text"/>
 
-    <TextView
-      android:id="@+id/about_heats_rounds_header"
-      style="@style/help_header"
-      android:text="@string/about_heats_rounds_header" />
+		<TextView
+			android:id="@+id/about_heats_rounds_header"
+			style="@style/help_header"
+			android:text="@string/about_heats_rounds_header"/>
 
-    <TextView
-      android:id="@+id/about_heats_rounds_text"
-      style="@style/help_text"
-      android:text="@string/about_heats_rounds_text" />
+		<TextView
+			android:id="@+id/about_heats_rounds_text"
+			style="@style/help_text"
+			android:text="@string/about_heats_rounds_text"/>
 
-    <TextView
-      android:id="@+id/about_qualifying_header"
-      style="@style/help_header"
-      android:text="@string/about_qualifying_header" />
+		<TextView
+			android:id="@+id/about_qualifying_header"
+			style="@style/help_header"
+			android:text="@string/about_qualifying_header"/>
 
-    <TextView
-      android:id="@+id/about_qualifying_text"
-      style="@style/help_text"
-      android:text="@string/about_qualifying_text" />
+		<TextView
+			android:id="@+id/about_qualifying_text"
+			style="@style/help_text"
+			android:text="@string/about_qualifying_text"/>
 
-    <TextView
-      android:id="@+id/about_prize_header"
-      style="@style/help_header"
-      android:text="@string/about_prize_header" />
+		<TextView
+			android:id="@+id/about_prize_header"
+			style="@style/help_header"
+			android:text="@string/about_prize_header"/>
 
-    <TextView
-      android:id="@+id/about_prize_text"
-      style="@style/help_text"
-      android:text="@string/about_prize_text" />
+		<TextView
+			android:id="@+id/about_prize_text"
+			style="@style/help_text"
+			android:text="@string/about_prize_text"/>
 
-    <TextView
-      android:id="@+id/about_class_header"
-      style="@style/help_header"
-      android:text="@string/about_class_header" />
+		<TextView
+			android:id="@+id/about_class_header"
+			style="@style/help_header"
+			android:text="@string/about_class_header"/>
 
-    <TextView
-      android:id="@+id/about_class_text"
-      style="@style/help_text"
-      android:text="@string/about_class_text" />
+		<TextView
+			android:id="@+id/about_class_text"
+			style="@style/help_text"
+			android:text="@string/about_class_text"/>
 
-    <TextView
-      android:id="@+id/about_demo_preview_header"
-      style="@style/help_header"
-      android:text="@string/about_demo_preview_header" />
+		<TextView
+			android:id="@+id/about_demo_preview_header"
+			style="@style/help_header"
+			android:text="@string/about_demo_preview_header"/>
 
-    <TextView
-      android:id="@+id/about_demo_preview_text"
-      style="@style/help_text"
-      android:text="@string/about_demo_preview_text" />
+		<TextView
+			android:id="@+id/about_demo_preview_text"
+			style="@style/help_text"
+			android:text="@string/about_demo_preview_text"/>
 
-    <TextView
-      android:id="@+id/about_sog_header"
-      style="@style/help_header"
-      android:text="@string/about_sog_header" />
+		<TextView
+			android:id="@+id/about_sog_header"
+			style="@style/help_header"
+			android:text="@string/about_sog_header"/>
 
-    <TextView
-      android:id="@+id/about_sog_text"
-      style="@style/help_text"
-      android:text="@string/about_sog_text" />
+		<TextView
+			android:id="@+id/about_sog_text"
+			style="@style/help_text"
+			android:text="@string/about_sog_text"/>
 
-    <TextView
-      android:id="@+id/about_format_header"
-      style="@style/help_header"
-      android:text="@string/about_format_header" />
+		<TextView
+			android:id="@+id/about_format_header"
+			style="@style/help_header"
+			android:text="@string/about_format_header"/>
 
-    <TextView
-      android:id="@+id/about_format_text"
-      style="@style/help_text"
-      android:autoLink="web"
-      android:text="@string/about_format_text" />
+		<TextView
+			android:id="@+id/about_format_text"
+			style="@style/help_text"
+			android:autoLink="web"
+			android:text="@string/about_format_text"/>
 
-    <TextView
-      android:id="@+id/about_length_header"
-      style="@style/help_header"
-      android:text="@string/about_length_header" />
+		<TextView
+			android:id="@+id/about_length_header"
+			style="@style/help_header"
+			android:text="@string/about_length_header"/>
 
-    <TextView
-      android:id="@+id/about_length_text"
-      style="@style/help_text"
-      android:text="@string/about_length_text" />
+		<TextView
+			android:id="@+id/about_length_text"
+			style="@style/help_text"
+			android:text="@string/about_length_text"/>
 
-    <TextView
-      android:id="@+id/about_continuous_header"
-      style="@style/help_header"
-      android:text="@string/about_continuous_header" />
+		<TextView
+			android:id="@+id/about_continuous_header"
+			style="@style/help_header"
+			android:text="@string/about_continuous_header"/>
 
-    <TextView
-      android:id="@+id/about_continuous_text"
-      style="@style/help_text"
-      android:text="@string/about_continuous_text" />
+		<TextView
+			android:id="@+id/about_continuous_text"
+			style="@style/help_text"
+			android:text="@string/about_continuous_text"/>
 
-    <TextView
-      android:id="@+id/about_location_header"
-      style="@style/help_header"
-      android:text="@string/about_location_header" />
+		<TextView
+			android:id="@+id/about_location_header"
+			style="@style/help_header"
+			android:text="@string/about_location_header"/>
 
-    <TextView
-      android:id="@+id/about_location_text"
-      style="@style/help_text"
-      android:text="@string/about_location_text"></TextView>
-  </LinearLayout>
+		<TextView
+			android:id="@+id/about_location_text"
+			style="@style/help_text"
+			android:text="@string/about_location_text"></TextView>
+	</LinearLayout>
 
 </ScrollView>

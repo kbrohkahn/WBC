@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  
-  android:gravity="center_vertical"
-  android:orientation="horizontal">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
 
-  <ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="1dip"
-    android:layout_margin="@dimen/activity_margin"
-    android:background="@drawable/star_off"
-    android:contentDescription="@string/star"
-    android:visibility="invisible" />
+              android:gravity="center_vertical"
+              android:orientation="horizontal">
 
-  <TextView
-    style="@style/list_item"
-    android:layout_width="0dip"
-    android:layout_height="wrap_content"
-    android:layout_weight="8"
-    android:text="@string/event" />
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="1dip"
+		android:layout_margin="@dimen/activity_margin"
+		android:background="@drawable/star_off"
+		android:contentDescription="@string/star"
+		android:visibility="invisible"/>
 
-  <View style="@style/div_v" />
+	<TextView
+		style="@style/list_item"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_weight="8"
+		android:text="@string/event"/>
 
-  <RelativeLayout
-    android:layout_width="0dip"
-    android:layout_height="match_parent"
-    android:layout_weight="3">
+	<View style="@style/div_v"/>
 
-    <ImageView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_centerInParent="true"
-      android:contentDescription="@string/duration"
-      android:src="@drawable/timer_icon" />
-  </RelativeLayout>
+	<RelativeLayout
+		android:layout_width="0dip"
+		android:layout_height="match_parent"
+		android:layout_weight="3">
 
-  <View style="@style/div_v" />
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:contentDescription="@string/duration"
+			android:src="@drawable/timer_icon"/>
+	</RelativeLayout>
 
-  <TextView
-    style="@style/list_item"
-    android:layout_marginRight="@dimen/activity_margin"
-    android:layout_weight="4"
-    android:gravity="center_vertical|right"
-    android:text="@string/location" />
+	<View style="@style/div_v"/>
+
+	<TextView
+		style="@style/list_item"
+		android:layout_marginRight="@dimen/activity_margin"
+		android:layout_weight="4"
+		android:gravity="center_vertical|right"
+		android:text="@string/location"/>
 </LinearLayout>

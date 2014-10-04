@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<TextView
+			style="@style/header"
+			android:text="@string/finishes"/>
+
+		<View style="@style/div_h"/>
+
+		<LinearLayout
+			android:id="@+id/my_wbc_data_finishes"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+		</LinearLayout>
+
+		<TextView
+			style="@style/header"
+			android:text="@string/notes"/>
+
+		<View style="@style/div_h"/>
+
+		<LinearLayout
+			android:id="@+id/my_wbc_data_notes"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+		</LinearLayout>
+
+		<TextView
+			style="@style/header"
+			android:text="@string/events"/>
+
+		<View style="@style/div_h"/>
+
+		<LinearLayout
+			android:id="@+id/my_wbc_data_events"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+		</LinearLayout>
+	</LinearLayout>
+
+</ScrollView>

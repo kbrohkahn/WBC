@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/drawer_title"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:background="@drawable/action_bar_tab"
-  android:gravity="start"
-  android:padding="8dp"
-  android:textColor="@color/menu_text"
-  android:textSize="20sp" />
+<TextView android:id="@+id/drawer_title"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@drawable/action_bar_tab"
+          android:gravity="start"
+          android:padding="8dp"
+          android:textColor="@color/menu_text"
+          android:textSize="20sp"/>

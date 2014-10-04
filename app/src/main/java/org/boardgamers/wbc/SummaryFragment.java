@@ -21,8 +21,8 @@ import java.util.List;
 
 public class SummaryFragment extends Fragment {
   final static String TAG = "Summary Activity";
-  public static ArrayList<ArrayList<Event>> summaryList;
-  private static SummaryListAdapter listAdapter;
+  private ArrayList<ArrayList<Event>> summaryList;
+  private SummaryListAdapter listAdapter;
   private ExpandableListView listView;
   private SharedPreferences sp;
   private String notePrefString;
@@ -38,9 +38,9 @@ public class SummaryFragment extends Fragment {
         Context.MODE_PRIVATE);
     notePrefString = getActivity().getResources().getString(R.string.sp_event_note);
 
-    SummaryFragment.summaryList = new ArrayList<ArrayList<Event>>(MainActivity.dayStrings.length);
+    summaryList = new ArrayList<ArrayList<Event>>(MainActivity.dayStrings.length);
     for (int i = 0; i < MainActivity.dayStrings.length; i++) {
-      SummaryFragment.summaryList.add(new ArrayList<Event>());
+      summaryList.add(new ArrayList<Event>());
     }
 
     // setup list adapter and list view
@@ -75,6 +75,8 @@ public class SummaryFragment extends Fragment {
     // get time and go to current currentDay
     if (MainActivity.currentDay > -1)
       listView.setSelectedGroup(MainActivity.currentDay);
+
+    Log.d(TAG, "SUMMARY READY");
 
     super.onResume();
   }

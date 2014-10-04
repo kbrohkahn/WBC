@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
-  <View style="@style/div_h" />
+	<View style="@style/div_h"/>
 
-  <TextView
-    android:id="@+id/sg_name"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:ellipsize="marquee"
-    android:gravity="center_horizontal"
-    android:marqueeRepeatLimit="marquee_forever"
-    android:padding="@dimen/small_padding"
-    android:scrollHorizontally="true"
-    android:singleLine="true"
-    android:textColor="#ffffff"
-    android:textSize="14sp"
-    android:textStyle="italic" />
+	<TextView
+		android:id="@+id/sg_name"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:ellipsize="marquee"
+		android:gravity="center_horizontal"
+		android:marqueeRepeatLimit="marquee_forever"
+		android:padding="@dimen/small_padding"
+		android:scrollHorizontally="true"
+		android:singleLine="true"
+		android:textColor="#ffffff"
+		android:textSize="14sp"
+		android:textStyle="italic"/>
 
 </LinearLayout>

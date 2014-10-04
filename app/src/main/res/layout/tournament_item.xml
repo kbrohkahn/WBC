@@ -1,106 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-  <ImageView
-    android:id="@+id/gi_star"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_centerVertical="true"
-    android:contentDescription="@string/star"
-    android:padding="@dimen/activity_margin" />
+	<ImageView
+		android:id="@+id/gi_star"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+		android:layout_centerVertical="true"
+		android:contentDescription="@string/star"
+		android:padding="@dimen/activity_margin"/>
 
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerVertical="true"
-    android:layout_marginBottom="@dimen/activity_margin"
-    android:layout_marginRight="@dimen/activity_margin"
-    android:layout_marginTop="@dimen/activity_margin"
-    android:layout_toLeftOf="@+id/gi_edit"
-    android:layout_toRightOf="@+id/gi_star"
-    android:orientation="vertical">
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_marginBottom="@dimen/activity_margin"
+		android:layout_marginRight="@dimen/activity_margin"
+		android:layout_marginTop="@dimen/activity_margin"
+		android:layout_toLeftOf="@+id/gi_edit"
+		android:layout_toRightOf="@+id/gi_star"
+		android:orientation="vertical">
 
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal">
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
 
-      <TextView
-        android:id="@+id/gi_name"
-        style="@style/list_item"
-        android:layout_weight="8"
-        android:gravity="center_vertical|left" />
+			<TextView
+				android:id="@+id/gi_name"
+				style="@style/list_item"
+				android:layout_weight="8"
+				android:gravity="center_vertical|left"/>
 
-      <TextView
-        android:id="@+id/gi_format"
-        style="@style/list_item"
-        android:layout_weight="2"
-        android:gravity="center_vertical|right" />
-    </LinearLayout>
+			<TextView
+				android:id="@+id/gi_format"
+				style="@style/list_item"
+				android:layout_weight="2"
+				android:gravity="center_vertical|right"/>
+		</LinearLayout>
 
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal">
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
 
-      <TextView
-        android:id="@+id/gi_date"
-        style="@style/list_item"
-        android:layout_weight="4"
-        android:gravity="center_vertical|left" />
+			<TextView
+				android:id="@+id/gi_date"
+				style="@style/list_item"
+				android:layout_weight="4"
+				android:gravity="center_vertical|left"/>
 
-      <TextView
-        android:id="@+id/gi_time"
-        style="@style/list_item"
-        android:layout_weight="2" />
+			<TextView
+				android:id="@+id/gi_time"
+				style="@style/list_item"
+				android:layout_weight="2"/>
 
-      <RelativeLayout
-        style="@style/list_item"
-        android:layout_weight="3">
+			<RelativeLayout
+				style="@style/list_item"
+				android:layout_weight="3">
 
-        <TextView
-          android:id="@+id/gi_duration"
-          style="@style/list_item"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerInParent="true"
-          android:drawablePadding="@dimen/small_padding" />
-      </RelativeLayout>
+				<TextView
+					android:id="@+id/gi_duration"
+					style="@style/list_item"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerInParent="true"
+					android:drawablePadding="@dimen/small_padding"/>
+			</RelativeLayout>
 
-      <TextView
-        android:id="@+id/gi_class"
-        style="@style/list_item"
-        android:layout_weight="2" />
+			<TextView
+				android:id="@+id/gi_class"
+				style="@style/list_item"
+				android:layout_weight="2"/>
 
-      <TextView
-        android:id="@+id/gi_location"
-        style="@style/list_item"
-        android:layout_weight="4"
-        android:gravity="center_vertical|right" />
-    </LinearLayout>
-  </LinearLayout>
+			<TextView
+				android:id="@+id/gi_location"
+				style="@style/list_item"
+				android:layout_weight="4"
+				android:gravity="center_vertical|right"/>
+		</LinearLayout>
+	</LinearLayout>
 
-  <ImageButton
-    android:id="@+id/gi_edit"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerVertical="true"
-    android:layout_marginRight="@dimen/activity_margin"
-    android:layout_toLeftOf="@+id/gi_delete"
-    android:background="@drawable/edit_icon"
-    android:contentDescription="@string/edit" />
+	<ImageButton
+		android:id="@+id/gi_edit"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_marginRight="@dimen/activity_margin"
+		android:layout_toLeftOf="@+id/gi_delete"
+		android:background="@drawable/edit_icon"
+		android:contentDescription="@string/edit"/>
 
-  <ImageButton
-    android:id="@+id/gi_delete"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentRight="true"
-    android:layout_centerVertical="true"
-    android:layout_marginRight="@dimen/activity_margin"
-    android:background="@drawable/delete_icon"
-    android:contentDescription="@string/delete" />
+	<ImageButton
+		android:id="@+id/gi_delete"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:layout_marginRight="@dimen/activity_margin"
+		android:background="@drawable/delete_icon"
+		android:contentDescription="@string/delete"/>
 
 </RelativeLayout>

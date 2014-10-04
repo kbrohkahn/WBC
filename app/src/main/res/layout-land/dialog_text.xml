@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/dt_title"
-        style="@style/dialog_title" />
+        style="@style/header" />
 
     <View style="@style/div_h" />
 

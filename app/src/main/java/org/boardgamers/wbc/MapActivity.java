@@ -43,7 +43,6 @@ public class MapActivity extends Activity {
   private Handler handler;
   private boolean on;
 
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
