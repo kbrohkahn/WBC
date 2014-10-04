@@ -172,7 +172,12 @@ public class SummaryFragment extends Fragment {
       note.setTextColor(tColor);
 
       String noteString = sp.getString(notePrefString + event.identifier, "");
-      note.setText(noteString == null ? "No note" : noteString);
+      if (noteString == null || noteString.length() == 0) {
+        note.setLines(0);
+        note.setText("");
+      } else {
+        note.setText("note-" + noteString);
+      }
 
       ImageView starIV = (ImageView) view.findViewById(R.id.si_star);
       starIV.setImageResource(event.starred ? R.drawable.star_on

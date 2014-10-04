@@ -9,7 +9,6 @@
   <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:lines="2"
     android:padding="@dimen/activity_margin"
     android:id="@+id/summary_event_note"/>
 
