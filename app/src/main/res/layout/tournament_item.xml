@@ -19,7 +19,6 @@
 		android:layout_marginBottom="@dimen/activity_margin"
 		android:layout_marginRight="@dimen/activity_margin"
 		android:layout_marginTop="@dimen/activity_margin"
-		android:layout_toLeftOf="@+id/gi_edit"
 		android:layout_toRightOf="@+id/gi_star"
 		android:orientation="vertical">
 
@@ -82,25 +81,4 @@
 				android:gravity="center_vertical|right"/>
 		</LinearLayout>
 	</LinearLayout>
-
-	<ImageButton
-		android:id="@+id/gi_edit"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerVertical="true"
-		android:layout_marginRight="@dimen/activity_margin"
-		android:layout_toLeftOf="@+id/gi_delete"
-		android:background="@drawable/edit_icon"
-		android:contentDescription="@string/edit"/>
-
-	<ImageButton
-		android:id="@+id/gi_delete"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:layout_centerVertical="true"
-		android:layout_marginRight="@dimen/activity_margin"
-		android:background="@drawable/delete_icon"
-		android:contentDescription="@string/delete"/>
-
 </RelativeLayout>

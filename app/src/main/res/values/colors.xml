@@ -11,15 +11,17 @@
 	<color name="blue_light">#98A0BE</color>
 	<color name="blue_dark">#192146</color>
 
-	<!-- event background colors -->
+	<!-- help background colors -->
 	<color name="gray">#aaaaaa</color>
 	<color name="gray_light">#cccccc</color>
 	<color name="green">#BFFFBF</color>
 	<color name="green_light">#E5FFE5</color>
 	<color name="yellow">#FFFFBF</color>
 	<color name="yellow_light">#FFFFE5</color>
+	<color name="white">#ffffff</color>
+	<color name="black">#000000</color>
 
-	<!-- event text colors (from program) -->
+	<!-- help text colors (from program) -->
 	<color name="junior">#278B43</color>
 	<color name="open_tournament">#F37029</color>
 	<color name="non_tournament">#004688</color>
@@ -44,9 +46,9 @@
 
 	<!-- design -->
 	<color name="action_bar_background">@color/red_lightest</color>
-	<color name="action_bar_text">@android:color/black</color>
+	<color name="action_bar_text">@color/black</color>
 	<color name="menu_background">@color/red_lighter</color>
-	<color name="menu_text">@android:color/black</color>
+	<color name="menu_text">@color/black</color>
 
 	<!-- buttons -->
 	<color name="default_button_pressed">@color/blue_dark</color>

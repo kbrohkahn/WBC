@@ -62,27 +62,16 @@ public class SplashScreen extends Activity {
 
       String identifier, row, temp, eventTitle, eClass, format, gm, tempString, location;
       String[] rowData;
-      int tournamentID, index, day, hour, prize, lineNum = 0;
+      int tournamentID = -1, index, day, hour, prize, lineNum = 0;
       int numTournaments = 0, numPreviews = 0, numJuniors = 0, numSeminars = 0;
-
       double duration, totalDuration;
       boolean continuous, qualify, isTournamentEvent;
 
       Event event, tempEvent, prevEvent = null;
       Tournament tournament;
-
+      List<Tournament> tournaments = new ArrayList<Tournament>();
       String tournamentTitle = "My Events", tournamentLabel = "", shortEventTitle = "";
       String change;
-
-      List<Tournament> tournaments = new ArrayList<Tournament>();
-
-      tournamentID = 0;
-      tournament = new Tournament(tournamentID, tournamentTitle,
-          tournamentLabel, false, 0, "Me");
-      tournament.visible = sp.getBoolean("vis_" + tournamentTitle, true);
-      tournament.finish = sp.getInt("fin_" + tournamentTitle, 0);
-
-      tournaments.add(tournament);
 
       for (index = 0; ; index++) {
         row = sp.getString(userEventPrefString + String.valueOf(index), "");
@@ -224,7 +213,7 @@ public class SplashScreen extends Activity {
 
           }
 
-          // get tournament title and label and event short name
+          // get tournament title and label and help short name
           temp = eventTitle;
 
           // search through extra strings
@@ -237,7 +226,7 @@ public class SplashScreen extends Activity {
           }
 
           // split title in two, first part is tournament title,
-          // second is short event title (H1/1)
+          // second is short help title (H1/1)
           isTournamentEvent = eClass.length() > 0;
 
           if (isTournamentEvent || format.equalsIgnoreCase("Preview")) {
@@ -375,7 +364,7 @@ public class SplashScreen extends Activity {
               }
 
               if (prevEvent.tournamentID == tournamentID) {
-                // update previous event total duration
+                // update previous help total duration
                 temp = prevEvent.title;
 
                 // search through extra strings
@@ -454,10 +443,10 @@ public class SplashScreen extends Activity {
                 }
               }
             } else if (continuous) {
-              Log.d(TAG, "Unknown continuous event: " + eventTitle);
+              Log.d(TAG, "Unknown continuous help: " + eventTitle);
             }
           } else if (continuous) {
-            Log.d(TAG, "Non tournament event " + eventTitle + " is cont");
+            Log.d(TAG, "Non tournament help " + eventTitle + " is cont");
           }
 
           if (halfPast)
@@ -479,13 +468,13 @@ public class SplashScreen extends Activity {
 
           // TODO add changes here
           /*
-           * if (event.title.equalsIgnoreCase("Age of Renaissance H1/3 PC")) { int
+           * if (help.title.equalsIgnoreCase("Age of Renaissance H1/3 PC")) { int
            * newDay=5;
            *
-           * if (scheduleVersion<0) { change=event.title+": Day changed from "
-           * +dayStrings[event.currentDay]+" to " +dayStrings[newDay]; newVersion=0; }
+           * if (scheduleVersion<0) { change=help.title+": Day changed from "
+           * +dayStrings[help.currentDay]+" to " +dayStrings[newDay]; newVersion=0; }
            *
-           * event.currentDay=newDay; }
+           * help.currentDay=newDay; }
            */
 
           if (!change.equalsIgnoreCase(""))

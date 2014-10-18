@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class HelpActivity extends Activity {
@@ -35,7 +36,7 @@ public class HelpActivity extends Activity {
     }
   };
   TextView[] aboutTexts;
-  TextView[] aboutHeaders;
+  LinearLayout[] aboutHeaders;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -53,10 +54,10 @@ public class HelpActivity extends Activity {
     final int numCategories = aboutHeaderIDs.length;
 
     aboutTexts = new TextView[numCategories];
-    aboutHeaders = new TextView[numCategories];
+    aboutHeaders = new LinearLayout[numCategories];
     for (int i = 0; i < numCategories; i++) {
       aboutTexts[i] = (TextView) findViewById(aboutTextIDs[i]);
-      aboutHeaders[i] = (TextView) findViewById(aboutHeaderIDs[i]);
+      aboutHeaders[i] = (LinearLayout) findViewById(aboutHeaderIDs[i]);
       aboutHeaders[i].setOnClickListener(headerListener);
     }
   }

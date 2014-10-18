@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-
               android:orientation="vertical">
 
 	<RelativeLayout
@@ -110,136 +109,7 @@
 		style="@style/div_h"
 		android:layout_marginTop="@dimen/text_margin_large"/>
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-
-		<ImageView
-			android:id="@+id/gf_star"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:contentDescription="@string/star"
-			android:paddingLeft="@dimen/activity_margin"
-			android:paddingRight="@dimen/activity_margin"/>
-
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:layout_marginRight="@dimen/activity_margin"
-			android:layout_toLeftOf="@+id/gf_edit"
-			android:layout_toRightOf="@+id/gf_star"
-			android:orientation="vertical">
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal">
-
-				<TextView
-					style="@style/list_item"
-					android:layout_height="wrap_content"
-					android:layout_weight="8"
-					android:gravity="center_vertical|left"
-					android:text="@string/event"/>
-
-				<View
-					android:id="@+id/gf_format_divider"
-					style="@style/div_v"/>
-
-				<TextView
-					android:id="@+id/gf_format"
-					style="@style/list_item"
-					android:layout_weight="2"
-					android:gravity="center_vertical|right"
-					android:text="@string/format"/>
-			</LinearLayout>
-
-			<View style="@style/div_h"/>
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal">
-
-				<TextView
-					style="@style/list_item"
-					android:layout_height="wrap_content"
-					android:layout_weight="4"
-					android:gravity="center_vertical|left"
-					android:text="@string/day"/>
-
-				<View style="@style/div_v"/>
-
-				<RelativeLayout
-					android:layout_width="0dip"
-					android:layout_height="match_parent"
-					android:layout_weight="2">
-
-					<ImageView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_centerInParent="true"
-						android:contentDescription="@string/time"
-						android:src="@drawable/clock_icon"/>
-				</RelativeLayout>
-
-				<View style="@style/div_v"/>
-
-				<RelativeLayout
-					android:layout_width="0dip"
-					android:layout_height="match_parent"
-					android:layout_weight="3">
-
-					<ImageView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_centerInParent="true"
-						android:contentDescription="@string/duration"
-						android:src="@drawable/timer_icon"/>
-				</RelativeLayout>
-
-				<View
-					android:id="@+id/gf_class_divider"
-					style="@style/div_v"/>
-
-				<TextView
-					android:id="@+id/gf_class"
-					style="@style/list_item"
-					android:layout_weight="2"
-					android:text="@string/eClass"/>
-
-				<View style="@style/div_v"/>
-
-				<TextView
-					style="@style/list_item"
-					android:layout_weight="4"
-					android:gravity="center_vertical|right"
-					android:text="@string/location"/>
-			</LinearLayout>
-		</LinearLayout>
-
-		<ImageButton
-			android:id="@+id/gf_edit"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:layout_marginRight="@dimen/activity_margin"
-			android:layout_toLeftOf="@+id/gf_delete"
-			android:background="@drawable/edit_icon"
-			android:contentDescription="@string/edit"/>
-
-		<ImageButton
-			android:id="@+id/gf_delete"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_centerVertical="true"
-			android:layout_marginRight="@dimen/activity_margin"
-			android:background="@drawable/delete_icon"
-			android:contentDescription="@string/delete"/>
-	</RelativeLayout>
+	<include layout="@layout/tournament_header"/>
 
 	<ListView
 		android:id="@+id/gf_events"

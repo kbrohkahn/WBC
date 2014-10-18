@@ -29,14 +29,14 @@ public class EventActivity extends FragmentActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.event, menu);
+    inflater.inflate(R.menu.help, menu);
     return true;
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.event_help:
+      case R.id.menu_help:
         Intent intent = new Intent(this, HelpActivity.class);
         startActivity(intent);
         return true;

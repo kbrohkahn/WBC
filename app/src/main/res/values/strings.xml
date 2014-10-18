@@ -20,6 +20,9 @@
 	<string name="events">Events</string>
 	<string name="note">Event Notes</string>
 	<string name="edit_event">Edit Event</string>
+	<string name="add_event">Add Event</string>
+	<string name="splash_text">World\nBoardgaming\nChampionships</string  >
+	<string name="delete_all">Delete All</string>
 	<string name="open_drawer">Open Drawer</string>
 	<string name="close_drawer">Close Drawer</string>
 
@@ -117,7 +120,6 @@
 	<string-array name="drawer_titles">
 		<item>All Starred Events</item>
 		<item>Full Schedule</item>
-		<item>Edit Created Events</item>
 		<item>My WBC Data</item>
 	</string-array>
 

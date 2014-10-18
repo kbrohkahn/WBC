@@ -7,7 +7,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -57,6 +56,7 @@ public class MainActivity extends Activity {
   public static ArrayList<ArrayList<ArrayList<Event>>> dayList;
   public static String[] dayStrings;
   public static String allChanges;
+  public static CharSequence drawerTitle;
   private static int COLOR_JUNIOR;
   private static int COLOR_SEMINAR;
   private static int COLOR_QUALIFY;
@@ -68,11 +68,10 @@ public class MainActivity extends Activity {
   private DrawerLayout drawerLayout;
   private ActionBarDrawerToggle drawerToggle;
   private ListView drawerList;
-  private CharSequence drawerTitle;
   private CharSequence actionBarTitle;
 
   /**
-   * Add starred event to "My Events" group in list
+   * Add starred help to "My Events" group in list
    *
    * @param event - Event that was starred
    */
@@ -100,10 +99,10 @@ public class MainActivity extends Activity {
   }
 
   /**
-   * Remove starred event from "My Events" group in list
+   * Remove starred help from "My Events" group in list
    *
-   * @param identifier - event id
-   * @param day        - event's currentDay, used to find which my events group
+   * @param identifier - help id
+   * @param day        - help's currentDay, used to find which my events group
    */
   public static void removeStarredEvent(String identifier, int day) {
     List<Event> myEvents = dayList.get(day).get(0);
@@ -120,7 +119,7 @@ public class MainActivity extends Activity {
    *
    * @param c   - context
    * @param gID - game ID
-   * @param eID - event ID (needed for tablets where event also displayed)
+   * @param eID - help ID (needed for tablets where help also displayed)
    */
   public static void selectGame(Context c, int gID, String eID) {
     SELECTED_GAME_ID = gID;
@@ -143,7 +142,7 @@ public class MainActivity extends Activity {
   }
 
   /**
-   * @param event - event needed for format, title, class, and qualify
+   * @param event - help needed for format, title, class, and qualify
    * @return integer value of color
    */
   public static int getTextColor(Event event) {
@@ -164,7 +163,7 @@ public class MainActivity extends Activity {
   }
 
   /**
-   * @param event - event needed for format, title, class, and qualify
+   * @param event - help needed for format, title, class, and qualify
    * @return integer value of typeface
    */
   public static int getTextStyle(Event event) {
@@ -279,7 +278,7 @@ public class MainActivity extends Activity {
       dc.show(getFragmentManager(), "changes_dialog");
     }
 
-    SummaryFragment summaryFragment = new SummaryFragment();
+    Fragment summaryFragment = new SummaryFragment();
     FragmentManager fragmentManager = getFragmentManager();
     fragmentManager.beginTransaction()
         .replace(R.id.content_frame, summaryFragment)
@@ -371,7 +370,6 @@ public class MainActivity extends Activity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-
     if (drawerToggle.onOptionsItemSelected(item))
       return true;
 
@@ -394,9 +392,7 @@ public class MainActivity extends Activity {
         break;
       default:
         return super.onOptionsItemSelected(item);
-
     }
-
 
     startActivity(intent);
 
@@ -415,17 +411,10 @@ public class MainActivity extends Activity {
         fragment = new SummaryFragment();
         break;
       case 1:
-        actionBarTitle = getResources().getStringArray(R.array.days)[Math.max(currentDay, 0)];
+        actionBarTitle = dayStrings[Math.max(currentDay, 0)];
         fragment = new ScheduleContainer();
         break;
       case 2:
-        SELECTED_GAME_ID = 0;
-        SELECTED_EVENT_ID = "";
-
-        Intent intent = new Intent(this, TournamentActivity.class);
-        startActivity(intent);
-        return;
-      case 3:
         fragment = new MyWBCData();
         break;
       default:
@@ -434,15 +423,12 @@ public class MainActivity extends Activity {
     }
 
     FragmentManager fragmentManager = getFragmentManager();
-    FragmentTransaction ft = fragmentManager.beginTransaction()
-        .replace(R.id.content_frame, fragment);
-
-    //ft.addToBackStack("Summary");
-    ft.commit();
+    fragmentManager.beginTransaction()
+        .replace(R.id.content_frame, fragment).commit();
 
     // Highlight the selected item, update the title, and close the drawer
-    drawerList.setSelection(position);
-    drawerList.setItemChecked(position, true);
+    //drawerList.setSelection(position);
+    //drawerList.setItemChecked(position, true);
     setActionBarTitle(actionBarTitle);
     drawerLayout.closeDrawer(drawerList);
   }

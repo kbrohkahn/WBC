@@ -50,7 +50,7 @@ public class SearchActivity extends Activity {
     ImageButton roomSearchButton = (ImageButton) findViewById(R.id.ds_search_room);
     ImageButton formatSearchButton = (ImageButton) findViewById(R.id.ds_search_format);
 
-    // setup event auto complete text view
+    // setup help auto complete text view
     ArrayAdapter<String> tvAdapter = new ArrayAdapter<String>(this,
         android.R.layout.simple_spinner_dropdown_item, tournamentTitles);
     tvAdapter
@@ -75,7 +75,7 @@ public class SearchActivity extends Activity {
       }
     });
 
-    // setup event search button
+    // setup help search button
     eventInputSearchButton.setOnClickListener(new View.OnClickListener() {
 
       @Override

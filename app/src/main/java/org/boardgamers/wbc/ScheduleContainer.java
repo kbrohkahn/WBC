@@ -32,7 +32,8 @@ public class ScheduleContainer extends Fragment implements
         .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
           @Override
           public void onPageSelected(int position) {
-            getActivity().getActionBar().setTitle("WBC-" + MainActivity.dayStrings[position]);
+            MainActivity.drawerTitle = "WBC-" + MainActivity.dayStrings[position];
+            getActivity().getActionBar().setTitle(MainActivity.drawerTitle);
           }
         });
 

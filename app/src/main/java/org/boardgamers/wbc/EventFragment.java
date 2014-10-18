@@ -2,7 +2,6 @@ package org.boardgamers.wbc;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +11,6 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -163,13 +161,14 @@ public class EventFragment extends Fragment {
 
   }
 
+
   public void changeEventStar(boolean starred) {
     event.starred = starred;
     star.setImageResource(starred ? R.drawable.star_on
         : R.drawable.star_off);
 
     TournamentFragment.changeEventStar(event.identifier, starred,
-        getActivity(), true);
+        getActivity());
 
   }
 
@@ -186,11 +185,6 @@ public class EventFragment extends Fragment {
     editor.putString(getResources().getString(R.string.sp_event_note)
         + event.identifier, note);
     editor.apply();
-
-    // TODO desel editText
-    InputMethodManager imm = (InputMethodManager) getActivity()
-        .getSystemService(Service.INPUT_METHOD_SERVICE);
-    imm.hideSoftInputFromWindow(noteET.getWindowToken(), 0);
 
     super.onPause();
   }

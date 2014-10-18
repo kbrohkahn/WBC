@@ -99,7 +99,7 @@ public class SettingsActivity extends Activity {
       }
     }
 
-    // get user event strings
+    // get user help strings
     String userEventPrefString = resources.getString(R.string.sp_user_event);
 
     List<String> userEvents = new ArrayList<String>();

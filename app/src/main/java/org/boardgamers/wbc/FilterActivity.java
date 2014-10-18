@@ -11,8 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -39,6 +37,28 @@ public class FilterActivity extends Activity {
     isTournament = new Boolean[MainActivity.allTournaments.size()];
     for (int i = 0; i < isTournament.length; i++)
       isTournament[i] = MainActivity.allTournaments.get(i).isTournament;
+
+    // setup checkboxes
+    tournamentCBs = new CheckBox[isTournament.length];
+    CheckBox temp;
+    Tournament tournament;
+    for (int i = 0; i < isTournament.length; i++) {
+      tournament = MainActivity.allTournaments.get(i);
+      temp = new CheckBox(this);
+      temp.setText(tournament.title);
+      temp.setTextAppearance(this, R.style.medium_text);
+      temp.setChecked(tournament.visible);
+
+      tournamentCBs[i] = temp;
+    }
+
+    // setup checkbox layout
+    LinearLayout checkBoxLayout = (LinearLayout) findViewById(R.id.filter_layout);
+    checkBoxLayout.removeAllViews();
+    for (CheckBox checkBox : tournamentCBs)
+      checkBoxLayout.addView(checkBox);
+
+    // setup batch buttons
 
     // select all image button
     ImageButton selectAll = (ImageButton) findViewById(R.id.filter_select_all);
@@ -115,44 +135,11 @@ public class FilterActivity extends Activity {
         return false;
       }
     });
-
-    // set up checkboxes
-    LinearLayout checkBoxLayout = (LinearLayout) findViewById(R.id.filter_layout);
-    checkBoxLayout.removeAllViews();
-    tournamentCBs = new CheckBox[isTournament.length];
-
-    CheckBox temp;
-    Tournament tournament;
-    for (int i = 0; i < isTournament.length; i++) {
-      tournament = MainActivity.allTournaments.get(i);
-      temp = new CheckBox(this);
-      temp.setText(tournament.title);
-      temp.setTextAppearance(this, R.style.medium_text);
-      temp.setChecked(tournament.visible);
-
-      temp.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView,
-                                     boolean isChecked) {
-          // TODO Auto-generated method stub
-        }
-      });
-
-      tournamentCBs[i] = temp;
-    }
-
-    // add checkboxes
-    for (CheckBox checkBox : tournamentCBs)
-      checkBoxLayout.addView(checkBox);
-
   }
-
 
   private void showToast(String string) {
     Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
   }
-
 
   @Override
   public void onPause() {

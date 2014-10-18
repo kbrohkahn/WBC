@@ -146,7 +146,7 @@ public class NotificationService extends Service {
       eventTitle = rowData[2];
 
       identifier = String.valueOf(day * 24 + hour) + "_" + eventTitle;
-      // if event is starred, add to notification string
+      // if help is starred, add to notification string
       if (sp.getBoolean(starPrefString + identifier, false) &&
           currentDay * 24 + currentHour + 1 == day * 24 + currentHour)
         eventsString += eventTitle + ", ";
@@ -208,7 +208,7 @@ public class NotificationService extends Service {
         hour = Integer.valueOf(tempString);
 
         identifier = String.valueOf(day * 24 + hour) + "_" + eventTitle;
-        // if event is starred, add to notification string
+        // if help is starred, add to notification string
         if (sp.getBoolean(starPrefString + identifier, false) &&
             currentDay * 24 + currentHour + 1 == day * 24 + currentHour)
           eventsString += eventTitle + ", ";

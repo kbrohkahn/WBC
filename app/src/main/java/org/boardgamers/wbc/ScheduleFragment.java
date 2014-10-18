@@ -44,10 +44,9 @@ public class ScheduleFragment extends Fragment {
 
   @Override
   public void onResume() {
+    listAdapter.notifyDataSetChanged();
     if (dayID == MainActivity.currentDay)
       listView.setSelectedGroup(MainActivity.currentHour - 5);
-
-    listAdapter.notifyDataSetChanged();
 
     super.onResume();
   }
@@ -63,9 +62,9 @@ public class ScheduleFragment extends Fragment {
   }
 
   public void changeEventStar(Event event, boolean starred, int groupPosition) {
-    // update event's star
+    // update help's star
     if (groupPosition == 0) {
-      // if in first group, need to find original event
+      // if in first group, need to find original help
       List<Event> events = MainActivity.dayList.get(event.day).get(
           event.hour - 6);
       for (int i = 0; i < events.size(); i++) {
@@ -234,9 +233,9 @@ public class ScheduleFragment extends Fragment {
 
         for (; i <= dayID; i++) {
           for (Event event : MainActivity.dayList.get(i).get(0)) {
-            // check if starred event has started
+            // check if starred help has started
             if (i * 24 + event.hour <= dayID * 24 + groupPosition + 6) {
-              // check if starred event ends after this currentHour
+              // check if starred help ends after this currentHour
 
               if (i * 24 + event.hour + event.totalDuration > dayID * 24
                   + groupPosition + 6) {
