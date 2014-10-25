@@ -39,36 +39,36 @@
 				<TextView
 					style="@style/medium_text"
 					android:layout_width="wrap_content"
-					android:layout_marginLeft="@dimen/ce_time_margin"
-					android:layout_marginRight="@dimen/ce_time_margin"
+					android:layout_marginLeft="@dimen/default_margin"
+					android:layout_marginRight="@dimen/default_margin"
 					android:text="@string/ce_at"/>
 
 				<Spinner
 					android:id="@+id/ce_hour"
 					style="@style/medium_text"
 					android:layout_width="wrap_content"
-					android:layout_marginLeft="@dimen/ce_time_margin"
-					android:layout_marginRight="@dimen/ce_time_margin"/>
+					android:layout_marginLeft="@dimen/default_margin"
+					android:layout_marginRight="@dimen/default_margin"/>
 
 				<TextView
 					style="@style/medium_text"
 					android:layout_width="wrap_content"
-					android:layout_marginLeft="@dimen/ce_time_margin"
-					android:layout_marginRight="@dimen/ce_time_margin"
+					android:layout_marginLeft="@dimen/default_margin"
+					android:layout_marginRight="@dimen/default_margin"
 					android:text="@string/ce_for"/>
 
 				<Spinner
 					android:id="@+id/ce_duration"
 					style="@style/medium_text"
 					android:layout_width="wrap_content"
-					android:layout_marginLeft="@dimen/ce_time_margin"
-					android:layout_marginRight="@dimen/ce_time_margin"/>
+					android:layout_marginLeft="@dimen/default_margin"
+					android:layout_marginRight="@dimen/default_margin"/>
 
 				<TextView
 					style="@style/medium_text"
 					android:layout_width="wrap_content"
-					android:layout_marginLeft="@dimen/ce_time_margin"
-					android:layout_marginRight="@dimen/ce_time_margin"
+					android:layout_marginLeft="@dimen/default_margin"
+					android:layout_marginRight="@dimen/default_margin"
 					android:text="@string/ce_hours"/>
 			</LinearLayout>
 

@@ -18,10 +18,16 @@
 		android:minHeight="320dp">
 
 		<LinearLayout
-			android:id="@+id/dt_layout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:orientation="vertical"></LinearLayout>
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/dt_text"
+				style="@style/medium_text"
+				android:gravity="center"
+				android:padding="@dimen/default_margin"/>
+		</LinearLayout>
 	</ScrollView>
 
 	<Button

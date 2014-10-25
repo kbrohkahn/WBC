@@ -58,14 +58,14 @@
 			android:orientation="horizontal">
 
 			<Button
-				style="@style/button"
 				android:id="@+id/add_event"
+				style="@style/button"
 				android:layout_weight="1"
 				android:text="@string/add_event"/>
 
 			<Button
-				style="@style/button"
 				android:id="@+id/delete_all"
+				style="@style/button"
 				android:layout_weight="1"
 				android:text="@string/delete_all"/>
 

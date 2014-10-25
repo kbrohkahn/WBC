@@ -13,7 +13,7 @@
 		android:ellipsize="marquee"
 		android:gravity="center_horizontal"
 		android:marqueeRepeatLimit="marquee_forever"
-		android:padding="@dimen/small_padding"
+		android:padding="@dimen/default_margin"
 		android:scrollHorizontally="true"
 		android:singleLine="true"
 		android:textColor="#ffffff"

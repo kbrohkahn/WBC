@@ -13,14 +13,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,10 +26,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +45,7 @@ import java.util.Locale;
 public class MainActivity extends Activity {
   private final static String TAG = "Summary Activity";
   public static int SELECTED_GAME_ID;
+
   public static String SELECTED_EVENT_ID;
   public static int currentDay;
   public static int currentHour;
@@ -64,6 +62,10 @@ public class MainActivity extends Activity {
   private static int COLOR_NON_TOURNAMENT;
   private static String dialogText;
   private static String dialogTitle;
+  public final int drawerIconIDs[] = {R.drawable.ic_drawer_star,
+      R.drawable.ic_drawer_view_as_list, R.drawable.ic_drawer_finish,
+      0, R.drawable.ic_drawer_filter, R.drawable.ic_drawer_settings,
+      0, R.drawable.ic_drawer_help, 0, R.drawable.ic_drawer_about};
   private String[] drawerTitles;
   private DrawerLayout drawerLayout;
   private ActionBarDrawerToggle drawerToggle;
@@ -83,6 +85,7 @@ public class MainActivity extends Activity {
         event.qualify, event.duration, event.continuous,
         event.totalDuration, event.location);
     starredEvent.starred = true;
+
     // get position in starred list to add (time, then title)
     int index = 0;
     for (Event eTemp : myEvents) {
@@ -138,7 +141,6 @@ public class MainActivity extends Activity {
     Intent intent = new Intent(c, MapActivity.class);
     intent.putExtra("roomName", room);
     c.startActivity(intent);
-
   }
 
   /**
@@ -205,11 +207,9 @@ public class MainActivity extends Activity {
     drawerTitles = getResources().getStringArray(R.array.drawer_titles);
     drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawerList = (ListView) findViewById(R.id.left_drawer);
-    actionBarTitle = drawerTitle = getTitle();
+    drawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_list_item));
 
-    drawerList.setAdapter(new ArrayAdapter<String>(this,
-        R.layout.drawer_list_item, drawerTitles));
-    drawerList.setOnItemClickListener(new DrawerItemClickListener());
+    actionBarTitle = drawerTitle = getTitle();
 
     drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
         R.drawable.ic_drawer, R.string.open_drawer, R.string.close_drawer) {
@@ -304,14 +304,14 @@ public class MainActivity extends Activity {
     String[] daysForParsing = getResources()
         .getStringArray(R.array.daysForParsing);
 
-    Calendar c = Calendar.getInstance();
+    Calendar calendar = Calendar.getInstance();
 
     // get currentHour
-    currentHour = c.get(Calendar.HOUR_OF_DAY);
+    currentHour = calendar.get(Calendar.HOUR_OF_DAY);
 
     SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd",
         Locale.US);
-    String dateString = dateFormatter.format(c.getTime());
+    String dateString = dateFormatter.format(calendar.getTime());
 
     // get currentDay
     currentDay = -1;
@@ -324,7 +324,6 @@ public class MainActivity extends Activity {
 
     super.onResume();
   }
-
 
   @Override
   public void onPause() {
@@ -346,7 +345,6 @@ public class MainActivity extends Activity {
     super.onPause();
   }
 
-
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
@@ -360,10 +358,6 @@ public class MainActivity extends Activity {
     boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
 
     menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
-    menu.findItem(R.id.menu_filter).setVisible(!drawerOpen);
-    menu.findItem(R.id.menu_help).setVisible(!drawerOpen);
-    menu.findItem(R.id.menu_about).setVisible(!drawerOpen);
-    menu.findItem(R.id.menu_settings).setVisible(!drawerOpen);
 
     return super.onPrepareOptionsMenu(menu);
   }
@@ -378,24 +372,10 @@ public class MainActivity extends Activity {
       case R.id.menu_search:
         intent = new Intent(this, SearchActivity.class);
         break;
-      case R.id.menu_filter:
-        intent = new Intent(this, FilterActivity.class);
-        break;
-      case R.id.menu_help:
-        intent = new Intent(this, HelpActivity.class);
-        break;
-      case R.id.menu_about:
-        intent = new Intent(this, AboutActivity.class);
-        break;
-      case R.id.menu_settings:
-        intent = new Intent(this, SettingsActivity.class);
-        break;
       default:
         return super.onOptionsItemSelected(item);
     }
-
     startActivity(intent);
-
     return true;
   }
 
@@ -403,9 +383,8 @@ public class MainActivity extends Activity {
    * Swaps fragments in the main content view
    */
   private void selectItem(int position) {
-    actionBarTitle = drawerTitles[position];
-
-    Fragment fragment;
+    Fragment fragment = null;
+    Intent intent = null;
     switch (position) {
       case 0:
         fragment = new SummaryFragment();
@@ -417,19 +396,37 @@ public class MainActivity extends Activity {
       case 2:
         fragment = new MyWBCData();
         break;
+      case 4:
+        intent = new Intent(this, FilterActivity.class);
+        break;
+      case 5:
+        intent = new Intent(this, SettingsActivity.class);
+        break;
+      case 7:
+        intent = new Intent(this, HelpActivity.class);
+        break;
+      case 8:
+        intent = new Intent(this, AboutActivity.class);
+        break;
       default:
-        // return to avoid null fragment
         return;
     }
 
-    FragmentManager fragmentManager = getFragmentManager();
-    fragmentManager.beginTransaction()
-        .replace(R.id.content_frame, fragment).commit();
+    if (fragment != null) {
+      actionBarTitle = drawerTitles[position];
 
-    // Highlight the selected item, update the title, and close the drawer
-    //drawerList.setSelection(position);
-    //drawerList.setItemChecked(position, true);
-    setActionBarTitle(actionBarTitle);
+      FragmentManager fragmentManager = getFragmentManager();
+      fragmentManager.beginTransaction()
+          .replace(R.id.content_frame, fragment).commit();
+
+      // Highlight the selected item, update the title, and close the drawer
+      //drawerList.setSelection(position);
+      //drawerList.setItemChecked(position, true);
+      setActionBarTitle(actionBarTitle);
+    } else {
+      startActivity(intent);
+    }
+
     drawerLayout.closeDrawer(drawerList);
   }
 
@@ -462,25 +459,11 @@ public class MainActivity extends Activity {
       TextView title = (TextView) view.findViewById(R.id.dt_title);
       title.setText(dialogTitle);
 
-      LinearLayout layout = (LinearLayout) view
-          .findViewById(R.id.dt_layout);
-      layout.removeAllViews();
-
-      final Context context = getActivity();
-      final Resources resources = getResources();
-      int padding = (int) resources.getDimension(R.dimen.text_margin_small);
-
-      TextView textView = new TextView(context);
+      TextView textView = (TextView) view.findViewById(R.id.dt_text);
       textView.setText(dialogText);
-      textView.setTextAppearance(context, R.style.medium_text);
-      textView.setGravity(Gravity.CENTER);
-      textView.setPadding(padding, padding, padding, padding);
-
-      layout.addView(textView);
 
       Button close = (Button) view.findViewById(R.id.dt_close);
       close.setOnClickListener(new View.OnClickListener() {
-
         @Override
         public void onClick(View v) {
           dismiss();
@@ -488,14 +471,68 @@ public class MainActivity extends Activity {
       });
 
       return view;
-
     }
   }
 
-  private class DrawerItemClickListener implements ListView.OnItemClickListener {
+  public class DrawerAdapter extends ArrayAdapter<String> {
+    LayoutInflater inflater;
+    int layoutResID;
+
+    public DrawerAdapter(Context context, int layoutResourceID) {
+      super(context, layoutResourceID);
+
+      this.layoutResID = layoutResourceID;
+      inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+
     @Override
-    public void onItemClick(AdapterView parent, View view, int position, long id) {
-      selectItem(position);
+    public int getCount() {
+      return drawerTitles.length;
+    }
+
+    @Override
+    public String getItem(int position) {
+      return drawerTitles[position];
+    }
+
+    @Override
+    public long getItemId(int position) {
+      return position;
+    }
+
+
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+      View view = convertView;
+
+      Log.d(TAG, drawerTitles[position]);
+      if (view == null) {
+        if (position == 3 || position == 6) {
+          view = inflater.inflate(R.layout.drawer_list_header, null);
+
+          TextView title = (TextView) view.findViewById(R.id.drawer_title);
+          title.setText(drawerTitles[position]);
+
+        } else {
+          view = inflater.inflate(R.layout.drawer_list_item, null);
+
+          TextView title = (TextView) view.findViewById(R.id.drawer_title);
+          title.setText(drawerTitles[position]);
+
+          ImageView icon = (ImageView) view.findViewById(R.id.drawer_image);
+          icon.setImageResource(drawerIconIDs[position]);
+
+          view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              selectItem(position);
+            }
+          });
+        }
+      }
+
+      return view;
     }
   }
 }

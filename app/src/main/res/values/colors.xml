@@ -47,7 +47,7 @@
 	<!-- design -->
 	<color name="action_bar_background">@color/red_lightest</color>
 	<color name="action_bar_text">@color/black</color>
-	<color name="menu_background">@color/red_lighter</color>
+	<color name="menu_background">@color/red_lightest</color>
 	<color name="menu_text">@color/black</color>
 
 	<!-- buttons -->
