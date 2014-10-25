@@ -17,7 +17,6 @@ public class ScheduleContainer extends Fragment implements
   private DayPagerAdapter pageAdapter;
   private ViewPager viewPager;
 
-
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.schedule_container, container, false);
@@ -43,7 +42,6 @@ public class ScheduleContainer extends Fragment implements
 
     return view;
   }
-
 
   @Override
   public boolean onNavigationItemSelected(int itemPosition, long itemId) {

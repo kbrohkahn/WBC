@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
   public final int drawerIconIDs[] = {R.drawable.ic_drawer_star,
       R.drawable.ic_drawer_view_as_list, R.drawable.ic_drawer_finish,
       0, R.drawable.ic_drawer_filter, R.drawable.ic_drawer_settings,
-      0, R.drawable.ic_drawer_help, 0, R.drawable.ic_drawer_about};
+      0, R.drawable.ic_drawer_help, R.drawable.ic_drawer_about};
   private String[] drawerTitles;
   private DrawerLayout drawerLayout;
   private ActionBarDrawerToggle drawerToggle;
