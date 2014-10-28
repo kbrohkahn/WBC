@@ -1,10 +1,12 @@
 package org.boardgamers.wbc;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -38,13 +40,9 @@ import java.util.List;
  * Fragment containing user's WBC data, including tournament finishes, help notes, and created events
  */
 public class MyWBCData extends Fragment {
-  private static List<Event> userEvents;
   private static LinearLayout userEventsLayout;
   private static int selectedEvent;
   private static LayoutInflater userEventLayoutInflater;
-  private static boolean allStarred;
-  private static ImageView starGame;
-  private static Activity activity;
   private final String TAG = "My WBC Data Activity";
 
   public static void saveUserEvents(Context context) {
@@ -61,8 +59,8 @@ public class MyWBCData extends Fragment {
     String breakCharacter = "~";
 
     int i = 0;
-    for (; i < userEvents.size(); i++) {
-      event = userEvents.get(i);
+    for (; i < TournamentFragment.tournamentEvents.size(); i++) {
+      event = TournamentFragment.tournamentEvents.get(i);
 
       saveString = String.valueOf(event.day) + breakCharacter
           + String.valueOf(event.hour) + breakCharacter + event.title
@@ -78,44 +76,10 @@ public class MyWBCData extends Fragment {
     editor.apply();
   }
 
-  public static void changeEventStar(String id, boolean starred,
-                                     Activity context) {
-    for (Event event : userEvents) {
-      if (event.identifier.equalsIgnoreCase(id)) {
-        event.starred = starred;
-        updateUserEventList(context);
-
-        // update in schedule activity
-        ArrayList<Event> eventList = MainActivity.dayList.get(event.day).get(
-            event.hour - 6);
-        for (Event tempE : eventList) {
-          if (tempE.identifier.equalsIgnoreCase(event.identifier)) {
-            tempE.starred = starred;
-            break;
-          }
-        }
-        if (starred)
-          MainActivity.addStarredEvent(event);
-        else
-          MainActivity.removeStarredEvent(event.identifier, event.day);
-
-        // update in event fragment
-        EventFragment fragment = (EventFragment) context.getFragmentManager()
-            .findFragmentById(R.id.eventFragment);
-        if (fragment != null && fragment.isInLayout() && MainActivity.SELECTED_EVENT_ID.equalsIgnoreCase(id)) {
-          EventFragment.star.setImageResource(starred ? R.drawable.star_on
-              : R.drawable.star_off);
-        }
-
-        return;
-      }
-    }
-  }
-
-  public static void updateUserEventList(Context context) {
+  public static void updateUserEventList(final Context context) {
     userEventsLayout.removeAllViews();
-    for (int i = 0; i < userEvents.size(); i++) {
-      final Event event = userEvents.get(i);
+    for (int i = 0; i < TournamentFragment.tournamentEvents.size(); i++) {
+      final Event event = TournamentFragment.tournamentEvents.get(i);
 
       RelativeLayout layout = (RelativeLayout) userEventLayoutInflater.inflate(R.layout.tournament_item, null);
 
@@ -161,10 +125,6 @@ public class MyWBCData extends Fragment {
       time.setTextColor(tColor);
       time.setText(String.valueOf(event.hour));
 
-      LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0,
-          LinearLayout.LayoutParams.MATCH_PARENT, 0);
-
-
       TextView duration = (TextView) layout.findViewById(R.id.gi_duration);
       duration.setTypeface(null, tType);
       duration.setTextColor(tColor);
@@ -188,7 +148,7 @@ public class MyWBCData extends Fragment {
 
         @Override
         public void onClick(View v) {
-          //MainActivity.openMap(context, event.location);
+          MainActivity.openMap(context, event.location);
         }
       });
 
@@ -201,18 +161,50 @@ public class MyWBCData extends Fragment {
       star.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          changeEventStar(event.identifier, !event.starred, activity);
-          setAllStared();
+          TournamentFragment.changeEventStar(event.identifier, !event.starred, MainActivity.activity);
+          TournamentFragment.setAllStared();
         }
       });
 
       layout.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          selectEvent(activity, event.identifier);
+          selectEvent(MainActivity.activity, event.identifier);
         }
       });
 
+      final int position = i;
+      layout.setOnLongClickListener(new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View view) {
+          AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.activity);
+
+          builder.setTitle("Choose an action");
+          builder.setMessage("What do you want to do to " + event.title);
+
+          builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+              deleteEvents(position);
+            }
+          });
+
+          builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+              editEvent(position);
+            }
+          });
+
+          builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+              dialog.dismiss();
+            }
+          });
+
+          builder.create().show();
+
+          return false;
+        }
+      });
       userEventsLayout.addView(layout);
     }
   }
@@ -229,28 +221,6 @@ public class MyWBCData extends Fragment {
       Intent intent = new Intent(activity, EventActivity.class);
       activity.startActivity(intent);
     }
-  }
-
-  /**
-   * set starGame image view
-   */
-  public static void setGameStar() {
-    starGame.setImageResource(allStarred ? R.drawable.star_on
-        : R.drawable.star_off);
-  }
-
-  /**
-   * Event star changed - check for change in allStarred boolean and set game star image view
-   */
-  public static void setAllStared() {
-    allStarred = true;
-    for (Event tEvent : userEvents) {
-      if (!tEvent.starred) {
-        allStarred = false;
-        return;
-      }
-    }
-    setGameStar();
   }
 
   @Override
@@ -298,9 +268,9 @@ public class MyWBCData extends Fragment {
 
         finishString += " in " + tournament.title;
 
-        textView = new TextView(getActivity());
+        textView = new TextView(MainActivity.activity);
         textView.setText(finishString);
-        textView.setTextAppearance(getActivity(), R.style.medium_text);
+        textView.setTextAppearance(MainActivity.activity, R.style.medium_text);
         textView.setGravity(Gravity.START);
         textView.setPadding(padding, padding, padding, padding);
 
@@ -319,7 +289,7 @@ public class MyWBCData extends Fragment {
         .findViewById(R.id.my_wbc_data_notes);
     notesLayout.removeAllViews();
 
-    SharedPreferences sp = getActivity().getSharedPreferences(
+    SharedPreferences sp = MainActivity.activity.getSharedPreferences(
         getResources().getString(R.string.sp_file_name),
         Context.MODE_PRIVATE);
     String notePrefString = getResources().getString(R.string.sp_event_note);
@@ -336,9 +306,9 @@ public class MyWBCData extends Fragment {
                   "");
           if (noteString.length() > 0) {
 
-            textView = new TextView(getActivity());
+            textView = new TextView(MainActivity.activity);
             textView.setText(event.title + ": " + noteString);
-            textView.setTextAppearance(getActivity(),
+            textView.setTextAppearance(MainActivity.activity,
                 R.style.medium_text);
             textView.setGravity(Gravity.START);
             textView.setPadding(padding, padding, padding,
@@ -351,23 +321,18 @@ public class MyWBCData extends Fragment {
     }
 
     /** ADD USER EVENTS **/
-
-    activity = getActivity();
-
     userEventLayoutInflater = inflater;
     userEventsLayout = (LinearLayout) view.findViewById(R.id.my_wbc_data_events);
-
 
     String identifier, row, eventTitle, location;
     String[] rowData;
     int index, day, hour;
-    double duration, totalDuration;
-    boolean continuous, qualify, isTournamentEvent;
+    double duration;
 
     String userEventPrefString = getResources().getString(R.string.sp_user_event);
     String starPrefString = getResources().getString(R.string.sp_event_starred);
 
-    userEvents = new ArrayList<Event>();
+    TournamentFragment.tournamentEvents = new ArrayList<Event>();
     for (index = 0; ; index++) {
       row = sp.getString(userEventPrefString + String.valueOf(index), "");
       if (row.equalsIgnoreCase(""))
@@ -386,10 +351,10 @@ public class MyWBCData extends Fragment {
           false, duration, false, duration, location);
       event.starred = sp.getBoolean(starPrefString + identifier, false);
 
-      userEvents.add(event);
+      TournamentFragment.tournamentEvents.add(event);
     }
 
-    updateUserEventList(getActivity());
+    updateUserEventList(MainActivity.activity);
 
     Button addEvent = (Button) view.findViewById(R.id.add_event);
     addEvent.setOnClickListener(new View.OnClickListener() {
@@ -412,79 +377,20 @@ public class MyWBCData extends Fragment {
 
   public void showCreateDialog() {
     DialogCreateEvent editNameDialog = new DialogCreateEvent();
-    editNameDialog.show(getActivity().getFragmentManager(),
+    editNameDialog.show(MainActivity.activity.getFragmentManager(),
         "create_event_dialog");
   }
 
-  public void editEvent(int index) {
+  public static void editEvent(int index) {
     selectedEvent = index;
     DialogEditEvent editNameDialog = new DialogEditEvent();
-    editNameDialog.show(getActivity().getFragmentManager(), "edit_event_dialog");
+    editNameDialog.show(MainActivity.activity.getFragmentManager(), "edit_event_dialog");
   }
 
-  public void deleteEvents(int index) {
+  public static void deleteEvents(int index) {
     selectedEvent = index;
     DialogDelete deleteDialog = new DialogDelete();
-    deleteDialog.show(getActivity().getFragmentManager(), "delete_dialog");
-  }
-
-  public void changeEventStar(String id, boolean starred) {
-    for (Event event : userEvents) {
-      if (event.identifier.equalsIgnoreCase(id)) {
-        event.starred = starred;
-
-        // update in schedule activity
-        ArrayList<Event> eventList = MainActivity.dayList.get(event.day).get(
-            event.hour - 6);
-        for (Event tempE : eventList) {
-          if (tempE.identifier.equalsIgnoreCase(event.identifier)) {
-            tempE.starred = starred;
-            break;
-          }
-        }
-        if (starred)
-          MainActivity.addStarredEvent(event);
-        else
-          MainActivity.removeStarredEvent(event.identifier, event.day);
-
-        // update in help fragment
-        EventFragment fragment = (EventFragment) getFragmentManager()
-            .findFragmentById(R.id.eventFragment);
-        if (fragment != null && fragment.isInLayout() && MainActivity.SELECTED_EVENT_ID.equalsIgnoreCase(id)) {
-          EventFragment.star.setImageResource(starred ? R.drawable.star_on
-              : R.drawable.star_off);
-        }
-
-        setGameStar();
-        return;
-      }
-    }
-  }
-
-  public boolean getAllStarred() {
-    boolean allStarred = true;
-    for (Event tEvent : userEvents) {
-      if (!tEvent.starred) {
-        allStarred = false;
-        break;
-      }
-    }
-    return allStarred;
-    //TODO setGameStar();
-  }
-
-  /**
-   * Game star button clicked - change allStarred boolean and update events
-   */
-  public void changeAllStarred() {
-    allStarred = !allStarred;
-    setGameStar();
-
-    for (Event event : userEvents) {
-      if (event.starred ^ allStarred) {
-        changeEventStar(event.identifier, allStarred, getActivity());
-      }
-    }
+    deleteDialog.show(MainActivity.activity.getFragmentManager(), "delete_dialog");
   }
 
   public static class DialogDelete extends DialogFragment {
@@ -511,10 +417,10 @@ public class MyWBCData extends Fragment {
       if (ALL_EVENTS)
         string = "all your events?";
       else {
-        Event event = userEvents.get(selectedEvent);
+        Event event = TournamentFragment.tournamentEvents.get(selectedEvent);
         String day = getResources().getStringArray(R.array.days)[event.day];
 
-        SharedPreferences settings = getActivity().getSharedPreferences(
+        SharedPreferences settings = MainActivity.activity.getSharedPreferences(
             getResources().getString(R.string.sp_file_name),
             Context.MODE_PRIVATE);
 
@@ -536,17 +442,16 @@ public class MyWBCData extends Fragment {
         @Override
         public void onClick(View v) {
           deleteItem();
-          closeDialog();
+          getDialog().dismiss();
         }
       });
 
       Button cancel = (Button) view.findViewById(R.id.dd_cancel);
       cancel.setEnabled(true);
       cancel.setOnClickListener(new View.OnClickListener() {
-
         @Override
         public void onClick(View v) {
-          closeDialog();
+          getDialog().dismiss();
         }
       });
 
@@ -562,8 +467,8 @@ public class MyWBCData extends Fragment {
         index = 0;
       else
         index = selectedEvent;
-      while (index < userEvents.size()) {
-        event = userEvents.remove(index);
+      while (index < TournamentFragment.tournamentEvents.size()) {
+        event = TournamentFragment.tournamentEvents.remove(index);
 
         // delete from dayList (currentHour)
         List<Event> scheduleEvents = MainActivity.dayList.get(
@@ -593,34 +498,14 @@ public class MyWBCData extends Fragment {
         // eventsDB.deleteEvent(help.ID);
 
         if (!ALL_EVENTS)
-          index = userEvents.size();
+          index = TournamentFragment.tournamentEvents.size();
 
       }
 
-      if (userEvents.size() == 0) {
-        getActivity().finish();
-      } else {
-
-        if (selectedEvent == 0)
-          selectedEvent++;
-
-        MainActivity.SELECTED_EVENT_ID = userEvents.get(selectedEvent - 1).identifier;
-        updateUserEventList(getActivity());
-
-        EventFragment fragment = (EventFragment) getActivity()
-            .getFragmentManager().findFragmentById(
-                R.id.eventFragment);
-
-        if (fragment != null && fragment.isInLayout()) {
-          EventFragment.setEvent(getActivity());
-        }
-      }
-      saveUserEvents(getActivity());
+      updateUserEventList(MainActivity.activity);
+      saveUserEvents(MainActivity.activity);
     }
 
-    public void closeDialog() {
-      this.dismiss();
-    }
   }
 
   public static class DialogCreateEvent extends DialogFragment {
@@ -666,7 +551,7 @@ public class MyWBCData extends Fragment {
 
       hourSpinner = (Spinner) view.findViewById(R.id.ce_hour);
 
-      SharedPreferences settings = getActivity().getSharedPreferences(
+      SharedPreferences settings = MainActivity.activity.getSharedPreferences(
           getResources().getString(R.string.sp_file_name),
           Context.MODE_PRIVATE);
 
@@ -674,14 +559,14 @@ public class MyWBCData extends Fragment {
       int hoursID = (hours24 ? R.array.hours_24 : R.array.hours_12);
 
       ArrayAdapter<CharSequence> hourA = ArrayAdapter.createFromResource(
-          getActivity(), hoursID, android.R.layout.simple_spinner_item);
+          MainActivity.activity, hoursID, android.R.layout.simple_spinner_item);
       hourA
           .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       hourSpinner.setAdapter(hourA);
 
       durationSpinner = (Spinner) view.findViewById(R.id.ce_duration);
       ArrayAdapter<CharSequence> durationA = ArrayAdapter
-          .createFromResource(getActivity(), R.array.duration,
+          .createFromResource(MainActivity.activity, R.array.duration,
               android.R.layout.simple_spinner_item);
       durationA
           .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -693,7 +578,7 @@ public class MyWBCData extends Fragment {
         @Override
         public void onClick(View v) {
           createEvent();
-          closeDialog();
+          getDialog().dismiss();
         }
       });
       cancel = (Button) view.findViewById(R.id.ce_cancel);
@@ -702,7 +587,7 @@ public class MyWBCData extends Fragment {
 
         @Override
         public void onClick(View v) {
-          closeDialog();
+          getDialog().dismiss();
         }
       });
 
@@ -766,17 +651,13 @@ public class MyWBCData extends Fragment {
 
       if (titleET.getText().toString().length() > 0
           && locationET.getText().toString().length() > 0) {
-        for (int i = 0; i < days.length; i++) {
-          if (days[i].isChecked()) {
+        for (CheckBox checkBox : days) {
+          if (checkBox.isChecked()) {
             add.setEnabled(true);
             break;
           }
         }
       }
-    }
-
-    public void closeDialog() {
-      this.dismiss();
     }
 
     public void createEvent() {
@@ -795,8 +676,8 @@ public class MyWBCData extends Fragment {
               false, duration, false, duration, location);
 
           int index = 0;
-          for (; index < userEvents.size(); index++) {
-            tempEvent = userEvents.get(index);
+          for (; index < TournamentFragment.tournamentEvents.size(); index++) {
+            tempEvent = TournamentFragment.tournamentEvents.get(index);
             if ((tempEvent.day * 24 + tempEvent.hour > newEvent.day * 24
                 + newEvent.hour)
                 || (tempEvent.day * 24 + tempEvent.hour == newEvent.day
@@ -805,9 +686,8 @@ public class MyWBCData extends Fragment {
               break;
           }
 
-          userEvents.add(index, newEvent);
-
-          changeEventStar(newEvent.identifier, true, getActivity());
+          TournamentFragment.tournamentEvents.add(index, newEvent);
+          TournamentFragment.changeEventStar(newEvent.identifier, true, MainActivity.activity);
 
           MainActivity.SELECTED_EVENT_ID = identifier;
 
@@ -815,22 +695,25 @@ public class MyWBCData extends Fragment {
               newEvent);
 
         }
-
       }
 
-      saveUserEvents(getActivity());
+      saveUserEvents(MainActivity.activity);
 
-      EventFragment fragment = (EventFragment) getActivity()
+      EventFragment fragment = (EventFragment) MainActivity.activity
           .getFragmentManager().findFragmentById(R.id.eventFragment);
 
       if (fragment != null && fragment.isInLayout()) {
-        EventFragment.setEvent(getActivity());
+        EventFragment.setEvent(MainActivity.activity);
       }
 
-      updateUserEventList(getActivity());
+      updateUserEventList(MainActivity.activity);
 
     }
   }
+
+
+
+
 
   public static class DialogEditEvent extends DialogCreateEvent {
     // private final String TAG="WBC EditEventDialog";
@@ -847,8 +730,8 @@ public class MyWBCData extends Fragment {
       daysLL.setVisibility(View.GONE);
 
       event = null;
-      for (int i = 0; i < userEvents.size(); i++) {
-        event = userEvents.get(i);
+      for (int i = 0; i < TournamentFragment.tournamentEvents.size(); i++) {
+        event = TournamentFragment.tournamentEvents.get(i);
         if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID))
           break;
       }
@@ -866,7 +749,7 @@ public class MyWBCData extends Fragment {
         @Override
         public void onClick(View v) {
           saveEvent();
-          closeDialog();
+          getDialog().dismiss();
 
         }
       });
@@ -888,13 +771,13 @@ public class MyWBCData extends Fragment {
       // remove help from global list and edit
 
       int index = 0;
-      for (; index < userEvents.size(); index++) {
-        if (userEvents.get(index).identifier
+      for (; index < TournamentFragment.tournamentEvents.size(); index++) {
+        if (TournamentFragment.tournamentEvents.get(index).identifier
             .equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID))
           break;
       }
 
-      Event editedEvent = userEvents.remove(index);
+      Event editedEvent = TournamentFragment.tournamentEvents.remove(index);
       editedEvent.hour = hour;
       editedEvent.title = title;
       editedEvent.duration = duration;
@@ -903,8 +786,8 @@ public class MyWBCData extends Fragment {
       // add edited help to tournament list
       Event tempEvent;
       index = 0;
-      for (; index < userEvents.size(); index++) {
-        tempEvent = userEvents.get(index);
+      for (; index < TournamentFragment.tournamentEvents.size(); index++) {
+        tempEvent = TournamentFragment.tournamentEvents.get(index);
         if ((tempEvent.day * 24 + tempEvent.hour > editedEvent.day * 24
             + editedEvent.hour)
             || (tempEvent.day * 24 + tempEvent.hour == editedEvent.day * 24
@@ -913,7 +796,7 @@ public class MyWBCData extends Fragment {
           break;
 
       }
-      userEvents.add(index, editedEvent);
+      TournamentFragment.tournamentEvents.add(index, editedEvent);
 
       // remove old help from schedule
       List<Event> events = MainActivity.dayList.get(event.day).get(
@@ -938,16 +821,15 @@ public class MyWBCData extends Fragment {
 
       MainActivity.SELECTED_EVENT_ID = event.identifier;
 
-      updateUserEventList(getActivity());
+      updateUserEventList(MainActivity.activity);
 
-      EventFragment fragment = (EventFragment) getActivity()
+      EventFragment fragment = (EventFragment) MainActivity.activity
           .getFragmentManager().findFragmentById(R.id.eventFragment);
 
       if (fragment != null && fragment.isInLayout()) {
-        EventFragment.setEvent(getActivity());
+        EventFragment.setEvent(MainActivity.activity);
       }
-      saveUserEvents(getActivity());
+      saveUserEvents(MainActivity.activity);
     }
   }
-
 }

@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
   public static ArrayList<ArrayList<ArrayList<Event>>> dayList;
   public static String[] dayStrings;
   public static String allChanges;
-  public static CharSequence drawerTitle;
+  public static String drawerTitle;
   private static int COLOR_JUNIOR;
   private static int COLOR_SEMINAR;
   private static int COLOR_QUALIFY;
@@ -62,6 +62,7 @@ public class MainActivity extends Activity {
   private static int COLOR_NON_TOURNAMENT;
   private static String dialogText;
   private static String dialogTitle;
+  public static Activity activity;
   public final int drawerIconIDs[] = {R.drawable.ic_drawer_star,
       R.drawable.ic_drawer_view_as_list, R.drawable.ic_drawer_finish,
       0, R.drawable.ic_drawer_filter, R.drawable.ic_drawer_settings,
@@ -70,7 +71,7 @@ public class MainActivity extends Activity {
   private DrawerLayout drawerLayout;
   private ActionBarDrawerToggle drawerToggle;
   private ListView drawerList;
-  private CharSequence actionBarTitle;
+  private String actionBarTitle;
 
   /**
    * Add starred help to "My Events" group in list
@@ -195,6 +196,8 @@ public class MainActivity extends Activity {
     COLOR_NON_TOURNAMENT = getResources().getColor(R.color.non_tournament);
     COLOR_OPEN_TOURNAMENT = getResources().getColor(R.color.open_tournament);
 
+    activity = this;
+
     // enable home button for navigation drawer
     final ActionBar ab = getActionBar();
     if (ab != null) {
@@ -206,23 +209,22 @@ public class MainActivity extends Activity {
     // load navigation drawer
     drawerTitles = getResources().getStringArray(R.array.drawer_titles);
     drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
     drawerList = (ListView) findViewById(R.id.left_drawer);
     drawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_list_item));
-
-    actionBarTitle = drawerTitle = getTitle();
 
     drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
         R.drawable.ic_drawer, R.string.open_drawer, R.string.close_drawer) {
 
       public void onDrawerClosed(View view) {
         super.onDrawerClosed(view);
-        setActionBarTitle(actionBarTitle);
+        //setActionBarTitle(actionBarTitle);
         invalidateOptionsMenu();
       }
 
       public void onDrawerOpened(View drawerView) {
         super.onDrawerOpened(drawerView);
-        setActionBarTitle(drawerTitle);
+        //setActionBarTitle(drawerTitle);
         invalidateOptionsMenu();
       }
     };
@@ -278,12 +280,7 @@ public class MainActivity extends Activity {
       dc.show(getFragmentManager(), "changes_dialog");
     }
 
-    Fragment summaryFragment = new SummaryFragment();
-    FragmentManager fragmentManager = getFragmentManager();
-    fragmentManager.beginTransaction()
-        .replace(R.id.content_frame, summaryFragment)
-        .commit();
-
+    selectItem(0);
   }
 
   @Override
@@ -356,8 +353,10 @@ public class MainActivity extends Activity {
   public boolean onPrepareOptionsMenu(Menu menu) {
     // If the nav drawer is open, hide action items related to the content view
     boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
+    // If user data open, hide search do avoid multiple tournament event lists
+    boolean userDataOpen = getFragmentManager().findFragmentByTag("user") != null;
 
-    menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
+    menu.findItem(R.id.menu_search).setVisible(!(drawerOpen || userDataOpen));
 
     return super.onPrepareOptionsMenu(menu);
   }
@@ -385,16 +384,22 @@ public class MainActivity extends Activity {
   private void selectItem(int position) {
     Fragment fragment = null;
     Intent intent = null;
+    String tag = null;
     switch (position) {
       case 0:
         fragment = new SummaryFragment();
+        actionBarTitle = drawerTitles[position];
+        tag = "summary";
         break;
       case 1:
-        actionBarTitle = dayStrings[Math.max(currentDay, 0)];
         fragment = new ScheduleContainer();
+        actionBarTitle = dayStrings[Math.max(currentDay, 0)];
+        tag = "schedule";
         break;
       case 2:
         fragment = new MyWBCData();
+        actionBarTitle = drawerTitles[position];
+        tag = "user";
         break;
       case 4:
         intent = new Intent(this, FilterActivity.class);
@@ -413,16 +418,14 @@ public class MainActivity extends Activity {
     }
 
     if (fragment != null) {
-      actionBarTitle = drawerTitles[position];
-
       FragmentManager fragmentManager = getFragmentManager();
       fragmentManager.beginTransaction()
-          .replace(R.id.content_frame, fragment).commit();
+          .replace(R.id.content_frame, fragment, tag).commit();
 
       // Highlight the selected item, update the title, and close the drawer
-      //drawerList.setSelection(position);
-      //drawerList.setItemChecked(position, true);
+      drawerList.setItemChecked(position, true);
       setActionBarTitle(actionBarTitle);
+      invalidateOptionsMenu();
     } else {
       startActivity(intent);
     }
@@ -485,7 +488,6 @@ public class MainActivity extends Activity {
       inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-
     @Override
     public int getCount() {
       return drawerTitles.length;
@@ -500,7 +502,6 @@ public class MainActivity extends Activity {
     public long getItemId(int position) {
       return position;
     }
-
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -531,7 +532,6 @@ public class MainActivity extends Activity {
           });
         }
       }
-
       return view;
     }
   }

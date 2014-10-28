@@ -3,9 +3,7 @@
 
 	<!-- main app colors -->
 	<color name="red">#600000</color>
-	<color name="red_light">#903333</color>
-	<color name="red_lighter">#b06666</color>
-	<color name="red_lightest">#d0aaaa</color>
+	<color name="red_light">#d0aaaa</color>
 	<color name="red_dark">#300000</color>
 	<color name="blue">#31428C</color>
 	<color name="blue_light">#98A0BE</color>
@@ -30,9 +28,9 @@
 	<color name="divider">#000000</color>
 
 	<!-- list -->
-	<color name="item_focused">@color/red_lightest</color>
-	<color name="item_pressed">@color/red_light</color>
-	<color name="item_selected">@color/red_lighter</color>
+	<color name="item_focused">@color/blue</color>
+	<color name="item_pressed">@color/red</color>
+	<color name="item_selected">@color/red_light</color>
 	<color name="group_default_expanded">@color/blue_light</color>
 	<color name="group_default_collapsed">@color/blue</color>
 	<color name="group_focused">@color/blue</color>
@@ -45,9 +43,9 @@
 	<color name="future_light">@color/yellow_light</color>
 
 	<!-- design -->
-	<color name="action_bar_background">@color/red_lightest</color>
+	<color name="action_bar_background">@color/red_light</color>
 	<color name="action_bar_text">@color/black</color>
-	<color name="menu_background">@color/red_lightest</color>
+	<color name="menu_background">@color/red_light</color>
 	<color name="menu_text">@color/black</color>
 
 	<!-- buttons -->

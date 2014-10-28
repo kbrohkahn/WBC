@@ -29,11 +29,14 @@ public class TournamentFragment extends Fragment {
   private static final String TAG = "Game Fragment";
   public static ArrayList<Event> tournamentEvents;
   private static ImageView starGame;
-  private static TournamentListAdapter listAdapter;
+  public static boolean allStarred;
+
+  private Activity activity;
+
   private final int[] finishIDs = {R.id.gf_finish_0, R.id.gf_finish_1,
       R.id.gf_finish_2, R.id.gf_finish_3, R.id.gf_finish_4,
       R.id.gf_finish_5, R.id.gf_finish_6};
-  private boolean allStarred;
+  private static TournamentListAdapter listAdapter;
   private Tournament tournament;
   private boolean hasFormat;
   private boolean hasClass;
@@ -55,7 +58,9 @@ public class TournamentFragment extends Fragment {
       if (event.identifier.equalsIgnoreCase(id)) {
         event.starred = starred;
 
-        listAdapter.notifyDataSetChanged();
+        // will be null if calling from user event
+        if (listAdapter != null)
+          listAdapter.notifyDataSetChanged();
 
         // update in schedule activity
         ArrayList<Event> eventList = MainActivity.dayList.get(event.day).get(
@@ -87,13 +92,13 @@ public class TournamentFragment extends Fragment {
   /**
    * Game star button clicked - change allStarred boolean and update events
    */
-  public void changeAllStarred() {
+  public static void changeAllStarred(Activity a) {
     allStarred = !allStarred;
     setGameStar();
 
     for (Event event : tournamentEvents) {
       if (event.starred ^ allStarred) {
-        changeEventStar(event.identifier, allStarred, getActivity());
+        changeEventStar(event.identifier, allStarred, a);
       }
     }
   }
@@ -101,7 +106,7 @@ public class TournamentFragment extends Fragment {
   /**
    * set starGame image view
    */
-  public void setGameStar() {
+  public static void setGameStar() {
     starGame.setImageResource(allStarred ? R.drawable.star_on
         : R.drawable.star_off);
   }
@@ -109,7 +114,7 @@ public class TournamentFragment extends Fragment {
   /**
    * Event star changed - check for change in allStarred boolean and set game star image view
    */
-  public void setAllStared() {
+  public static void setAllStared() {
     allStarred = true;
     for (Event tEvent : tournamentEvents) {
       if (!tEvent.starred) {
@@ -145,6 +150,7 @@ public class TournamentFragment extends Fragment {
     for (int i = 0; i < finishIDs.length; i++)
       finishButtons[i] = (RadioButton) view.findViewById(finishIDs[i]);
 
+    activity = getActivity();
     setGame();
 
     return view;
@@ -252,7 +258,7 @@ public class TournamentFragment extends Fragment {
     }
 
     // set title
-    getActivity().setTitle(tournament.title);
+    activity.setTitle(tournament.title);
 
     // set GM
     gameGM.setText("GM: " + tournament.gm);
@@ -261,7 +267,7 @@ public class TournamentFragment extends Fragment {
     starGame.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        changeAllStarred();
+        changeAllStarred(activity);
       }
     });
 
@@ -273,7 +279,7 @@ public class TournamentFragment extends Fragment {
   public void onPause() {
     for (int i = 0; i < finishButtons.length; i++) {
       if (finishButtons[i].isChecked()) {
-        SharedPreferences.Editor editor = getActivity()
+        SharedPreferences.Editor editor = activity
             .getSharedPreferences(
                 getResources().getString(R.string.sp_file_name),
                 Context.MODE_PRIVATE).edit();
@@ -294,7 +300,7 @@ public class TournamentFragment extends Fragment {
 
     public TournamentListAdapter() {
       inflater = (LayoutInflater)
-          getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+          activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -405,7 +411,7 @@ public class TournamentFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-          MainActivity.openMap(getActivity(), event.location);
+          MainActivity.openMap(activity, event.location);
         }
       });
 
@@ -418,7 +424,7 @@ public class TournamentFragment extends Fragment {
       star.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          changeEventStar(event.identifier, !event.starred, getActivity());
+          changeEventStar(event.identifier, !event.starred, activity);
           setAllStared();
         }
       });
@@ -440,9 +446,9 @@ public class TournamentFragment extends Fragment {
           .findFragmentById(R.id.eventFragment);
 
       if (fragment != null && fragment.isInLayout()) {
-        EventFragment.setEvent(getActivity());
+        EventFragment.setEvent(activity);
       } else {
-        Intent intent = new Intent(getActivity(), EventActivity.class);
+        Intent intent = new Intent(activity, EventActivity.class);
         startActivity(intent);
       }
     }

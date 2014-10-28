@@ -33,10 +33,10 @@ public class SummaryFragment extends Fragment {
     View view = inflater.inflate(R.layout.summary, container, false);
 
     // load preferences, needed for notes
-    sp = getActivity().getSharedPreferences(getActivity()
+    sp = MainActivity.activity.getSharedPreferences(MainActivity.activity
             .getResources().getString(R.string.sp_file_name),
         Context.MODE_PRIVATE);
-    notePrefString = getActivity().getResources().getString(R.string.sp_event_note);
+    notePrefString = MainActivity.activity.getResources().getString(R.string.sp_event_note);
 
     summaryList = new ArrayList<ArrayList<Event>>(MainActivity.dayStrings.length);
     for (int i = 0; i < MainActivity.dayStrings.length; i++) {
@@ -57,7 +57,7 @@ public class SummaryFragment extends Fragment {
 
   @Override
   public void onResume() {
-    final ActionBar ab = getActivity().getActionBar();
+    final ActionBar ab = MainActivity.activity.getActionBar();
     if (ab != null)
       ab.setTitle("My WBC");
     else
@@ -115,7 +115,7 @@ public class SummaryFragment extends Fragment {
 
     public SummaryListAdapter() {
       inflater = (LayoutInflater)
-          getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+          MainActivity.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -165,7 +165,7 @@ public class SummaryFragment extends Fragment {
       location.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          MainActivity.openMap(getActivity(), event.location);
+          MainActivity.openMap(MainActivity.activity, event.location);
         }
       });
 
@@ -217,7 +217,7 @@ public class SummaryFragment extends Fragment {
       view.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          MainActivity.selectGame(getActivity(), tID, eID);
+          MainActivity.selectGame(MainActivity.activity, tID, eID);
         }
       });
 

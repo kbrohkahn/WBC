@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 public class EventFragment extends Fragment {
   private final static String TAG = "Event Fragment";
+  private Activity activity;
   public static ImageView star;
   private static Event event;
   private static RelativeLayout timeLayout;
@@ -153,7 +154,7 @@ public class EventFragment extends Fragment {
 
     noteET = (EditText) view.findViewById(R.id.ef_note);
 
-    final Activity activity = getActivity();
+    activity = getActivity();
     if (!MainActivity.SELECTED_EVENT_ID.equalsIgnoreCase(""))
       setEvent(activity);
 
@@ -168,7 +169,7 @@ public class EventFragment extends Fragment {
         : R.drawable.star_off);
 
     TournamentFragment.changeEventStar(event.identifier, starred,
-        getActivity());
+        activity);
 
   }
 
@@ -178,7 +179,7 @@ public class EventFragment extends Fragment {
 
     note = noteET.getText().toString();
 
-    SharedPreferences.Editor editor = getActivity().getSharedPreferences(
+    SharedPreferences.Editor editor = activity.getSharedPreferences(
         getResources().getString(R.string.sp_file_name),
         Context.MODE_PRIVATE).edit();
 

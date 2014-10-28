@@ -32,7 +32,7 @@ public class ScheduleContainer extends Fragment implements
           @Override
           public void onPageSelected(int position) {
             MainActivity.drawerTitle = "WBC-" + MainActivity.dayStrings[position];
-            getActivity().getActionBar().setTitle(MainActivity.drawerTitle);
+            MainActivity.activity.getActionBar().setTitle(MainActivity.drawerTitle);
           }
         });
 

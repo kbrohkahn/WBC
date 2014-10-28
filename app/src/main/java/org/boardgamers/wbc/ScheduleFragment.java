@@ -31,7 +31,7 @@ public class ScheduleFragment extends Fragment {
         .inflate(R.layout.schedule_fragment, container, false);
 
     dayID = getArguments().getInt("current_day");
-    listAdapter = new ScheduleListAdapter(this.getActivity());
+    listAdapter = new ScheduleListAdapter(MainActivity.activity);
 
     listView = (ExpandableListView) view.findViewById(R.id.sf_schedule);
     listView.setAdapter(listAdapter);
@@ -147,7 +147,7 @@ public class ScheduleFragment extends Fragment {
       location.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          MainActivity.openMap(getActivity(), event.location);
+          MainActivity.openMap(MainActivity.activity, event.location);
         }
       });
 
@@ -188,7 +188,7 @@ public class ScheduleFragment extends Fragment {
       view.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          MainActivity.selectGame(getActivity(), tID, eID);
+          MainActivity.selectGame(MainActivity.activity, tID, eID);
         }
       });
 
@@ -208,7 +208,7 @@ public class ScheduleFragment extends Fragment {
 
       TextView name = (TextView) view.findViewById(R.id.sg_name);
 
-      SharedPreferences settings = getActivity().getSharedPreferences(
+      SharedPreferences settings = MainActivity.activity.getSharedPreferences(
           getResources().getString(R.string.sp_file_name),
           Context.MODE_PRIVATE);
 
