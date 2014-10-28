@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class TournamentFragment extends Fragment {
   private static final String TAG = "Game Fragment";
   public static ArrayList<Event> tournamentEvents;
-  private static ImageView starGame;
+  public static ImageView starGame;
   public static boolean allStarred;
 
   private Activity activity;
@@ -59,7 +59,9 @@ public class TournamentFragment extends Fragment {
         event.starred = starred;
 
         // will be null if calling from user event
-        if (listAdapter != null)
+        if (listAdapter == null)
+          MyWBCData.updateUserEventList(MainActivity.activity);
+        else
           listAdapter.notifyDataSetChanged();
 
         // update in schedule activity

@@ -29,7 +29,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -81,7 +80,7 @@ public class MyWBCData extends Fragment {
     for (int i = 0; i < TournamentFragment.tournamentEvents.size(); i++) {
       final Event event = TournamentFragment.tournamentEvents.get(i);
 
-      RelativeLayout layout = (RelativeLayout) userEventLayoutInflater.inflate(R.layout.tournament_item, null);
+      LinearLayout layout = (LinearLayout) userEventLayoutInflater.inflate(R.layout.tournament_item, null);
 
       boolean started = event.day * 24 + event.hour <= MainActivity.currentDay * 24 + MainActivity.currentHour;
       boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.currentDay
@@ -163,6 +162,8 @@ public class MyWBCData extends Fragment {
         public void onClick(View view) {
           TournamentFragment.changeEventStar(event.identifier, !event.starred, MainActivity.activity);
           TournamentFragment.setAllStared();
+
+
         }
       });
 
@@ -371,6 +372,17 @@ public class MyWBCData extends Fragment {
         deleteEvents(-1);
       }
     });
+
+    TournamentFragment.starGame = (ImageView) view.findViewById(R.id.gf_star);
+    TournamentFragment.starGame.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        TournamentFragment.changeAllStarred(MainActivity.activity);
+      }
+    });
+
+    TournamentFragment.setAllStared();
+    TournamentFragment.setGameStar();
 
     return view;
   }
@@ -710,10 +722,6 @@ public class MyWBCData extends Fragment {
 
     }
   }
-
-
-
-
 
   public static class DialogEditEvent extends DialogCreateEvent {
     // private final String TAG="WBC EditEventDialog";
