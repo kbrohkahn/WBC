@@ -139,7 +139,6 @@ public class SummaryFragment extends Fragment {
       duration.setTypeface(null, tType);
       duration.setTextColor(tColor);
 
-
       if (event.continuous) {
         duration.setCompoundDrawablesWithIntrinsicBounds(0, 0,
             R.drawable.continuous_icon, 0);
@@ -156,7 +155,7 @@ public class SummaryFragment extends Fragment {
       location.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          MainActivity.openMap(MainActivity.activity, event.location);
+          MainActivity.openMap(event.location);
         }
       });
 

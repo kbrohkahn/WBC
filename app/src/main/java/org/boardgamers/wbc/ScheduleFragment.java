@@ -1,6 +1,5 @@
 package org.boardgamers.wbc;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -165,7 +164,7 @@ public class ScheduleFragment extends Fragment {
       location.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          MainActivity.openMap(MainActivity.activity, event.location);
+          MainActivity.openMap(event.location);
         }
       });
 

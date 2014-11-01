@@ -66,7 +66,7 @@ public class EventFragment extends Fragment {
     location.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        MainActivity.openMap(activity, event.location);
+        MainActivity.openMap(event.location);
       }
     });
 

@@ -123,12 +123,13 @@
 		<item>All Starred Events</item>
 		<item>Full Schedule</item>
 		<item>My WBC Data</item>
+    <item>Convention Info</item>
+    <item>Hotel Map</item>
+    <item>Help</item>
+    <item>About App</item>
 		<item>Settings</item>
 		<item>Schedule Filter</item>
 		<item>General Settings</item>
-		<item>App Info</item>
-		<item>Help</item>
-		<item>About</item>
 	</string-array>
 
 

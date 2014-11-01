@@ -39,10 +39,87 @@ import java.util.List;
  * Fragment containing user's WBC data, including tournament finishes, help notes, and created events
  */
 public class UserDataFragment extends Fragment {
+  private static ArrayList<Event> userEvents;
+  private static ImageView userEventsStarIV;
+  private static boolean allStarred;
+
   private static LinearLayout userEventsLayout;
   private static int selectedEvent;
   private static LayoutInflater userEventLayoutInflater;
   private final String TAG = "My WBC Data Activity";
+
+  public static void changeEventStar(String id, boolean starred,
+                                     Activity context) {
+    for (Event event : userEvents) {
+      if (event.identifier.equalsIgnoreCase(id)) {
+        event.starred = starred;
+
+        // will be null if calling from user event
+        updateUserEventList(MainActivity.activity);
+
+        // update in schedule activity
+        ArrayList<Event> eventList = MainActivity.dayList.get(event.day).get(
+            event.hour - 6);
+        for (Event tempE : eventList) {
+          if (tempE.identifier.equalsIgnoreCase(event.identifier)) {
+            tempE.starred = starred;
+            break;
+          }
+        }
+        if (starred)
+          MainActivity.addStarredEvent(event);
+        else
+          MainActivity.removeStarredEvent(event.identifier, event.day);
+
+        // update in event fragment
+        EventFragment fragment = (EventFragment) context.getFragmentManager()
+            .findFragmentById(R.id.eventFragment);
+        if (fragment != null && fragment.isInLayout() && MainActivity.SELECTED_EVENT_ID.equalsIgnoreCase(id)) {
+          EventFragment.star.setImageResource(starred ? R.drawable.star_on
+              : R.drawable.star_off);
+        }
+
+        return;
+      }
+    }
+  }
+
+  /**
+   * Game star button clicked - change allStarred boolean and update events
+   */
+  public static void changeAllStarred(Activity a) {
+    allStarred = !allStarred;
+    setGameStar();
+
+    for (Event event : userEvents) {
+      if (event.starred ^ allStarred) {
+        changeEventStar(event.identifier, allStarred, a);
+      }
+    }
+  }
+
+  /**
+   * set userEventsStarIV image resource
+   */
+  public static void setGameStar() {
+    userEventsStarIV.setImageResource(allStarred ? R.drawable.star_on
+        : R.drawable.star_off);
+  }
+
+  /**
+   * Event star changed - check for change in allStarred boolean and set game star image view.
+   * Call setGameStar before return
+   */
+  public static void setAllStared() {
+    allStarred = true;
+    for (Event tEvent : userEvents) {
+      if (!tEvent.starred) {
+        allStarred = false;
+        return;
+      }
+    }
+    setGameStar();
+  }
 
   private static void saveUserEvents(Context context) {
     final Resources resources = context.getResources();
@@ -58,8 +135,8 @@ public class UserDataFragment extends Fragment {
     String breakCharacter = "~";
 
     int i = 0;
-    for (; i < TournamentFragment.tournamentEvents.size(); i++) {
-      event = TournamentFragment.tournamentEvents.get(i);
+    for (; i < userEvents.size(); i++) {
+      event = userEvents.get(i);
 
       saveString = String.valueOf(event.day) + breakCharacter
           + String.valueOf(event.hour) + breakCharacter + event.title
@@ -77,8 +154,8 @@ public class UserDataFragment extends Fragment {
 
   public static void updateUserEventList(final Context context) {
     userEventsLayout.removeAllViews();
-    for (int i = 0; i < TournamentFragment.tournamentEvents.size(); i++) {
-      final Event event = TournamentFragment.tournamentEvents.get(i);
+    for (int i = 0; i < userEvents.size(); i++) {
+      final Event event = userEvents.get(i);
 
       LinearLayout layout = (LinearLayout) userEventLayoutInflater.inflate(R.layout.tournament_item, null);
 
@@ -147,7 +224,7 @@ public class UserDataFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-          MainActivity.openMap(context, event.location);
+          MainActivity.openMap(event.location);
         }
       });
 
@@ -160,8 +237,8 @@ public class UserDataFragment extends Fragment {
       star.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          TournamentFragment.changeEventStar(event.identifier, !event.starred, MainActivity.activity);
-          TournamentFragment.setAllStared();
+          changeEventStar(event.identifier, !event.starred, MainActivity.activity);
+          setAllStared();
 
 
         }
@@ -333,7 +410,7 @@ public class UserDataFragment extends Fragment {
     String userEventPrefString = getResources().getString(R.string.sp_user_event);
     String starPrefString = getResources().getString(R.string.sp_event_starred);
 
-    TournamentFragment.tournamentEvents = new ArrayList<Event>();
+    userEvents = new ArrayList<Event>();
     for (index = 0; ; index++) {
       row = sp.getString(userEventPrefString + String.valueOf(index), "");
       if (row.equalsIgnoreCase(""))
@@ -352,7 +429,7 @@ public class UserDataFragment extends Fragment {
           false, duration, false, duration, location);
       event.starred = sp.getBoolean(starPrefString + identifier, false);
 
-      TournamentFragment.tournamentEvents.add(event);
+      userEvents.add(event);
     }
 
     updateUserEventList(MainActivity.activity);
@@ -373,15 +450,15 @@ public class UserDataFragment extends Fragment {
       }
     });
 
-    TournamentFragment.starGame = (ImageView) view.findViewById(R.id.gf_star);
-    TournamentFragment.starGame.setOnClickListener(new View.OnClickListener() {
+    userEventsStarIV = (ImageView) view.findViewById(R.id.gf_star);
+    userEventsStarIV.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        TournamentFragment.changeAllStarred(MainActivity.activity);
+        changeAllStarred(MainActivity.activity);
       }
     });
 
-    TournamentFragment.setAllStared();
+    setAllStared();
 
     return view;
   }
@@ -428,7 +505,7 @@ public class UserDataFragment extends Fragment {
       if (ALL_EVENTS)
         string = "all your events?";
       else {
-        Event event = TournamentFragment.tournamentEvents.get(selectedEvent);
+        Event event = userEvents.get(selectedEvent);
         String day = getResources().getStringArray(R.array.days)[event.day];
 
         SharedPreferences settings = MainActivity.activity.getSharedPreferences(
@@ -478,8 +555,8 @@ public class UserDataFragment extends Fragment {
         index = 0;
       else
         index = selectedEvent;
-      while (index < TournamentFragment.tournamentEvents.size()) {
-        event = TournamentFragment.tournamentEvents.remove(index);
+      while (index < userEvents.size()) {
+        event = userEvents.remove(index);
 
         // delete from dayList (currentHour)
         List<Event> scheduleEvents = MainActivity.dayList.get(
@@ -509,7 +586,7 @@ public class UserDataFragment extends Fragment {
         // eventsDB.deleteEvent(help.ID);
 
         if (!ALL_EVENTS)
-          index = TournamentFragment.tournamentEvents.size();
+          index = userEvents.size();
 
       }
 
@@ -683,12 +760,12 @@ public class UserDataFragment extends Fragment {
         if (days[day].isChecked()) {
           identifier = String.valueOf(day * 24 + hour) + title;
 
-          newEvent = new Event(identifier, 0, day, hour, title, "", "",
+          newEvent = new Event(identifier, -1, day, hour, title, "", "",
               false, duration, false, duration, location);
 
           int index = 0;
-          for (; index < TournamentFragment.tournamentEvents.size(); index++) {
-            tempEvent = TournamentFragment.tournamentEvents.get(index);
+          for (; index < userEvents.size(); index++) {
+            tempEvent = userEvents.get(index);
             if ((tempEvent.day * 24 + tempEvent.hour > newEvent.day * 24
                 + newEvent.hour)
                 || (tempEvent.day * 24 + tempEvent.hour == newEvent.day
@@ -697,8 +774,8 @@ public class UserDataFragment extends Fragment {
               break;
           }
 
-          TournamentFragment.tournamentEvents.add(index, newEvent);
-          TournamentFragment.changeEventStar(newEvent.identifier, true, MainActivity.activity);
+          userEvents.add(index, newEvent);
+          changeEventStar(newEvent.identifier, true, MainActivity.activity);
 
           MainActivity.SELECTED_EVENT_ID = identifier;
 
@@ -737,8 +814,8 @@ public class UserDataFragment extends Fragment {
       daysLL.setVisibility(View.GONE);
 
       event = null;
-      for (int i = 0; i < TournamentFragment.tournamentEvents.size(); i++) {
-        event = TournamentFragment.tournamentEvents.get(i);
+      for (int i = 0; i < userEvents.size(); i++) {
+        event = userEvents.get(i);
         if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID))
           break;
       }
@@ -778,13 +855,13 @@ public class UserDataFragment extends Fragment {
       // remove help from global list and edit
 
       int index = 0;
-      for (; index < TournamentFragment.tournamentEvents.size(); index++) {
-        if (TournamentFragment.tournamentEvents.get(index).identifier
+      for (; index < userEvents.size(); index++) {
+        if (userEvents.get(index).identifier
             .equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID))
           break;
       }
 
-      Event editedEvent = TournamentFragment.tournamentEvents.remove(index);
+      Event editedEvent = userEvents.remove(index);
       editedEvent.hour = hour;
       editedEvent.title = title;
       editedEvent.duration = duration;
@@ -793,8 +870,8 @@ public class UserDataFragment extends Fragment {
       // add edited help to tournament list
       Event tempEvent;
       index = 0;
-      for (; index < TournamentFragment.tournamentEvents.size(); index++) {
-        tempEvent = TournamentFragment.tournamentEvents.get(index);
+      for (; index < userEvents.size(); index++) {
+        tempEvent = userEvents.get(index);
         if ((tempEvent.day * 24 + tempEvent.hour > editedEvent.day * 24
             + editedEvent.hour)
             || (tempEvent.day * 24 + tempEvent.hour == editedEvent.day * 24
@@ -803,7 +880,7 @@ public class UserDataFragment extends Fragment {
           break;
 
       }
-      TournamentFragment.tournamentEvents.add(index, editedEvent);
+      userEvents.add(index, editedEvent);
 
       // remove old help from schedule
       List<Event> events = MainActivity.dayList.get(event.day).get(

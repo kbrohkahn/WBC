@@ -45,8 +45,8 @@ import java.util.Locale;
 public class MainActivity extends Activity {
   private final static String TAG = "Main Activity";
   public static int SELECTED_GAME_ID;
-
   public static String SELECTED_EVENT_ID;
+  public static String SELECTED_ROOM;
   public static int currentDay;
   public static int currentHour;
   public static int NUM_EVENTS;
@@ -65,13 +65,13 @@ public class MainActivity extends Activity {
   private static String dialogTitle;
   public static Activity activity;
   private final int drawerIconIDs[] = {R.drawable.ic_drawer_star,
-      R.drawable.ic_drawer_view_as_list, R.drawable.ic_drawer_finish,
-      0, R.drawable.ic_drawer_filter, R.drawable.ic_drawer_settings,
-      0, R.drawable.ic_drawer_help, R.drawable.ic_drawer_about};
-  private String[] drawerTitles;
-  private DrawerLayout drawerLayout;
+      R.drawable.ic_drawer_view_as_list, R.drawable.ic_drawer_finish, 0,
+      0, R.drawable.ic_drawer_help, R.drawable.ic_drawer_about,
+      0, R.drawable.ic_drawer_filter, R.drawable.ic_drawer_settings};
+  private static String[] drawerTitles;
+  private static DrawerLayout drawerLayout;
   private ActionBarDrawerToggle drawerToggle;
-  private ListView drawerList;
+  private static ListView drawerList;
   public static String actionBarTitle;
 
   /**
@@ -131,19 +131,22 @@ public class MainActivity extends Activity {
     SELECTED_GAME_ID = gID;
     SELECTED_EVENT_ID = eID;
 
-    Intent intent = new Intent(c, TournamentActivity.class);
-    c.startActivity(intent);
-
+    if (SELECTED_GAME_ID > -1) {
+      // start wbc tournament
+      Intent intent = new Intent(c, TournamentActivity.class);
+      c.startActivity(intent);
+    } else {
+      // start user tournament
+      selectMenuItem(2);
+    }
   }
 
   /**
-   * @param c    - calling context
    * @param room - string containing name of selected room
    */
-  public static void openMap(Context c, String room) {
-    Intent intent = new Intent(c, MapActivity.class);
-    intent.putExtra("roomName", room);
-    c.startActivity(intent);
+  public static void openMap(String room) {
+    SELECTED_ROOM = room;
+    selectMenuItem(7);
   }
 
   /**
@@ -283,7 +286,7 @@ public class MainActivity extends Activity {
     // start summary fragment and set action bar title
     if (currentFragment == -1)
       currentFragment = 0;
-    selectItem(currentFragment);
+    selectMenuItem(currentFragment);
     drawerTitle = getResources().getString(R.string.app_name_short);
   }
 
@@ -357,10 +360,9 @@ public class MainActivity extends Activity {
   public boolean onPrepareOptionsMenu(Menu menu) {
     // If the nav drawer is open, hide action items related to the content view
     boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
-    // If user data open, hide search do avoid multiple tournament event lists
-    boolean userDataOpen = getFragmentManager().findFragmentByTag("user") != null;
 
-    menu.findItem(R.id.menu_search).setVisible(!(drawerOpen || userDataOpen));
+    menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
+
 
     return super.onPrepareOptionsMenu(menu);
   }
@@ -385,11 +387,11 @@ public class MainActivity extends Activity {
   /**
    * If position < 3, set fragment for main activity layout and set action bar title. If position >3, start activity
    */
-  private void selectItem(int position) {
+  private static void selectMenuItem(int position) {
 
     drawerLayout.closeDrawer(drawerList);
     if (position < 3) {
-      FragmentManager fragmentManager = getFragmentManager();
+      FragmentManager fragmentManager = activity.getFragmentManager();
       Fragment fragment;
       String tag;
 
@@ -432,28 +434,31 @@ public class MainActivity extends Activity {
       // highlight the selected item, update the title, and refresh the drawer
       drawerList.setItemChecked(position, true);
       currentFragment = position;
-      setActionBarTitle(actionBarTitle);
-      invalidateOptionsMenu();
+      activity.setTitle(actionBarTitle);
+      activity.invalidateOptionsMenu();
     } else if (position > 3) {
       Intent intent;
 
       switch (position) {
         case 4:
-          intent = new Intent(this, FilterActivity.class);
+          intent = new Intent(activity, MapActivity.class);
           break;
         case 5:
-          intent = new Intent(this, SettingsActivity.class);
+          intent = new Intent(activity, HelpActivity.class);
           break;
-        case 7:
-          intent = new Intent(this, HelpActivity.class);
+        case 6:
+          intent = new Intent(activity, AboutActivity.class);
           break;
         case 8:
-          intent = new Intent(this, AboutActivity.class);
+          intent = new Intent(activity, FilterActivity.class);
+          break;
+        case 9:
+          intent = new Intent(activity, SettingsActivity.class);
           break;
         default:
           return;
       }
-      startActivity(intent);
+      activity.startActivity(intent);
     }
   }
 
@@ -532,7 +537,7 @@ public class MainActivity extends Activity {
       View view = convertView;
 
       if (view == null) {
-        if (position == 3 || position == 6) {
+        if (position == 3 || position == 7) {
           view = inflater.inflate(R.layout.drawer_list_header, null);
 
           TextView title = (TextView) view.findViewById(R.id.drawer_title);
@@ -550,7 +555,7 @@ public class MainActivity extends Activity {
           view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              selectItem(position);
+              selectMenuItem(position);
             }
           });
         }

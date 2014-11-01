@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class TournamentFragment extends Fragment {
   private static final String TAG = "Game Fragment";
   public static ArrayList<Event> tournamentEvents;
-  public static ImageView starGame;
+  public static ImageView tournamentEventsStarIV;
   public static boolean allStarred;
 
   private Activity activity;
@@ -59,10 +59,7 @@ public class TournamentFragment extends Fragment {
         event.starred = starred;
 
         // will be null if calling from user event
-        if (listAdapter == null)
-          UserDataFragment.updateUserEventList(MainActivity.activity);
-        else
-          listAdapter.notifyDataSetChanged();
+        listAdapter.notifyDataSetChanged();
 
         // update in schedule activity
         ArrayList<Event> eventList = MainActivity.dayList.get(event.day).get(
@@ -106,10 +103,10 @@ public class TournamentFragment extends Fragment {
   }
 
   /**
-   * set starGame image view
+   * set tournamentEventsStarIV image resource
    */
   public static void setGameStar() {
-    starGame.setImageResource(allStarred ? R.drawable.star_on
+    tournamentEventsStarIV.setImageResource(allStarred ? R.drawable.star_on
         : R.drawable.star_off);
   }
 
@@ -137,7 +134,7 @@ public class TournamentFragment extends Fragment {
 
     gameGM = (TextView) view.findViewById(R.id.gf_gm);
     listView = (ListView) view.findViewById(R.id.gf_events);
-    starGame = (ImageView) view.findViewById(R.id.gf_star);
+    tournamentEventsStarIV = (ImageView) view.findViewById(R.id.gf_star);
 
     gameFormatDivider = view.findViewById(R.id.gf_format_divider);
     gameClassDivider = view.findViewById(R.id.gf_class_divider);
@@ -267,7 +264,7 @@ public class TournamentFragment extends Fragment {
     gameGM.setText("GM: " + tournament.gm);
 
     // set game star
-    starGame.setOnClickListener(new View.OnClickListener() {
+    tournamentEventsStarIV.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         changeAllStarred(activity);
@@ -413,7 +410,7 @@ public class TournamentFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-          MainActivity.openMap(activity, event.location);
+          MainActivity.openMap(event.location);
         }
       });
 

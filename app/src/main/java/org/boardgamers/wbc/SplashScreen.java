@@ -87,7 +87,7 @@ public class SplashScreen extends Activity {
         location = rowData[4];
 
         identifier = String.valueOf(day * 24 + hour) + eventTitle;
-        event = new Event(identifier, 0, day, hour, eventTitle, "", "",
+        event = new Event(identifier, tournamentID, day, hour, eventTitle, "", "",
             false, duration, false, duration, location);
         event.starred = sp.getBoolean(starPrefString + identifier, false);
 

@@ -167,7 +167,7 @@ public class SearchActivity extends Activity {
   }
 
   public void showMap(String room) {
-    MainActivity.openMap(this, room);
+    MainActivity.openMap(room);
     finish();
   }
 

@@ -30,7 +30,6 @@ public class MapActivity extends Activity {
       R.drawable.room_terrace, R.drawable.room_terrace,
       R.drawable.room_terrace, R.drawable.room_terrace,
       R.drawable.room_terrace, R.drawable.room_terrace};
-  private String roomString;
   private final Runnable runnable = new Runnable() {
     @Override
     public void run() {
@@ -60,11 +59,10 @@ public class MapActivity extends Activity {
     upstairsIV = (ImageView) findViewById(R.id.map_upstairs_overlay);
     downstairsIV = (ImageView) findViewById(R.id.map_downstairs_overlay);
 
-    roomString = getIntent().getStringExtra("roomName");
     roomID = -1;
     String[] roomsDownstairs = getResources().getStringArray(R.array.rooms_downstairs);
     for (int i = 0; i < roomsDownstairs.length; i++) {
-      if (roomsDownstairs[i].equalsIgnoreCase(roomString)) {
+      if (roomsDownstairs[i].equalsIgnoreCase(MainActivity.SELECTED_ROOM)) {
         roomID = i;
         break;
       }
@@ -72,14 +70,14 @@ public class MapActivity extends Activity {
 
     String[] roomsUpstairs = getResources().getStringArray(R.array.rooms_upstairs);
     for (int i = 0; i < roomsUpstairs.length; i++) {
-      if (roomsUpstairs[i].equalsIgnoreCase(roomString)) {
+      if (roomsUpstairs[i].equalsIgnoreCase(MainActivity.SELECTED_ROOM)) {
         roomID = 50 + i;
         break;
       }
     }
 
     if (roomID > -1) {
-      setTitle(roomString);
+      setTitle(MainActivity.SELECTED_ROOM);
       handler = new Handler();
 
       if (roomID >= 50)
