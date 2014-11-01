@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 public class HelpActivity extends Activity {
-  final static int[] aboutHeaderIDs = {R.id.about_app_header,
+  private final static int[] aboutHeaderIDs = {R.id.about_app_header,
       R.id.about_schedule_header, R.id.about_dates_header,
       R.id.about_times_header, R.id.about_heats_rounds_header,
       R.id.about_qualifying_header, R.id.about_prize_header,
@@ -19,7 +19,7 @@ public class HelpActivity extends Activity {
       R.id.about_sog_header, R.id.about_format_header,
       R.id.about_length_header, R.id.about_continuous_header,
       R.id.about_location_header};
-  final static int[] aboutTextIDs = {R.id.about_app_text,
+  private final static int[] aboutTextIDs = {R.id.about_app_text,
       R.id.about_schedule_text, R.id.about_dates_text,
       R.id.about_times_text, R.id.about_heats_rounds_text,
       R.id.about_qualifying_text, R.id.about_prize_text,
@@ -27,15 +27,15 @@ public class HelpActivity extends Activity {
       R.id.about_sog_text, R.id.about_format_text,
       R.id.about_length_text, R.id.about_continuous_text,
       R.id.about_location_text};
-  final String TAG = "Help";
+  private final String TAG = "Help";
   private final View.OnClickListener headerListener = new View.OnClickListener() {
     @Override
     public void onClick(View v) {
       selectHeader(v.getId());
     }
   };
-  TextView[] aboutTexts;
-  TextView[] aboutHeaders;
+  private TextView[] aboutTexts;
+  private TextView[] aboutHeaders;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

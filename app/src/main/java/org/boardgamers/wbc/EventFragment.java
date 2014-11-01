@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class EventFragment extends Fragment {
-  private final static String TAG = "Event Fragment";
+  private final String TAG = "Event Fragment";
   private Activity activity;
   public static ImageView star;
   private static Event event;
@@ -163,7 +163,7 @@ public class EventFragment extends Fragment {
   }
 
 
-  public void changeEventStar(boolean starred) {
+  private void changeEventStar(boolean starred) {
     event.starred = starred;
     star.setImageResource(starred ? R.drawable.star_on
         : R.drawable.star_off);
@@ -190,7 +190,7 @@ public class EventFragment extends Fragment {
     super.onPause();
   }
 
-  public void share() {
+  private void share() {
     String s = event.title + ": " + note;
 
     Intent sharingIntent = new Intent(Intent.ACTION_SEND);

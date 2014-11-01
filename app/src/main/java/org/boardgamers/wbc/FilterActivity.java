@@ -18,7 +18,7 @@ import android.widget.Toast;
 public class FilterActivity extends Activity {
 
   private static CheckBox[] tournamentCBs;
-  final String TAG = "Filter Dialog";
+  private final String TAG = "Filter Dialog";
   private Boolean[] isTournament;
 
   protected void onCreate(Bundle savedInstanceState) {

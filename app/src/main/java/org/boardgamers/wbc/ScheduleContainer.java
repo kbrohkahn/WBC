@@ -4,44 +4,59 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class ScheduleContainer extends Fragment implements
     ActionBar.OnNavigationListener {
-  private static String TAG = "Schedule Activity";
-
-  private DayPagerAdapter pageAdapter;
+  private final String TAG = "Schedule Activity";
   private ViewPager viewPager;
+  private DayPagerAdapter adapter;
+  private Parcelable adapterState;
+  private int currentPage = -1;
 
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.schedule_container, container, false);
 
     // setup page adapter and view pager for action bar
-    pageAdapter = new DayPagerAdapter(getFragmentManager());
-    viewPager = (ViewPager) view.findViewById(R.id.pager);
-    viewPager.setAdapter(pageAdapter);
+    adapter = new DayPagerAdapter(getFragmentManager());
 
-    // viewPager.setOffscreenPageLimit(1);
+    viewPager = (ViewPager) view.findViewById(R.id.pager);
+    viewPager.setAdapter(adapter);
+    viewPager.setOffscreenPageLimit(0);
     viewPager
         .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
           @Override
           public void onPageSelected(int position) {
-            MainActivity.drawerTitle = "WBC-" + MainActivity.dayStrings[position];
-            MainActivity.activity.getActionBar().setTitle(MainActivity.drawerTitle);
+            MainActivity.actionBarTitle = "WBC-" + MainActivity.dayStrings[position];
+
+            try {
+              MainActivity.activity.getActionBar().setTitle(MainActivity.actionBarTitle);
+            } catch (NullPointerException e) {
+              Log.d(TAG, "ERROR: Could not get action bar");
+            }
           }
         });
 
     // set viewpager to current currentDay
-    if (MainActivity.currentDay > -1)
-      viewPager.setCurrentItem(MainActivity.currentDay);
+    if (currentPage == -1) {
+      if (MainActivity.currentDay > -1)
+        currentPage = MainActivity.currentDay;
+      else
+        currentPage = 0;
+    }
+
+    viewPager.setCurrentItem(currentPage);
 
     return view;
   }
+
 
   @Override
   public boolean onNavigationItemSelected(int itemPosition, long itemId) {
@@ -51,8 +66,14 @@ public class ScheduleContainer extends Fragment implements
 
   @Override
   public void onResume() {
-    pageAdapter.notifyDataSetChanged();
+    adapter.restoreState(adapterState, null);
     super.onResume();
+  }
+
+  @Override
+  public void onPause() {
+    adapterState = adapter.saveState();
+    super.onPause();
   }
 
   public static class DayPagerAdapter extends FragmentPagerAdapter {

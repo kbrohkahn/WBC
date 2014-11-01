@@ -30,8 +30,8 @@ public class MapActivity extends Activity {
       R.drawable.room_terrace, R.drawable.room_terrace,
       R.drawable.room_terrace, R.drawable.room_terrace,
       R.drawable.room_terrace, R.drawable.room_terrace};
-  public String roomString;
-  Runnable runnable = new Runnable() {
+  private String roomString;
+  private final Runnable runnable = new Runnable() {
     @Override
     public void run() {
       setRoom();
@@ -101,7 +101,7 @@ public class MapActivity extends Activity {
     super.onResume();
   }
 
-  public void setRoom() {
+  private void setRoom() {
     if (roomID >= 50)
       upstairsIV.setVisibility(on ? View.GONE : View.VISIBLE);
     else
@@ -112,7 +112,7 @@ public class MapActivity extends Activity {
 
   }
 
-  public void refreshRoom() {
+  private void refreshRoom() {
     handler.postDelayed(runnable, 500);
   }
 

@@ -43,7 +43,7 @@ import java.util.Locale;
  * Main Activity class
  */
 public class MainActivity extends Activity {
-  private final static String TAG = "Summary Activity";
+  private final static String TAG = "Main Activity";
   public static int SELECTED_GAME_ID;
 
   public static String SELECTED_EVENT_ID;
@@ -54,16 +54,17 @@ public class MainActivity extends Activity {
   public static ArrayList<ArrayList<ArrayList<Event>>> dayList;
   public static String[] dayStrings;
   public static String allChanges;
-  public static String drawerTitle;
+  private String drawerTitle;
   private static int COLOR_JUNIOR;
   private static int COLOR_SEMINAR;
   private static int COLOR_QUALIFY;
   private static int COLOR_OPEN_TOURNAMENT;
   private static int COLOR_NON_TOURNAMENT;
+  private static int currentFragment = -1;
   private static String dialogText;
   private static String dialogTitle;
   public static Activity activity;
-  public final int drawerIconIDs[] = {R.drawable.ic_drawer_star,
+  private final int drawerIconIDs[] = {R.drawable.ic_drawer_star,
       R.drawable.ic_drawer_view_as_list, R.drawable.ic_drawer_finish,
       0, R.drawable.ic_drawer_filter, R.drawable.ic_drawer_settings,
       0, R.drawable.ic_drawer_help, R.drawable.ic_drawer_about};
@@ -71,7 +72,7 @@ public class MainActivity extends Activity {
   private DrawerLayout drawerLayout;
   private ActionBarDrawerToggle drawerToggle;
   private ListView drawerList;
-  private String actionBarTitle;
+  public static String actionBarTitle;
 
   /**
    * Add starred help to "My Events" group in list
@@ -97,6 +98,7 @@ public class MainActivity extends Activity {
       else
         index++;
     }
+
     dayList.get(event.day).get(0).add(index,
         starredEvent);
 
@@ -218,13 +220,13 @@ public class MainActivity extends Activity {
 
       public void onDrawerClosed(View view) {
         super.onDrawerClosed(view);
-        //setActionBarTitle(actionBarTitle);
+        setActionBarTitle(actionBarTitle);
         invalidateOptionsMenu();
       }
 
       public void onDrawerOpened(View drawerView) {
         super.onDrawerOpened(drawerView);
-        //setActionBarTitle(drawerTitle);
+        setActionBarTitle(drawerTitle);
         invalidateOptionsMenu();
       }
     };
@@ -280,7 +282,11 @@ public class MainActivity extends Activity {
       dc.show(getFragmentManager(), "changes_dialog");
     }
 
-    selectItem(0);
+    // start summary fragment and set action bar title
+    if (currentFragment == -1)
+      currentFragment = 0;
+    selectItem(currentFragment);
+    drawerTitle = getResources().getString(R.string.app_name_short);
   }
 
   @Override
@@ -379,7 +385,7 @@ public class MainActivity extends Activity {
   }
 
   /**
-   * Swaps fragments in the main content view
+   * If position < 3, set fragment for main activity layout and set action bar title. If position >3, start activity
    */
   private void selectItem(int position) {
     Fragment fragment = null;
@@ -397,7 +403,7 @@ public class MainActivity extends Activity {
         tag = "schedule";
         break;
       case 2:
-        fragment = new MyWBCData();
+        fragment = new UserDataFragment();
         actionBarTitle = drawerTitles[position];
         tag = "user";
         break;
@@ -424,6 +430,7 @@ public class MainActivity extends Activity {
 
       // Highlight the selected item, update the title, and close the drawer
       drawerList.setItemChecked(position, true);
+      currentFragment = position;
       setActionBarTitle(actionBarTitle);
       invalidateOptionsMenu();
     } else {
@@ -433,7 +440,7 @@ public class MainActivity extends Activity {
     drawerLayout.closeDrawer(drawerList);
   }
 
-  public void setActionBarTitle(CharSequence title) {
+  private void setActionBarTitle(CharSequence title) {
     final ActionBar ab = getActionBar();
     if (ab != null)
       ab.setTitle(title);
@@ -445,7 +452,7 @@ public class MainActivity extends Activity {
    * Dialog Text
    */
   public static class DialogText extends DialogFragment {
-    final String TAG = "Changes Dialog";
+    private final String TAG = "Changes Dialog";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -478,8 +485,8 @@ public class MainActivity extends Activity {
   }
 
   public class DrawerAdapter extends ArrayAdapter<String> {
-    LayoutInflater inflater;
-    int layoutResID;
+    final LayoutInflater inflater;
+    final int layoutResID;
 
     public DrawerAdapter(Context context, int layoutResourceID) {
       super(context, layoutResourceID);
@@ -507,7 +514,6 @@ public class MainActivity extends Activity {
     public View getView(final int position, View convertView, ViewGroup parent) {
       View view = convertView;
 
-      Log.d(TAG, drawerTitles[position]);
       if (view == null) {
         if (position == 3 || position == 6) {
           view = inflater.inflate(R.layout.drawer_list_header, null);

@@ -17,11 +17,10 @@ import android.widget.TextView;
 import java.util.List;
 
 public class ScheduleFragment extends Fragment {
-  final static String TAG = "Schedule Fragment";
+  private final String TAG = "Schedule Fragment";
 
   private ScheduleListAdapter listAdapter;
   private ExpandableListView listView;
-
   private int dayID;
 
   @Override
@@ -51,17 +50,17 @@ public class ScheduleFragment extends Fragment {
     super.onResume();
   }
 
-  public void expandAll(int start) {
+  private void expandAll(int start) {
     for (int i = start; i < listAdapter.getGroupCount(); i++)
       listView.expandGroup(i);
   }
 
-  public void collapseAll(int start) {
+  private void collapseAll(int start) {
     for (int i = start; i < listAdapter.getGroupCount(); i++)
       listView.collapseGroup(i);
   }
 
-  public void changeEventStar(Event event, boolean starred, int groupPosition) {
+  private void changeEventStar(Event event, boolean starred, int groupPosition) {
     // update help's star
     if (groupPosition == 0) {
       // if in first group, need to find original help
@@ -83,6 +82,7 @@ public class ScheduleFragment extends Fragment {
 
     listAdapter.notifyDataSetChanged();
   }
+
 
   class ScheduleListAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
@@ -301,13 +301,11 @@ public class ScheduleFragment extends Fragment {
 
     @Override
     public long getGroupId(int groupPosition) {
-      // TODO Auto-generated method stub
-      return 0;
+      return groupPosition;
     }
 
     @Override
     public boolean hasStableIds() {
-      // TODO Auto-generated method stub
       return false;
     }
   }

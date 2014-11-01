@@ -20,7 +20,7 @@ import java.util.List;
  * Splash screen so fragments loaded from Main Activity
  */
 public class SplashScreen extends Activity {
-  private String TAG = "Splash";
+  private final String TAG = "Splash";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class SplashScreen extends Activity {
       Event event, tempEvent, prevEvent = null;
       Tournament tournament;
       List<Tournament> tournaments = new ArrayList<Tournament>();
-      String tournamentTitle = "My Events", tournamentLabel = "", shortEventTitle = "";
+      String tournamentTitle, tournamentLabel, shortEventTitle = "";
       String change;
 
       for (index = 0; ; index++) {

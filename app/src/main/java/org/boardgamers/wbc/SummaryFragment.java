@@ -1,13 +1,11 @@
 package org.boardgamers.wbc;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SummaryFragment extends Fragment {
-  final static String TAG = "Summary Activity";
+  final static String TAG = "Summary Fragment";
+
   private ArrayList<ArrayList<Event>> summaryList;
   private SummaryListAdapter listAdapter;
   private ExpandableListView listView;
@@ -57,12 +56,6 @@ public class SummaryFragment extends Fragment {
 
   @Override
   public void onResume() {
-    final ActionBar ab = MainActivity.activity.getActionBar();
-    if (ab != null)
-      ab.setTitle("My WBC");
-    else
-      Log.d(TAG, "Error: Could not get action bar");
-
     summaryList = new ArrayList<ArrayList<Event>>(MainActivity.dayList.size());
     for (int i = 0; i < MainActivity.dayList.size(); i++) {
       summaryList.add(new ArrayList<Event>());
@@ -75,8 +68,6 @@ public class SummaryFragment extends Fragment {
     // get time and go to current currentDay
     if (MainActivity.currentDay > -1)
       listView.setSelectedGroup(MainActivity.currentDay);
-
-    Log.d(TAG, "SUMMARY READY");
 
     super.onResume();
   }

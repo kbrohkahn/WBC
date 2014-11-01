@@ -38,13 +38,13 @@ import java.util.List;
 /**
  * Fragment containing user's WBC data, including tournament finishes, help notes, and created events
  */
-public class MyWBCData extends Fragment {
+public class UserDataFragment extends Fragment {
   private static LinearLayout userEventsLayout;
   private static int selectedEvent;
   private static LayoutInflater userEventLayoutInflater;
   private final String TAG = "My WBC Data Activity";
 
-  public static void saveUserEvents(Context context) {
+  private static void saveUserEvents(Context context) {
     final Resources resources = context.getResources();
 
     SharedPreferences.Editor editor = context.getSharedPreferences(
@@ -210,7 +210,7 @@ public class MyWBCData extends Fragment {
     }
   }
 
-  public static void selectEvent(Activity activity, String eID) {
+  private static void selectEvent(Activity activity, String eID) {
     MainActivity.SELECTED_EVENT_ID = eID;
 
     EventFragment fragment = (EventFragment) activity.getFragmentManager()
@@ -382,24 +382,23 @@ public class MyWBCData extends Fragment {
     });
 
     TournamentFragment.setAllStared();
-    TournamentFragment.setGameStar();
 
     return view;
   }
 
-  public void showCreateDialog() {
+  private void showCreateDialog() {
     DialogCreateEvent editNameDialog = new DialogCreateEvent();
     editNameDialog.show(MainActivity.activity.getFragmentManager(),
         "create_event_dialog");
   }
 
-  public static void editEvent(int index) {
+  private static void editEvent(int index) {
     selectedEvent = index;
     DialogEditEvent editNameDialog = new DialogEditEvent();
     editNameDialog.show(MainActivity.activity.getFragmentManager(), "edit_event_dialog");
   }
 
-  public static void deleteEvents(int index) {
+  private static void deleteEvents(int index) {
     selectedEvent = index;
     DialogDelete deleteDialog = new DialogDelete();
     deleteDialog.show(MainActivity.activity.getFragmentManager(), "delete_dialog");

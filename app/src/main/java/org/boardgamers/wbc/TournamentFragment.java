@@ -60,7 +60,7 @@ public class TournamentFragment extends Fragment {
 
         // will be null if calling from user event
         if (listAdapter == null)
-          MyWBCData.updateUserEventList(MainActivity.activity);
+          UserDataFragment.updateUserEventList(MainActivity.activity);
         else
           listAdapter.notifyDataSetChanged();
 
@@ -114,7 +114,8 @@ public class TournamentFragment extends Fragment {
   }
 
   /**
-   * Event star changed - check for change in allStarred boolean and set game star image view
+   * Event star changed - check for change in allStarred boolean and set game star image view.
+   * Call setGameStar before return
    */
   public static void setAllStared() {
     allStarred = true;
@@ -274,7 +275,6 @@ public class TournamentFragment extends Fragment {
     });
 
     setAllStared();
-    setGameStar();
   }
 
   @Override

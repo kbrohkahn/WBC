@@ -16,7 +16,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class AboutActivity extends Activity {
-  final String TAG = "About";
+  private final String TAG = "About";
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
