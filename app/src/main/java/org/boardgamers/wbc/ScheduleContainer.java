@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -14,22 +13,19 @@ import android.view.ViewGroup;
 
 public class ScheduleContainer extends Fragment implements
     ActionBar.OnNavigationListener {
-  private final String TAG = "Schedule Activity";
+  private final String TAG = "Schedule Container";
   private ViewPager viewPager;
-  private DayPagerAdapter adapter;
-  private Parcelable adapterState;
   private int currentPage = -1;
 
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+
     View view = inflater.inflate(R.layout.schedule_container, container, false);
 
     // setup page adapter and view pager for action bar
-    adapter = new DayPagerAdapter(getFragmentManager());
-
     viewPager = (ViewPager) view.findViewById(R.id.pager);
-    viewPager.setAdapter(adapter);
-    viewPager.setOffscreenPageLimit(0);
+    viewPager.setAdapter(new DayPagerAdapter(getFragmentManager()));
+    viewPager.setOffscreenPageLimit(4);
     viewPager
         .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
           @Override
@@ -57,23 +53,10 @@ public class ScheduleContainer extends Fragment implements
     return view;
   }
 
-
   @Override
   public boolean onNavigationItemSelected(int itemPosition, long itemId) {
     viewPager.setCurrentItem(itemPosition);
     return false;
-  }
-
-  @Override
-  public void onResume() {
-    adapter.restoreState(adapterState, null);
-    super.onResume();
-  }
-
-  @Override
-  public void onPause() {
-    adapterState = adapter.saveState();
-    super.onPause();
   }
 
   public static class DayPagerAdapter extends FragmentPagerAdapter {

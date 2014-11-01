@@ -1,11 +1,13 @@
 package org.boardgamers.wbc;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +32,18 @@ public class ScheduleFragment extends Fragment {
         .inflate(R.layout.schedule_fragment, container, false);
 
     dayID = getArguments().getInt("current_day");
-    listAdapter = new ScheduleListAdapter(MainActivity.activity);
 
+    listAdapter = new ScheduleListAdapter(MainActivity.activity);
     listView = (ExpandableListView) view.findViewById(R.id.sf_schedule);
     listView.setAdapter(listAdapter);
     listView.setDividerHeight(0);
 
     expandAll(0);
+
+    if (dayID == MainActivity.currentDay)
+      listView.setSelectedGroup(MainActivity.currentHour - 5);
+
+    Log.d(TAG, "Creating view for " + String.valueOf(dayID));
 
     return view;
   }
@@ -44,9 +51,6 @@ public class ScheduleFragment extends Fragment {
   @Override
   public void onResume() {
     listAdapter.notifyDataSetChanged();
-    if (dayID == MainActivity.currentDay)
-      listView.setSelectedGroup(MainActivity.currentHour - 5);
-
     super.onResume();
   }
 
@@ -66,8 +70,7 @@ public class ScheduleFragment extends Fragment {
       // if in first group, need to find original help
       List<Event> events = MainActivity.dayList.get(event.day).get(
           event.hour - 6);
-      for (int i = 0; i < events.size(); i++) {
-        Event temp = events.get(i);
+      for (Event temp: events) {
         if (temp.identifier.equalsIgnoreCase(event.identifier)) {
           temp.starred = starred;
           break;
@@ -82,7 +85,6 @@ public class ScheduleFragment extends Fragment {
 
     listAdapter.notifyDataSetChanged();
   }
-
 
   class ScheduleListAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;

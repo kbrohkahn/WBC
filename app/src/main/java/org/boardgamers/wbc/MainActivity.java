@@ -189,8 +189,6 @@ public class MainActivity extends Activity {
 
     setContentView(R.layout.main_layout);
 
-    Log.d(TAG, "MAIN ACTIVITY STARTED");
-
     // get resources
     COLOR_JUNIOR = getResources().getColor(R.color.junior);
     COLOR_SEMINAR = getResources().getColor(R.color.seminar);
@@ -388,56 +386,73 @@ public class MainActivity extends Activity {
    * If position < 3, set fragment for main activity layout and set action bar title. If position >3, start activity
    */
   private void selectItem(int position) {
-    Fragment fragment = null;
-    Intent intent = null;
-    String tag = null;
-    switch (position) {
-      case 0:
-        fragment = new SummaryFragment();
-        actionBarTitle = drawerTitles[position];
-        tag = "summary";
-        break;
-      case 1:
-        fragment = new ScheduleContainer();
-        actionBarTitle = dayStrings[Math.max(currentDay, 0)];
-        tag = "schedule";
-        break;
-      case 2:
-        fragment = new UserDataFragment();
-        actionBarTitle = drawerTitles[position];
-        tag = "user";
-        break;
-      case 4:
-        intent = new Intent(this, FilterActivity.class);
-        break;
-      case 5:
-        intent = new Intent(this, SettingsActivity.class);
-        break;
-      case 7:
-        intent = new Intent(this, HelpActivity.class);
-        break;
-      case 8:
-        intent = new Intent(this, AboutActivity.class);
-        break;
-      default:
-        return;
-    }
-
-    if (fragment != null) {
+    Log.d(TAG, String.valueOf(position) + " selected");
+    drawerLayout.closeDrawer(drawerList);
+    if (position < 3) {
       FragmentManager fragmentManager = getFragmentManager();
+      Fragment fragment;
+      String tag;
+
+      switch (position) {
+        case 0:
+          actionBarTitle = drawerTitles[position];
+          tag = "summary";
+
+          fragment = fragmentManager.findFragmentByTag(tag);
+          if (fragment == null)
+            fragment = new SummaryFragment();
+          break;
+        case 1:
+          actionBarTitle = dayStrings[Math.max(currentDay, 0)];
+          tag = "schedule";
+
+          fragment = fragmentManager.findFragmentByTag(tag);
+          if (fragment == null)
+            fragment = new ScheduleContainer();
+
+          break;
+        case 2:
+          actionBarTitle = drawerTitles[position];
+          tag = "user";
+
+          fragment = fragmentManager.findFragmentByTag(tag);
+          if (fragment == null)
+            fragment = new UserDataFragment();
+          break;
+        default:
+          return;
+      }
+
+      // switch fragments
       fragmentManager.beginTransaction()
           .replace(R.id.content_frame, fragment, tag).commit();
 
-      // Highlight the selected item, update the title, and close the drawer
+      // highlight the selected item, update the title, and refresh the drawer
       drawerList.setItemChecked(position, true);
       currentFragment = position;
       setActionBarTitle(actionBarTitle);
       invalidateOptionsMenu();
-    } else {
+    } else if (position > 3) {
+      Intent intent;
+
+      switch (position) {
+        case 4:
+          intent = new Intent(this, FilterActivity.class);
+          break;
+        case 5:
+          intent = new Intent(this, SettingsActivity.class);
+          break;
+        case 7:
+          intent = new Intent(this, HelpActivity.class);
+          break;
+        case 8:
+          intent = new Intent(this, AboutActivity.class);
+          break;
+        default:
+          return;
+      }
       startActivity(intent);
     }
-
-    drawerLayout.closeDrawer(drawerList);
   }
 
   private void setActionBarTitle(CharSequence title) {
