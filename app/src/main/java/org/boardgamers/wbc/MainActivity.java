@@ -386,7 +386,7 @@ public class MainActivity extends Activity {
    * If position < 3, set fragment for main activity layout and set action bar title. If position >3, start activity
    */
   private void selectItem(int position) {
-    Log.d(TAG, String.valueOf(position) + " selected");
+
     drawerLayout.closeDrawer(drawerList);
     if (position < 3) {
       FragmentManager fragmentManager = getFragmentManager();
@@ -401,9 +401,10 @@ public class MainActivity extends Activity {
           fragment = fragmentManager.findFragmentByTag(tag);
           if (fragment == null)
             fragment = new SummaryFragment();
+
           break;
         case 1:
-          actionBarTitle = dayStrings[Math.max(currentDay, 0)];
+          actionBarTitle = "WBC-" + dayStrings[Math.max(currentDay, 0)];
           tag = "schedule";
 
           fragment = fragmentManager.findFragmentByTag(tag);
@@ -418,6 +419,7 @@ public class MainActivity extends Activity {
           fragment = fragmentManager.findFragmentByTag(tag);
           if (fragment == null)
             fragment = new UserDataFragment();
+
           break;
         default:
           return;

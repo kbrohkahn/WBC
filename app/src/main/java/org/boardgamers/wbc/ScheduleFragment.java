@@ -19,19 +19,37 @@ import android.widget.TextView;
 import java.util.List;
 
 public class ScheduleFragment extends Fragment {
-  private final String TAG = "Schedule Fragment";
+  private static final String TAG = "Schedule Fragment";
 
   private ScheduleListAdapter listAdapter;
   private ExpandableListView listView;
   private int dayID;
+
+  public static ScheduleFragment newInstance(int d) {
+    Log.d(TAG, "New instance " + String.valueOf(d));
+    ScheduleFragment f = new ScheduleFragment();
+
+    // Supply num input as an argument.
+    Bundle args = new Bundle();
+    args.putInt("current_day", d);
+    f.setArguments(args);
+
+    return f;
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    dayID = getArguments().getInt("current_day");
+    Log.d(TAG, "Create " + String.valueOf(dayID));
+
+    super.onCreate(savedInstanceState);
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View view = inflater
         .inflate(R.layout.schedule_fragment, container, false);
-
-    dayID = getArguments().getInt("current_day");
 
     listAdapter = new ScheduleListAdapter(MainActivity.activity);
     listView = (ExpandableListView) view.findViewById(R.id.sf_schedule);
@@ -42,8 +60,6 @@ public class ScheduleFragment extends Fragment {
 
     if (dayID == MainActivity.currentDay)
       listView.setSelectedGroup(MainActivity.currentHour - 5);
-
-    Log.d(TAG, "Creating view for " + String.valueOf(dayID));
 
     return view;
   }
@@ -70,7 +86,7 @@ public class ScheduleFragment extends Fragment {
       // if in first group, need to find original help
       List<Event> events = MainActivity.dayList.get(event.day).get(
           event.hour - 6);
-      for (Event temp: events) {
+      for (Event temp : events) {
         if (temp.identifier.equalsIgnoreCase(event.identifier)) {
           temp.starred = starred;
           break;
