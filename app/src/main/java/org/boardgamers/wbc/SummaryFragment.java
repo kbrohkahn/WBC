@@ -169,7 +169,7 @@ public class SummaryFragment extends Fragment {
         note.setLines(0);
         note.setText("");
       } else {
-        note.setText("note-" + noteString);
+        note.setText(noteString);
       }
 
       ImageView starIV = (ImageView) view.findViewById(R.id.si_star);
