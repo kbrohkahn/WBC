@@ -282,7 +282,10 @@
 
 	<!-- ABOUT -->
 	<string name="about_developer_text">Created by Kevin Broh-Kahn\ndev@boardgamers.org</string>
-	<string name="about_others_text">Schedule files courtesy of Craig Trader\nMaps courtesy of Jason Long</string>
+	<string name="about_others_text">Schedule files courtesy of Craig Trader\nMaps courtesy of Jason Long</string>\
+
+  <!-- HELP -->
+  <string name="how_to_help">Select a help topic to expand and show info</string>
 	<string name="about_app_header">HOW TO USE THE APP</string>
 	<string name="about_app_text">DAYS &amp; TIMES: The app displays ongoing events with a green background,
 future events yellow, and ended events gray.

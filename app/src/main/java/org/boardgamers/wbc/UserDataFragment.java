@@ -287,6 +287,12 @@ public class UserDataFragment extends Fragment {
     }
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    setGameStar();
+  }
+
   private static void selectEvent(Activity activity, String eID) {
     MainActivity.SELECTED_EVENT_ID = eID;
 

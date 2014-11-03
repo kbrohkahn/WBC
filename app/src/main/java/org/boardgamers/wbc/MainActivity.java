@@ -65,8 +65,9 @@ public class MainActivity extends Activity {
   private static String dialogTitle;
   public static Activity activity;
   private final int drawerIconIDs[] = {R.drawable.ic_drawer_star,
-      R.drawable.ic_drawer_view_as_list, R.drawable.ic_drawer_finish, 0,
-      0, R.drawable.ic_drawer_help, R.drawable.ic_drawer_about,
+      R.drawable.ic_drawer_view_as_list, R.drawable.ic_drawer_finish,
+      0, R.drawable.ic_drawer_map,
+      R.drawable.ic_drawer_help, R.drawable.ic_drawer_about,
       0, R.drawable.ic_drawer_filter, R.drawable.ic_drawer_settings};
   private static String[] drawerTitles;
   private static DrawerLayout drawerLayout;

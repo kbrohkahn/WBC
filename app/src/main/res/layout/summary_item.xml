@@ -4,13 +4,13 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
-	<include layout="@layout/schedule_item"/>
+  <include layout="@layout/schedule_item"/>
 
-	<TextView
-		android:id="@+id/summary_event_note"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:padding="@dimen/activity_margin"/>
+  <TextView
+    android:id="@+id/summary_event_note"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_margin"/>
 
 
 </LinearLayout>

@@ -4,10 +4,10 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-	<fragment
-		android:id="@+id/eventFragment"
-		class="org.boardgamers.wbc.EventFragment"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"></fragment>
+  <fragment
+    android:id="@+id/eventFragment"
+    class="org.boardgamers.wbc.EventFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"></fragment>
 
 </LinearLayout>

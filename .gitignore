@@ -7,3 +7,6 @@ local.properties
 
 # Whatever this is
 .idea/
+
+# OS X files
+*.DS_Store

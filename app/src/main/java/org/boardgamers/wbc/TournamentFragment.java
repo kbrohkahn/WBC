@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +37,8 @@ public class TournamentFragment extends Fragment {
       R.id.gf_finish_5, R.id.gf_finish_6};
   private static TournamentListAdapter listAdapter;
   private Tournament tournament;
-  private boolean hasFormat;
-  private boolean hasClass;
+  //private boolean hasFormat;
+  //private boolean hasClass;
   private TextView gameGM;
   private TextView gameFormat;
   private TextView gameClass;
@@ -51,6 +50,13 @@ public class TournamentFragment extends Fragment {
   private LinearLayout finishLayout;
   private RadioGroup finishGroup;
   private RadioButton[] finishButtons;
+
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    setGameStar();
+  }
 
   public static void changeEventStar(String id, boolean starred,
                                      Activity context) {
@@ -167,8 +173,6 @@ public class TournamentFragment extends Fragment {
     // get events
     tournamentEvents = new ArrayList<Event>();
 
-    hasFormat = false;
-    hasClass = false;
 
     Event event;
     for (int i = 0; i < MainActivity.dayList.size(); i++) {
@@ -178,23 +182,12 @@ public class TournamentFragment extends Fragment {
           event = MainActivity.dayList.get(i).get(j).get(k);
           if (id < 1000 && event.tournamentID == tournament.ID) {
             tournamentEvents.add(event);
-
-            if (event.format.length() > 0)
-              hasFormat = true;
-            if (event.eClass.length() > 0)
-              hasClass = true;
           } else if (id >= 1000 && event.format.equalsIgnoreCase(formatStrings[id - 1000])) {
             tournamentEvents.add(event);
           }
         }
       }
     }
-
-    Log.d(TAG, hasClass ? "Has class" : "No class");
-    gameFormatDivider.setVisibility(hasFormat ? View.VISIBLE : View.GONE);
-    gameFormat.setVisibility(hasFormat ? View.VISIBLE : View.GONE);
-    gameClassDivider.setVisibility(hasClass ? View.VISIBLE : View.GONE);
-    gameClass.setVisibility(hasClass ? View.VISIBLE : View.GONE);
 
     listAdapter = new TournamentListAdapter();
     listView.setAdapter(listAdapter);
@@ -206,7 +199,7 @@ public class TournamentFragment extends Fragment {
     Event lastEvent = tournamentEvents.get(tournamentEvents.size() - 1);
 
     // check if last event is class (is tournament)
-    if (lastEvent.eClass.length() > 0) {
+    if (tournament.isTournament && id < 1000) {
 
       // links available for tournament
       previewLink.setVisibility(View.VISIBLE);
@@ -276,20 +269,21 @@ public class TournamentFragment extends Fragment {
 
   @Override
   public void onPause() {
-    for (int i = 0; i < finishButtons.length; i++) {
-      if (finishButtons[i].isChecked()) {
-        SharedPreferences.Editor editor = activity
-            .getSharedPreferences(
-                getResources().getString(R.string.sp_file_name),
-                Context.MODE_PRIVATE).edit();
-        editor.putInt("fin_" + tournament.title, i);
-        editor.apply();
+    if (tournament.isTournament) {
+      for (int i = 0; i < finishButtons.length; i++) {
+        if (finishButtons[i].isChecked()) {
+          SharedPreferences.Editor editor = activity
+              .getSharedPreferences(
+                  getResources().getString(R.string.sp_file_name),
+                  Context.MODE_PRIVATE).edit();
+          editor.putInt("fin_" + tournament.title, i);
+          editor.apply();
 
-        MainActivity.allTournaments.get(tournament.ID).finish = i;
-        break;
+          MainActivity.allTournaments.get(tournament.ID).finish = i;
+          break;
+        }
       }
     }
-
     super.onPause();
   }
 
@@ -370,22 +364,14 @@ public class TournamentFragment extends Fragment {
           LinearLayout.LayoutParams.MATCH_PARENT, 0);
 
       TextView eClass = (TextView) view.findViewById(R.id.gi_class);
-      if (hasClass) {
-        eClass.setVisibility(View.VISIBLE);
-        eClass.setTypeface(null, tType);
-        eClass.setTextColor(tColor);
-        eClass.setText(event.eClass);
-      } else
-        eClass.setLayoutParams(lp);
+      eClass.setTypeface(null, tType);
+      eClass.setTextColor(tColor);
+      eClass.setText(event.eClass);
 
       TextView format = (TextView) view.findViewById(R.id.gi_format);
-      if (hasFormat) {
-        format.setVisibility(View.VISIBLE);
-        format.setTypeface(null, tType);
-        format.setTextColor(tColor);
-        format.setText(event.format);
-      } else
-        format.setLayoutParams(lp);
+      format.setTypeface(null, tType);
+      format.setTextColor(tColor);
+      format.setText(event.format);
 
       TextView duration = (TextView) view.findViewById(R.id.gi_duration);
       duration.setTypeface(null, tType);
@@ -436,6 +422,7 @@ public class TournamentFragment extends Fragment {
       });
       return view;
     }
+
 
     public void selectEvent(String eID) {
       MainActivity.SELECTED_EVENT_ID = eID;

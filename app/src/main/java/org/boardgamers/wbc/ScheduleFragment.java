@@ -123,7 +123,7 @@ public class ScheduleFragment extends Fragment {
       int tType = MainActivity.getTextStyle(event);
 
       if (event.starred
-          || MainActivity.allTournaments.get(event.tournamentID).visible)
+          || (event.tournamentID > -1 && MainActivity.allTournaments.get(event.tournamentID).visible))
         view = inflater.inflate(R.layout.schedule_item, parent, false);
       else
         return inflater.inflate(R.layout.schedule_gone, parent, false);
