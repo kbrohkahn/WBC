@@ -36,9 +36,10 @@ public class ScheduleContainer extends Fragment implements
           public void onPageSelected(int position) {
             MainActivity.actionBarTitle = "WBC-" + MainActivity.dayStrings[position];
 
-            try {
-              MainActivity.activity.getActionBar().setTitle(MainActivity.actionBarTitle);
-            } catch (NullPointerException e) {
+            ActionBar ab = MainActivity.activity.getActionBar();
+            if (ab != null) {
+              ab.setTitle(MainActivity.actionBarTitle);
+            } else {
               Log.d(TAG, "ERROR: Could not get action bar");
             }
           }

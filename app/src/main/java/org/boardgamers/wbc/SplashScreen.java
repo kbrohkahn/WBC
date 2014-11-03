@@ -50,6 +50,22 @@ public class SplashScreen extends Activity {
 
     @Override
     protected Integer doInBackground(Integer... params) {
+      // SETUP
+      MainActivity.dayStrings = getResources().getStringArray(R.array.days);
+      MainActivity.dayList = new ArrayList<ArrayList<ArrayList<Event>>>(MainActivity.dayStrings.length);
+
+      ArrayList<ArrayList<Event>> tempList;
+      int i = 0;
+      while (i < MainActivity.dayStrings.length) {
+        tempList = new ArrayList<ArrayList<Event>>();
+        for (int j = 0; j < 19; j++) {
+          tempList.add(new ArrayList<Event>());
+        }
+        MainActivity.dayList.add(tempList);
+        i++;
+      }
+
+      // GET PREFERENCES AND THEIR STRINGS
       SharedPreferences sp = getSharedPreferences(
           getResources().getString(R.string.sp_file_name),
           Context.MODE_PRIVATE);
@@ -60,7 +76,7 @@ public class SplashScreen extends Activity {
 
       /***** LOAD USER EVENTS *******/
 
-      String identifier, row, temp, eventTitle, eClass, format, gm, tempString, location;
+      String identifier, row, eventTitle, eClass, format, gm, tempString, location;
       String[] rowData;
       int tournamentID = -1, index, day, hour, prize, lineNum = 0;
       int numTournaments = 0, numPreviews = 0, numJuniors = 0, numSeminars = 0;
@@ -99,9 +115,8 @@ public class SplashScreen extends Activity {
       /***** LOAD SHARED EVENTS *******/
 
       // get events (may need update)
-      int scheduleVersion = sp.getInt(
-          getResources().getString(R.string.sp_2014_schedule_version), -1);
-      int newVersion = 0;
+      //int scheduleVersion = sp.getInt(getResources().getString(R.string.sp_2014_schedule_version), -1);
+      int newVersion = 13;
 
       /***** PARSE SCHEDULE *****/
 
@@ -181,10 +196,10 @@ public class SplashScreen extends Activity {
             location = "";
           } else {
             // prize
-            temp = rowData[3];
-            if (temp.equalsIgnoreCase("") || temp.equalsIgnoreCase("-"))
-              temp = "0";
-            prize = Integer.valueOf(temp);
+            tempString = rowData[3];
+            if (tempString.equalsIgnoreCase("") || tempString.equalsIgnoreCase("-"))
+              tempString = "0";
+            prize = Integer.valueOf(tempString);
 
             // class
             eClass = rowData[4];
@@ -214,14 +229,14 @@ public class SplashScreen extends Activity {
           }
 
           // get tournament title and label and help short name
-          temp = eventTitle;
+          tempString = eventTitle;
 
           // search through extra strings
           for (String eventExtraString : preExtraStrings) {
-            index = temp.indexOf(eventExtraString);
+            index = tempString.indexOf(eventExtraString);
             if (index > -1) {
-              temp = temp.substring(0, index)
-                  + temp.substring(index + eventExtraString.length());
+              tempString = tempString.substring(0, index)
+                  + tempString.substring(index + eventExtraString.length());
             }
           }
 
@@ -230,9 +245,9 @@ public class SplashScreen extends Activity {
           isTournamentEvent = eClass.length() > 0;
 
           if (isTournamentEvent || format.equalsIgnoreCase("Preview")) {
-            index = temp.lastIndexOf(" ");
-            shortEventTitle = temp.substring(index + 1);
-            temp = temp.substring(0, index);
+            index = tempString.lastIndexOf(" ");
+            shortEventTitle = tempString.substring(index + 1);
+            tempString = tempString.substring(0, index);
 
             if (index == -1) {
               Log.d(TAG, "");
@@ -243,21 +258,21 @@ public class SplashScreen extends Activity {
               || eventTitle.indexOf("COIN series") == 0
               || format.equalsIgnoreCase("SOG")
               || format.equalsIgnoreCase("Preview")) {
-            tournamentTitle = temp;
+            tournamentTitle = tempString;
             tournamentLabel = "-";
 
           } else if (isTournamentEvent) {
             for (String eventExtraString : postExtraStrings) {
-              index = temp.indexOf(eventExtraString);
+              index = tempString.indexOf(eventExtraString);
               if (index > -1) {
-                temp = temp.substring(0, index);
+                tempString = tempString.substring(0, index);
               }
             }
 
             tournamentLabel = rowData[10];
-            tournamentTitle = temp;
+            tournamentTitle = tempString;
           } else {
-            tournamentTitle = temp;
+            tournamentTitle = tempString;
             tournamentLabel = "";
 
             if (eventTitle.indexOf("Auction") == 0)
@@ -269,7 +284,7 @@ public class SplashScreen extends Activity {
                 "Wits & Wagers", "Texas Roadhouse BPA Fundraiser",
                 "Memoir: D-Day"};
             for (String nonTournamentString : nonTournamentStrings) {
-              if (temp.indexOf(nonTournamentString) == 0) {
+              if (tempString.indexOf(nonTournamentString) == 0) {
                 tournamentTitle = nonTournamentString;
                 break;
               }
@@ -365,22 +380,22 @@ public class SplashScreen extends Activity {
 
               if (prevEvent.tournamentID == tournamentID) {
                 // update previous help total duration
-                temp = prevEvent.title;
+                tempString = prevEvent.title;
 
                 // search through extra strings
                 for (String eventExtraString : preExtraStrings) {
-                  index = temp.indexOf(eventExtraString);
+                  index = tempString.indexOf(eventExtraString);
                   if (index > -1) {
-                    temp = temp.substring(0, index)
-                        + temp.substring(index
+                    tempString = tempString.substring(0, index)
+                        + tempString.substring(index
                         + eventExtraString.length());
                   }
                 }
 
-                index = temp.lastIndexOf(" ");
+                index = tempString.lastIndexOf(" ");
 
                 if (index > -1) {
-                  shortEventTitle = temp.substring(index + 1);
+                  shortEventTitle = tempString.substring(index + 1);
                   if (shortEventTitle.indexOf("R") == 0) {
                     dividerIndex = shortEventTitle.indexOf("/");
 
@@ -552,32 +567,9 @@ public class SplashScreen extends Activity {
           + " are juniors, " + String.valueOf(numPreviews) + " are previews, "
           + String.valueOf(numSeminars) + " are seminars, ");
 
-      return 1;
-    }
-
-    @Override
-    protected void onPostExecute(Integer result) {
-      super.onPostExecute(result);
       startMainActivity();
-    }
 
-    @Override
-    protected void onPreExecute() {
-      super.onPreExecute();
-
-      MainActivity.dayStrings = getResources().getStringArray(R.array.days);
-      MainActivity.dayList = new ArrayList<ArrayList<ArrayList<Event>>>(MainActivity.dayStrings.length);
-
-      ArrayList<ArrayList<Event>> temp;
-      int i = 0;
-      while (i < MainActivity.dayStrings.length) {
-        temp = new ArrayList<ArrayList<Event>>();
-        for (int j = 0; j < 19; j++) {
-          temp.add(new ArrayList<Event>());
-        }
-        MainActivity.dayList.add(temp);
-        i++;
-      }
+      return 1;
     }
   }
 }

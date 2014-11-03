@@ -48,14 +48,14 @@ public class UserDataFragment extends Fragment {
   private static LayoutInflater userEventLayoutInflater;
   private final String TAG = "My WBC Data Activity";
 
-  public static void changeEventStar(String id, boolean starred,
-                                     Activity context) {
+  private static void changeEventStar(String id, boolean starred,
+                                      Activity context) {
     for (Event event : userEvents) {
       if (event.identifier.equalsIgnoreCase(id)) {
         event.starred = starred;
 
         // will be null if calling from user event
-        updateUserEventList(MainActivity.activity);
+        updateUserEventList();
 
         // update in schedule activity
         ArrayList<Event> eventList = MainActivity.dayList.get(event.day).get(
@@ -87,7 +87,7 @@ public class UserDataFragment extends Fragment {
   /**
    * Game star button clicked - change allStarred boolean and update events
    */
-  public static void changeAllStarred(Activity a) {
+  private static void changeAllStarred(Activity a) {
     allStarred = !allStarred;
     setGameStar();
 
@@ -101,7 +101,7 @@ public class UserDataFragment extends Fragment {
   /**
    * set userEventsStarIV image resource
    */
-  public static void setGameStar() {
+  private static void setGameStar() {
     userEventsStarIV.setImageResource(allStarred ? R.drawable.star_on
         : R.drawable.star_off);
   }
@@ -110,7 +110,7 @@ public class UserDataFragment extends Fragment {
    * Event star changed - check for change in allStarred boolean and set game star image view.
    * Call setGameStar before return
    */
-  public static void setAllStared() {
+  private static void setAllStared() {
     allStarred = true;
     for (Event tEvent : userEvents) {
       if (!tEvent.starred) {
@@ -121,10 +121,10 @@ public class UserDataFragment extends Fragment {
     setGameStar();
   }
 
-  private static void saveUserEvents(Context context) {
-    final Resources resources = context.getResources();
+  private static void saveUserEvents() {
+    final Resources resources = MainActivity.activity.getResources();
 
-    SharedPreferences.Editor editor = context.getSharedPreferences(
+    SharedPreferences.Editor editor = MainActivity.activity.getSharedPreferences(
         resources.getString(R.string.sp_file_name),
         Context.MODE_PRIVATE).edit();
     String userEventPrefString = resources.getString(R.string.sp_user_event);
@@ -152,12 +152,12 @@ public class UserDataFragment extends Fragment {
     editor.apply();
   }
 
-  public static void updateUserEventList(final Context context) {
+  private static void updateUserEventList() {
     userEventsLayout.removeAllViews();
     for (int i = 0; i < userEvents.size(); i++) {
       final Event event = userEvents.get(i);
 
-      LinearLayout layout = (LinearLayout) userEventLayoutInflater.inflate(R.layout.tournament_item, null);
+      LinearLayout layout = (LinearLayout) userEventLayoutInflater.inflate(R.layout.tournament_item, userEventsLayout, false);
 
       boolean started = event.day * 24 + event.hour <= MainActivity.currentDay * 24 + MainActivity.currentHour;
       boolean ended = event.day * 24 + event.hour + event.totalDuration <= MainActivity.currentDay
@@ -438,7 +438,7 @@ public class UserDataFragment extends Fragment {
       userEvents.add(event);
     }
 
-    updateUserEventList(MainActivity.activity);
+    updateUserEventList();
 
     Button addEvent = (Button) view.findViewById(R.id.add_event);
     addEvent.setOnClickListener(new View.OnClickListener() {
@@ -596,8 +596,8 @@ public class UserDataFragment extends Fragment {
 
       }
 
-      updateUserEventList(MainActivity.activity);
-      saveUserEvents(MainActivity.activity);
+      updateUserEventList();
+      saveUserEvents();
     }
 
   }
@@ -791,7 +791,7 @@ public class UserDataFragment extends Fragment {
         }
       }
 
-      saveUserEvents(MainActivity.activity);
+      saveUserEvents();
 
       EventFragment fragment = (EventFragment) MainActivity.activity
           .getFragmentManager().findFragmentById(R.id.eventFragment);
@@ -800,7 +800,7 @@ public class UserDataFragment extends Fragment {
         EventFragment.setEvent(MainActivity.activity);
       }
 
-      updateUserEventList(MainActivity.activity);
+      updateUserEventList();
 
     }
   }
@@ -819,11 +819,11 @@ public class UserDataFragment extends Fragment {
       daysTV.setVisibility(View.GONE);
       daysLL.setVisibility(View.GONE);
 
-      event = null;
-      for (int i = 0; i < userEvents.size(); i++) {
-        event = userEvents.get(i);
-        if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID))
+      for (Event temp : userEvents) {
+        if (temp.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID)) {
+          event = temp;
           break;
+        }
       }
 
       oldTime = event.hour;
@@ -911,7 +911,7 @@ public class UserDataFragment extends Fragment {
 
       MainActivity.SELECTED_EVENT_ID = event.identifier;
 
-      updateUserEventList(MainActivity.activity);
+      updateUserEventList();
 
       EventFragment fragment = (EventFragment) MainActivity.activity
           .getFragmentManager().findFragmentById(R.id.eventFragment);
@@ -919,7 +919,7 @@ public class UserDataFragment extends Fragment {
       if (fragment != null && fragment.isInLayout()) {
         EventFragment.setEvent(MainActivity.activity);
       }
-      saveUserEvents(MainActivity.activity);
+      saveUserEvents();
     }
   }
 }

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<style name="AppTheme" parent="@android:Theme.Holo.Light">
-		<item name="android:actionBarStyle">@style/ActionBar</item>
-		<item name="android:actionBarItemBackground">@drawable/action_bar_tab</item>
-		<item name="android:dropDownListViewStyle">@style/DropDownListView</item>
-	</style>
+  <style name="AppTheme" parent="@android:Theme.Holo.Light">
+    <item name="android:actionBarStyle">@style/ActionBar</item>
+    <item name="android:actionBarItemBackground">@drawable/action_bar_tab</item>
+    <item name="android:dropDownListViewStyle">@style/DropDownListView</item>
+  </style>
 
-	<style name="ActionBar" parent="@android:style/Widget.Holo.ActionBar">
-		<item name="android:background">@color/action_bar_background</item>
-		<item name="android:textColor">@color/action_bar_text</item>
-	</style>
+  <style name="ActionBar" parent="@android:style/Widget.Holo.ActionBar">
+    <item name="android:background">@color/action_bar_background</item>
+    <item name="android:textColor">@color/action_bar_text</item>
+  </style>
 
-	<style name="DropDownListView" parent="@android:style/Widget.Holo.ListView.DropDown">
-		<item name="android:background">@color/menu_background</item>
-		<item name="android:textColor">@color/menu_text</item>
-		<item name="android:listSelector">@drawable/action_bar_tab</item>
-	</style>
+  <style name="DropDownListView" parent="@android:style/Widget.Holo.ListView.DropDown">
+    <item name="android:background">@color/menu_background</item>
+    <item name="android:textColor">@color/menu_text</item>
+    <item name="android:listSelector">@drawable/action_bar_tab</item>
+  </style>
 </resources>

@@ -215,7 +215,7 @@ public class MainActivity extends Activity {
     drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
     drawerList = (ListView) findViewById(R.id.left_drawer);
-    drawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_list_item));
+    drawerList.setAdapter(new DrawerAdapter(this));
 
     drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
         R.drawable.ic_drawer, R.string.open_drawer, R.string.close_drawer) {
@@ -511,10 +511,10 @@ public class MainActivity extends Activity {
     final LayoutInflater inflater;
     final int layoutResID;
 
-    public DrawerAdapter(Context context, int layoutResourceID) {
-      super(context, layoutResourceID);
+    public DrawerAdapter(Context context) {
+      super(context, R.layout.drawer_list_item);
 
-      this.layoutResID = layoutResourceID;
+      layoutResID = R.layout.drawer_list_item;
       inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -539,13 +539,13 @@ public class MainActivity extends Activity {
 
       if (view == null) {
         if (position == 3 || position == 7) {
-          view = inflater.inflate(R.layout.drawer_list_header, null);
+          view = inflater.inflate(R.layout.drawer_list_header, parent, false);
 
           TextView title = (TextView) view.findViewById(R.id.drawer_title);
           title.setText(drawerTitles[position]);
 
         } else {
-          view = inflater.inflate(R.layout.drawer_list_item, null);
+          view = inflater.inflate(R.layout.drawer_list_item, parent, false);
 
           TextView title = (TextView) view.findViewById(R.id.drawer_title);
           title.setText(drawerTitles[position]);

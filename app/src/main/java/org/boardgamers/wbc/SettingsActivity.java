@@ -144,6 +144,7 @@ public class SettingsActivity extends Activity {
     }
 
     try {
+      //noinspection ConstantConditions
       os.write(userName.getBytes());
       os.write("\n".getBytes());
       for (i = 0; i < userEvents.size(); i++) {

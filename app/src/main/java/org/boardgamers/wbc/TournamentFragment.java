@@ -40,10 +40,7 @@ public class TournamentFragment extends Fragment {
   //private boolean hasFormat;
   //private boolean hasClass;
   private TextView gameGM;
-  private TextView gameFormat;
-  private TextView gameClass;
-  private View gameFormatDivider;
-  private View gameClassDivider;
+
   private TextView previewLink;
   private TextView reportLink;
   private ListView listView;
@@ -141,11 +138,6 @@ public class TournamentFragment extends Fragment {
     gameGM = (TextView) view.findViewById(R.id.gf_gm);
     listView = (ListView) view.findViewById(R.id.gf_events);
     tournamentEventsStarIV = (ImageView) view.findViewById(R.id.gf_star);
-
-    gameFormatDivider = view.findViewById(R.id.gf_format_divider);
-    gameClassDivider = view.findViewById(R.id.gf_class_divider);
-    gameFormat = (TextView) view.findViewById(R.id.gf_format);
-    gameClass = (TextView) view.findViewById(R.id.gf_class);
 
     previewLink = (TextView) view.findViewById(R.id.gf_preview_link);
     reportLink = (TextView) view.findViewById(R.id.gf_report_link);
@@ -314,7 +306,7 @@ public class TournamentFragment extends Fragment {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
       if (view == null)
-        view = inflater.inflate(R.layout.tournament_item, null);
+        view = inflater.inflate(R.layout.tournament_item, parent, false);
 
       final Event event = tournamentEvents.get(position);
 
@@ -359,9 +351,6 @@ public class TournamentFragment extends Fragment {
       time.setTypeface(null, tType);
       time.setTextColor(tColor);
       time.setText(String.valueOf(event.hour));
-
-      LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0,
-          LinearLayout.LayoutParams.MATCH_PARENT, 0);
 
       TextView eClass = (TextView) view.findViewById(R.id.gi_class);
       eClass.setTypeface(null, tType);

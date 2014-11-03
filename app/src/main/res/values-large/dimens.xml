@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="map_margin_upstairs_land">24dp</dimen>
-    <dimen name="map_margin_downstairs_land">48dp</dimen>
-    <dimen name="map_margin_upstairs_port">0dp</dimen>
-    <dimen name="map_margin_downstairs_port">24dp</dimen>
+  <dimen name="map_margin_upstairs_land">24dp</dimen>
+  <dimen name="map_margin_downstairs_land">48dp</dimen>
+  <dimen name="map_margin_upstairs_port">0dp</dimen>
+  <dimen name="map_margin_downstairs_port">24dp</dimen>
 
 </resources>

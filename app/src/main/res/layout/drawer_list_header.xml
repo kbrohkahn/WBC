@@ -13,6 +13,7 @@
     android:layout_height="wrap_content"
     android:gravity="start"
     android:paddingLeft="@dimen/navigation_padding"
+    android:paddingRight="@dimen/navigation_padding"
     android:textAllCaps="true"
     android:textColor="@color/menu_text"
     android:textSize="12sp"

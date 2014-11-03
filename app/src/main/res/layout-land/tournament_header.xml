@@ -6,84 +6,84 @@
               android:gravity="center_vertical"
               android:orientation="horizontal">
 
-	<ImageView
-		android:id="@+id/gf_star"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:contentDescription="@string/star"
-		android:paddingLeft="@dimen/activity_margin"
-		android:paddingRight="@dimen/activity_margin"/>
+  <ImageView
+    android:id="@+id/gf_star"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:contentDescription="@string/star"
+    android:paddingLeft="@dimen/activity_margin"
+    android:paddingRight="@dimen/activity_margin"/>
 
-	<TextView
-		style="@style/list_item"
-		android:layout_weight="7"
-		android:gravity="center_vertical|left"
-		android:text="@string/event"/>
+  <TextView
+    style="@style/list_item"
+    android:layout_weight="7"
+    android:gravity="center_vertical|left"
+    android:text="@string/event"/>
 
-	<View style="@style/div_v"/>
+  <View style="@style/div_v"/>
 
-	<TextView
-		style="@style/list_item"
-		android:layout_weight="4"
-		android:text="@string/day"/>
+  <TextView
+    style="@style/list_item"
+    android:layout_weight="4"
+    android:text="@string/day"/>
 
-	<View style="@style/div_v"/>
+  <View style="@style/div_v"/>
 
-	<RelativeLayout
-		android:layout_width="0dip"
-		android:layout_height="match_parent"
-		android:layout_weight="2">
+  <RelativeLayout
+    android:layout_width="0dip"
+    android:layout_height="match_parent"
+    android:layout_weight="2">
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:contentDescription="@string/time"
-			android:src="@drawable/clock_icon"/>
-	</RelativeLayout>
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:contentDescription="@string/time"
+      android:src="@drawable/clock_icon"/>
+  </RelativeLayout>
 
-	<View style="@style/div_v"/>
+  <View style="@style/div_v"/>
 
-	<RelativeLayout
-		android:layout_width="0dip"
-		android:layout_height="match_parent"
-		android:layout_weight="3">
+  <RelativeLayout
+    android:layout_width="0dip"
+    android:layout_height="match_parent"
+    android:layout_weight="3">
 
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerInParent="true"
-			android:contentDescription="@string/duration"
-			android:src="@drawable/timer_icon"/>
-	</RelativeLayout>
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:contentDescription="@string/duration"
+      android:src="@drawable/timer_icon"/>
+  </RelativeLayout>
 
-	<View style="@style/div_v"/>
+  <View style="@style/div_v"/>
 
-	<TextView
-		android:id="@+id/gf_format"
-		style="@style/list_item"
-		android:layout_weight="3"
-		android:text="@string/format"/>
+  <TextView
+    android:id="@+id/gf_format"
+    style="@style/list_item"
+    android:layout_weight="3"
+    android:text="@string/format"/>
 
-	<View
-		android:id="@+id/gf_format_divider"
-		style="@style/div_v"/>
+  <View
+    android:id="@+id/gf_format_divider"
+    style="@style/div_v"/>
 
-	<TextView
-		android:id="@+id/gf_class"
-		style="@style/list_item"
-		android:layout_weight="2"
-		android:text="@string/eClass"/>
+  <TextView
+    android:id="@+id/gf_class"
+    style="@style/list_item"
+    android:layout_weight="2"
+    android:text="@string/eClass"/>
 
-	<View
-		android:id="@+id/gf_class_divider"
-		style="@style/div_v"/>
+  <View
+    android:id="@+id/gf_class_divider"
+    style="@style/div_v"/>
 
-	<TextView
-		style="@style/list_item"
-		android:layout_marginRight="@dimen/activity_margin"
-		android:layout_weight="4"
-		android:gravity="center_vertical|right"
-		android:text="@string/location"/>
+  <TextView
+    style="@style/list_item"
+    android:layout_marginRight="@dimen/activity_margin"
+    android:layout_weight="4"
+    android:gravity="center_vertical|right"
+    android:text="@string/location"/>
 
 </LinearLayout>

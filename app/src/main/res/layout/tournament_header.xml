@@ -17,7 +17,6 @@
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
     android:layout_marginRight="@dimen/activity_margin"
-    android:layout_toLeftOf="@+id/gf_edit"
     android:layout_toRightOf="@+id/gf_star"
     android:orientation="vertical">
 

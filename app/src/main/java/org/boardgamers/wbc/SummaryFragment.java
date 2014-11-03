@@ -38,7 +38,7 @@ public class SummaryFragment extends Fragment {
     notePrefString = MainActivity.activity.getResources().getString(R.string.sp_event_note);
 
     summaryList = new ArrayList<ArrayList<Event>>(MainActivity.dayStrings.length);
-    for (int i = 0; i < MainActivity.dayStrings.length; i++) {
+    for (String s : MainActivity.dayStrings) {
       summaryList.add(new ArrayList<Event>());
     }
 

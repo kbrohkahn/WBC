@@ -9,4 +9,4 @@ local.properties
 .idea/
 
 # OS X files
-*.DS_Store
+#*.DS_Store
