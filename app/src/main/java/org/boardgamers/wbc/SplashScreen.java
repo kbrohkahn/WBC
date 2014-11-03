@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -85,7 +86,7 @@ public class SplashScreen extends Activity {
 
       Event event, tempEvent, prevEvent = null;
       Tournament tournament;
-      List<Tournament> tournaments = new ArrayList<Tournament>();
+      MainActivity.allTournaments = new ArrayList<Tournament>();
       String tournamentTitle, tournamentLabel, shortEventTitle = "";
       String change;
 
@@ -115,8 +116,7 @@ public class SplashScreen extends Activity {
       /***** LOAD SHARED EVENTS *******/
 
       // get events (may need update)
-      //int scheduleVersion = sp.getInt(getResources().getString(R.string.sp_2014_schedule_version), -1);
-      int newVersion = 13;
+      int scheduleVersion = sp.getInt(getResources().getString(R.string.sp_2014_schedule_version), -1);
 
       /***** PARSE SCHEDULE *****/
 
@@ -293,9 +293,9 @@ public class SplashScreen extends Activity {
 
           // check if last 5 in list contains this tournament
           tournamentID = -1;
-          for (index = Math.max(0, tournaments.size() - 5); index < tournaments
+          for (index = Math.max(0, MainActivity.allTournaments.size() - 5); index < MainActivity.allTournaments
               .size(); index++) {
-            if (tournaments.get(index).title
+            if (MainActivity.allTournaments.get(index).title
                 .equalsIgnoreCase(tournamentTitle)) {
               tournamentID = index;
               break;
@@ -304,7 +304,7 @@ public class SplashScreen extends Activity {
 
           if (tournamentID > -1) {
             // update existing tournament
-            tournament = tournaments.get(tournamentID);
+            tournament = MainActivity.allTournaments.get(tournamentID);
             if (prize > 0)
               tournament.prize = prize;
             if (isTournamentEvent)
@@ -312,7 +312,7 @@ public class SplashScreen extends Activity {
 
             tournament.gm = gm;
           } else {
-            tournamentID = tournaments.size();
+            tournamentID = MainActivity.allTournaments.size();
             tournament = new Tournament(tournamentID, tournamentTitle,
                 tournamentLabel, isTournamentEvent, prize, gm);
 
@@ -320,7 +320,7 @@ public class SplashScreen extends Activity {
                 true);
             tournament.finish = sp.getInt("fin_" + tournamentTitle, 0);
 
-            tournaments.add(tournament);
+            MainActivity.allTournaments.add(tournament);
 
             if (format.equalsIgnoreCase("Preview"))
               numPreviews++;
@@ -481,16 +481,19 @@ public class SplashScreen extends Activity {
           /********* LOAD INTO DAYLIST *************/
           change = "";
 
-          // TODO add changes here
-          /*
-           * if (help.title.equalsIgnoreCase("Age of Renaissance H1/3 PC")) { int
-           * newDay=5;
-           *
-           * if (scheduleVersion<0) { change=help.title+": Day changed from "
-           * +dayStrings[help.currentDay]+" to " +dayStrings[newDay]; newVersion=0; }
-           *
-           * help.currentDay=newDay; }
-           */
+          // EVENT CHANGE LAYOUT
+          if (event.title.equalsIgnoreCase("EVENT_TITLE")) {
+            int newDay = 5;
+            int VERSION_EVENT_CHANGED = -1;
+            if (scheduleVersion < VERSION_EVENT_CHANGED) {
+              change = event.title + ": Day changed from "
+                  + MainActivity.dayStrings[event.day] + " to " + MainActivity.dayStrings[newDay];
+            }
+            event.day = newDay;
+          }
+
+          // TODO ADD EVENT CHANGES
+
 
           if (!change.equalsIgnoreCase(""))
             MainActivity.allChanges += "\t" + change + "\n\n";
@@ -536,19 +539,42 @@ public class SplashScreen extends Activity {
 
         }
 
+        // close streams and number of events
         isr.close();
         is.close();
         reader.close();
-
         MainActivity.NUM_EVENTS = lineNum;
 
-        // save update version
+        // try to get version code
+        int newVersion;
+        try {
+          newVersion = getPackageManager().getPackageInfo(getPackageName(),
+              0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+          newVersion = 1000;
+          Log.d(TAG, "ERROR: Could not get version code, defaulting to " + String.valueOf(newVersion));
+          e.printStackTrace();
+        }
+
+        // save new version code
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(
             getResources().getString(R.string.sp_2014_schedule_version),
             newVersion);
         editor.apply();
 
+        // log statistics
+        Log.d(TAG, "Finished load, " + String.valueOf(tournamentID)
+            + " total tournaments and " + String.valueOf(lineNum)
+            + " total events");
+        Log.d(TAG, "Of total, " + String.valueOf(numTournaments)
+            + " are tournaments, " + String.valueOf(numJuniors)
+            + " are juniors, " + String.valueOf(numPreviews) + " are previews, "
+            + String.valueOf(numSeminars) + " are seminars, ");
+
+        // start main actvitiy and return
+        startMainActivity();
+        return 1;
       } catch (IOException e) {
         showToast(
             "ERROR: Could not parse schedule file,"
@@ -556,20 +582,6 @@ public class SplashScreen extends Activity {
         e.printStackTrace();
         return -1;
       }
-
-      MainActivity.allTournaments = tournaments;
-
-      Log.d(TAG, "Finished load, " + String.valueOf(tournamentID)
-          + " total tournaments and " + String.valueOf(lineNum)
-          + " total events");
-      Log.d(TAG, "Of total, " + String.valueOf(numTournaments)
-          + " are tournaments, " + String.valueOf(numJuniors)
-          + " are juniors, " + String.valueOf(numPreviews) + " are previews, "
-          + String.valueOf(numSeminars) + " are seminars, ");
-
-      startMainActivity();
-
-      return 1;
     }
   }
 }

@@ -1,13 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 20
+    compileSdkVersion 21
     buildToolsVersion '20.0.0'
 
     defaultConfig {
         applicationId "org.boardgamers.wbc"
         minSdkVersion 14
-        targetSdkVersion 20
+        targetSdkVersion 21
+        versionCode 12
+        versionName "1.100"
     }
 
     buildTypes {
