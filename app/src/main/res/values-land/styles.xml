@@ -1,7 +1,0 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-  <style name="orientation_changer">
-    <item name="android:orientation">horizontal</item>
-  </style>
-
-</resources>

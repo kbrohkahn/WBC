@@ -4,173 +4,7 @@
   <!-- COMMON AND MENUS -->
   <string name="app_name_long">World Boardgaming Championships</string>
   <string name="app_name_short">WBC</string>
-  <string name="edit">Edit</string>
-  <string name="delete">Delete</string>
-  <string name="close">Close</string>
-  <string name="create_event">Create Event</string>
-  <string name="cancel">Cancel</string>
-  <string name="save">Save</string>
-  <string name="clear">Clear</string>
-  <string name="share">Share</string>
-  <string name="map">Hotel Map</string>
-  <string name="finishes">Finishes</string>
-  <string name="notes">Notes</string>
-  <string name="events">Events</string>
-  <string name="edit_event">Edit Event</string>
-  <string name="add_event">Add Event</string>
-  <string name="delete_all">Delete All</string>
 
-
-  <!-- ACTIVITY TITLES -->
-  <string name="activity_tournament">Tournament</string>
-  <string name="activity_event">Event</string>
-  <string name="activity_settings">Settings</string>
-  <string name="activity_filter">Filter Schedule</string>
-  <string name="activity_help">Help</string>
-  <string name="activity_about">About</string>
-  <string name="activity_search">Search</string>
-
-  <!-- FILTER MENU -->
-  <string name="select_all">Select All</string>
-  <string name="deselect_all">Deselect All</string>
-  <string name="select_tournament">Select Tournaments</string>
-  <string name="deselect_tournament">Deselect Tournaments</string>
-
-  <!-- SCHEDULE FRAGMENT -->
-  <string name="day">DAY</string>
-  <string name="time">TIM</string>
-  <string name="event">EVENT</string>
-  <string name="eClass">CLS</string>
-  <string name="format">FORMAT</string>
-  <string name="duration">Duration</string>
-  <string name="location">LOCATION</string>
-  <string name="star">Star a tournament or event</string>
-
-  <!-- GAME FRAGMENT -->
-  <string name="finish">Finish</string>
-  <string name="preview"><u>Preview</u></string>
-  <string name="report"><u>Report</u></string>
-  <string name="zero">-</string>
-  <string name="first_short">1</string>
-  <string name="second_short">2</string>
-  <string name="third_short">3</string>
-  <string name="fourth_short">4</string>
-  <string name="fifth_short">5</string>
-  <string name="sixth_short">6</string>
-  <string name="first">1st</string>
-  <string name="second">2nd</string>
-  <string name="third">3rd</string>
-  <string name="fourth">4th</string>
-  <string name="fifth">5th</string>
-  <string name="sixth">6th</string>
-
-  <!-- EVENT FRAGMENT -->
-  <string name="event_note_hint">Add event note</string>
-  <string name="event_format">-Format-</string>
-  <string name="event_class">-Class-</string>
-  <string name="event_time_and_location">-Time and location-</string>
-
-  <!-- CREATE EVENT DIALOG -->
-  <string name="ce_title">Title *</string>
-  <string name="ce_location">Location *</string>
-  <string name="ce_days">Choose days *</string>
-  <string name="ce_at">At</string>
-  <string name="ce_for">for</string>
-  <string name="ce_hours">hours</string>
-  <string name="add">Add</string>
-
-  <!-- MAP DIALOG -->
-  <string name="mf_upstairs">Map of upstairs</string>
-  <string name="mf_downstairs">Map of downstairs</string>
-
-  <!-- SEARCH DIALOG -->
-  <string name="ds_tournament">Tournament</string>
-  <string name="ds_tournament_hint">Enter tournament</string>
-  <string name="ds_formats">Formats</string>
-  <string name="ds_rooms">Room</string>
-
-  <!-- DELETE DIALOG -->
-  <string name="dd_string">Are you sure you want to delete</string>
-
-  <!-- SETTINGS -->
-  <string name="settings_notify">Notify me before my starred events start</string>
-  <string name="settings_notify_type">Select notification action</string>
-  <string name="settings_notify_time_before">Notify me</string>
-  <string name="settings_notify_time_after">minutes before each event</string>
-  <string name="settings_vibrate">Vibrate</string>
-  <string name="settings_sound">Sound</string>
-  <string name="settings_both">Both</string>
-
-  <!-- PREFERENCES FILES -->
-  <string name="sp_file_name">SettingsSPFile</string>
-  <string name="sp_notify_starred">notify_starred</string>
-  <string name="sp_notify_type">notify_type</string>
-  <string name="sp_notify_time">notify_time</string>
-  <string name="sp_2014_schedule_version">2014_schedule_version</string>
-  <string name="sp_event_starred">2014_event_starred_</string>
-  <string name="sp_event_note">2014_event_note_</string>
-  <string name="sp_user_event">2014_user_event_</string>
-
-  <!-- NAVIGATION DRAWER -->
-  <string name="open_drawer">Open Drawer</string>
-  <string name="close_drawer">Close Drawer</string>
-  <string name="drawer_image">Icon for drawer items</string>
-
-  <string-array name="drawer_titles">
-    <item>All Starred Events</item>
-    <item>Full Schedule</item>
-    <item>My WBC Data</item>
-    <item>Convention Info</item>
-    <item>Hotel Map</item>
-    <item>Help</item>
-    <item>About App</item>
-    <item>Settings</item>
-    <item>Schedule Filter</item>
-    <item>General Settings</item>
-  </string-array>
-
-
-  <!-- ARRAYS -->
-  <string-array name="hours_12">
-    <item>7 AM</item>
-    <item>8 AM</item>
-    <item>9 AM</item>
-    <item>10 AM</item>
-    <item>11 AM</item>
-    <item>12 PM</item>
-    <item>1 PM</item>
-    <item>2 PM</item>
-    <item>3 PM</item>
-    <item>4 PM</item>
-    <item>5 PM</item>
-    <item>6 PM</item>
-    <item>7 PM</item>
-    <item>8 PM</item>
-    <item>9 PM</item>
-    <item>10 PM</item>
-    <item>11 PM</item>
-    <item>12 AM</item>
-  </string-array>
-  <string-array name="hours_24">
-    <item>0700</item>
-    <item>0800</item>
-    <item>0900</item>
-    <item>1000</item>
-    <item>1100</item>
-    <item>1200</item>
-    <item>1300</item>
-    <item>1400</item>
-    <item>1500</item>
-    <item>1600</item>
-    <item>1700</item>
-    <item>1800</item>
-    <item>1900</item>
-    <item>2000</item>
-    <item>2100</item>
-    <item>2200</item>
-    <item>2300</item>
-    <item>2400</item>
-  </string-array>
   <string-array name="search_formats">
     <item>Demo</item>
     <item>Meeting</item>
@@ -179,14 +13,6 @@
     <item>Seminar</item>
     <item>Sign-In</item>
     <item>SOG</item>
-  </string-array>
-  <string-array name="duration">
-    <item>1</item>
-    <item>2</item>
-    <item>3</item>
-    <item>4</item>
-    <item>5</item>
-    <item>6</item>
   </string-array>
   <string-array name="daysForParsing">
     <item>2014-08-02</item>
@@ -280,248 +106,268 @@
   <!-- ABOUT -->
   <string name="about_developer_text">Created by Kevin Broh-Kahn\ndev@boardgamers.org</string>
   <string name="about_others_text">Schedule files courtesy of Craig Trader\nMaps courtesy of Jason Long</string>
-  \
 
   <!-- HELP -->
-  <string name="how_to_help">Select a help topic to expand and show info</string>
-  <string name="about_app_header">HOW TO USE THE APP</string>
-	<string name="about_app_text">DAYS &amp; TIMES: The app displays ongoing events with a green background,
-future events yellow, and ended events gray.
-To change the displayed day, swipe left and right from the main schedule or
-select
-a day from the drop down in the action bar.
-\n\nCUSTOMIZE SCHEDULE: Touch the star to the left of an event to add it to "My Events"
-list at the top of each day. Use the main menu to access "Created Events,"
-where you can add custom events to your schedule, and "Filter,"
-where you can select which tournaments and convention events are displayed
-in your schedule. Touch an hour group to show/hide all events
-starting that hour, or long press to additionally show/hide all following
-hour groups. Ongoing events for a given hour are included in the group header.
-\n\nMAP: To view the hotel map,
-select an event location, which is underlined like a link,
-or search for a room via "Search" in the main menu.
-If the room is in the hotel, it will flash on the map.
-\n\nSAVING: Schedule filter, app settings, tournament finishes, event notes, etc.
-are all saved automatically, so do not worry about losing your settings!
-\n\nOTHER: If an event does not have a format or class (i.e. non-tournament events),
-then that text field will not be shown. For tournament finishes,
-finishes awarding plaques are in bold while laurels are in italics.
-\n\nPlease contact dev@boardgamers.org with any further questions.</string>
-  <string name="about_schedule_header">HOW TO READ THE SCHEDULE</string>
-	<string name="about_schedule_text">The
-schedule on the main screen is a chronological
-listing of events by order of appearance.
-Junior Events are listed first, highlighted by a
-symbol and are in green. Open Gaming, including
-Scheduled Open Games (SOG), and other
-non-tournament games are listed in orange. Nongaming
-events, such as meetings, registration, and
-the auction, are listed in blue. Seminars are listed
-in purple. Demonstrations are listed in black, italics.
-Advanced rounds that require prior qualification,
-such as Finals, are listed in red.
-“PC” indicates that an event is part of a Pre-
-Con and is limited to Tribune members or
-those with a badge good for that particular
-“PC” day.
-\n\nWhen more than one event starts at the same
-time, non-tournament events are listed first,
-followed by tournaments—both in alphabetical
-order. An alphabetical list of tournaments
-can be found in search screen via the main menu.</string>
-  <string name="about_dates_header">DATES</string>
-	<string name="about_dates_text">Abbreviations for dates are Mo:
-Monday, Tu: Tuesday, We: Wednesday,
-Th: Thursday, Fr: Friday, Sa: Saturday, Su:
-Sunday. “PC Sa” or “PC Su” indicates
-that events occur on the Saturday or
-Sunday before WBC begins. Separate admission
-is required for Non-Tribune Members for
-all Pre-Cons.</string>
-  <string name="about_times_header">TIMES</string>
-	<string name="about_times_text">Times are listed in military time;
-e.g., 11 or 1100 is 11 am and 13 or 1300 is 1 pm. Tournament
-play commences at the scheduled times for
-each event and may run past midnight. No
-event may start a round after midnight (exception:
-our five night enders) or reconvene
-before 9 am without the consent of all remaining
-players.</string>
-  <string name="about_heats_rounds_header">HEATS/ROUNDS</string>
-<string name="about_heats_rounds_text">“H1/3” indicates the
-heat number out of the total number of
-heats. “R1/6” indicates the round number
-out of the estimated total number of rounds.
-A “-” instead of a “/” in the Round listing
-indicates that the rounds are continuous,
-starting immediately after the end of
-the preceding round. Heats are multiple
-starts of an event’s preliminary (qualifying)
-round. Players may play in as many heats as
-they wish, win or lose. Rounds often require
-players to qualify to advance to the next
-round. Players wishing to withdraw even
-if they qualify for the next round should
-inform the GM. Players who wish to enter
-an event in an advanced round must have
-the permission of the GM. “PC” indicates
-an event that begins during the Pre-Con but
-may end during WBC proper.</string>
-  <string name="about_qualifying_header">QUARTER/SEMI/FINAL</string>
-	<string name="about_qualifying_text">Play is restricted
-to players who have qualified for these
-rounds. For “SF/F,” the Final immediately follows
-the semifinal. Final rounds may be rescheduled
-by the GM for the mutual benefit
-of the finalists. Such rescheduling requires the
-agreement of ALL remaining players without
-pressure to do so, otherwise the scheduled
-time is the default. Those who can’t abide by
-it must forfeit. Players who fail to appear for
-advanced rounds forfeit any claim on prizes
-or laurels that pass instead to those who advance
-in their place.</string>
-  <string name="about_prize_header">PRIZE</string>
-	<string name="about_prize_text">1, 2, 3, 4, 5 or 6 is the number
-of places receiving plaques; 2 through 6 are
-Century events.</string>
-  <string name="about_class_header">CLASS</string>
-	<string name="about_class_text">There are three classes of tournaments:
-\n\nA: Experienced Players Only—red Kiosks;
-rules are not taught before or during play;
-\n\nB: Beginners Allowed—yellow kiosks;
-game will be taught ONLY at the listed Demo
-time. For subsequent rounds, the Class is A;
-\n\nC: Coached—green kiosks; game will
-be taught during or just prior to event start
-in event location. Once past the Preliminary
-round, the Class is always A.</string>
-  <string name="about_demo_preview_header">DEMO/PREVIEW</string>
-	<string name="about_demo_preview_text">All teaching sessions take
-place in Paradise Terrace at the listed Table
-#. For B Class Events, anyone new to a game
-must attend. For C Class Event s, attending a
-scheduled demo places less stress on the GM
-and the event. If no one arrives for a demo
-within 15 minutes of the scheduled starting
-time, the demo is cancelled. This year, Previews
-and Scheduled Open Gaming have been
-added to the demo area. Previews are demos
-without a corresponding event; designers
-showing their upcoming games either as an
-adjunct to anticipated Kick Starter campaigns
-or extended playtesting opportunities. Doing
-so in the Demo area allows us to relieve pressure
-on the Open Gaming area while at the
-same time benefitting everyone with scheduled
-opportunities to gather players without
-tying up tables trolling for interest.</string>
-  <string name="about_sog_header">SCHEDULED OPEN GAMING</string>
-	<string name="about_sog_text">SOG makes
-use of the demo tables in Paradise Assembly
-during down times to allow players to schedule
-multi-player Open Gaming opportunities which
-actually get listed in the convention schedule
-and have supporting signage and a reserved
-table provided they have made the request before
-June. To reserve a place in the referenced
-game, you should list your badge number in the
-game’s signup block on the yellow Schedule kiosk
-for that table in Paradise assembly.</string>
-  <string name="about_format_header">FORMAT</string>
-	<string name="about_format_text">FORMAT: Before playing an event, check the
-Event Preview at boardgamers.org/yearbkex,
-the event kiosk, or via the tournament screen in the app by selecting 
-an event or searching for that tournament. The Event Preview contains
-the details about how the event will run, any
-special tournament rules, the number of players
-who qualify to advance, and any tie-breakers in
-use. Most events become SE during subsequent
-rounds. Any questions about format should be
-directed to the GM BEFORE the event begins.
-Standard tie-breakers apply to events run with
-heats. They are described on our website’s GM
-Guidelines page and in event Previews.
-\n\nFF: Free Form—Contact GM at the
-listed times for flexible scheduling.
-SE: Single Elimination—play until you
-lose one game.
-\n\nSwEl: Swiss Elimination—play all
-preliminary rounds; qualifiers advance
-to SE rounds.
-\n\nSEM: SE with Mulligan Round—the
-Mulligan is an optional Round 1 that
-forgives losses. Winners advance
-directly to Round 2. Non-winners may
-play again in the regularly scheduled
-Round 1 with no penalty.
-\n\nSWISS: Play all rounds paired against
-those with same record.
-HWO: Heat Winners Only—enter any
-number of preliminary heats; winners
-only advance to next round.
-\n\nHMW: Heats Most Wins—enter any
-number of heats; qualifiers advance to SE
-rounds; first tiebreaker is most wins (e.g.,
-total in all heats entered). The remaining
-tiebreakers are 2) win in first Heat
-entered; 3) win in second Heat entered; 4)
-win in third Heat entered; 5) win in fourth
-Heat entered; 6) GM specific tiebreaker,
-provided it has been clearly described in
-the Event Preview; 7) average finish in all
-heats entered (e.g., a 2nd and two 3rds =
-2.67 and beats two 2nds and two 4ths = 3);
-and 8) high dice roll.
-\n\nHMWG: Heats Most Wins GM—enter
-any number of heats; qualifiers advance
-to SE rounds; first tiebreaker is most
-wins; GM specifies other tiebreakers.
-\n\nHSW: Heats Single Win—enter any
-number of preliminary heats; qualifiers
-advance to SE rounds; first tiebreaker
-is win in first heat entered. The second
-tiebreaker is 2) Most Wins (e.g., total
-in all heats entered). The third through
-eighth tiebreakers are the same as HMW.
-\n\nHMSE: Heats Multiple SE—each heat
-is played SE in continuous rounds to
-determine one winner who advances to
-the next round.
-\n\nSOG: Scheduled Multi-Player Open
-Gaming. The number of possible
-players is indicated by a number
-followed by “P” after the name of the
-event.
-\n\nPreview: Non-event demonstration.</string>
-  <string name="about_length_header">LENGTH</string>
-	<string name="about_length_text">The duration of the event in hours.
-Round lengths are rounded up to the next hour.
-Actual allowed playing time is determined by
-the GM and should always be less than the
-scheduled period.</string>
-  <string name="about_continuous_header">CONTINUOUS</string>
-	<string name="about_continuous_text">If an image of two rotating
-  arrows appears in the
-Length column, the event continues immediately
-into the next round upon completion of
-a round. The only interruption is at midnight,
-when rounds continue the following morning at
-9. GMs may grant breaks between rounds of no
-more than one hour, but only if the event is on
-schedule and such breaks are applied uniformly
-for all entrants, such that each round starts and
-ends simultaneously (e.g., some players may
-not be allowed a break that allows them to trail
-the rest of the field and delay the tournament).</string>
-  <string name="about_location_header">LOCATION</string>
-	<string name="about_location_text">A map—displaying a multilevel
-floorplan of the Lancaster Host—can be found 
-by selecting an underlined room location 
-from any screen of the app. GrognardCon Pre-Con events shift
-from Heritage to Conestoga 1 beginning at 9 am
-on Wednesday. Otherwise, continuous round
-Events start again the next day in the same room
-unless listed elsewhere in the schedule.</string>
+  <string-array name="help_headers">
+    <item>How to use the app</item>
+    <item>How to read the schedule</item>
+    <item>Dates</item>
+    <item>Times</item>
+    <item>Heats/Rounds</item>
+    <item>Quarter/Semi/Final</item>
+    <item>Prize</item>
+    <item>Class</item>
+    <item>Demo/Preview</item>
+    <item>Scheduled Open Gaming</item>
+    <item>Format</item>
+    <item>Length</item>
+    <item>Continuous</item>
+    <item>Location</item>
+  </string-array>
+
+  <string-array name="help_texts">
+  <item>DAYS &amp; TIMES: The app displays ongoing events with a green background,
+    future events yellow, and ended events gray.
+    To change the displayed day, swipe left and right from the main schedule or
+    select
+    a day from the drop down in the action bar.
+    \n\nCUSTOMIZE SCHEDULE: Touch the star to the left of an event to add it to "My Events"
+    list at the top of each day. Use the main menu to access "Created Events,"
+    where you can add custom events to your schedule, and "Filter,"
+    where you can select which tournaments and convention events are displayed
+    in your schedule. Touch an hour group to show/hide all events
+    starting that hour, or long press to additionally show/hide all following
+    hour groups. Ongoing events for a given hour are included in the group header.
+    \n\nMAP: To view the hotel map,
+    select an event location, which is underlined like a link,
+    or search for a room via "Search" in the main menu.
+    If the room is in the hotel, it will flash on the map.
+    \n\nSAVING: Schedule filter, app settings, tournament finishes, event notes, etc.
+    are all saved automatically, so do not worry about losing your settings!
+    \n\nOTHER: If an event does not have a format or class (i.e. non-tournament events),
+    then that text field will not be shown. For tournament finishes,
+    finishes awarding plaques are in bold while laurels are in italics.
+    \n\nPlease contact dev@boardgamers.org with any further questions.
+  </item>
+  <item>The
+    schedule on the main screen is a chronological
+    listing of events by order of appearance.
+    Junior Events are listed first, highlighted by a
+    symbol and are in green. Open Gaming, including
+    Scheduled Open Games (SOG), and other
+    non-tournament games are listed in orange. Nongaming
+    events, such as meetings, registration, and
+    the auction, are listed in blue. Seminars are listed
+    in purple. Demonstrations are listed in black, italics.
+    Advanced rounds that require prior qualification,
+    such as Finals, are listed in red.
+    “PC” indicates that an event is part of a Pre-
+    Con and is limited to Tribune members or
+    those with a badge good for that particular
+    “PC” day.
+    \n\nWhen more than one event starts at the same
+    time, non-tournament events are listed first,
+    followed by tournaments—both in alphabetical
+    order. An alphabetical list of tournaments
+    can be found in search screen via the main menu.
+  </item>
+  <item>Abbreviations for dates are Mo:
+    Monday, Tu: Tuesday, We: Wednesday,
+    Th: Thursday, Fr: Friday, Sa: Saturday, Su:
+    Sunday. “PC Sa” or “PC Su” indicates
+    that events occur on the Saturday or
+    Sunday before WBC begins. Separate admission
+    is required for Non-Tribune Members for
+    all Pre-Cons.
+  </item>
+  <item>Times are listed in military time;
+    e.g., 11 or 1100 is 11 am and 13 or 1300 is 1 pm. Tournament
+    play commences at the scheduled times for
+    each event and may run past midnight. No
+    event may start a round after midnight (exception:
+    our five night enders) or reconvene
+    before 9 am without the consent of all remaining
+    players.
+  </item>
+  <item>“H1/3” indicates the
+    heat number out of the total number of
+    heats. “R1/6” indicates the round number
+    out of the estimated total number of rounds.
+    A “-” instead of a “/” in the Round listing
+    indicates that the rounds are continuous,
+    starting immediately after the end of
+    the preceding round. Heats are multiple
+    starts of an event’s preliminary (qualifying)
+    round. Players may play in as many heats as
+    they wish, win or lose. Rounds often require
+    players to qualify to advance to the next
+    round. Players wishing to withdraw even
+    if they qualify for the next round should
+    inform the GM. Players who wish to enter
+    an event in an advanced round must have
+    the permission of the GM. “PC” indicates
+    an event that begins during the Pre-Con but
+    may end during WBC proper.
+  </item>
+  <item>Play is restricted
+    to players who have qualified for these
+    rounds. For “SF/F,” the Final immediately follows
+    the semifinal. Final rounds may be rescheduled
+    by the GM for the mutual benefit
+    of the finalists. Such rescheduling requires the
+    agreement of ALL remaining players without
+    pressure to do so, otherwise the scheduled
+    time is the default. Those who can’t abide by
+    it must forfeit. Players who fail to appear for
+    advanced rounds forfeit any claim on prizes
+    or laurels that pass instead to those who advance
+    in their place.
+  </item>
+  <item>1, 2, 3, 4, 5 or 6 is the number
+    of places receiving plaques; 2 through 6 are
+    Century events.
+  </item>
+  <item>There are three classes of tournaments:
+    \n\nA: Experienced Players Only—red Kiosks;
+    rules are not taught before or during play;
+    \n\nB: Beginners Allowed—yellow kiosks;
+    game will be taught ONLY at the listed Demo
+    time. For subsequent rounds, the Class is A;
+    \n\nC: Coached—green kiosks; game will
+    be taught during or just prior to event start
+    in event location. Once past the Preliminary
+    round, the Class is always A.
+  </item>
+  <item>All teaching sessions take
+    place in Paradise Terrace at the listed Table
+    #. For B Class Events, anyone new to a game
+    must attend. For C Class Event s, attending a
+    scheduled demo places less stress on the GM
+    and the event. If no one arrives for a demo
+    within 15 minutes of the scheduled starting
+    time, the demo is cancelled. This year, Previews
+    and Scheduled Open Gaming have been
+    added to the demo area. Previews are demos
+    without a corresponding event; designers
+    showing their upcoming games either as an
+    adjunct to anticipated Kick Starter campaigns
+    or extended playtesting opportunities. Doing
+    so in the Demo area allows us to relieve pressure
+    on the Open Gaming area while at the
+    same time benefitting everyone with scheduled
+    opportunities to gather players without
+    tying up tables trolling for interest.
+  </item>
+  <item>SOG makes
+    use of the demo tables in Paradise Assembly
+    during down times to allow players to schedule
+    multi-player Open Gaming opportunities which
+    actually get listed in the convention schedule
+    and have supporting signage and a reserved
+    table provided they have made the request before
+    June. To reserve a place in the referenced
+    game, you should list your badge number in the
+    game’s signup block on the yellow Schedule kiosk
+    for that table in Paradise assembly.
+  </item>
+  <item>FORMAT: Before playing an event, check the
+    Event Preview at boardgamers.org/yearbkex,
+    the event kiosk, or via the tournament screen in the app by selecting
+    an event or searching for that tournament. The Event Preview contains
+    the details about how the event will run, any
+    special tournament rules, the number of players
+    who qualify to advance, and any tie-breakers in
+    use. Most events become SE during subsequent
+    rounds. Any questions about format should be
+    directed to the GM BEFORE the event begins.
+    Standard tie-breakers apply to events run with
+    heats. They are described on our website’s GM
+    Guidelines page and in event Previews.
+    \n\nFF: Free Form—Contact GM at the
+    listed times for flexible scheduling.
+    SE: Single Elimination—play until you
+    lose one game.
+    \n\nSwEl: Swiss Elimination—play all
+    preliminary rounds; qualifiers advance
+    to SE rounds.
+    \n\nSEM: SE with Mulligan Round—the
+    Mulligan is an optional Round 1 that
+    forgives losses. Winners advance
+    directly to Round 2. Non-winners may
+    play again in the regularly scheduled
+    Round 1 with no penalty.
+    \n\nSWISS: Play all rounds paired against
+    those with same record.
+    HWO: Heat Winners Only—enter any
+    number of preliminary heats; winners
+    only advance to next round.
+    \n\nHMW: Heats Most Wins—enter any
+    number of heats; qualifiers advance to SE
+    rounds; first tiebreaker is most wins (e.g.,
+    total in all heats entered). The remaining
+    tiebreakers are 2) win in first Heat
+    entered; 3) win in second Heat entered; 4)
+    win in third Heat entered; 5) win in fourth
+    Heat entered; 6) GM specific tiebreaker,
+    provided it has been clearly described in
+    the Event Preview; 7) average finish in all
+    heats entered (e.g., a 2nd and two 3rds =
+    2.67 and beats two 2nds and two 4ths = 3);
+    and 8) high dice roll.
+    \n\nHMWG: Heats Most Wins GM—enter
+    any number of heats; qualifiers advance
+    to SE rounds; first tiebreaker is most
+    wins; GM specifies other tiebreakers.
+    \n\nHSW: Heats Single Win—enter any
+    number of preliminary heats; qualifiers
+    advance to SE rounds; first tiebreaker
+    is win in first heat entered. The second
+    tiebreaker is 2) Most Wins (e.g., total
+    in all heats entered). The third through
+    eighth tiebreakers are the same as HMW.
+    \n\nHMSE: Heats Multiple SE—each heat
+    is played SE in continuous rounds to
+    determine one winner who advances to
+    the next round.
+    \n\nSOG: Scheduled Multi-Player Open
+    Gaming. The number of possible
+    players is indicated by a number
+    followed by “P” after the name of the
+    event.
+    \n\nPreview: Non-event demonstration.
+  </item>
+  <item>
+    The duration of the event in hours.
+    Round lengths are rounded up to the next hour.
+    Actual allowed playing time is determined by
+    the GM and should always be less than the
+    scheduled period.
+  </item>
+  <item>
+    If an image of two rotating
+    arrows appears in the
+    Length column, the event continues immediately
+    into the next round upon completion of
+    a round. The only interruption is at midnight,
+    when rounds continue the following morning at
+    9. GMs may grant breaks between rounds of no
+    more than one hour, but only if the event is on
+    schedule and such breaks are applied uniformly
+    for all entrants, such that each round starts and
+    ends simultaneously (e.g., some players may
+    not be allowed a break that allows them to trail
+    the rest of the field and delay the tournament).
+  </item>
+  <item>
+    A map—displaying a multilevel
+    floorplan of the Lancaster Host—can be found
+    by selecting an underlined room location
+    from any screen of the app. GrognardCon Pre-Con events shift
+    from Heritage to Conestoga 1 beginning at 9 am
+    on Wednesday. Otherwise, continuous round
+    Events start again the next day in the same room
+    unless listed elsewhere in the schedule.
+  </item>
+  </string-array>
 
 </resources>
