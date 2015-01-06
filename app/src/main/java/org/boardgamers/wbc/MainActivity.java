@@ -4,16 +4,34 @@ import com.kbrohkahn.conventionlibrary.CL_MainActivity;
 
 public class MainActivity extends CL_MainActivity {
 
-  @Override
   public void loadClasses() {
     mapActivityClass = MapActivity.class;
-    aboutActivityClass = AboutActivity.class;
-    helpActivityClass = HelpActivity.class;
-    filterActivityClass = FilterActivity.class;
-    settingsActivityClass = SettingsActivity.class;
-    searchActivityClass = SearchActivity.class;
     tournamentActivityClass = TournamentActivity.class;
     eventActivityClass = EventActivity.class;
-    notificationServiceClass = NotificationService.class;
+  }
+
+  @Override
+  protected Class getHelpActivityClass() {
+    return HelpActivity.class;
+  }
+
+  @Override
+  protected Class getSettingsActivityClass() {
+    return SettingsActivity.class;
+  }
+
+  @Override
+  protected Class getAboutActivityClass() {
+    return AboutActivity.class;
+  }
+
+  @Override
+  protected Class getFilterActivityClass() {
+    return FilterActivity.class;
+  }
+
+  @Override
+  protected Class getSearchActivityClass() {
+    return SearchActivity.class;
   }
 }

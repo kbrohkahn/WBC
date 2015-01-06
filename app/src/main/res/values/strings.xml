@@ -4,6 +4,8 @@
   <!-- COMMON AND MENUS -->
   <string name="app_name_long">World Boardgaming Championships</string>
   <string name="app_name_short">WBC</string>
+  <string name="email">dev@boardgamers.org</string>
+
 
   <string-array name="search_formats">
     <item>Demo</item>
