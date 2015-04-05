@@ -1,1 +1,1 @@
-include ':app', ':conventionlibrary'
+include ':app'

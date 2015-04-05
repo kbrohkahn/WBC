@@ -1,12 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <!-- COMMON AND MENUS -->
+  <!-- APP DETAILS -->
   <string name="app_name_long">World Boardgaming Championships</string>
   <string name="app_name_short">WBC</string>
   <string name="email">dev@boardgamers.org</string>
+  <string name="notification_title">WBC: Events starting soon</string>
 
+  <!-- COMMON AND MENUS -->
+  <string name="edit">Edit</string>
+  <string name="delete">Delete</string>
+  <string name="close">Close</string>
+  <string name="create_event">Create Event</string>
+  <string name="cancel">Cancel</string>
+  <string name="save">Save</string>
+  <string name="clear">Clear</string>
+  <string name="share">Share</string>
+  <string name="map">Hotel Map</string>
+  <string name="finishes">Finishes</string>
+  <string name="notes">Notes</string>
+  <string name="events">Events</string>
+  <string name="edit_event">Edit Event</string>
+  <string name="add_event">Add Event</string>
+  <string name="delete_all">Delete All</string>
+  <string name="star">Star IV</string>
 
+  <!-- ACTIVITY TITLES -->
+  <string name="activity_tournament">Tournament</string>
+  <string name="activity_event">Event</string>
+  <string name="activity_settings">Settings</string>
+  <string name="activity_filter">Filter Schedule</string>
+  <string name="activity_help">Help</string>
+  <string name="activity_about">About</string>
+  <string name="activity_search">Search</string>
+
+  <!-- FILTER MENU -->
+  <string name="select_all">Select All</string>
+  <string name="deselect_all">Deselect All</string>
+  <string name="select_tournament">Select Tourneys</string>
+  <string name="deselect_tournament">Deselect Tourneys</string>
+  <string name="select_all_new_line">Select\nAll</string>
+  <string name="deselect_all_new_line">Deselect\nAll</string>
+  <string name="select_tournament_new_line">Select\nTourneys</string>
+  <string name="deselect_tournament_new_line">Deselect\nTourneys</string>
+
+  <!-- SCHEDULE FRAGMENT -->
+  <string name="day">DAY</string>
+  <string name="time">TIM</string>
+  <string name="event">EVENT</string>
+  <string name="eClass">CLS</string>
+  <string name="format">FORMAT</string>
+  <string name="duration">Duration</string>
+  <string name="location">LOCATION</string>
+
+  <!-- GAME FRAGMENT -->
+  <string name="finish">Finish</string>
+  <string name="preview"><u>Preview</u></string>
+  <string name="report"><u>Report</u></string>
+  <string name="zero">-</string>
+  <string name="first_short">1</string>
+  <string name="second_short">2</string>
+  <string name="third_short">3</string>
+  <string name="fourth_short">4</string>
+  <string name="fifth_short">5</string>
+  <string name="sixth_short">6</string>
+  <string name="first">1st</string>
+  <string name="second">2nd</string>
+  <string name="third">3rd</string>
+  <string name="fourth">4th</string>
+  <string name="fifth">5th</string>
+  <string name="sixth">6th</string>
+
+  <!-- EVENT FRAGMENT -->
+  <string name="event_note_hint">Add event note</string>
+  <string name="event_format">-Format-</string>
+  <string name="event_class">-Class-</string>
+  <string name="event_time_and_location">-Time and location-</string>
+
+  <!-- CREATE EVENT DIALOG -->
+  <string name="ce_title">Title *</string>
+  <string name="ce_location">Location *</string>
+  <string name="ce_days">Choose days *</string>
+  <string name="ce_at">At</string>
+  <string name="ce_for">for</string>
+  <string name="ce_hours">hours</string>
+  <string name="add">Add</string>
+
+  <!-- MAP DIALOG -->
+  <string name="mf_upstairs">Map of upstairs</string>
+  <string name="mf_downstairs">Map of downstairs</string>
+
+  <!-- SEARCH DIALOG -->
+  <string name="ds_tournament">Tournaments</string>
+  <string name="ds_tournament_hint">Enter tournament</string>
+  <string name="ds_formats">Formats</string>
+  <string name="ds_rooms">Rooms</string>
+
+  <!-- DELETE DIALOG -->
+  <string name="dd_string">Are you sure you want to delete</string>
+
+  <!-- SETTINGS -->
+  <string name="settings_notify">Notify me before my starred events start</string>
+  <string name="settings_notify_type">Select notification action</string>
+  <string name="settings_notify_time_before">Notify me</string>
+  <string name="settings_notify_time_after">minutes before each event</string>
+  <string name="settings_vibrate">Vibrate</string>
+  <string name="settings_sound">Sound</string>
+  <string name="settings_both">Both</string>
+
+  <!-- PREFERENCES FILES -->
+  <string name="sp_file_name">SettingsSPFile</string>
+  <string name="sp_notify_starred">notify_starred</string>
+  <string name="sp_notify_type">notify_type</string>
+  <string name="sp_notify_time">notify_time</string>
+  <string name="sp_2014_schedule_version">2014_schedule_version</string>
+  <string name="sp_event_starred">2014_event_starred_</string>
+  <string name="sp_event_note">2014_event_note_</string>
+  <string name="sp_user_event">2014_user_event_</string>
+
+  <!-- NAVIGATION DRAWER -->
+  <string name="open_drawer">Open Drawer</string>
+  <string name="close_drawer">Close Drawer</string>
+  <string name="drawer_image">Icon for drawer items</string>
+
+  <string-array name="drawer_titles">
+    <item>All Starred Events</item>
+    <item>Full Schedule</item>
+    <item>My Data</item>
+    <item>Convention Info</item>
+    <item>Hotel Map</item>
+    <item>Help</item>
+    <item>About App</item>
+    <item>Settings</item>
+    <item>Schedule Filter</item>
+    <item>General Settings</item>
+  </string-array>
+
+  <!-- TIMES AND DURATION -->
+  <string-array name="hours_12">
+    <item>7 AM</item>
+    <item>8 AM</item>
+    <item>9 AM</item>
+    <item>10 AM</item>
+    <item>11 AM</item>
+    <item>12 PM</item>
+    <item>1 PM</item>
+    <item>2 PM</item>
+    <item>3 PM</item>
+    <item>4 PM</item>
+    <item>5 PM</item>
+    <item>6 PM</item>
+    <item>7 PM</item>
+    <item>8 PM</item>
+    <item>9 PM</item>
+    <item>10 PM</item>
+    <item>11 PM</item>
+    <item>12 AM</item>
+  </string-array>
+  <string-array name="hours_24">
+    <item>0700</item>
+    <item>0800</item>
+    <item>0900</item>
+    <item>1000</item>
+    <item>1100</item>
+    <item>1200</item>
+    <item>1300</item>
+    <item>1400</item>
+    <item>1500</item>
+    <item>1600</item>
+    <item>1700</item>
+    <item>1800</item>
+    <item>1900</item>
+    <item>2000</item>
+    <item>2100</item>
+    <item>2200</item>
+    <item>2300</item>
+    <item>2400</item>
+  </string-array>
+  <string-array name="duration">
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    <item>6</item>
+  </string-array>
+
+  <!-- APP SPECIFIC STRINGS AND ARRAYS -->
   <string-array name="search_formats">
     <item>Demo</item>
     <item>Meeting</item>
@@ -110,6 +290,7 @@
   <string name="about_others_text">Schedule files courtesy of Craig Trader\nMaps courtesy of Jason Long</string>
 
   <!-- HELP -->
+  <string name="how_to_help">Select a help topic to expand and show info</string>
   <string-array name="help_headers">
     <item>How to use the app</item>
     <item>How to read the schedule</item>

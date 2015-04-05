@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/filter_batch_layout"
+    android:layout_alignParentTop="true"
+    android:layout_marginLeft="@dimen/default_margin"
+    android:layout_marginRight="@dimen/default_margin">
+
+    <LinearLayout
+      android:id="@+id/filter_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"/>
+  </ScrollView>
+
+  <LinearLayout
+    android:id="@+id/filter_batch_layout"
+    style="?android:buttonBarStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/primary_light"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/default_margin"
+    android:paddingTop="@dimen/default_margin">
+
+    <Button
+      android:id="@+id/filter_select_all"
+      style="?android:buttonBarButtonStyle"
+      android:layout_width="0dip"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:gravity="center"
+      android:text="@string/select_all_new_line"/>
+
+    <Button
+      android:id="@+id/filter_select_non_tournament"
+      style="?android:buttonBarButtonStyle"
+      android:layout_width="0dip"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:gravity="center"
+      android:text="@string/select_tournament_new_line"/>
+
+    <Button
+      android:id="@+id/filter_deselect_all"
+      style="?android:buttonBarButtonStyle"
+      android:layout_width="0dip"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:gravity="center"
+      android:text="@string/deselect_all_new_line"/>
+
+    <Button
+      android:id="@+id/filter_deselect_tournament"
+      style="?android:buttonBarButtonStyle"
+      android:layout_width="0dip"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:gravity="center"
+      android:text="@string/deselect_tournament_new_line"/>
+  </LinearLayout>
+</RelativeLayout>

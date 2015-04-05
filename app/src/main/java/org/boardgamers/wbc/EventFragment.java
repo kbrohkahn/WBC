@@ -1,6 +1,216 @@
 package org.boardgamers.wbc;
 
-import com.kbrohkahn.conventionlibrary.CL_EventFragment;
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-public class EventFragment extends CL_EventFragment {
+public class EventFragment extends Fragment {
+  private final String TAG="Event Fragment";
+  private Activity activity;
+  public static ImageView star;
+  private static Event event;
+  private static RelativeLayout timeLayout;
+  private static TextView eFormat;
+  private static TextView eClass;
+  private static TextView location;
+  private static TextView time;
+  private static EditText noteET;
+  private static String note;
+
+  public static void setEvent(final Activity activity) {
+    event=null;
+
+    // if tournament fragment is null, event is user event
+    if (TournamentFragment.tournamentEvents!=null) {
+      for (int i=0; i<TournamentFragment.tournamentEvents.size(); i++) {
+        event=TournamentFragment.tournamentEvents.get(i);
+        if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID)) {
+          break;
+        }
+      }
+    } else {
+      for (int i=0; i<UserDataFragment.userEvents.size(); i++) {
+        event=UserDataFragment.userEvents.get(i);
+        if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID)) {
+          break;
+        }
+      }
+    }
+    int tColor=MainActivity.getTextColor(event);
+    int tType=MainActivity.getTextStyle(event);
+
+    TournamentFragment fragment=
+        (TournamentFragment) activity.getFragmentManager().findFragmentById(R.id.gameFragment);
+
+    if (fragment==null || !fragment.isInLayout()) {
+
+      activity.setTitle(event.title);
+    }
+
+    eFormat.setText("Format: "+event.format);
+    eFormat.setTypeface(null, tType);
+    eFormat.setTextColor(tColor);
+
+    eClass.setText("Class: "+event.eClass);
+    eClass.setTypeface(null, tType);
+    eClass.setTextColor(tColor);
+
+    SpannableString locationText=new SpannableString(event.location);
+    locationText.setSpan(new UnderlineSpan(), 0, locationText.length(), 0);
+    location.setText(locationText);
+    location.setTypeface(null, tType);
+    location.setTextColor(tColor);
+
+    location.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        MainActivity.openMap(event.location);
+      }
+    });
+
+    String minute;
+    if (event.duration<1) {
+      minute=String.valueOf((int) (event.duration*60+.5));
+    } else {
+      minute="00";
+    }
+
+    time.setText(MainActivity.dayStrings[event.day]+", "+String.valueOf(event.hour)+"00 to "+
+        String.valueOf((event.hour+(int) event.duration)+minute));
+    time.setTypeface(null, tType);
+    time.setTextColor(tColor);
+
+    if (event.continuous) {
+      time.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
+    }
+
+    star.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);
+
+    SharedPreferences sp=activity
+        .getSharedPreferences(activity.getResources().getString(R.string.sp_file_name),
+            Context.MODE_PRIVATE);
+    note=sp.getString(activity.getResources().getString(R.string.sp_event_note)+event.identifier,
+        "");
+    noteET.setText(note);
+
+    boolean started=event.day*24+event.hour<=MainActivity.currentDay*24+MainActivity.currentHour;
+    boolean ended=event.day*24+event.hour+event.totalDuration<=
+        MainActivity.currentDay*24+MainActivity.currentHour;
+    boolean happening=started && !ended;
+
+    if (ended) {
+      timeLayout.setBackgroundResource(R.drawable.ended_light);
+    } else if (happening) {
+      timeLayout.setBackgroundResource(R.drawable.current_light);
+    } else {
+      timeLayout.setBackgroundResource(R.drawable.future_light);
+    }
+
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+    View view=inflater.inflate(R.layout.event_fragment, container, false);
+
+    timeLayout=(RelativeLayout) view.findViewById(R.id.ef_time_layout);
+    eFormat=(TextView) view.findViewById(R.id.ef_format);
+    eClass=(TextView) view.findViewById(R.id.ef_class);
+    location=(TextView) view.findViewById(R.id.ef_location);
+    time=(TextView) view.findViewById(R.id.ef_time);
+
+    star=(ImageView) view.findViewById(R.id.ef_star);
+    star.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        changeEventStar(!event.starred);
+
+      }
+    });
+
+    Button share=(Button) view.findViewById(R.id.ef_share);
+    share.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        share();
+
+      }
+    });
+
+    Button clear=(Button) view.findViewById(R.id.ef_clear);
+    clear.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        noteET.getText().clear();
+
+      }
+    });
+
+    noteET=(EditText) view.findViewById(R.id.ef_note);
+
+    activity=getActivity();
+    if (!MainActivity.SELECTED_EVENT_ID.equalsIgnoreCase("")) {
+      setEvent(activity);
+    }
+
+    return view;
+
+  }
+
+  private void changeEventStar(boolean starred) {
+    event.starred=starred;
+    star.setImageResource(starred ? R.drawable.star_on : R.drawable.star_off);
+
+    TournamentFragment.changeEventStar(event.identifier, starred, activity);
+
+  }
+
+  @Override
+  public void onPause() {
+    // save note on pause
+
+    note=noteET.getText().toString();
+
+    SharedPreferences.Editor editor=activity
+        .getSharedPreferences(getResources().getString(R.string.sp_file_name), Context.MODE_PRIVATE)
+        .edit();
+
+    editor.putString(getResources().getString(R.string.sp_event_note)+event.identifier, note);
+    editor.apply();
+
+    super.onPause();
+  }
+
+  private void share() {
+    String s=event.title+": "+note;
+
+    Intent sharingIntent=new Intent(Intent.ACTION_SEND);
+    sharingIntent.setType("text/plain");
+
+    String subjectString=event.title;
+    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, subjectString);
+    sharingIntent.putExtra(Intent.EXTRA_TITLE, subjectString);
+
+    String contentString=s+" #WBC";
+    sharingIntent.putExtra(Intent.EXTRA_TEXT, contentString);
+
+    startActivity(Intent.createChooser(sharingIntent, "Share via"));
+
+  }
 }
