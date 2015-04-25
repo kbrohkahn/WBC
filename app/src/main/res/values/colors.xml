@@ -3,17 +3,11 @@
 
   <!-- main app colors -->
   <color name="primary">#600000</color>
-  <!--red-->
   <color name="primary_light">#d0aaaa</color>
-  <!--light red-->
   <color name="secondary">#31428C</color>
-  <!--blue-->
   <color name="secondary_light">#98A0BE</color>
-  <!--light blue-->
   <color name="secondary_dark">#192146</color>
-  <!--dark blue-->
 
-  <!-- help background colors -->
   <color name="gray">#aaaaaa</color>
   <color name="gray_light">#cccccc</color>
   <color name="green">#BFFFBF</color>

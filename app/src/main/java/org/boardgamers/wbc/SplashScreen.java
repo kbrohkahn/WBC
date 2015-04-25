@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SplashScreen extends Activity {
-  private final String TAG="Splash";
+  //private final String TAG="Splash";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +26,11 @@ public class SplashScreen extends Activity {
 
     setContentView(R.layout.splash);
 
-    Log.d(TAG, "APP OPEN");
-
     new LoadEventsTask().execute(null, null, null);
 
   }
 
   public void showToast(String string) {
-    Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
     Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
   }
 
@@ -52,18 +49,10 @@ public class SplashScreen extends Activity {
     protected Integer doInBackground(Integer... params) {
       // SETUP
       MainActivity.dayStrings=getResources().getStringArray(R.array.days);
-      MainActivity.dayList=
-          new ArrayList<ArrayList<ArrayList<Event>>>(MainActivity.dayStrings.length);
 
-      ArrayList<ArrayList<Event>> tempList;
-      int i=0;
-      while (i<MainActivity.dayStrings.length) {
-        tempList=new ArrayList<ArrayList<Event>>();
-        for (int j=0; j<19; j++) {
-          tempList.add(new ArrayList<Event>());
-        }
-        MainActivity.dayList.add(tempList);
-        i++;
+      MainActivity.dayList=new ArrayList<>();
+      for (int i=0; i<MainActivity.TOTAL_DAYS*MainActivity.GROUPS_PER_DAY; i++) {
+        MainActivity.dayList.add(new ArrayList<Event>());
       }
 
       // GET PREFERENCES AND THEIR STRINGS
@@ -85,7 +74,7 @@ public class SplashScreen extends Activity {
 
       Event event, tempEvent, prevEvent=null;
       Tournament tournament;
-      MainActivity.allTournaments=new ArrayList<Tournament>();
+      MainActivity.allTournaments=new ArrayList<>();
       String tournamentTitle, tournamentLabel, shortEventTitle="";
       String change;
 
@@ -108,7 +97,7 @@ public class SplashScreen extends Activity {
             false, duration, location);
         event.starred=sp.getBoolean(starPrefString+identifier, false);
 
-        MainActivity.dayList.get(day).get(hour-6).add(0, event);
+        MainActivity.dayList.get(day*MainActivity.GROUPS_PER_DAY+hour-6).add(0, event);
         if (event.starred) {
           MainActivity.addStarredEvent(event);
         }
@@ -424,15 +413,15 @@ public class SplashScreen extends Activity {
                       }
                     }
 
-                    List<Event> searchList=
-                        MainActivity.dayList.get(prevEvent.day).get(prevEvent.hour-6);
+                    List<Event> searchList=MainActivity.dayList
+                        .get(prevEvent.day*MainActivity.GROUPS_PER_DAY+prevEvent.hour-6);
                     for (Event searchEvent : searchList) {
                       if (searchEvent.identifier.equalsIgnoreCase(prevEvent.identifier)) {
                         searchEvent.totalDuration=prevEvent.totalDuration;
                       }
                     }
 
-                    searchList=MainActivity.dayList.get(prevEvent.day).get(0);
+                    searchList=MainActivity.dayList.get(prevEvent.day*MainActivity.GROUPS_PER_DAY);
                     for (Event searchEvent : searchList) {
                       if (searchEvent.identifier.equalsIgnoreCase(prevEvent.identifier)) {
                         searchEvent.totalDuration=prevEvent.totalDuration;
@@ -440,7 +429,7 @@ public class SplashScreen extends Activity {
                     }
 
                     Log.d(TAG, "Event "+prevEvent.title+" duration changed to "+
-                            String.valueOf(prevEvent.totalDuration));
+                        String.valueOf(prevEvent.totalDuration));
                   }
                 }
               }
@@ -485,7 +474,8 @@ public class SplashScreen extends Activity {
           }
 
           // LOAD INTO LIST
-          ArrayList<Event> searchList=MainActivity.dayList.get(event.day).get(event.hour-6);
+          ArrayList<Event> searchList=
+              MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
           if (eventTitle.contains("Junior")) {
             index=0;
             for (; index<searchList.size(); index++) {
@@ -515,7 +505,8 @@ public class SplashScreen extends Activity {
             }
           }
 
-          MainActivity.dayList.get(event.day).get(event.hour-6).add(index, event);
+          MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6)
+              .add(index, event);
 
           if (event.starred) {
             MainActivity.addStarredEvent(event);

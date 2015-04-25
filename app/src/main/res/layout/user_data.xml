@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <include
+    layout="@layout/default_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/user_data_action_layout"/>
+
+  <LinearLayout
+    android:id="@+id/user_data_action_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:orientation="horizontal">
+    <!--style="?android:attr/buttonBarStyle"-->
+
+    <Button
+      android:id="@+id/add_event"
+      style="@style/button"
+      android:layout_weight="1"
+      android:text="@string/add_event"/>
+
+    <Button
+      android:id="@+id/delete_all"
+      style="@style/button"
+      android:layout_weight="1"
+      android:text="@string/delete_all"/>
+
+  </LinearLayout>
+</RelativeLayout>

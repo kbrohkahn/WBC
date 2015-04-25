@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-
+  android:alpha=".75"
+  android:background="@color/primary_light"
   android:gravity="center_vertical"
   android:orientation="horizontal">
 
@@ -13,6 +14,23 @@
     android:background="@drawable/star_off"
     android:contentDescription="@string/star"
     android:visibility="invisible"/>
+
+  <View style="@style/div_v"/>
+
+  <RelativeLayout
+    android:layout_width="0dip"
+    android:layout_height="match_parent"
+    android:layout_weight="2">
+
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:contentDescription="@string/time"
+      android:src="@drawable/clock_icon"/>
+  </RelativeLayout>
+
+  <View style="@style/div_v"/>
 
   <TextView
     style="@style/list_item"
