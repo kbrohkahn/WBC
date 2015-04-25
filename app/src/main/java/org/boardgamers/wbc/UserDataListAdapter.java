@@ -3,7 +3,6 @@ package org.boardgamers.wbc;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -62,7 +61,6 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
         }
       });
 
-
       return view;
     } else if (groupPosition==NOTES_INDEX) {
       view=inflater.inflate(R.layout.schedule_item_text, parent, false);
@@ -83,6 +81,7 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
     }
   }
 
+  @Override
   public void changeEventStar(Event event, int groupPosition, int childPosition) {
     event.starred=!event.starred;
 
@@ -123,7 +122,7 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
   public Object getGroup(int groupPosition) {
     switch (groupPosition) {
       case EVENTS_INDEX:
-        return ((UserDataFragment) fragment).userEvents;
+        return UserDataFragment.userEvents;
       case NOTES_INDEX:
         return ((UserDataFragment) fragment).userNotes;
       case FINISHES_INDEX:
@@ -138,13 +137,13 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
   }
 
   private void editEvent(int index) {
-    ((UserDataFragment) fragment).selectedEvent=index;
+    UserDataFragment.selectedEvent=index;
     DialogEditEvent editNameDialog=new DialogEditEvent();
     editNameDialog.show(MainActivity.activity.getFragmentManager(), "edit_event_dialog");
   }
 
   private void deleteEvents(int index) {
-    ((UserDataFragment) fragment).selectedEvent=index;
+    UserDataFragment.selectedEvent=index;
     DialogDeleteEvent deleteDialog=new DialogDeleteEvent();
     deleteDialog.show(MainActivity.activity.getFragmentManager(), "delete_event_dialog");
   }

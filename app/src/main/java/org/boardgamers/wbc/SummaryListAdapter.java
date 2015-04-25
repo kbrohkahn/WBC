@@ -14,6 +14,7 @@ public class SummaryListAdapter extends DefaultScheduleListAdapter {
     super(c, f);
   }
 
+  @Override
   public void changeEventStar(Event event, int groupPosition, int childPosition) {
     MainActivity.dayList.get(groupPosition*MainActivity.GROUPS_PER_DAY).remove(childPosition);
 

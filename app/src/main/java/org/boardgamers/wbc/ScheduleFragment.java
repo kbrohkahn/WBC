@@ -10,6 +10,10 @@ public class ScheduleFragment extends DefaultListFragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View view=super.onCreateView(inflater, container, savedInstanceState);
+    if (view!=null) {
+      view.findViewById(R.id.sl_hour).setVisibility(View.GONE);
+      view.findViewById(R.id.sl_hour_divider).setVisibility(View.GONE);
+    }
 
     listView.setFastScrollEnabled(true);
 

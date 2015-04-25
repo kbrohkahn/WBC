@@ -2,6 +2,8 @@ package org.boardgamers.wbc;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
@@ -22,6 +24,18 @@ public class ScheduleListAdapter extends DefaultScheduleListAdapter {
     hours=c.getResources().getStringArray(hoursID);
   }
 
+
+  @Override
+  public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
+                           View view, ViewGroup parent) {
+    view=super.getChildView(groupPosition, childPosition, isLastChild, view, parent);
+    if (groupPosition%MainActivity.GROUPS_PER_DAY!=0) {
+      view.findViewById(R.id.si_hour).setVisibility(View.GONE);
+    }
+    return view;
+  }
+
+ @Override
   public void changeEventStar(Event event, int groupPosition, int childPosition) {
     event.starred=!event.starred;
 
