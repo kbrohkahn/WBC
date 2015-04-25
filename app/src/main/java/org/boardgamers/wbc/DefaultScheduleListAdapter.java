@@ -112,7 +112,9 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
         MainActivity.currentDay*24+MainActivity.currentHour;
     boolean happening=started && !ended;
 
-    if (childPosition%2==0) {
+    if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID)) {
+      view.setBackgroundResource(R.drawable.selected);
+    } else if (childPosition%2==0) {
       if (ended) {
         view.setBackgroundResource(R.drawable.ended_light);
       } else if (happening) {
@@ -137,8 +139,7 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
 
         EventFragment eventFragment=(EventFragment) fragment.getActivity().getFragmentManager()
             .findFragmentById(R.id.eventFragment);
-
-        if (eventFragment!=null && fragment.isInLayout()) {
+        if (eventFragment!=null) {
           eventFragment.setEvent(event);
         } else {
           Intent intent=new Intent(fragment.getActivity(), EventActivity.class);
@@ -154,6 +155,13 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
 
   public void changeEventStar(Event event, int groupPosition, int childPosition) {
     notifyDataSetChanged();
+
+    EventFragment eventFragment=(EventFragment) fragment.getActivity().getFragmentManager()
+        .findFragmentById(R.id.eventFragment);
+    if (eventFragment!=null && eventFragment.event!=null &&
+        eventFragment.event.identifier.equalsIgnoreCase(event.identifier)) {
+      eventFragment.star.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);
+    }
   }
 
   @Override
@@ -197,11 +205,11 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
     return view;
   }
 
-  public int getGroupViewId(final int groupPosition) {
+  public int getGroupViewId(int groupPosition) {
     return R.layout.schedule_group_large;
   }
 
-  public String getGroupTitle(final int groupPosition) {
+  public String getGroupTitle(int groupPosition) {
     return null;
   }
 

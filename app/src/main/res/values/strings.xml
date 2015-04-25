@@ -17,13 +17,16 @@
   <string name="clear">Clear</string>
   <string name="share">Share</string>
   <string name="map">Hotel Map</string>
-  <string name="finishes">Finishes</string>
-  <string name="notes">Notes</string>
-  <string name="events">Events</string>
+  <string name="user_finishes">My Finishes</string>
+  <string name="user_notes">My Notes</string>
+  <string name="user_events">My Events</string>
   <string name="edit_event">Edit Event</string>
   <string name="add_event">Add Event</string>
   <string name="delete_all">Delete All</string>
   <string name="star">Star IV</string>
+  <string name="search">Search</string>
+  <string name="search_hint">Search title or format</string>
+
 
   <!-- ACTIVITY TITLES -->
   <string name="activity_tournament">Tournament</string>
@@ -32,7 +35,6 @@
   <string name="activity_filter">Filter Schedule</string>
   <string name="activity_help">Help</string>
   <string name="activity_about">About</string>
-  <string name="activity_search">Search</string>
 
   <!-- FILTER MENU -->
   <string name="select_all">Select All</string>
@@ -73,9 +75,12 @@
 
   <!-- EVENT FRAGMENT -->
   <string name="event_note_hint">Add event note</string>
-  <string name="event_format">-Format-</string>
-  <string name="event_class">-Class-</string>
-  <string name="event_time_and_location">-Time and location-</string>
+  <string name="event_gm">GM: </string>
+  <string name="event_format">Format: </string>
+  <string name="event_class">Class: </string>
+  <string name="event_time">Time</string>
+  <string name="event_location">Location</string>
+  <string name="event_title">Title</string>
 
   <!-- CREATE EVENT DIALOG -->
   <string name="ce_title">Title *</string>

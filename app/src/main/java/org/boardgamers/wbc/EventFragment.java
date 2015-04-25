@@ -4,10 +4,13 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -36,7 +39,7 @@ public class EventFragment extends Fragment {
           R.id.ef_finish_5, R.id.ef_finish_6};
 
   public ImageView star;
-  private Event event;
+  public Event event;
   private Tournament tournament;
 
   private ImageView boxIV;
@@ -73,7 +76,7 @@ public class EventFragment extends Fragment {
 
       @Override
       public void onClick(View v) {
-        changeEventStar(!event.starred);
+        changeEventStar();
 
       }
     });
@@ -99,9 +102,7 @@ public class EventFragment extends Fragment {
     });
 
     noteET=(EditText) view.findViewById(R.id.ef_note);
-
     gameGM=(TextView) view.findViewById(R.id.ef_gm);
-
     previewLink=(TextView) view.findViewById(R.id.ef_preview_link);
     reportLink=(TextView) view.findViewById(R.id.ef_report_link);
 
@@ -124,19 +125,17 @@ public class EventFragment extends Fragment {
         }
       }
     }
-
     return view;
-
   }
 
   public void setEvent(Event e) {
     event=e;
+    tournament=MainActivity.allTournaments.get(event.tournamentID);
 
     eTitle.setText(event.title);
-
-    eFormat.setText("Format: "+event.format);
-
-    eClass.setText("Class: "+event.eClass);
+    eFormat.setText(getResources().getString(R.string.event_format)+event.format);
+    eClass.setText(getResources().getString(R.string.event_class)+event.eClass);
+    gameGM.setText(getResources().getString(R.string.event_gm)+tournament.gm);
 
     SpannableString locationText=new SpannableString(event.location);
     locationText.setSpan(new UnderlineSpan(), 0, locationText.length(), 0);
@@ -157,10 +156,8 @@ public class EventFragment extends Fragment {
     } else {
       minute="00";
     }
-
     time.setText(MainActivity.dayStrings[event.day]+", "+String.valueOf(event.hour)+"00 to "+
         String.valueOf((event.hour+(int) event.duration)+minute));
-
     if (event.continuous) {
       time.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
     }
@@ -185,15 +182,9 @@ public class EventFragment extends Fragment {
       timeLayout.setBackgroundResource(R.drawable.future_light);
     }
 
-    tournament=MainActivity.allTournaments.get(event.tournamentID);
-
     // check if last event is class (is tournament)
     if (tournament.isTournament && tournament.ID<1000) {
-
-      // links available for tournament
-      previewLink.setVisibility(View.VISIBLE);
       previewLink.setOnClickListener(new View.OnClickListener() {
-
         @Override
         public void onClick(View v) {
           getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
@@ -201,7 +192,6 @@ public class EventFragment extends Fragment {
         }
       });
 
-      reportLink.setVisibility(View.VISIBLE);
       reportLink.setOnClickListener(new View.OnClickListener() {
 
         @Override
@@ -226,75 +216,93 @@ public class EventFragment extends Fragment {
 
       finishGroup.check(finishIDs[tournament.finish]);
 
+      previewLink.setVisibility(View.VISIBLE);
       finishLayout.setVisibility(View.VISIBLE);
+      reportLink.setVisibility(View.VISIBLE);
     } else {
-      // not tournament
       finishLayout.setVisibility(View.GONE);
       previewLink.setVisibility(View.GONE);
       reportLink.setVisibility(View.GONE);
     }
 
-    // set title
-    //getActivity().setTitle(tournament.title);
-
-    // set GM
-    gameGM.setText("GM: "+tournament.gm);
-
-    try {
-      InputStream is=(InputStream) new URL("http://boardgamers.org/boxart/"+tournament.label+".jpg")
-          .getContent();
-      boxIV.setImageDrawable(Drawable.createFromStream(is, "src name"));
-
-    } catch (Exception ex) {
-      Log.d(TAG, "Unable to load image");
-    }
-
+    new DownloadImageTask().execute("http://boardgamers.org/boxart/"+tournament.label+".jpg");
   }
 
-  private void changeEventStar(boolean starred) {
-    event.starred=starred;
-    star.setImageResource(starred ? R.drawable.star_on : R.drawable.star_off);
+  private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
-    // update in schedule activity
-    ArrayList<Event> eventList=
-        MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
-    for (Event tempE : eventList) {
-      if (tempE.identifier.equalsIgnoreCase(event.identifier)) {
-        tempE.starred=starred;
-        break;
+    protected Bitmap doInBackground(String... urls) {
+      String urldisplay=urls[0];
+      Bitmap bitmap=null;
+      try {
+        InputStream in=new java.net.URL(urldisplay).openStream();
+        bitmap=BitmapFactory.decodeStream(in);
+      } catch (Exception e) {
+        Log.e("Error", e.getMessage());
+        e.printStackTrace();
       }
+      return bitmap;
     }
-    if (starred) {
-      MainActivity.addStarredEvent(event);
-    } else {
-      MainActivity.removeStarredEvent(event.identifier, event.day);
+
+    protected void onPostExecute(Bitmap result) {
+      boxIV.setImageBitmap(result);
     }
   }
 
-  @Override
-  public void onPause() {
-    // save note on pause
+  private void changeEventStar() {
+    event.starred=!event.starred;
+    star.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);
 
-    note=noteET.getText().toString();
-
-    SharedPreferences.Editor editor=getActivity()
-        .getSharedPreferences(getResources().getString(R.string.sp_file_name), Context.MODE_PRIVATE)
-        .edit();
-
-    editor.putString(getResources().getString(R.string.sp_event_note)+event.identifier, note);
-
-    if (tournament.isTournament) {
-      for (int i=0; i<finishButtons.length; i++) {
-        if (finishButtons[i].isChecked()) {
-          editor.putInt("fin_"+tournament.title, i);
-
-          MainActivity.allTournaments.get(tournament.ID).finish=i;
+    if (event.tournamentID==-1 && UserDataFragment.userEvents!=null) {
+      for (Event tempEvent : UserDataFragment.userEvents) {
+        if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {
+          tempEvent.starred=event.starred;
           break;
         }
       }
     }
 
-    editor.apply();
+    // update in day list
+    ArrayList<Event> eventList=
+        MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
+    for (Event tempEvent : eventList) {
+      if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {
+        tempEvent.starred=event.starred;
+        break;
+      }
+    }
+
+    if (event.starred) {
+      MainActivity.addStarredEvent(event);
+    } else {
+      MainActivity.removeStarredEvent(event.identifier, event.day);
+    }
+
+    ((MainActivity) getActivity()).updateFragment(-1);
+  }
+
+  @Override
+  public void onPause() {
+    if (event!=null) {
+      // save note on pause
+      note=noteET.getText().toString();
+
+      SharedPreferences.Editor editor=getActivity()
+          .getSharedPreferences(getResources().getString(R.string.sp_file_name),
+              Context.MODE_PRIVATE).edit();
+      editor.putString(getResources().getString(R.string.sp_event_note)+event.identifier, note);
+
+      if (tournament.isTournament) {
+        for (int i=0; i<finishButtons.length; i++) {
+          if (finishButtons[i].isChecked()) {
+            editor.putInt("fin_"+tournament.title, i);
+
+            MainActivity.allTournaments.get(tournament.ID).finish=i;
+            break;
+          }
+        }
+      }
+      editor.apply();
+    }
 
     super.onPause();
   }

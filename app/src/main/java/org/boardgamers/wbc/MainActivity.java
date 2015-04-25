@@ -6,8 +6,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +37,7 @@ import java.util.Locale;
 /**
  * Main Activity class
  */
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener, SearchView.OnQueryTextListener {
   private final static String TAG="Main Activity";
 
   public static final int SUMMARY_FRAGMENT_POSITION=0;
@@ -125,7 +128,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     pagerAdapter=new TabsPagerAdapter(getFragmentManager());
 
     viewPager.setAdapter(pagerAdapter);
-    actionBar.setHomeButtonEnabled(false);
     actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
     for (String tabString : tabs) {
@@ -143,31 +145,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // make respected tab selected
         actionBar.setSelectedNavigationItem(position);
 
-        switch (position) {
-          case SUMMARY_FRAGMENT_POSITION:
-            SummaryFragment summaryFragment=
-                (SummaryFragment) pagerAdapter.getItem(SUMMARY_FRAGMENT_POSITION);
-            if (summaryFragment!=null) {
-              summaryFragment.updateList();
-            }
-            break;
-
-          case SCHEDULE_FRAGMENT_POSITION:
-            ScheduleFragment scheduleFragment=
-                (ScheduleFragment) pagerAdapter.getItem(SCHEDULE_FRAGMENT_POSITION);
-            if (scheduleFragment!=null) {
-              scheduleFragment.updateList();
-            }
-            break;
-
-          case USER_DATA_FRAGMENT_POSITION:
-            UserDataFragment userDataFragment=
-                (UserDataFragment) pagerAdapter.getItem(USER_DATA_FRAGMENT_POSITION);
-            if (userDataFragment!=null) {
-              userDataFragment.updateList();
-            }
-            break;
-        }
+        updateFragment(position);
       }
 
       @Override
@@ -178,15 +156,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       public void onPageScrollStateChanged(int arg0) {
       }
     });
-
-    // enable home button for navigation drawer
-    final ActionBar ab=getActionBar();
-    if (ab!=null) {
-      ab.setDisplayHomeAsUpEnabled(true);
-      ab.setHomeButtonEnabled(true);
-    } else {
-      Log.d(TAG, "Could not get action bar");
-    }
 
     // loaded, show dialogs
     SharedPreferences sp=
@@ -234,6 +203,51 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       dc.show(getFragmentManager(), "changes_dialog");
     }
 
+    handleIntent(getIntent());
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    handleIntent(intent);
+  }
+
+  private void handleIntent(Intent intent) {
+    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+      String query=intent.getStringExtra(SearchManager.QUERY);
+      Log.d(TAG, "Text input: "+query);
+    }
+  }
+
+  public void updateFragment(int position) {
+    switch (position) {
+      case SUMMARY_FRAGMENT_POSITION:
+        SummaryFragment summaryFragment=
+            (SummaryFragment) pagerAdapter.getItem(SUMMARY_FRAGMENT_POSITION);
+        if (summaryFragment!=null) {
+          summaryFragment.updateList();
+        }
+        break;
+
+      case SCHEDULE_FRAGMENT_POSITION:
+        ScheduleFragment scheduleFragment=
+            (ScheduleFragment) pagerAdapter.getItem(SCHEDULE_FRAGMENT_POSITION);
+        if (scheduleFragment!=null) {
+          scheduleFragment.updateList();
+        }
+        break;
+
+      case USER_DATA_FRAGMENT_POSITION:
+        UserDataFragment userDataFragment=
+            (UserDataFragment) pagerAdapter.getItem(USER_DATA_FRAGMENT_POSITION);
+        if (userDataFragment!=null) {
+          userDataFragment.updateList();
+        }
+        break;
+
+      default:
+        updateFragment(viewPager.getCurrentItem());
+        break;
+    }
   }
 
   @Override
@@ -253,6 +267,17 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
   @Override
   public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+  }
+
+  @Override
+  public boolean onQueryTextSubmit(String query) {
+    return false;
+  }
+
+  @Override
+  public boolean onQueryTextChange(String newText) {
+    Log.d(TAG, "TEST:"+newText);
+    return true;
   }
 
   /**
@@ -305,50 +330,36 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
     inflater.inflate(R.menu.main, menu);
+
+    SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
+    SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
+    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+    searchView.setOnQueryTextListener(this);
+
     return true;
   }
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    // If the nav drawer is open, hide action items related to the content view
-
     return super.onPrepareOptionsMenu(menu);
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
 
-    if (item.getItemId()==R.id.menu_search) {
-
+    if (item.getItemId()==R.id.menu_map) {
+      startActivity(new Intent(this, MapActivity.class));
+    } else if (item.getItemId()==R.id.menu_help) {
+      startActivity(new Intent(this, HelpActivity.class));
+    } else if (item.getItemId()==R.id.menu_about) {
+      startActivity(new Intent(this, AboutActivity.class));
+    } else if (item.getItemId()==R.id.menu_filter) {
+      startActivity(new Intent(this, FilterActivity.class));
+    } else if (item.getItemId()==R.id.menu_settings) {
+      startActivity(new Intent(this, SettingsActivity.class));
     } else {
       return super.onOptionsItemSelected(item);
     }
-
-    // TODO
-    //    Intent intent;
-    //Intent intent=new Intent(this, SearchActivity.class);
-    //startActivity(intent);
-    //    switch (position) {
-    //      case HOTEL_MAP_ACTIVITY_INDEX:
-    //        Log.d(TAG, String.valueOf(SELECTED_ROOM));
-    //        intent=new Intent(activity, MapActivity.class);
-    //        break;
-    //      case HELP_ACTIVITY_INDEX:
-    //        intent=new Intent(activity, HelpActivity.class);
-    //        break;
-    //      case ABOUT_ACTIVITY_INDEX:
-    //        intent=new Intent(activity, AboutActivity.class);
-    //        break;
-    //      case FILTER_ACTIVITY_INDEX:
-    //        intent=new Intent(activity, FilterActivity.class);
-    //        break;
-    //      case SETTINGS_ACTIVITY_INDEX:
-    //        intent=new Intent(activity, SettingsActivity.class);
-    //        break;
-    //      default:
-    //        return;
-    //    }
-    //    startActivity(intent);
 
     return true;
   }

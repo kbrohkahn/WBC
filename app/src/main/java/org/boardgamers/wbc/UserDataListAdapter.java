@@ -101,6 +101,20 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
   }
 
   @Override
+  public String getGroupTitle(int groupPosition) {
+    switch (groupPosition) {
+      case EVENTS_INDEX:
+        return fragment.getResources().getString(R.string.user_events);
+      case NOTES_INDEX:
+        return fragment.getResources().getString(R.string.user_notes);
+      case FINISHES_INDEX:
+        return fragment.getResources().getString(R.string.user_finishes);
+      default:
+        return null;
+    }
+  }
+
+  @Override
   public Object getGroup(int groupPosition) {
 
     switch (groupPosition) {
