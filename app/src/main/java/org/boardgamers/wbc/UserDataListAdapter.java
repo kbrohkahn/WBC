@@ -3,6 +3,7 @@ package org.boardgamers.wbc;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
  * Created by Kevin Broh-Kahn
  */
 public class UserDataListAdapter extends DefaultScheduleListAdapter {
+  private final String TAG="User Data List Adapter";
+
   private final int EVENTS_INDEX=0;
   private final int NOTES_INDEX=1;
   private final int FINISHES_INDEX=2;
@@ -26,6 +29,7 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
                            View view, ViewGroup parent) {
     if (groupPosition==EVENTS_INDEX) {
       view=super.getChildView(groupPosition, childPosition, isLastChild, view, parent);
+
       view.setOnLongClickListener(new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View view) {
@@ -58,6 +62,7 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
         }
       });
 
+
       return view;
     } else if (groupPosition==NOTES_INDEX) {
       view=inflater.inflate(R.layout.schedule_item_text, parent, false);
@@ -72,9 +77,9 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
       TextView text=(TextView) view.findViewById(R.id.si_text);
       text.setText(((UserDataFragment) fragment).getFinish(childPosition));
 
-      return null;
-    } else {
       return view;
+    } else {
+      return null;
     }
   }
 
@@ -116,7 +121,6 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
 
   @Override
   public Object getGroup(int groupPosition) {
-
     switch (groupPosition) {
       case EVENTS_INDEX:
         return ((UserDataFragment) fragment).userEvents;
@@ -144,5 +148,4 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
     DialogDeleteEvent deleteDialog=new DialogDeleteEvent();
     deleteDialog.show(MainActivity.activity.getFragmentManager(), "delete_event_dialog");
   }
-
 }

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  * Created by Kevin
  */
 public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
-  // private final String TAG="Default Schedule List Adapter";
+  private final String TAG="Default Adapter";
 
   private int COLOR_JUNIOR;
   private int COLOR_SEMINAR;
@@ -202,6 +203,8 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
       view.setBackgroundResource(R.drawable.group_collapsed);
     }
 
+
+
     return view;
   }
 
@@ -287,7 +290,7 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public int getGroupCount() {
-    return -1;
+    return 0;
   }
 
 }
