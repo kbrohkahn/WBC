@@ -3,8 +3,6 @@ package org.boardgamers.wbc;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
@@ -16,17 +14,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +28,8 @@ import java.util.Locale;
 /**
  * Main Activity class
  */
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener, SearchView.OnQueryTextListener {
+public class MainActivity extends FragmentActivity
+    implements ActionBar.TabListener, SearchView.OnQueryTextListener {
   private final static String TAG="Main Activity";
 
   public static final int SUMMARY_FRAGMENT_POSITION=0;
@@ -67,9 +59,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
   // Tab titles
   private String[] tabs={"Starred", "Full Schedule", "My Data"};
-
-  private static String dialogText;
-  private static String dialogTitle;
 
   public static Activity activity;
 
@@ -157,26 +146,24 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       }
     });
 
-    // loaded, show dialogs
+    int latestDialogVersion=13;
+
     SharedPreferences sp=
         getSharedPreferences(getResources().getString(R.string.sp_file_name), Context.MODE_PRIVATE);
     int version=sp.getInt("last_app_version", 0);
 
     // alert to notify email for questions
-    if (version<12) {
-      AlertDialog.Builder questionAlertBuilder=new AlertDialog.Builder(this);
-      questionAlertBuilder
-          .setMessage("Welcome to "+getResources().getString(R.string.app_name_long)+
-              " for Android! Please send all questions, comments, requests, etc. to Kevin Broh-Kahn "+
-              "at "+getResources().getString(R.string.email)+
-              " (link in \"About\" page via main menu)").setTitle("Welcome!");
-      questionAlertBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-          dialog.dismiss();
-        }
-      });
-      questionAlertBuilder.create().show();
+    if (version<latestDialogVersion) {
+      AlertDialog.Builder initialBuilder=new AlertDialog.Builder(this);
+      initialBuilder.setTitle(R.string.initial_dialog_title)
+          .setMessage(R.string.initial_dialog_text)
+          .setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              dialog.dismiss();
+            }
+          });
+      initialBuilder.create().show();
     }
 
     // save current version code
@@ -184,10 +171,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     try {
       versionCode=getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
     } catch (PackageManager.NameNotFoundException e) {
-      Toast.makeText(this,
+      Log.d(TAG,
           "ERROR: Could not find version code,"+"contact "+getResources().getString(R.string.email)+
-              " for help.", Toast.LENGTH_LONG).show();
-      versionCode=-1;
+              " for help.");
+      versionCode=latestDialogVersion;
       e.printStackTrace();
     }
 
@@ -196,11 +183,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     editor.apply();
 
     // check for changes
-    dialogText=allChanges;
-    dialogTitle="Schedule Changes";
-    if (!dialogText.equalsIgnoreCase("")) {
-      DialogText dc=new DialogText();
-      dc.show(getFragmentManager(), "changes_dialog");
+    if (allChanges!=null && !allChanges.equalsIgnoreCase("")) {
+      AlertDialog.Builder changesBuilder=new AlertDialog.Builder(this);
+      changesBuilder.setTitle(R.string.changes_dialog_title).setMessage(allChanges)
+          .setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+              dialog.dismiss();
+            }
+          });
+
+      changesBuilder.create().show();
     }
 
     handleIntent(getIntent());
@@ -362,42 +354,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     return true;
-  }
-
-  /**
-   * Dialog Text
-   */
-  public static class DialogText extends DialogFragment {
-    //private final String TAG="Changes Dialog";
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-      Dialog dialog=super.onCreateDialog(savedInstanceState);
-      dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-      return dialog;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-      View view=inflater.inflate(R.layout.dialog_text, container, false);
-
-      TextView title=(TextView) view.findViewById(R.id.dt_title);
-      title.setText(dialogTitle);
-
-      TextView textView=(TextView) view.findViewById(R.id.dt_text);
-      textView.setText(dialogText);
-
-      Button close=(Button) view.findViewById(R.id.dt_close);
-      close.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          dismiss();
-        }
-      });
-
-      return view;
-    }
   }
 
   //

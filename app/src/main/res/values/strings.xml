@@ -26,7 +26,9 @@
   <string name="star">Star IV</string>
   <string name="search">Search</string>
   <string name="search_hint">Search title or format</string>
-
+  <string name="changes_dialog_title">Schedule Changes</string>
+  <string name="initial_dialog_title">Welcome</string>
+  <string name="initial_dialog_text">Star events in the full schedule to add them to your schedule</string>
 
   <!-- ACTIVITY TITLES -->
   <string name="activity_tournament">Tournament</string>
@@ -105,13 +107,12 @@
   <string name="dd_string">Are you sure you want to delete</string>
 
   <!-- SETTINGS -->
-  <string name="settings_notify">Notify me before my starred events start</string>
-  <string name="settings_notify_type">Select notification action</string>
-  <string name="settings_notify_time_before">Notify me</string>
-  <string name="settings_notify_time_after">minutes before each event</string>
-  <string name="settings_vibrate">Vibrate</string>
-  <string name="settings_sound">Sound</string>
-  <string name="settings_both">Both</string>
+  <string name="settings_notifications">Notifications</string>
+  <string name="settings_notify">Event notifications</string>
+  <string name="settings_notify_summary">Notify me before my starred events start</string>
+  <string name="settings_notify_type">Notification type</string>
+  <string name="settings_notify_type_default">Sound+vibrate</string>
+  <string name="settings_notify_time">Minutes before event starts</string>
 
   <!-- PREFERENCES FILES -->
   <string name="sp_file_name">SettingsSPFile</string>
@@ -127,6 +128,17 @@
   <string name="open_drawer">Open Drawer</string>
   <string name="close_drawer">Close Drawer</string>
   <string name="drawer_image">Icon for drawer items</string>
+
+  <string-array name="settings_notify_type_entries">
+    <item>Vibrate</item>
+    <item>Ring</item>
+    <item>@string/settings_notify_type_default</item>
+  </string-array>
+  <string-array name="settings_notify_type_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+  </string-array>
 
   <string-array name="drawer_titles">
     <item>All Starred Events</item>

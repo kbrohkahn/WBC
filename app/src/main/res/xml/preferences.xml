@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <PreferenceCategory
+    android:key="pref_key_notifications"
+    android:title="@string/settings_notifications">
+
+    <CheckBoxPreference
+      android:defaultValue="false"
+      android:key="notify_starred"
+      android:summary="@string/settings_notify_summary"
+      android:title="@string/settings_notify"/>
+
+    <EditTextPreference
+      android:defaultValue="5"
+      android:dependency="notify_starred"
+      android:inputType="number"
+      android:key="notify_time"
+      android:title="@string/settings_notify_time"/>
+
+    <ListPreference
+      android:defaultValue="@string/settings_notify_type_default"
+      android:dependency="notify_starred"
+      android:dialogTitle="@string/settings_notify_type"
+      android:entries="@array/settings_notify_type_entries"
+      android:entryValues="@array/settings_notify_type_values"
+      android:key="notify_type"
+      android:title="@string/settings_notify_type"/>
+
+  </PreferenceCategory>
+</PreferenceScreen>
