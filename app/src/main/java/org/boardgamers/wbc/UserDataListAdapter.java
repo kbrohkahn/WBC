@@ -32,20 +32,20 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
       view.setOnLongClickListener(new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View view) {
-          AlertDialog.Builder builder=new AlertDialog.Builder(null);
+          AlertDialog.Builder builder=new AlertDialog.Builder(fragment.getActivity());
 
           builder.setTitle("Choose an action");
           builder.setMessage("What do you want to do?");
 
           builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-              deleteEvents(childPosition);
+              ((UserDataFragment) fragment).deleteEvents(childPosition);
             }
           });
 
           builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-              editEvent(childPosition);
+              ((UserDataFragment) fragment).editEvent(childPosition);
             }
           });
 
@@ -136,15 +136,4 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
     return 3;
   }
 
-  private void editEvent(int index) {
-    UserDataFragment.selectedEvent=index;
-    DialogEditEvent editNameDialog=new DialogEditEvent();
-    editNameDialog.show(MainActivity.activity.getFragmentManager(), "edit_event_dialog");
-  }
-
-  private void deleteEvents(int index) {
-    UserDataFragment.selectedEvent=index;
-    DialogDeleteEvent deleteDialog=new DialogDeleteEvent();
-    deleteDialog.show(MainActivity.activity.getFragmentManager(), "delete_event_dialog");
-  }
 }

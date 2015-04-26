@@ -90,8 +90,8 @@
           <TextView
             android:id="@+id/ef_preview_link"
             style="@style/medium_text"
-            android:gravity="left"
             android:layout_weight="1"
+            android:gravity="left"
             android:text="@string/preview"
             android:textColor="#0000FF"
             android:visibility="gone"/>
@@ -99,8 +99,8 @@
           <TextView
             android:id="@+id/ef_report_link"
             style="@style/medium_text"
-            android:gravity="right"
             android:layout_weight="1"
+            android:gravity="right"
             android:text="@string/report"
             android:textColor="#0000FF"
             android:visibility="gone"/>
@@ -113,8 +113,8 @@
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:scaleType="fitCenter"
-        android:contentDescription="@string/event"/>
+        android:contentDescription="@string/event"
+        android:scaleType="fitCenter"/>
 
     </LinearLayout>
 

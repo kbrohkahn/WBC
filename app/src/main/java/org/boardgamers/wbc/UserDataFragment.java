@@ -35,6 +35,12 @@ public class UserDataFragment extends DefaultListFragment {
 
     if (view!=null) {
       Button addEvent=(Button) view.findViewById(R.id.add_event);
+      addEvent.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          DialogCreateEvent dialog=new DialogCreateEvent();
+          dialog.show(getFragmentManager(), "create_event_dialog");
+        }
+      });
     }
 
     return view;
@@ -109,40 +115,18 @@ public class UserDataFragment extends DefaultListFragment {
   }
 
   public static void updateEventsList() {
-    final Resources resources=MainActivity.activity.getResources();
-    SharedPreferences sp=MainActivity.activity
-        .getSharedPreferences(resources.getString(R.string.sp_file_name), Context.MODE_PRIVATE);
-
-    String identifier, row, eventTitle, location;
-    String[] rowData;
-    int index, day, hour;
-    double duration;
-
-    String userEventPrefString=resources.getString(R.string.sp_user_event);
-    String starPrefString=resources.getString(R.string.sp_event_starred);
-
     userEvents=new ArrayList<>();
-    for (index=0; ; index++) {
-      row=sp.getString(userEventPrefString+String.valueOf(index), "");
-      if (row.equalsIgnoreCase("")) {
-        break;
+
+    for (int i=0; i<MainActivity.dayList.size(); i++) {
+      if (i%MainActivity.GROUPS_PER_DAY==0) {
+        continue;
       }
 
-      rowData=row.split("~");
-
-      day=Integer.valueOf(rowData[0]);
-      hour=Integer.valueOf(rowData[1]);
-      eventTitle=rowData[2];
-      duration=Double.valueOf(rowData[3]);
-      location=rowData[4];
-
-      identifier=String.valueOf(day*24+hour)+eventTitle;
-      Event event=
-          new Event(identifier, 0, day, hour, eventTitle, "", "", false, duration, false, duration,
-              location);
-      event.starred=sp.getBoolean(starPrefString+identifier, false);
-
-      userEvents.add(event);
+      for (Event event : MainActivity.dayList.get(i)) {
+        if (event.tournamentID==-1) {
+          userEvents.add(event);
+        }
+      }
     }
   }
 
@@ -152,10 +136,6 @@ public class UserDataFragment extends DefaultListFragment {
 
   public String getFinish(int index) {
     return userFinishes.get(index);
-  }
-
-  public Event getEvent(int index) {
-    return userEvents.get(index);
   }
 
   @Override
@@ -191,8 +171,18 @@ public class UserDataFragment extends DefaultListFragment {
   }
 
   private void showCreateDialog() {
-    DialogCreateEvent editNameDialog=new DialogCreateEvent();
-    editNameDialog.show(getActivity().getFragmentManager(), "create_event_dialog");
+  }
+
+  public void editEvent(int index) {
+    UserDataFragment.selectedEvent=index;
+    DialogEditEvent editNameDialog=new DialogEditEvent();
+    editNameDialog.show(getFragmentManager(), "edit_event_dialog");
+  }
+
+  public void deleteEvents(int index) {
+    UserDataFragment.selectedEvent=index;
+    DialogDeleteEvent deleteDialog=new DialogDeleteEvent();
+    deleteDialog.show(getFragmentManager(), "delete_event_dialog");
   }
 
 }

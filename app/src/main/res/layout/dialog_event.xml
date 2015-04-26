@@ -7,7 +7,7 @@
 
   <TextView
     android:id="@+id/ce_dialog_title"
-    style="@style/header"/>
+    style="@style/dialog_header"/>
 
   <View style="@style/div_h"/>
 

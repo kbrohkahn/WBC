@@ -6,7 +6,7 @@
   android:orientation="vertical">
 
   <TextView
-    style="@style/header"
+    style="@style/dialog_header"
     android:text="@string/delete"/>
 
   <View style="@style/div_h"/>

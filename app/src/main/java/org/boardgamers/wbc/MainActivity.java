@@ -60,8 +60,6 @@ public class MainActivity extends FragmentActivity
   // Tab titles
   private String[] tabs={"Starred", "Schedule", "My Data"};
 
-  public static Activity activity;
-
   /**
    * Add starred help to "My Events" group in list
    *
@@ -110,8 +108,6 @@ public class MainActivity extends FragmentActivity
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.main_layout);
-
-    activity=this;
 
     viewPager=(ViewPager) findViewById(R.id.pager);
     actionBar=getActionBar();
