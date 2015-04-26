@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -24,10 +25,18 @@ public class SplashScreen extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    setProgressBarIndeterminateVisibility(true);
+
+
     setContentView(R.layout.splash);
 
     new LoadEventsTask().execute(null, null, null);
 
+  }
+
+  public void setLoadProgress(int progress) {
+    this.setProgress(progress);
   }
 
   public void showToast(String string) {
@@ -60,6 +69,7 @@ public class SplashScreen extends Activity {
           Context.MODE_PRIVATE);
       String userEventPrefString=getResources().getString(R.string.sp_user_event);
       String starPrefString=getResources().getString(R.string.sp_event_starred);
+
 
       MainActivity.allChanges="";
 
@@ -513,6 +523,8 @@ public class SplashScreen extends Activity {
           }
 
           lineNum++;
+
+          setLoadProgress(lineNum);
 
         }
 

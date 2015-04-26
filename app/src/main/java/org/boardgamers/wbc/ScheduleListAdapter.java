@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SectionIndexer;
 
 import java.util.ArrayList;
 
@@ -11,8 +12,9 @@ import java.util.ArrayList;
  * Created by Kevin
  * Adapter for full schedule ExpandableListAdapter
  */
-public class ScheduleListAdapter extends DefaultScheduleListAdapter {
-  protected final String[] hours;
+public class ScheduleListAdapter extends DefaultScheduleListAdapter implements SectionIndexer {
+  private final String[] hours;
+  private final String[] sections;
 
   public ScheduleListAdapter(Context c, ScheduleFragment f) {
     super(c, f);
@@ -22,8 +24,13 @@ public class ScheduleListAdapter extends DefaultScheduleListAdapter {
             Context.MODE_PRIVATE);
     int hoursID=(settings.getBoolean("24_hour", true) ? R.array.hours_24 : R.array.hours_12);
     hours=c.getResources().getStringArray(hoursID);
-  }
 
+    sections=new String[MainActivity.TOTAL_DAYS];
+    for (int i=0; i<MainActivity.TOTAL_DAYS; i++) {
+      sections[i]=MainActivity.dayStrings[i];
+
+    }
+  }
 
   @Override
   public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
@@ -35,7 +42,7 @@ public class ScheduleListAdapter extends DefaultScheduleListAdapter {
     return view;
   }
 
- @Override
+  @Override
   public void changeEventStar(Event event, int groupPosition, int childPosition) {
     event.starred=!event.starred;
 
@@ -101,5 +108,18 @@ public class ScheduleListAdapter extends DefaultScheduleListAdapter {
   @Override
   public int getGroupCount() {
     return MainActivity.dayList.size();
+  }
+
+  @Override
+  public int getPositionForSection(int sectionIndex) {
+    return sectionIndex;
+  }
+
+  public int getSectionForPosition(int position) {
+    return position;
+  }
+
+  public Object[] getSections() {
+    return sections;
   }
 }

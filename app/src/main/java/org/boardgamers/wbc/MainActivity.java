@@ -58,7 +58,7 @@ public class MainActivity extends FragmentActivity
   private ActionBar actionBar;
 
   // Tab titles
-  private String[] tabs={"Starred", "Full Schedule", "My Data"};
+  private String[] tabs={"Starred", "Schedule", "My Data"};
 
   public static Activity activity;
 
@@ -85,6 +85,7 @@ public class MainActivity extends FragmentActivity
         break;
       }
     }
+
     events.add(index, starredEvent);
   }
 

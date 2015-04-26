@@ -4,6 +4,7 @@
   <!-- main app colors -->
   <color name="primary">#600000</color>
   <color name="primary_light">#d0aaaa</color>
+  <color name="primary_lightest">#EFE1E1</color>
   <color name="secondary">#31428C</color>
   <color name="secondary_light">#98A0BE</color>
   <color name="secondary_dark">#192146</color>

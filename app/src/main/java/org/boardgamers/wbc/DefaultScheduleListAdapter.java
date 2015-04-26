@@ -185,6 +185,7 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
       }
     });
 
+    view.setLongClickable(true);
     view.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
@@ -202,8 +203,6 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
     } else {
       view.setBackgroundResource(R.drawable.group_collapsed);
     }
-
-
 
     return view;
   }
