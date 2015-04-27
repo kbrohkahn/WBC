@@ -23,7 +23,6 @@ public class DialogDeleteEvent extends DialogFragment {
   private boolean ALL_EVENTS;
   protected UserDataFragment fragment;
 
-
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     Dialog dialog=super.onCreateDialog(savedInstanceState);

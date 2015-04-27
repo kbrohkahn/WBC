@@ -13,7 +13,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kevin
@@ -273,12 +273,12 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public Object getChild(int groupPosition, int childPosition) {
-    return ((ArrayList) getGroup(groupPosition)).get(childPosition);
+    return ((List) getGroup(groupPosition)).get(childPosition);
   }
 
   @Override
   public int getChildrenCount(int groupPosition) {
-    return ((ArrayList) getGroup(groupPosition)).size();
+    return ((List) getGroup(groupPosition)).size();
   }
 
   @Override

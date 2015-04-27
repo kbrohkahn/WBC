@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kevin Broh-Kahn
@@ -88,7 +88,7 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
     if (event.starred) {
       MainActivity.addStarredEvent(event);
     } else {
-      ArrayList<Event> events=
+      List<Event> events=
           MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
       for (Event tempEvent : events) {
         if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {

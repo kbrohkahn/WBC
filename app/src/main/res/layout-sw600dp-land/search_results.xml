@@ -7,7 +7,7 @@
 
   <fragment
     android:id="@+id/searchFragment"
-    class="org.boardgamers.wbc.SearchFragment"
+    class="org.boardgamers.wbc.SearchResultFragment"
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_weight="1">

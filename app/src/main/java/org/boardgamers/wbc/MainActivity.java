@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.widget.SearchView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -46,14 +48,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   public static int currentHour;
 
   public static List<Tournament> allTournaments;
-  public static ArrayList<ArrayList<Event>> dayList;
+  public static List<List<Event>> dayList;
   public static String[] dayStrings;
-
-  public static String allChanges;
 
   private static ViewPager viewPager;
   private static TabsPagerAdapter pagerAdapter;
-  private ActionBar actionBar;
+
+  private List<String> availableSearchStrings;
+  private SearchView searchView;
 
   // Tab titles
   private String[] tabs={"Starred", "Schedule", "My Data"};
@@ -108,27 +110,28 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     setContentView(R.layout.main_layout);
 
     viewPager=(ViewPager) findViewById(R.id.pager);
-    actionBar=getActionBar();
     pagerAdapter=new TabsPagerAdapter(getFragmentManager());
-
     viewPager.setAdapter(pagerAdapter);
-    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-    for (String tabString : tabs) {
-      actionBar.addTab(actionBar.newTab().setText(tabString).setTabListener(this));
+    final ActionBar actionBar=getActionBar();
+    if (actionBar!=null) {
+      actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+      for (String tabString : tabs) {
+        actionBar.addTab(actionBar.newTab().setText(tabString).setTabListener(this));
+      }
+    } else {
+      Log.d(TAG, "Error: could not get action bar");
     }
 
-    /**
-     * on swiping the viewpager make respective tab selected
-     * */
     viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
       @Override
       public void onPageSelected(int position) {
-        // on changing the page
-        // make respected tab selected
-        actionBar.setSelectedNavigationItem(position);
-
+        if (actionBar!=null) {
+          actionBar.setSelectedNavigationItem(position);
+        } else {
+          Log.d(TAG, "Error: could not get action bar");
+        }
         updateFragment(position);
       }
 
@@ -178,6 +181,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     editor.apply();
 
     // check for changes
+    String allChanges=getIntent().getStringExtra("allChanges");
     if (allChanges!=null && !allChanges.equalsIgnoreCase("")) {
       AlertDialog.Builder changesBuilder=new AlertDialog.Builder(this);
       changesBuilder.setTitle(R.string.changes_dialog_title).setMessage(allChanges)
@@ -190,18 +194,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       changesBuilder.create().show();
     }
 
-    handleIntent(getIntent());
-  }
+    // get list of available searches
+    availableSearchStrings=new ArrayList<>();
 
-  @Override
-  protected void onNewIntent(Intent intent) {
-    handleIntent(intent);
-  }
+    String[] formats=getResources().getStringArray(R.array.search_formats);
+    availableSearchStrings.addAll(Arrays.asList(formats));
 
-  private void handleIntent(Intent intent) {
-    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-      String query=intent.getStringExtra(SearchManager.QUERY);
-      Log.d(TAG, "Text input: "+query);
+    for (int i=0; i<allTournaments.size(); i++) {
+      availableSearchStrings.add(allTournaments.get(i).title);
     }
   }
 
@@ -292,7 +292,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             .edit();
     String starPrefString=getResources().getString(R.string.sp_event_starred);
 
-    for (ArrayList<Event> events : dayList) {
+    for (List<Event> events : dayList) {
       for (Event event : events) {
         editor.putBoolean(starPrefString+event.identifier, event.starred);
       }
@@ -308,29 +308,46 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     inflater.inflate(R.menu.main, menu);
 
     SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
-    final SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
-    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+    searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
+    searchView.setSearchableInfo(
+        searchManager.getSearchableInfo(new ComponentName(this, SearchResultActivity.class)));
+
+    //searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
     searchView.setSubmitButtonEnabled(true);
 
-    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-      @Override public boolean onQueryTextSubmit(String query) {
-        startSearchActivity(query);
-        return false;
-      }
-
-      @Override public boolean onQueryTextChange(String newText) {
-        return true;
-      }
-    });
+    //    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    //      @Override public boolean onQueryTextSubmit(String query) {
+    //        return false;
+    //      }
+    //
+    //      @Override public boolean onQueryTextChange(String newText) {
+    //        Log.d(TAG, "Changing");
+    //        setSearchViewAdapter(newText);
+    //        Log.d(TAG, "Changed");
+    //        return true;
+    //      }
+    //    });
+    //
+    //    String[] columnNames={"_id", "text"};
+    //    MatrixCursor cursor=new MatrixCursor(columnNames);
+    //
+    //    final SimpleCursorAdapter adapter=
+    //        new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor,
+    //            new String[] {"text"}, new int[] {android.R.id.text1}, 0);
+    //
+    //    adapter.setFilterQueryProvider(new FilterQueryProvider() {
+    //      @Override public Cursor runQuery(CharSequence constraint) {
+    //        return null;
+    //      }
+    //    });
+    //
+    //    searchView.setSuggestionsAdapter(adapter);
 
     return true;
   }
 
-  public void startSearchActivity(String searchString) {
-    Intent intent=new Intent(this, SearchResult.class);
-    intent.putExtra("query", searchString);
-    startActivity(intent);
+  public void setSearchViewAdapter(String query) {
+
   }
 
   @Override
@@ -358,40 +375,4 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     return true;
   }
 
-  //
-  //  /**
-  //   * Game star button clicked - change allStarred boolean and update events
-  //   */
-  //  public static void changeAllStarred(Activity a) {
-  //    allStarred=!allStarred;
-  //    setGameStar();
-  //
-  //    for (Event event : tournamentEvents) {
-  //      if (event.starred^allStarred) {
-  //        changeEventStar(event.identifier, allStarred, a);
-  //      }
-  //    }
-  //  }
-  //
-  //  /**
-  //   * set tournamentEventsStarIV image resource
-  //   */
-  //  public static void setGameStar() {
-  //    tournamentEventsStarIV.setImageResource(allStarred ? R.drawable.star_on : R.drawable.star_off);
-  //  }
-  //
-  //  /**
-  //   * Event star changed - check for change in allStarred boolean and set game star image view.
-  //   * Call setGameStar before return
-  //   */
-  //  public static void setAllStared() {
-  //    allStarred=true;
-  //    for (Event tEvent : tournamentEvents) {
-  //      if (!tEvent.starred) {
-  //        allStarred=false;
-  //        return;
-  //      }
-  //    }
-  //    setGameStar();
-  //  }
 }

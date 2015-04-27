@@ -20,6 +20,7 @@ import java.util.List;
 
 public class SplashScreen extends Activity {
   //private final String TAG="Splash";
+  private String allChanges;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,6 @@ public class SplashScreen extends Activity {
 
     requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     setProgressBarIndeterminateVisibility(true);
-
 
     setContentView(R.layout.splash);
 
@@ -44,7 +44,9 @@ public class SplashScreen extends Activity {
   }
 
   public void startMainActivity() {
-    startActivity(new Intent(this, MainActivity.class));
+    Intent intent=new Intent(this, MainActivity.class);
+    intent.putExtra("allChanges", allChanges);
+    startActivity(intent);
     finish();
   }
 
@@ -70,8 +72,7 @@ public class SplashScreen extends Activity {
       String userEventPrefString=getResources().getString(R.string.sp_user_event);
       String starPrefString=getResources().getString(R.string.sp_event_starred);
 
-
-      MainActivity.allChanges="";
+      allChanges="";
 
       /***** LOAD USER EVENTS *******/
 
@@ -480,11 +481,11 @@ public class SplashScreen extends Activity {
           // TODO ADD EVENT CHANGES
 
           if (!change.equalsIgnoreCase("")) {
-            MainActivity.allChanges+="\t"+change+"\n\n";
+            allChanges+="\t"+change+"\n\n";
           }
 
           // LOAD INTO LIST
-          ArrayList<Event> searchList=
+          List<Event> searchList=
               MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
           if (eventTitle.contains("Junior")) {
             index=0;

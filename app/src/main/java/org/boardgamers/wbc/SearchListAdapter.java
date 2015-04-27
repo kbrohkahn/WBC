@@ -7,13 +7,22 @@ import android.content.Context;
  */
 public class SearchListAdapter extends DefaultScheduleListAdapter {
 
-  public SearchListAdapter(Context c, SearchFragment f) {
+  public SearchListAdapter(Context c, SearchResultFragment f) {
     super(c, f);
   }
 
   @Override
   public void changeEventStar(Event event, int groupPosition, int childPosition) {
-    // TODO
+    changeEventStar(event, groupPosition, childPosition, true);
+  }
+
+  public void changeEventStar(Event event, int groupPosition, int childPosition,
+                              boolean updateAllStarred) {
+    event.starred=!event.starred;
+
+    if (updateAllStarred) {
+      ((SearchResultFragment) fragment).setAllStared();
+    }
 
     super.changeEventStar(event, groupPosition, childPosition);
   }
@@ -30,7 +39,7 @@ public class SearchListAdapter extends DefaultScheduleListAdapter {
 
   @Override
   public Object getGroup(int groupPosition) {
-    return ((SearchFragment) fragment).getGroup(groupPosition);
+    return ((SearchResultFragment) fragment).getGroup(groupPosition);
   }
 
   @Override

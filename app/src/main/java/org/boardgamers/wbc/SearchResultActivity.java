@@ -2,16 +2,16 @@ package org.boardgamers.wbc;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 /**
  * Created by Kevin
  */
-public class SearchResult extends Activity {
+public class SearchResultActivity extends Activity {
   private final String TAG="Search Activity";
 
   @Override
@@ -26,8 +26,29 @@ public class SearchResult extends Activity {
       Log.d(TAG, "Could not get action bar");
     }
 
+    // Get the intent, verify the action and get the query
+    handleIntent(getIntent());
+
     setContentView(R.layout.search_results);
   }
+
+
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    Log.d(TAG, "new intent");
+    handleIntent(intent);
+  }
+
+  private void handleIntent(Intent intent) {
+    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+      String query=intent.getStringExtra(SearchManager.QUERY);
+      Log.d(TAG, "Text input: "+query);
+      setTitle(query);
+
+    }
+  }
+
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {

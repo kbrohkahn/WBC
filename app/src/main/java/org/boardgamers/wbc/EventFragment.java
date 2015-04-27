@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,8 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EventFragment extends Fragment {
   private final String TAG="Event Fragment";
@@ -116,7 +114,7 @@ public class EventFragment extends Fragment {
     boxIV=(ImageView) view.findViewById(R.id.ef_box_image);
 
     if (!MainActivity.SELECTED_EVENT_ID.equalsIgnoreCase("")) {
-      for (ArrayList<Event> events : MainActivity.dayList) {
+      for (List<Event> events : MainActivity.dayList) {
         for (Event event : events) {
           if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID)) {
             setEvent(event);
@@ -262,7 +260,7 @@ public class EventFragment extends Fragment {
     }
 
     // update in day list
-    ArrayList<Event> eventList=
+    List<Event> eventList=
         MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
     for (Event tempEvent : eventList) {
       if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {

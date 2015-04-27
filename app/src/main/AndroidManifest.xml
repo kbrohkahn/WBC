@@ -38,16 +38,16 @@
       android:configChanges="orientation|keyboardHidden|screenSize"
       android:label="@string/app_name_short">
 
-    </activity>
-    <activity
-      android:name=".EventActivity"
-      android:label="@string/activity_event"
-      android:windowSoftInputMode="stateUnchanged">
+      <meta-data
+        android:name="android.app.searchable"
+        android:resource="@xml/searchable"/>
+
     </activity>
 
     <activity
-      android:name=".SearchResult"
+      android:name=".SearchResultActivity"
       android:label="@string/search">
+
       <intent-filter>
         <action android:name="android.intent.action.SEARCH"/>
       </intent-filter>
@@ -57,6 +57,11 @@
         android:resource="@xml/searchable"/>
     </activity>
 
+    <activity
+      android:name=".EventActivity"
+      android:label="@string/activity_event"
+      android:windowSoftInputMode="stateHidden">
+    </activity>
     <activity
       android:name=".MapActivity"
       android:label="@string/map">
@@ -75,8 +80,7 @@
     </activity>
     <activity
       android:name=".SettingsActivity"
-      android:label="@string/activity_settings"
-      android:windowSoftInputMode="stateUnchanged">
+      android:label="@string/activity_settings">
     </activity>
   </application>
 

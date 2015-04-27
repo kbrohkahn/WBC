@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SectionIndexer;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kevin
@@ -52,7 +52,7 @@ public class ScheduleListAdapter extends DefaultScheduleListAdapter implements S
       if (groupPosition%MainActivity.GROUPS_PER_DAY==0) {
         MainActivity.dayList.get(groupPosition).remove(childPosition);
 
-        ArrayList<Event> events=
+        List<Event> events=
             MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
         for (Event tempEvent : events) {
           if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {

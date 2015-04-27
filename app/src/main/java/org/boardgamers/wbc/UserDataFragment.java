@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fragment containing user's WBC data, including tournament finishes, help notes, and created events
@@ -18,9 +19,9 @@ import java.util.ArrayList;
 public class UserDataFragment extends DefaultListFragment {
   private final String TAG="My WBC Data Activity";
 
-  public static ArrayList<Event> userEvents;
-  public ArrayList<String> userNotes;
-  public ArrayList<String> userFinishes;
+  public static List<Event> userEvents;
+  public List<String> userNotes;
+  public List<String> userFinishes;
 
   public static int selectedEvent;
 
@@ -65,7 +66,7 @@ public class UserDataFragment extends DefaultListFragment {
     String notePrefString=getResources().getString(R.string.sp_event_note);
 
     String noteString;
-    for (ArrayList<Event> events : MainActivity.dayList) {
+    for (List<Event> events : MainActivity.dayList) {
       for (Event event : events) {
         noteString=sp.getString(notePrefString+String.valueOf(event.identifier), "");
         if (noteString.length()>0) {

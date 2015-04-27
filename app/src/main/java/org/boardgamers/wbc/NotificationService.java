@@ -58,7 +58,7 @@ public class NotificationService extends Service {
       date=Calendar.getInstance().getTime();
       Log.d(TAG, "ERROR: Unable to parse string of first day");
       Toast.makeText(this, "ERROR: Unable to parse string of first day, "+
-              "contact "+getResources().getString(R.string.email)+" for help.", Toast.LENGTH_LONG)
+          "contact "+getResources().getString(R.string.email)+" for help.", Toast.LENGTH_LONG)
           .show();
     }
 
