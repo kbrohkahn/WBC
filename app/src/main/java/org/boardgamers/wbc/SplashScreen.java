@@ -58,6 +58,8 @@ public class SplashScreen extends Activity {
 
     @Override
     protected Integer doInBackground(Integer... params) {
+      Log.d(TAG, "Starting load");
+
       // SETUP
       MainActivity.dayStrings=getResources().getStringArray(R.array.days);
 
@@ -558,6 +560,7 @@ public class SplashScreen extends Activity {
             String.valueOf(numJuniors)+" are juniors, "+String.valueOf(numPreviews)+
             " are previews, "+String.valueOf(numSeminars)+" are seminars, ");
 
+        Log.d(TAG, "Finished load");
         // start main actvitiy and return
         startMainActivity();
         return 1;
@@ -566,6 +569,7 @@ public class SplashScreen extends Activity {
         e.printStackTrace();
         return -1;
       }
+
     }
   }
 }

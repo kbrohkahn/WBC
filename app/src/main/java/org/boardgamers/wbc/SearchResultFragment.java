@@ -20,7 +20,10 @@ public class SearchResultFragment extends DefaultListFragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    loadEvents();
+    resultEvents=new ArrayList<>();
+    for (int i=0; i<MainActivity.TOTAL_DAYS; i++) {
+      resultEvents.add(new ArrayList<Event>());
+    }
 
     View view=super.onCreateView(inflater, container, savedInstanceState);
 
@@ -49,16 +52,13 @@ public class SearchResultFragment extends DefaultListFragment {
     return view;
   }
 
-  public void loadEvents() {
+  public void loadEvents(String query) {
+    allStarred=true;
+
     resultEvents=new ArrayList<>();
     for (int i=0; i<MainActivity.TOTAL_DAYS; i++) {
       resultEvents.add(new ArrayList<Event>());
     }
-
-    String query=getActivity().getIntent().getStringExtra("query");
-    getActivity().setTitle(query);
-
-    allStarred=true;
 
     for (int i=0; i<MainActivity.dayList.size(); i++) {
       for (Event event : MainActivity.dayList.get(i)) {
@@ -70,6 +70,8 @@ public class SearchResultFragment extends DefaultListFragment {
         }
       }
     }
+
+    listAdapter.notifyDataSetChanged();
   }
 
   @Override

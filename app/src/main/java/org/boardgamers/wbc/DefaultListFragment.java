@@ -25,7 +25,9 @@ public class DefaultListFragment extends Fragment {
     listView.setAdapter(listAdapter);
     listView.setDividerHeight(0);
 
-    expandGroups(listAdapter.getGroupCount(), 0, true);
+    if (listAdapter.getGroup(0)!=null) {
+      expandGroups(listAdapter.getGroupCount(), 0, true);
+    }
 
     return view;
   }

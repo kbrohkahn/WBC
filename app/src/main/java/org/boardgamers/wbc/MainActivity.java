@@ -20,8 +20,6 @@ import android.view.MenuItem;
 import android.widget.SearchView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -53,9 +51,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
   private static ViewPager viewPager;
   private static TabsPagerAdapter pagerAdapter;
-
-  private List<String> availableSearchStrings;
-  private SearchView searchView;
 
   // Tab titles
   private String[] tabs={"Starred", "Schedule", "My Data"};
@@ -194,15 +189,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       changesBuilder.create().show();
     }
 
-    // get list of available searches
-    availableSearchStrings=new ArrayList<>();
-
-    String[] formats=getResources().getStringArray(R.array.search_formats);
-    availableSearchStrings.addAll(Arrays.asList(formats));
-
-    for (int i=0; i<allTournaments.size(); i++) {
-      availableSearchStrings.add(allTournaments.get(i).title);
-    }
   }
 
   public void updateFragment(int position) {
@@ -308,51 +294,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     inflater.inflate(R.menu.main, menu);
 
     SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
-    searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
+    SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
     searchView.setSearchableInfo(
         searchManager.getSearchableInfo(new ComponentName(this, SearchResultActivity.class)));
 
     //searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
     searchView.setSubmitButtonEnabled(true);
 
-    //    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-    //      @Override public boolean onQueryTextSubmit(String query) {
-    //        return false;
-    //      }
-    //
-    //      @Override public boolean onQueryTextChange(String newText) {
-    //        Log.d(TAG, "Changing");
-    //        setSearchViewAdapter(newText);
-    //        Log.d(TAG, "Changed");
-    //        return true;
-    //      }
-    //    });
-    //
-    //    String[] columnNames={"_id", "text"};
-    //    MatrixCursor cursor=new MatrixCursor(columnNames);
-    //
-    //    final SimpleCursorAdapter adapter=
-    //        new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor,
-    //            new String[] {"text"}, new int[] {android.R.id.text1}, 0);
-    //
-    //    adapter.setFilterQueryProvider(new FilterQueryProvider() {
-    //      @Override public Cursor runQuery(CharSequence constraint) {
-    //        return null;
-    //      }
-    //    });
-    //
-    //    searchView.setSuggestionsAdapter(adapter);
-
     return true;
-  }
-
-  public void setSearchViewAdapter(String query) {
-
-  }
-
-  @Override
-  public boolean onPrepareOptionsMenu(Menu menu) {
-    return super.onPrepareOptionsMenu(menu);
   }
 
   @Override

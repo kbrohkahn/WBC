@@ -46,6 +46,7 @@
 
     <activity
       android:name=".SearchResultActivity"
+      android:launchMode="singleTop"
       android:label="@string/search">
 
       <intent-filter>
