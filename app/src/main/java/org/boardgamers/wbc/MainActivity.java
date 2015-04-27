@@ -312,6 +312,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
     searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
     searchView.setSubmitButtonEnabled(true);
+
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override public boolean onQueryTextSubmit(String query) {
         startSearchActivity(query);
@@ -319,7 +320,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       }
 
       @Override public boolean onQueryTextChange(String newText) {
-        return false;
+        return true;
       }
     });
 
