@@ -147,19 +147,24 @@
       </LinearLayout>
 
       <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
           android:id="@+id/ce_cancel"
-          style="@style/button"
+          style="?android:attr/buttonBarButtonStyle"
+          android:layout_width="0dip"
+          android:layout_height="match_parent"
           android:layout_weight="1"
           android:text="@string/cancel"/>
 
         <Button
           android:id="@+id/ce_add"
-          style="@style/button"
+          style="?android:attr/buttonBarButtonStyle"
+          android:layout_width="0dip"
+          android:layout_height="match_parent"
           android:layout_weight="1"
           android:text="@string/add"/>
       </LinearLayout>

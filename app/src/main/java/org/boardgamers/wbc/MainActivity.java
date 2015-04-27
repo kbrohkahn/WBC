@@ -1,7 +1,6 @@
 package org.boardgamers.wbc;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
@@ -28,8 +27,7 @@ import java.util.Locale;
 /**
  * Main Activity class
  */
-public class MainActivity extends FragmentActivity
-    implements ActionBar.TabListener, SearchView.OnQueryTextListener {
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
   private final static String TAG="Main Activity";
 
   public static final int SUMMARY_FRAGMENT_POSITION=0;
@@ -258,17 +256,6 @@ public class MainActivity extends FragmentActivity
   public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
   }
 
-  @Override
-  public boolean onQueryTextSubmit(String query) {
-    return false;
-  }
-
-  @Override
-  public boolean onQueryTextChange(String newText) {
-    Log.d(TAG, "TEST:"+newText);
-    return true;
-  }
-
   /**
    * Sets apps currentDay and currentHour variables
    * Static allows for use in notification service
@@ -321,11 +308,28 @@ public class MainActivity extends FragmentActivity
     inflater.inflate(R.menu.main, menu);
 
     SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
-    SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
+    final SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-    searchView.setOnQueryTextListener(this);
+    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+    searchView.setSubmitButtonEnabled(true);
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override public boolean onQueryTextSubmit(String query) {
+        startSearchActivity(query);
+        return false;
+      }
+
+      @Override public boolean onQueryTextChange(String newText) {
+        return false;
+      }
+    });
 
     return true;
+  }
+
+  public void startSearchActivity(String searchString) {
+    Intent intent=new Intent(this, SearchResult.class);
+    intent.putExtra("query", searchString);
+    startActivity(intent);
   }
 
   @Override
