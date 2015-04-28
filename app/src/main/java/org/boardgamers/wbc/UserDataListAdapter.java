@@ -68,12 +68,24 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
       TextView text=(TextView) view.findViewById(R.id.si_text);
       text.setText(((UserDataFragment) fragment).getNote(childPosition));
 
+      if (childPosition%2==0) {
+        view.setBackgroundResource(R.drawable.future_light);
+      } else {
+        view.setBackgroundResource(R.drawable.future_dark);
+      }
+
       return view;
     } else if (groupPosition==FINISHES_INDEX) {
       view=inflater.inflate(R.layout.schedule_item_text, parent, false);
 
       TextView text=(TextView) view.findViewById(R.id.si_text);
       text.setText(((UserDataFragment) fragment).getFinish(childPosition));
+
+      if (childPosition%2==0) {
+        view.setBackgroundResource(R.drawable.ended_light);
+      } else {
+        view.setBackgroundResource(R.drawable.ended_dark);
+      }
 
       return view;
     } else {

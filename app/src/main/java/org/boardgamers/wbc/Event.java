@@ -1,7 +1,7 @@
 package org.boardgamers.wbc;
 
 public class Event {
-
+  public int id;
   public String identifier;
   public int tournamentID;
 
@@ -20,24 +20,48 @@ public class Event {
 
   // user variables
   public boolean starred;
+  public String note;
 
-  public Event(String i, int tID, int da, int h, String t, String cl, String f, boolean q,
-               double du, boolean co, double td, String l) {
-    identifier=i;
-    tournamentID=tID;
+  public Event(int id, String identifier, int tournamentID, int day, int hour, String title, String eClass,
+               String eFormat, boolean qualify, double duration, boolean continuous,
+               double totalDuration, String location) {
+    this.id=id;
+    this.identifier=identifier;
+    this.tournamentID=tournamentID;
 
-    day=da;
-    hour=h;
-    title=t;
+    this.day=day;
+    this.hour=hour;
+    this.title=title;
 
-    eClass=cl;
-    format=f;
-    qualify=q;
-    duration=du;
-    continuous=co;
-    totalDuration=td;
+    this.eClass=eClass;
+    this.format=eFormat;
+    this.qualify=qualify;
+    this.duration=duration;
+    this.continuous=continuous;
+    this.totalDuration=totalDuration;
 
-    location=l;
+    this.location=location;
+
+  }
+
+  public Event(String identifier, int tournamentID, int day, int hour, String title, String eClass,
+               String eFormat, boolean qualify, double duration, boolean continuous,
+               double totalDuration, String location) {
+    this.identifier=identifier;
+    this.tournamentID=tournamentID;
+
+    this.day=day;
+    this.hour=hour;
+    this.title=title;
+
+    this.eClass=eClass;
+    this.format=eFormat;
+    this.qualify=qualify;
+    this.duration=duration;
+    this.continuous=continuous;
+    this.totalDuration=totalDuration;
+
+    this.location=location;
 
   }
 }
