@@ -26,10 +26,7 @@ public class ScheduleListAdapter extends DefaultScheduleListAdapter implements S
     hours=c.getResources().getStringArray(hoursID);
 
     sections=new String[MainActivity.TOTAL_DAYS];
-    for (int i=0; i<MainActivity.TOTAL_DAYS; i++) {
-      sections[i]=MainActivity.dayStrings[i];
-
-    }
+    System.arraycopy(MainActivity.dayStrings, 0, sections, 0, sections.length);
   }
 
   @Override
@@ -112,11 +109,11 @@ public class ScheduleListAdapter extends DefaultScheduleListAdapter implements S
 
   @Override
   public int getPositionForSection(int sectionIndex) {
-    return sectionIndex;
+    return sectionIndex*MainActivity.GROUPS_PER_DAY;
   }
 
   public int getSectionForPosition(int position) {
-    return position;
+    return position/MainActivity.GROUPS_PER_DAY;
   }
 
   public Object[] getSections() {

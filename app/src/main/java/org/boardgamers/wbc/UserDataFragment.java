@@ -171,9 +171,6 @@ public class UserDataFragment extends DefaultListFragment {
     editor.apply();
   }
 
-  private void showCreateDialog() {
-  }
-
   public void editEvent(int index) {
     UserDataFragment.selectedEvent=index;
     DialogEditEvent editNameDialog=new DialogEditEvent();
