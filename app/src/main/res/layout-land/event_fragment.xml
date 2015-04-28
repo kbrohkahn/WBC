@@ -23,8 +23,7 @@
       android:id="@+id/ef_title"
       style="@style/medium_text"
       android:layout_width="wrap_content"
-      android:layout_alignParentTop="true"
-      android:layout_centerHorizontal="true"
+      android:layout_centerInParent="true"
       android:layout_margin="@dimen/default_margin"
       android:text="@string/event_title"/>
 
@@ -32,8 +31,8 @@
       android:id="@+id/ef_time"
       style="@style/medium_text"
       android:layout_width="wrap_content"
-      android:layout_below="@+id/ef_title"
-      android:layout_centerHorizontal="true"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentTop="true"
       android:drawablePadding="@dimen/default_margin"
       android:text="@string/event_time"/>
 
@@ -41,8 +40,8 @@
       android:id="@+id/ef_location"
       style="@style/medium_text"
       android:layout_width="wrap_content"
+      android:layout_alignParentRight="true"
       android:layout_below="@+id/ef_time"
-      android:layout_centerHorizontal="true"
       android:text="@string/event_location"/>
   </RelativeLayout>
 
@@ -61,6 +60,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin"
         android:orientation="horizontal">
+
+        <ImageView
+          android:id="@+id/ef_box_image"
+          android:layout_width="0dip"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:adjustViewBounds="true"
+          android:contentDescription="@string/event"
+          android:scaleType="fitXY"/>
 
         <LinearLayout
           android:layout_width="0dip"
@@ -104,38 +112,30 @@
 
         </LinearLayout>
 
-        <ImageView
-          android:id="@+id/ef_box_image"
+        <RelativeLayout
           android:layout_width="0dip"
           android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:adjustViewBounds="true"
-          android:contentDescription="@string/event"
-          android:scaleType="fitXY"/>
+          android:layout_marginTop="@dimen/layout_margin_small"
+          android:layout_weight="3">
+
+          <ImageView
+            android:id="@+id/ef_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/mf_upstairs"
+            android:scaleType="fitXY"/>
+
+          <ImageView
+            android:id="@+id/ef_map_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/mf_upstairs"
+            android:scaleType="fitXY"/>
+        </RelativeLayout>
 
       </LinearLayout>
-
-      <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/layout_margin_small">
-
-        <ImageView
-          android:id="@+id/ef_map"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:adjustViewBounds="true"
-          android:contentDescription="@string/mf_upstairs"
-          android:scaleType="fitXY"/>
-
-        <ImageView
-          android:id="@+id/ef_map_overlay"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:adjustViewBounds="true"
-          android:contentDescription="@string/mf_upstairs"
-          android:scaleType="fitXY"/>
-      </RelativeLayout>
 
       <LinearLayout
         android:id="@+id/ef_finish_layout"

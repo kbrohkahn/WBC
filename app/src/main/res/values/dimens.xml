@@ -2,8 +2,8 @@
 <resources>
 
   <dimen name="activity_margin">4dp</dimen>
-  <dimen name="text_margin_small">12dp</dimen>
-  <dimen name="text_margin_large">24dp</dimen>
+  <dimen name="layout_margin_small">12dp</dimen>
+  <dimen name="layout_margin_large">24dp</dimen>
   <dimen name="default_margin">4dp</dimen>
   <dimen name="navigation_padding">16dp</dimen>
   <dimen name="map_margin_upstairs_land">12dp</dimen>

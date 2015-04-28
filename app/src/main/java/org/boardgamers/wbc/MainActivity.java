@@ -39,7 +39,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   public static final int TOTAL_DAYS=9;
 
   public static String SELECTED_EVENT_ID="";
-  public static String SELECTED_ROOM;
   public static int NUM_EVENTS;
 
   public static int currentDay;

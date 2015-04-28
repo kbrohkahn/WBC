@@ -42,7 +42,7 @@
     <item name="android:textColor">@color/primary</item>
     <item name="android:textStyle">bold</item>
     <item name="android:gravity">left</item>
-    <item name="android:layout_marginTop">@dimen/text_margin_large</item>
+    <item name="android:layout_marginTop">@dimen/layout_margin_large</item>
   </style>
 
   <style name="div_v">

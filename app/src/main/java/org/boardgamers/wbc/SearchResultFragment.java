@@ -62,7 +62,8 @@ public class SearchResultFragment extends DefaultListFragment {
 
     for (int i=0; i<MainActivity.dayList.size(); i++) {
       for (Event event : MainActivity.dayList.get(i)) {
-        if (event.title.contains(query) || event.format.contains(query)) {
+        if (event.title.toLowerCase().contains(query) ||
+            event.format.toLowerCase().contains(query)) {
           resultEvents.get(i/MainActivity.GROUPS_PER_DAY).add(event);
           if (!event.starred) {
             allStarred=false;

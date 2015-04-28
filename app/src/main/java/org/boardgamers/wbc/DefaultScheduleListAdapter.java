@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,20 +81,9 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
     }
 
     TextView location=(TextView) view.findViewById(R.id.si_location);
+    location.setText(event.location);
     location.setTypeface(null, tType);
     location.setTextColor(tColor);
-
-    SpannableString locationText=new SpannableString(event.location);
-    locationText.setSpan(new UnderlineSpan(), 0, locationText.length(), 0);
-    location.setText(locationText);
-    location.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        MainActivity.SELECTED_ROOM=event.location;
-        Intent intent=new Intent(fragment.getActivity(), MapActivity.class);
-        fragment.getActivity().startActivity(intent);
-      }
-    });
 
     ImageView starIV=(ImageView) view.findViewById(R.id.si_star);
     starIV.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);

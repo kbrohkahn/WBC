@@ -44,7 +44,7 @@ public class SearchResultActivity extends Activity {
   private void handleIntent(Intent intent) {
     String query=null;
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-      query=intent.getStringExtra(SearchManager.QUERY);
+      query=intent.getStringExtra(SearchManager.QUERY).toLowerCase();
     } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
       Uri data=intent.getData();
       query=data.getLastPathSegment().toLowerCase();

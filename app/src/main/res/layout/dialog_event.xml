@@ -24,7 +24,7 @@
       <EditText
         android:id="@+id/ce_title"
         style="@style/medium_text"
-        android:layout_marginTop="@dimen/text_margin_small"
+        android:layout_marginTop="@dimen/layout_margin_small"
         android:hint="@string/ce_title"
         android:imeOptions="actionNext"
         android:singleLine="true"/>
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/text_margin_large"
+        android:layout_marginTop="@dimen/layout_margin_large"
         android:orientation="horizontal">
 
         <TextView
@@ -75,7 +75,7 @@
       <EditText
         android:id="@+id/ce_location"
         style="@style/medium_text"
-        android:layout_marginTop="@dimen/text_margin_large"
+        android:layout_marginTop="@dimen/layout_margin_large"
         android:hint="@string/ce_location"
         android:imeOptions="actionDone"
         android:singleLine="true"/>
@@ -83,7 +83,7 @@
       <TextView
         android:id="@+id/ce_days"
         style="@style/medium_text"
-        android:layout_marginTop="@dimen/text_margin_large"
+        android:layout_marginTop="@dimen/layout_margin_large"
         android:gravity="center"
         android:text="@string/ce_days"/>
 
@@ -91,7 +91,7 @@
         android:id="@+id/ce_days_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/text_margin_small"
+        android:layout_marginTop="@dimen/layout_margin_small"
         android:baselineAligned="false"
         android:orientation="horizontal">
 

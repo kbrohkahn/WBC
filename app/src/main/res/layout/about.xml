@@ -11,19 +11,19 @@
     <TextView
       android:id="@+id/about_app_version"
       style="@style/medium_text"
-      android:layout_marginTop="@dimen/text_margin_large"
+      android:layout_marginTop="@dimen/layout_margin_large"
       android:gravity="center"/>
 
     <TextView
       style="@style/medium_text"
-      android:layout_marginTop="@dimen/text_margin_large"
+      android:layout_marginTop="@dimen/layout_margin_large"
       android:autoLink="email"
       android:gravity="center"
       android:text="@string/about_developer_text"/>
 
     <TextView
       style="@style/medium_text"
-      android:layout_marginTop="@dimen/text_margin_large"
+      android:layout_marginTop="@dimen/layout_margin_large"
       android:gravity="center"
       android:text="@string/about_others_text"
       android:textSize="14sp"/>

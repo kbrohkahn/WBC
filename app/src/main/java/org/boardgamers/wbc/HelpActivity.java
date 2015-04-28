@@ -50,9 +50,9 @@ public class HelpActivity extends Activity {
     int count=headerStrings.length;
     aboutHeaders=new TextView[count];
     aboutTexts=new TextView[count];
-    int headerPadding=(int) getResources().getDimension(R.dimen.text_margin_small);
+    int headerPadding=(int) getResources().getDimension(R.dimen.layout_margin_small);
     int textPadding=(int) getResources().getDimension(R.dimen.default_margin);
-    int bottomPadding=(int) getResources().getDimension(R.dimen.text_margin_large);
+    int bottomPadding=(int) getResources().getDimension(R.dimen.layout_margin_large);
     TextView tempTV;
     for (int i=0; i<count; i++) {
       tempTV=new TextView(this);
