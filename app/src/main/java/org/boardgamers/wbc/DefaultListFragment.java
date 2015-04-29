@@ -1,6 +1,7 @@
 package org.boardgamers.wbc;
 
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,24 +21,17 @@ public class DefaultListFragment extends Fragment {
     View view=inflater.inflate(getLayoutId(), container, false);
 
     listView=(ExpandableListView) view.findViewById(R.id.default_list_view);
-
-    listAdapter=getAdapter();
-    listView.setAdapter(listAdapter);
     listView.setDividerHeight(0);
 
-    if (listAdapter.getGroup(0)!=null) {
-      expandGroups(listAdapter.getGroupCount(), 0, true);
-    }
+    startLoadTask();
 
     return view;
   }
 
+  public void startLoadTask() {}
+
   protected int getLayoutId() {
     return R.layout.default_list;
-  }
-
-  protected DefaultScheduleListAdapter getAdapter() {
-    return null;
   }
 
   public void expandGroups(int count, int start, boolean all) {
@@ -63,6 +57,31 @@ public class DefaultListFragment extends Fragment {
   public void updateList() {
     if (listAdapter!=null) {
       listAdapter.notifyDataSetChanged();
+    }
+  }
+
+  class LoadAdapterClass extends AsyncTask<Integer, Integer, Integer> {
+    protected DefaultListFragment fragment;
+
+    public LoadAdapterClass() {}
+
+    @Override
+    protected void onPostExecute(Integer integer) {
+      if (listAdapter.getGroup(0)!=null) {
+        expandGroups(listAdapter.getGroupCount(), 0, true);
+      }
+
+      listAdapter.hoursIntoConvention=MainActivity.getHoursIntoConvention();
+      listAdapter.notifyDataSetChanged();
+
+      super.onPostExecute(integer);
+    }
+
+    @Override
+    protected Integer doInBackground(Integer... params) {
+      listView.setAdapter(listAdapter);
+
+      return null;
     }
   }
 }

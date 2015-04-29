@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -21,7 +22,6 @@ import android.widget.SearchView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -30,10 +30,6 @@ import java.util.Locale;
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
   private final static String TAG="Main Activity";
 
-  public static final int SUMMARY_FRAGMENT_POSITION=0;
-  public static final int SCHEDULE_FRAGMENT_POSITION=1;
-  public static final int USER_DATA_FRAGMENT_POSITION=2;
-
   public static final int HOURS_PER_DAY=18;
   public static final int GROUPS_PER_DAY=HOURS_PER_DAY+1;
   public static final int TOTAL_DAYS=9;
@@ -41,61 +37,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   public static String SELECTED_EVENT_ID="";
   public static int NUM_EVENTS;
 
-  public static int currentDay;
-  public static int currentHour;
-
-  public static List<Tournament> allTournaments;
-  public static List<List<Event>> dayList;
-  public static String[] dayStrings;
+  private static int currentDay;
+  private static int currentHour;
 
   private static ViewPager viewPager;
   private static TabsPagerAdapter pagerAdapter;
 
+  private Handler handler=new Handler();
+
   // Tab titles
   private String[] tabs={"Starred", "Schedule", "My Data"};
-
-  /**
-   * Add starred help to "My Events" group in list
-   *
-   * @param event - Event that was starred
-   */
-  public static void addStarredEvent(Event event) {
-    Event starredEvent=
-        new Event(event.identifier, event.tournamentID, event.day, event.hour, event.title,
-            event.eClass, event.format, event.qualify, event.duration, event.continuous,
-            event.totalDuration, event.location);
-    starredEvent.starred=true;
-
-    // add event to day list(time, then title)
-    List<Event> events=dayList.get(starredEvent.day*GROUPS_PER_DAY);
-    Event tempEvent;
-    int index;
-    for (index=0; index<events.size(); index++) {
-      tempEvent=events.get(index);
-      if (starredEvent.hour<tempEvent.hour || (starredEvent.hour==tempEvent.hour &&
-          starredEvent.title.compareToIgnoreCase(tempEvent.title)==1)) {
-        break;
-      }
-    }
-
-    events.add(index, starredEvent);
-  }
-
-  /**
-   * Remove starred help from "My Events" group in list
-   *
-   * @param identifier - help id
-   * @param day        - help's currentDay, used to find which my events group
-   */
-  public static void removeStarredEvent(String identifier, int day) {
-    List<Event> myEvents=dayList.get(day*GROUPS_PER_DAY);
-    for (Event tempE : myEvents) {
-      if (tempE.identifier.equalsIgnoreCase(identifier)) {
-        myEvents.remove(tempE);
-        break;
-      }
-    }
-  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +57,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     viewPager=(ViewPager) findViewById(R.id.pager);
     pagerAdapter=new TabsPagerAdapter(getFragmentManager());
     viewPager.setAdapter(pagerAdapter);
+
+    NUM_EVENTS=getIntent().getIntExtra("totalEvents", -1);
 
     final ActionBar actionBar=getActionBar();
     if (actionBar!=null) {
@@ -138,12 +91,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       }
     });
 
-    int latestDialogVersion=13;
-
+    // SHOW INITIAL DIALOG
     SharedPreferences sp=
         getSharedPreferences(getResources().getString(R.string.sp_file_name), Context.MODE_PRIVATE);
     int version=sp.getInt("last_app_version", 0);
-
+    int latestDialogVersion=13;
     // alert to notify email for questions
     if (version<latestDialogVersion) {
       AlertDialog.Builder initialBuilder=new AlertDialog.Builder(this);
@@ -174,7 +126,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     editor.putInt("last_app_version", versionCode);
     editor.apply();
 
-    // check for changes
+    // SHOW CHANGES DIALOG
     String allChanges=getIntent().getStringExtra("allChanges");
     if (allChanges!=null && !allChanges.equalsIgnoreCase("")) {
       AlertDialog.Builder changesBuilder=new AlertDialog.Builder(this);
@@ -188,44 +140,41 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       changesBuilder.create().show();
     }
 
+    // SET TIME AND START RUNNABLE
+    Calendar calendar=Calendar.getInstance();
+    currentHour=calendar.get(Calendar.HOUR_OF_DAY);
+
+    SimpleDateFormat dateFormatter=new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    String dateString=dateFormatter.format(calendar.getTime());
+
+    currentDay=-1;
+    String[] daysForParsing=getResources().getStringArray(R.array.daysForParsing);
+    for (int i=0; i<daysForParsing.length; i++) {
+      if (daysForParsing[i].equalsIgnoreCase(dateString)) {
+        currentDay=i;
+        break;
+      }
+    }
+
+    // TODO TESTING: set currentDay to day of week
+    currentDay=(calendar.get(Calendar.DAY_OF_WEEK));
+
+    if (currentDay>-1) {
+      handler.postAtTime(runnable, calendar.getTimeInMillis()/60*60*1000+60*60*1000);
+    }
+
+    Log.d(TAG, "onCreate finished");
   }
 
   public void updateFragment(int position) {
-    switch (position) {
-      case SUMMARY_FRAGMENT_POSITION:
-        SummaryFragment summaryFragment=
-            (SummaryFragment) pagerAdapter.getItem(SUMMARY_FRAGMENT_POSITION);
-        if (summaryFragment!=null) {
-          summaryFragment.updateList();
-        }
-        break;
-
-      case SCHEDULE_FRAGMENT_POSITION:
-        ScheduleFragment scheduleFragment=
-            (ScheduleFragment) pagerAdapter.getItem(SCHEDULE_FRAGMENT_POSITION);
-        if (scheduleFragment!=null) {
-          scheduleFragment.updateList();
-        }
-        break;
-
-      case USER_DATA_FRAGMENT_POSITION:
-        UserDataFragment userDataFragment=
-            (UserDataFragment) pagerAdapter.getItem(USER_DATA_FRAGMENT_POSITION);
-        if (userDataFragment!=null) {
-          userDataFragment.updateList();
-        }
-        break;
-
-      default:
-        updateFragment(viewPager.getCurrentItem());
-        break;
+    if (position==-1) {
+      position=viewPager.getCurrentItem();
     }
-  }
 
-  @Override
-  protected void onResume() {
-    setCurrentTime(getResources().getStringArray(R.array.daysForParsing));
-    super.onResume();
+    DefaultListFragment fragment=(DefaultListFragment) pagerAdapter.getItem(position);
+    if (fragment!=null && fragment.isAdded()) {
+      fragment.updateList();
+    }
   }
 
   @Override
@@ -234,7 +183,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
   @Override
   public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-    viewPager.setCurrentItem(tab.getPosition());
+    int position=tab.getPosition();
+
+    viewPager.setCurrentItem(position);
+
+    DefaultListFragment fragment=(DefaultListFragment) pagerAdapter.getItem(position);
+    if (fragment!=null && fragment.isAdded()) {
+      fragment.updateList();
+    }
   }
 
   @Override
@@ -242,49 +198,49 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   }
 
   /**
-   * Sets apps currentDay and currentHour variables
-   * Static allows for use in notification service
+   * Update currentHour (and currentDay), run every hour when app is running
    */
-  public static void setCurrentTime(String[] daysForParsing) {
-    Calendar calendar=Calendar.getInstance();
+  private final Runnable runnable=new Runnable() {
+    @Override
+    public void run() {
+      handler.postDelayed(this, 60*60*1000);
 
-    // get currentHour
-    currentHour=calendar.get(Calendar.HOUR_OF_DAY);
-
-    SimpleDateFormat dateFormatter=new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-    String dateString=dateFormatter.format(calendar.getTime());
-
-    // get currentDay
-    currentDay=-1;
-    for (int i=0; i<daysForParsing.length; i++) {
-      if (daysForParsing[i].equalsIgnoreCase(dateString)) {
-        currentDay=i;
-        break;
+      currentHour++;
+      if (currentHour==24) {
+        currentHour=0;
+        currentDay++;
+        if (currentDay==9) {
+          currentDay=0;
+        }
       }
     }
+  };
 
-    // TODO comment before release
-    // set currentDay to day of week for testing
-    currentDay=(calendar.get(Calendar.DAY_OF_WEEK)-2)%7;
-
+  /**
+   * Get hours elapsed since midnight on the first day
+   *
+   * @return hours elapsed since midnight of the first day
+   */
+  public static int getHoursIntoConvention() {
+    if (currentDay==-1) {
+      return currentDay;
+    } else {
+      return currentDay*24+currentHour;
+    }
   }
 
-  @Override
-  public void onPause() {
-    // save starred states for all events
-    SharedPreferences.Editor editor=
-        getSharedPreferences(getResources().getString(R.string.sp_file_name), Context.MODE_PRIVATE)
-            .edit();
-    String starPrefString=getResources().getString(R.string.sp_event_starred);
-
-    for (List<Event> events : dayList) {
-      for (Event event : events) {
-        editor.putBoolean(starPrefString+event.identifier, event.starred);
-      }
+  /**
+   * Get the current group, based on currentDay and currentHour. If hour is between 24
+   * and 7, select group 0 of that day
+   *
+   * @return groupNumber
+   */
+  public static int getCurrentGroup() {
+    if (currentDay==-1) {
+      return 0;
+    } else {
+      return currentDay*GROUPS_PER_DAY+Math.max(0, currentHour-6);
     }
-    editor.apply();
-
-    super.onPause();
   }
 
   @Override

@@ -10,29 +10,31 @@ import java.util.List;
  */
 public class SummaryListAdapter extends DefaultScheduleListAdapter {
 
+
+
   public SummaryListAdapter(Context c, SummaryFragment f) {
     super(c, f);
   }
 
   @Override
   public void changeEventStar(Event event, int groupPosition, int childPosition) {
-    MainActivity.dayList.get(groupPosition*MainActivity.GROUPS_PER_DAY).remove(childPosition);
-
-    List<Event> events=
-        MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
-    for (Event tempEvent : events) {
-      if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {
-        tempEvent.starred=false;
-        break;
-      }
-    }
+//    MainActivity.dayList.get(groupPosition*MainActivity.GROUPS_PER_DAY).remove(childPosition);
+//
+//    List<Event> events=
+//        MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
+//    for (Event tempEvent : events) {
+//      if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {
+//        tempEvent.starred=false;
+//        break;
+//      }
+//    }
 
     super.changeEventStar(event, groupPosition, childPosition);
   }
 
   @Override
   public String getGroupTitle(final int groupPosition) {
-    return MainActivity.dayStrings[groupPosition];
+    return dayStrings[groupPosition];
   }
 
   @Override

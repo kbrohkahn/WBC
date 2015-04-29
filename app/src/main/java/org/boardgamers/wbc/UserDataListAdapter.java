@@ -97,21 +97,21 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
   public void changeEventStar(Event event, int groupPosition, int childPosition) {
     event.starred=!event.starred;
 
-    if (event.starred) {
-      MainActivity.addStarredEvent(event);
-    } else {
-      List<Event> events=
-          MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
-      for (Event tempEvent : events) {
-        if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {
-          tempEvent.starred=false;
-          break;
-        }
-      }
-
-      MainActivity.removeStarredEvent(event.identifier, event.day);
-
-    }
+//    if (event.starred) {
+//      MainActivity.addStarredEvent(event);
+//    } else {
+//      List<Event> events=
+//          MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
+//      for (Event tempEvent : events) {
+//        if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {
+//          tempEvent.starred=false;
+//          break;
+//        }
+//      }
+//
+//      MainActivity.removeStarredEvent(event.identifier, event.day);
+//
+//    }
 
     super.changeEventStar(event, groupPosition, childPosition);
   }

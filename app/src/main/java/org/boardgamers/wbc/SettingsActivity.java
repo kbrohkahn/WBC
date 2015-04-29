@@ -1,6 +1,7 @@
 package org.boardgamers.wbc;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
@@ -60,5 +61,15 @@ public class SettingsActivity extends PreferenceActivity {
     } else {
       return super.onOptionsItemSelected(item);
     }
+  }
+
+  @Override
+  public void onPause() {
+    Intent intent=new Intent(this, NotificationService.class);
+
+    stopService(intent);
+    startService(intent);
+
+    super.onPause();
   }
 }

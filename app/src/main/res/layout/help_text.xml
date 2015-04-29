@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+  style="@style/medium_text"
+  android:lineSpacingExtra="1px"
+  android:lineSpacingMultiplier="1"
+  android:padding="@dimen/default_margin"
+  android:layout_marginBottom="@dimen/layout_margin_large"
+  android:visibility="gone"
+  android:autoLink="web"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:text="@string/activity_help"/>

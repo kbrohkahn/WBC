@@ -10,13 +10,13 @@
     class="org.boardgamers.wbc.SearchResultFragment"
     android:layout_width="0dp"
     android:layout_height="match_parent"
-    android:layout_weight="1">
+    android:layout_weight="2">
   </fragment>
 
   <View style="@style/div_v"/>
 
   <fragment
-    android:id="@+id/search_eventFragment"
+    android:id="@+id/eventFragment"
     class="org.boardgamers.wbc.EventFragment"
     android:layout_width="0dp"
     android:layout_height="match_parent"

@@ -21,7 +21,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
- * Created by Kevin on 4/24/2015.
+ * Created by Kevin on 4/24/2015
+ * Dialog shown for creating user events
  */
 public class DialogCreateEvent extends DialogFragment {
 
@@ -138,10 +139,11 @@ public class DialogCreateEvent extends DialogFragment {
       }
     });
 
-    days=new CheckBox[MainActivity.dayStrings.length];
-    for (int i=0; i<MainActivity.dayStrings.length; i++) {
+    String[] dayStrings=getResources().getStringArray(R.array.days);
+    days=new CheckBox[dayStrings.length];
+    for (int i=0; i<dayStrings.length; i++) {
       days[i]=(CheckBox) view.findViewById(ceDayIDs[i]);
-      days[i].setText(MainActivity.dayStrings[i]);
+      days[i].setText(dayStrings[i]);
       days[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
         @Override

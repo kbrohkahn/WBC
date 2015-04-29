@@ -26,7 +26,7 @@ public class ScheduleListAdapter extends DefaultScheduleListAdapter implements S
     hours=c.getResources().getStringArray(hoursID);
 
     sections=new String[MainActivity.TOTAL_DAYS];
-    System.arraycopy(MainActivity.dayStrings, 0, sections, 0, sections.length);
+    System.arraycopy(dayStrings, 0, sections, 0, sections.length);
   }
 
   @Override
@@ -78,16 +78,17 @@ public class ScheduleListAdapter extends DefaultScheduleListAdapter implements S
   @Override
   public String getGroupTitle(final int groupPosition) {
     if (groupPosition%MainActivity.GROUPS_PER_DAY==0) {
-      return MainActivity.dayStrings[groupPosition/MainActivity.GROUPS_PER_DAY];
+      return dayStrings[groupPosition/MainActivity.GROUPS_PER_DAY];
     } else {
       String groupTitle=hours[(groupPosition%MainActivity.GROUPS_PER_DAY)-1]+": ";
 
-      for (int i=0; i<MainActivity.TOTAL_DAYS; i++) {
+      int day;
+      for (int i=0; i<groupPosition/MainActivity.GROUPS_PER_DAY+1; i++) {
         for (Event event : MainActivity.dayList.get(i*MainActivity.GROUPS_PER_DAY)) {
           // check if starred help has started
-          if (groupPosition/MainActivity.GROUPS_PER_DAY*24+groupPosition+6>=i*24+event.hour &&
-              groupPosition/MainActivity.GROUPS_PER_DAY*24+groupPosition+6<
-                  i*24+event.hour+event.totalDuration) {
+          day=groupPosition/MainActivity.GROUPS_PER_DAY;
+          if (day*24+groupPosition+6>=i*24+event.hour &&
+              day*24+groupPosition+6<i*24+event.hour+event.totalDuration) {
             groupTitle+=event.title+", ";
           }
         }

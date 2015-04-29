@@ -82,6 +82,7 @@ public class EventFragment extends Fragment {
   private final Runnable runnable=new Runnable() {
     @Override
     public void run() {
+      updateActive=false;
       changeMapOverlay();
     }
   };
@@ -157,7 +158,7 @@ public class EventFragment extends Fragment {
   public void onResume() {
     super.onResume();
 
-    if (roomID>-1 && !updateActive) {
+    if (roomID>-1) {
       startOverlayUpdate();
     }
   }
@@ -178,7 +179,9 @@ public class EventFragment extends Fragment {
     } else {
       minute="00";
     }
-    eTime.setText(MainActivity.dayStrings[event.day]+", "+String.valueOf(event.hour)+"00 to "+
+
+    String[] dayStrings=getResources().getStringArray(R.array.days);
+    eTime.setText(dayStrings[event.day]+", "+String.valueOf(event.hour)+"00 to "+
         String.valueOf((event.hour+(int) event.duration)+minute));
     if (event.continuous) {
       eTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
@@ -193,9 +196,9 @@ public class EventFragment extends Fragment {
     note=sp.getString(getResources().getString(R.string.sp_event_note)+event.identifier, "");
     noteET.setText(note);
 
-    boolean started=event.day*24+event.hour<=MainActivity.currentDay*24+MainActivity.currentHour;
-    boolean ended=event.day*24+event.hour+event.totalDuration<=
-        MainActivity.currentDay*24+MainActivity.currentHour;
+    int hoursIntoConvention=MainActivity.getHoursIntoConvention();
+    boolean started=event.day*24+event.hour<=hoursIntoConvention;
+    boolean ended=event.day*24+event.hour+event.totalDuration<=hoursIntoConvention;
     boolean happening=started && !ended;
 
     if (ended) {
@@ -249,7 +252,9 @@ public class EventFragment extends Fragment {
       reportLink.setVisibility(View.GONE);
     }
 
-    new DownloadImageTask().execute("http://boardgamers.org/boxart/"+tournament.label+".jpg");
+    if (tournament.isTournament) {
+      new DownloadImageTask().execute("http://boardgamers.org/boxart/"+tournament.label+".jpg");
+    }
   }
 
   private void changeEventStar() {
@@ -282,7 +287,10 @@ public class EventFragment extends Fragment {
     }
 
     // TODO
-    // ((MainActivity) getActivity()).updateFragment(-1);
+    if (getActivity() instanceof MainActivity) {
+      Log.d(TAG, "EventFragment's activity ius MainActivity");
+      ((MainActivity) getActivity()).updateFragment(-1);
+    }
   }
 
   private void share() {
@@ -376,8 +384,10 @@ public class EventFragment extends Fragment {
   }
 
   private void startOverlayUpdate() {
-    updateActive=true;
-    handler.postDelayed(runnable, 500);
+    if (!updateActive) {
+      updateActive=true;
+      handler.postDelayed(runnable, 500);
+    }
   }
 
   private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

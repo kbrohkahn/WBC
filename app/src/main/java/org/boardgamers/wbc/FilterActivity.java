@@ -16,9 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class FilterActivity extends Activity {
+  private final String TAG="Filter Activity";
 
   private static CheckBox[] tournamentCBs;
-  private final String TAG="Filter Activity";
   private Boolean[] isTournament;
 
   protected void onCreate(Bundle savedInstanceState) {

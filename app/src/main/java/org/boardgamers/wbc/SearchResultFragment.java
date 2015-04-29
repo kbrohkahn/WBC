@@ -1,6 +1,7 @@
 package org.boardgamers.wbc;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultFragment extends DefaultListFragment {
-  //private final String TAG="Search Fragment";
+  private final String TAG="Search Fragment";
 
   private List<List<Event>> resultEvents;
   private boolean allStarred;
@@ -45,8 +46,10 @@ public class SearchResultFragment extends DefaultListFragment {
 
     setGameStarIV();
 
-    if (MainActivity.currentDay>-1) {
-      listView.setSelectedGroup(MainActivity.currentDay);
+    Log.d(TAG, String.valueOf(-1/19));
+
+    if (listAdapter.hoursIntoConvention>-1) {
+      listView.setSelectedGroup(listAdapter.hoursIntoConvention/MainActivity.GROUPS_PER_DAY);
     }
 
     return view;
@@ -60,11 +63,19 @@ public class SearchResultFragment extends DefaultListFragment {
       resultEvents.add(new ArrayList<Event>());
     }
 
+    boolean selected=false;
     for (int i=0; i<MainActivity.dayList.size(); i++) {
       for (Event event : MainActivity.dayList.get(i)) {
         if (event.title.toLowerCase().contains(query) ||
             event.format.toLowerCase().contains(query)) {
           resultEvents.get(i/MainActivity.GROUPS_PER_DAY).add(event);
+
+          // select the first event that hasn't started
+          if (!selected && event.day*24+event.hour>listAdapter.hoursIntoConvention) {
+            MainActivity.SELECTED_EVENT_ID=event.identifier;
+            selected=true;
+          }
+
           if (!event.starred) {
             allStarred=false;
           }
@@ -75,9 +86,28 @@ public class SearchResultFragment extends DefaultListFragment {
     listAdapter.notifyDataSetChanged();
   }
 
-  @Override
-  protected DefaultScheduleListAdapter getAdapter() {
-    return new SearchListAdapter(getActivity(), this);
+  public void startLoadTask() {
+    new LoadSearchAdapterClass(this).doInBackground(0, 0, 0);
+  }
+
+  class LoadSearchAdapterClass extends DefaultListFragment.LoadAdapterClass {
+    public LoadSearchAdapterClass(SearchResultFragment f) {
+      fragment=f;
+    }
+
+    @Override
+    protected void onPostExecute(Integer integer) {
+      listView.setSelectedGroup(MainActivity.getCurrentGroup()/MainActivity.GROUPS_PER_DAY);
+
+      super.onPostExecute(integer);
+    }
+
+    @Override
+    protected Integer doInBackground(Integer... params) {
+      listAdapter=new SearchListAdapter(getActivity(), (SearchResultFragment) fragment);
+
+      return super.doInBackground(params);
+    }
   }
 
   public List<Event> getGroup(int group) {

@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * Created by Kevin on 4/24/2015.
+ * Dialog shown for deleting user events
  */
 public class DialogDeleteEvent extends DialogFragment {
   // private final String TAG="DeleteDialog";

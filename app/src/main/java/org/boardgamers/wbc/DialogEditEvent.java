@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * Created by Kevin on 4/24/2015.
+ * Dialog shown for editing user events. Extended from DialogCreateEvent, just edit existing views
  */
 public class DialogEditEvent extends DialogCreateEvent {
   // private final String TAG="WBC EditEventDialog";

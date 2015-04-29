@@ -11,6 +11,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,10 +28,19 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
 
   protected final LayoutInflater inflater;
   protected final DefaultListFragment fragment;
+  protected final String[] dayStrings;
+
+  public int hoursIntoConvention;
+
+  private List<List<Event>> events;
+  private List<Boolean> tournamentsVisible;
 
   public DefaultScheduleListAdapter(Context c, DefaultListFragment f) {
     inflater=(LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     fragment=f;
+
+    hoursIntoConvention=MainActivity.getHoursIntoConvention();
+    dayStrings=c.getResources().getStringArray(R.array.days);
 
     // get resources
     COLOR_JUNIOR=c.getResources().getColor(R.color.junior);
@@ -38,6 +48,28 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
     COLOR_QUALIFY=c.getResources().getColor(R.color.qualify);
     COLOR_NON_TOURNAMENT=c.getResources().getColor(R.color.non_tournament);
     COLOR_OPEN_TOURNAMENT=c.getResources().getColor(R.color.open_tournament);
+
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(c);
+    dbHelper.getReadableDatabase();
+    List<Event> tempEvents=dbHelper.getEvents(null);
+    tournamentsVisible=dbHelper.getAllVisible();
+    dbHelper.close();
+
+    events=new ArrayList<>();
+    int day=-1;
+    int hour=-1;
+    Event event;
+    while (tempEvents.size()>0) {
+
+      event=tempEvents.remove(0);
+
+      if (event.day*24+event.hour > day*24+hour) {
+        events.add(new ArrayList<Event>());
+        day++;
+        hour++;
+      }
+
+    }
   }
 
   @Override
@@ -45,8 +77,7 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
                            View view, ViewGroup parent) {
     final Event event=(Event) getChild(groupPosition, childPosition);
 
-    if (event.starred ||
-        (event.tournamentID>-1 && MainActivity.allTournaments.get(event.tournamentID).visible)) {
+    if (event.starred || (event.tournamentID>-1 && tournamentsVisible.get(event.tournamentID))) {
       view=inflater.inflate(R.layout.schedule_item, parent, false);
     } else {
       return inflater.inflate(R.layout.schedule_item_gone, parent, false);
@@ -94,9 +125,8 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
       }
     });
 
-    boolean started=event.day*24+event.hour<=MainActivity.currentDay*24+MainActivity.currentHour;
-    boolean ended=event.day*24+event.hour+event.totalDuration<=
-        MainActivity.currentDay*24+MainActivity.currentHour;
+    boolean started=event.day*24+event.hour<=hoursIntoConvention;
+    boolean ended=event.day*24+event.hour+event.totalDuration<=hoursIntoConvention;
     boolean happening=started && !ended;
 
     if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID)) {

@@ -29,7 +29,7 @@ public class SearchListAdapter extends DefaultScheduleListAdapter {
 
   @Override
   public String getGroupTitle(final int groupPosition) {
-    return MainActivity.dayStrings[groupPosition];
+    return dayStrings[groupPosition];
   }
 
   @Override

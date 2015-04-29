@@ -43,25 +43,4 @@ public class Event {
     this.location=location;
 
   }
-
-  public Event(String identifier, int tournamentID, int day, int hour, String title, String eClass,
-               String eFormat, boolean qualify, double duration, boolean continuous,
-               double totalDuration, String location) {
-    this.identifier=identifier;
-    this.tournamentID=tournamentID;
-
-    this.day=day;
-    this.hour=hour;
-    this.title=title;
-
-    this.eClass=eClass;
-    this.format=eFormat;
-    this.qualify=qualify;
-    this.duration=duration;
-    this.continuous=continuous;
-    this.totalDuration=totalDuration;
-
-    this.location=location;
-
-  }
 }

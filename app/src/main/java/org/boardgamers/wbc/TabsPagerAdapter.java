@@ -10,7 +10,6 @@ import android.support.v13.app.FragmentPagerAdapter;
  * and UserDataFragment
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
-
   public TabsPagerAdapter(FragmentManager fm) {
     super(fm);
   }
@@ -18,11 +17,11 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
   @Override
   public Fragment getItem(int index) {
     switch (index) {
-      case MainActivity.SUMMARY_FRAGMENT_POSITION:
+      case 0:
         return new SummaryFragment();
-      case MainActivity.SCHEDULE_FRAGMENT_POSITION:
+      case 1:
         return new ScheduleFragment();
-      case MainActivity.USER_DATA_FRAGMENT_POSITION:
+      case 2:
         return new UserDataFragment();
     }
 

@@ -2,12 +2,9 @@ package org.boardgamers.wbc;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.util.Linkify;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,14 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class HelpActivity extends Activity {
-
   private final String TAG="Help Activity";
-  private final View.OnClickListener headerListener=new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-      selectHeader(v.getId());
-    }
-  };
+
   private TextView[] aboutTexts;
   private TextView[] aboutHeaders;
 
@@ -50,39 +41,26 @@ public class HelpActivity extends Activity {
     int count=headerStrings.length;
     aboutHeaders=new TextView[count];
     aboutTexts=new TextView[count];
-    int headerPadding=(int) getResources().getDimension(R.dimen.layout_margin_small);
-    int textPadding=(int) getResources().getDimension(R.dimen.default_margin);
-    int bottomPadding=(int) getResources().getDimension(R.dimen.layout_margin_large);
-    TextView tempTV;
+    TextView textView;
+    LayoutInflater inflater=getLayoutInflater();
     for (int i=0; i<count; i++) {
-      tempTV=new TextView(this);
-      tempTV.setId(i);
-      tempTV.setText(headerStrings[i]);
-      tempTV.setOnClickListener(headerListener);
-      tempTV.setGravity(Gravity.CENTER);
-      tempTV.setPadding(headerPadding, headerPadding, headerPadding, headerPadding);
-      tempTV.setTextColor(getResources().getColor(R.color.white));
-      tempTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-      tempTV.setBackgroundResource(R.drawable.group_collapsed);
-      tempTV.setTypeface(null, Typeface.BOLD_ITALIC);
-      aboutHeaders[i]=tempTV;
-      layout.addView(tempTV);
+      textView=(TextView) inflater.inflate(R.layout.help_header, layout, false);
+      textView.setId(i);
+      textView.setText(headerStrings[i]);
+      textView.setClickable(true);
+      aboutHeaders[i]=textView;
+      layout.addView(textView);
 
-      tempTV=new TextView(this);
-      tempTV.setText(textStrings[i]);
-      tempTV.setLineSpacing(4, 1);
-      tempTV.setPadding(textPadding, 0, textPadding, bottomPadding);
-      tempTV.setVisibility(View.GONE);
-      tempTV.setGravity(Gravity.LEFT);
-      Linkify.addLinks(tempTV, Linkify.WEB_URLS);
-      aboutTexts[i]=tempTV;
-      layout.addView(tempTV);
+      textView=(TextView) inflater.inflate(R.layout.help_text, layout, false);
+      textView.setText(textStrings[i]);
+      aboutTexts[i]=textView;
+      layout.addView(textView);
     }
   }
 
-  public void selectHeader(int index) {
-    boolean vis=aboutTexts[index].isShown();
-    if (vis) {
+  public void headerListener(View view) {
+    int index=view.getId();
+    if (aboutTexts[index].isShown()) {
       aboutHeaders[index].setBackgroundResource(R.drawable.group_collapsed);
       aboutTexts[index].setVisibility(View.GONE);
     } else {

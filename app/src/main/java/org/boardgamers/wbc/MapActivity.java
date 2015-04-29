@@ -28,12 +28,6 @@ public class MapActivity extends Activity {
           R.drawable.room_terrace, R.drawable.room_terrace, R.drawable.room_terrace,
           R.drawable.room_terrace, R.drawable.room_terrace, R.drawable.room_terrace};
 
-  private final Runnable runnable=new Runnable() {
-    @Override
-    public void run() {
-      setRoom();
-    }
-  };
   private ImageView upstairsIV;
   private ImageView downstairsIV;
   private int roomID;
@@ -127,6 +121,13 @@ public class MapActivity extends Activity {
 
     super.onPause();
   }
+
+  private final Runnable runnable=new Runnable() {
+    @Override
+    public void run() {
+      setRoom();
+    }
+  };
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
