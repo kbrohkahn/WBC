@@ -41,7 +41,6 @@ public class FilterActivity extends Activity {
 
     isTournament=dbHelper.getAllVisible();
 
-
     // setup checkboxes
     tournamentCBs=new CheckBox[isTournament.size()];
     CheckBox temp;
@@ -157,8 +156,8 @@ public class FilterActivity extends Activity {
     boolean checked;
     for (int i=0; i<tournamentCBs.length; i++) {
       checked=tournamentCBs[i].isChecked();
-     // editor.putBoolean("vis_"+MainActivity.allTournaments.get(i).title, checked);
-     // MainActivity.allTournaments.get(i).visible=checked;
+      // editor.putBoolean("vis_"+MainActivity.allTournaments.get(i).title, checked);
+      // MainActivity.allTournaments.get(i).visible=checked;
     }
 
     editor.apply();

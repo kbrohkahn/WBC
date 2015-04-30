@@ -22,8 +22,8 @@ public class Event {
   public boolean starred;
   public String note;
 
-  public Event(int id, String identifier, int tournamentID, int day, int hour, String title, String eClass,
-               String eFormat, boolean qualify, double duration, boolean continuous,
+  public Event(int id, String identifier, int tournamentID, int day, int hour, String title,
+               String eClass, String eFormat, boolean qualify, double duration, boolean continuous,
                double totalDuration, String location) {
     this.id=id;
     this.identifier=identifier;

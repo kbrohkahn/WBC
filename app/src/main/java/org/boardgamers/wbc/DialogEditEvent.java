@@ -88,7 +88,6 @@ public class DialogEditEvent extends DialogCreateEvent {
     }
     UserDataListFragment.userEvents.add(index, editedEvent);
 
-
     EventFragment fragment=
         (EventFragment) getActivity().getFragmentManager().findFragmentById(R.id.eventFragment);
 
