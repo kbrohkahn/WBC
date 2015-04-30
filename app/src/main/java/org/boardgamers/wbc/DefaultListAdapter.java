@@ -11,14 +11,13 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Kevin
  */
-public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
-  // private final String TAG="Default Adapter";
+public class DefaultListAdapter extends BaseExpandableListAdapter {
+  private final String TAG="Default Adapter";
 
   private int COLOR_JUNIOR;
   private int COLOR_SEMINAR;
@@ -32,58 +31,30 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
 
   public int hoursIntoConvention;
 
-  private List<List<Event>> events;
-  private List<Boolean> tournamentsVisible;
+  protected List<List<Event>> events;
 
-  public DefaultScheduleListAdapter(Context c, DefaultListFragment f) {
-    inflater=(LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+  public DefaultListAdapter(DefaultListFragment f, List<List<Event>> e) {
+    inflater=(LayoutInflater) f.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     fragment=f;
+    events=e;
 
     hoursIntoConvention=MainActivity.getHoursIntoConvention();
-    dayStrings=c.getResources().getStringArray(R.array.days);
+    dayStrings=f.getResources().getStringArray(R.array.days);
 
     // get resources
-    COLOR_JUNIOR=c.getResources().getColor(R.color.junior);
-    COLOR_SEMINAR=c.getResources().getColor(R.color.seminar);
-    COLOR_QUALIFY=c.getResources().getColor(R.color.qualify);
-    COLOR_NON_TOURNAMENT=c.getResources().getColor(R.color.non_tournament);
-    COLOR_OPEN_TOURNAMENT=c.getResources().getColor(R.color.open_tournament);
-
-    WBCDataDbHelper dbHelper=new WBCDataDbHelper(c);
-    dbHelper.getReadableDatabase();
-    List<Event> tempEvents=dbHelper.getEvents(null);
-    tournamentsVisible=dbHelper.getAllVisible();
-    dbHelper.close();
-
-    events=new ArrayList<>();
-    int day=-1;
-    int hour=-1;
-    Event event;
-    while (tempEvents.size()>0) {
-
-      event=tempEvents.remove(0);
-
-      if (event.day*24+event.hour > day*24+hour) {
-        events.add(new ArrayList<Event>());
-        day++;
-        hour++;
-      }
-
-    }
+    COLOR_JUNIOR=f.getResources().getColor(R.color.junior);
+    COLOR_SEMINAR=f.getResources().getColor(R.color.seminar);
+    COLOR_QUALIFY=f.getResources().getColor(R.color.qualify);
+    COLOR_NON_TOURNAMENT=f.getResources().getColor(R.color.non_tournament);
+    COLOR_OPEN_TOURNAMENT=f.getResources().getColor(R.color.open_tournament);
   }
 
   @Override
-  public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
-                           View view, ViewGroup parent) {
+  public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view,
+                           ViewGroup parent) {
     final Event event=(Event) getChild(groupPosition, childPosition);
 
-    if (event.starred || (event.tournamentID>-1 && tournamentsVisible.get(event.tournamentID))) {
-      view=inflater.inflate(R.layout.schedule_item, parent, false);
-    } else {
-      return inflater.inflate(R.layout.schedule_item_gone, parent, false);
-    }
-
-    view.setVisibility(View.VISIBLE);
+    view=inflater.inflate(R.layout.schedule_item, parent, false);
 
     int tColor=getTextColor(event);
     int tType=getTextStyle(event);
@@ -121,7 +92,8 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
     starIV.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        changeEventStar(event, groupPosition, childPosition);
+        event.starred=!event.starred;
+        ((MainActivity) fragment.getActivity()).changeEventStar(event);
       }
     });
 
@@ -129,7 +101,7 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
     boolean ended=event.day*24+event.hour+event.totalDuration<=hoursIntoConvention;
     boolean happening=started && !ended;
 
-    if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID)) {
+    if (event.id==MainActivity.SELECTED_EVENT_ID) {
       view.setBackgroundResource(R.drawable.selected);
     } else if (childPosition%2==0) {
       if (ended) {
@@ -152,12 +124,12 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
     view.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        MainActivity.SELECTED_EVENT_ID=event.identifier;
+        MainActivity.SELECTED_EVENT_ID=event.id;
 
         EventFragment eventFragment=(EventFragment) fragment.getActivity().getFragmentManager()
             .findFragmentById(R.id.eventFragment);
         if (eventFragment!=null) {
-          eventFragment.setEvent(event);
+          eventFragment.setEvent();
         } else {
           Intent intent=new Intent(fragment.getActivity(), EventActivity.class);
           fragment.getActivity().startActivity(intent);
@@ -170,17 +142,6 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
     return view;
   }
 
-  public void changeEventStar(Event event, int groupPosition, int childPosition) {
-    notifyDataSetChanged();
-
-    EventFragment eventFragment=(EventFragment) fragment.getActivity().getFragmentManager()
-        .findFragmentById(R.id.eventFragment);
-    if (eventFragment!=null && eventFragment.event!=null &&
-        eventFragment.event.identifier.equalsIgnoreCase(event.identifier)) {
-      eventFragment.star.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);
-    }
-  }
-
   @Override
   public View getGroupView(final int groupPosition, final boolean isExpanded, View view,
                            ViewGroup parent) {
@@ -189,17 +150,6 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
     TextView name=(TextView) view.findViewById(R.id.sg_name);
     name.setText(getGroupTitle(groupPosition));
     name.setSelected(true);
-
-    view.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (isExpanded) {
-          fragment.collapseGroups(getGroupCount(), groupPosition, false);
-        } else {
-          fragment.expandGroups(getGroupCount(), groupPosition, false);
-        }
-      }
-    });
 
     view.setLongClickable(true);
     view.setOnLongClickListener(new View.OnLongClickListener() {
@@ -210,7 +160,19 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
         } else {
           fragment.expandGroups(getGroupCount(), groupPosition, true);
         }
-        return false;
+        return true;
+      }
+    });
+
+    view.setClickable(true);
+    view.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (isExpanded) {
+          fragment.collapseGroups(-1, groupPosition, false);
+        } else {
+          fragment.expandGroups(-1, groupPosition, false);
+        }
       }
     });
 
@@ -252,7 +214,7 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
   }
 
   /**
-   * @param event - help needed for format, title, class, and qualify
+   * @param event - event needed for format, title, class, and qualify
    * @return integer value of color
    */
   public int getTextColor(Event event) {
@@ -273,7 +235,7 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
   }
 
   /**
-   * @param event - help needed for format, title, class, and qualify
+   * @param event - event needed for format, title, class, and qualify
    * @return integer value of typeface
    */
   public int getTextStyle(Event event) {
@@ -290,23 +252,22 @@ public class DefaultScheduleListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public Object getChild(int groupPosition, int childPosition) {
-    return ((List) getGroup(groupPosition)).get(childPosition);
+    return events.get(groupPosition).get(childPosition);
   }
 
   @Override
   public int getChildrenCount(int groupPosition) {
-    return ((List) getGroup(groupPosition)).size();
+    return events.get(groupPosition).size();
   }
 
   @Override
   public Object getGroup(int groupPosition) {
-    return null;
+    return events.get(groupPosition);
   }
 
   @Override
   public int getGroupCount() {
-    return 0;
+    return events.size();
   }
 
 }
-

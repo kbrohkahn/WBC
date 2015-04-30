@@ -1,30 +1,14 @@
 package org.boardgamers.wbc;
 
-import android.content.Context;
+import java.util.List;
 
 /**
  * Created by Kevin
  */
-public class SearchListAdapter extends DefaultScheduleListAdapter {
+public class SearchListAdapter extends DefaultListAdapter {
 
-  public SearchListAdapter(Context c, SearchResultFragment f) {
-    super(c, f);
-  }
-
-  @Override
-  public void changeEventStar(Event event, int groupPosition, int childPosition) {
-    changeEventStar(event, groupPosition, childPosition, true);
-  }
-
-  public void changeEventStar(Event event, int groupPosition, int childPosition,
-                              boolean updateAllStarred) {
-    event.starred=!event.starred;
-
-    if (updateAllStarred) {
-      ((SearchResultFragment) fragment).setAllStared();
-    }
-
-    super.changeEventStar(event, groupPosition, childPosition);
+  public SearchListAdapter(DefaultListFragment f, List<List<Event>> e) {
+    super(f, e);
   }
 
   @Override
@@ -35,16 +19,6 @@ public class SearchListAdapter extends DefaultScheduleListAdapter {
   @Override
   public int getGroupViewId(final int groupPosition) {
     return R.layout.schedule_group_small;
-  }
-
-  @Override
-  public Object getGroup(int groupPosition) {
-    return ((SearchResultFragment) fragment).getGroup(groupPosition);
-  }
-
-  @Override
-  public int getGroupCount() {
-    return MainActivity.TOTAL_DAYS;
   }
 
 }

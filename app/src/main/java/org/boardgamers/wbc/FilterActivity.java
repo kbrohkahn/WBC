@@ -15,11 +15,13 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class FilterActivity extends Activity {
   private final String TAG="Filter Activity";
 
   private static CheckBox[] tournamentCBs;
-  private Boolean[] isTournament;
+  private List<Boolean> isTournament;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -35,21 +37,21 @@ public class FilterActivity extends Activity {
       Log.d(TAG, "Could not get action bar");
     }
 
-    isTournament=new Boolean[MainActivity.allTournaments.size()];
-    for (int i=0; i<isTournament.length; i++) {
-      isTournament[i]=MainActivity.allTournaments.get(i).isTournament;
-    }
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
+
+    isTournament=dbHelper.getAllVisible();
+
 
     // setup checkboxes
-    tournamentCBs=new CheckBox[isTournament.length];
+    tournamentCBs=new CheckBox[isTournament.size()];
     CheckBox temp;
-    Tournament tournament;
-    for (int i=0; i<isTournament.length; i++) {
-      tournament=MainActivity.allTournaments.get(i);
+    Tournament tournament=null;
+    for (int i=0; i<isTournament.size(); i++) {
+      //tournament=MainActivity.allTournaments.get(i);
       temp=new CheckBox(this);
       temp.setText(tournament.title);
       temp.setTextAppearance(this, R.style.medium_text);
-      temp.setChecked(tournament.visible);
+      temp.setChecked(isTournament.get(i));
 
       tournamentCBs[i]=temp;
     }
@@ -87,7 +89,7 @@ public class FilterActivity extends Activity {
       @Override
       public void onClick(View v) {
         for (int i=0; i<tournamentCBs.length; i++) {
-          if (isTournament[i]) {
+          if (isTournament.get(i)) {
             tournamentCBs[i].setChecked(true);
           }
 
@@ -127,7 +129,7 @@ public class FilterActivity extends Activity {
       @Override
       public void onClick(View v) {
         for (int i=0; i<tournamentCBs.length; i++) {
-          if (isTournament[i]) {
+          if (isTournament.get(i)) {
             tournamentCBs[i].setChecked(false);
           }
         }
@@ -155,8 +157,8 @@ public class FilterActivity extends Activity {
     boolean checked;
     for (int i=0; i<tournamentCBs.length; i++) {
       checked=tournamentCBs[i].isChecked();
-      editor.putBoolean("vis_"+MainActivity.allTournaments.get(i).title, checked);
-      MainActivity.allTournaments.get(i).visible=checked;
+     // editor.putBoolean("vis_"+MainActivity.allTournaments.get(i).title, checked);
+     // MainActivity.allTournaments.get(i).visible=checked;
     }
 
     editor.apply();

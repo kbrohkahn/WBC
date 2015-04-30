@@ -26,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.InputStream;
-import java.util.List;
 
 public class EventFragment extends Fragment {
   private final String TAG="Event Fragment";
@@ -141,15 +140,8 @@ public class EventFragment extends Fragment {
 
     boxIV=(ImageView) view.findViewById(R.id.ef_box_image);
 
-    if (!MainActivity.SELECTED_EVENT_ID.equalsIgnoreCase("")) {
-      for (List<Event> events : MainActivity.dayList) {
-        for (Event event : events) {
-          if (event.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID)) {
-            setEvent(event);
-            return view;
-          }
-        }
-      }
+    if (MainActivity.SELECTED_EVENT_ID>-1) {
+      setEvent();
     }
     return view;
   }
@@ -163,9 +155,11 @@ public class EventFragment extends Fragment {
     }
   }
 
-  public void setEvent(Event e) {
-    event=e;
-    tournament=MainActivity.allTournaments.get(event.tournamentID);
+  public void setEvent() {
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+    event=dbHelper.getEvent(MainActivity.SELECTED_EVENT_ID);
+
+    tournament=dbHelper.getTournament(event.tournamentID);
 
     eTitle.setText(event.title);
     eLocation.setText("@ "+event.location);
@@ -210,7 +204,7 @@ public class EventFragment extends Fragment {
     }
 
     // check if last event is class (is tournament)
-    if (tournament.isTournament && tournament.ID<1000) {
+    if (tournament.isTournament && tournament.id<1000) {
       previewLink.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -261,29 +255,13 @@ public class EventFragment extends Fragment {
     event.starred=!event.starred;
     star.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);
 
-    if (event.tournamentID==-1 && UserDataFragment.userEvents!=null) {
-      for (Event tempEvent : UserDataFragment.userEvents) {
+    if (event.tournamentID==-1 && UserDataListFragment.userEvents!=null) {
+      for (Event tempEvent : UserDataListFragment.userEvents) {
         if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {
           tempEvent.starred=event.starred;
           break;
         }
       }
-    }
-
-    // update in day list
-    List<Event> eventList=
-        MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
-    for (Event tempEvent : eventList) {
-      if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {
-        tempEvent.starred=event.starred;
-        break;
-      }
-    }
-
-    if (event.starred) {
-      MainActivity.addStarredEvent(event);
-    } else {
-      MainActivity.removeStarredEvent(event.identifier, event.day);
     }
 
     // TODO
@@ -316,22 +294,18 @@ public class EventFragment extends Fragment {
       // save note on pause
       note=noteET.getText().toString();
 
-      SharedPreferences.Editor editor=getActivity()
-          .getSharedPreferences(getResources().getString(R.string.sp_file_name),
-              Context.MODE_PRIVATE).edit();
-      editor.putString(getResources().getString(R.string.sp_event_note)+event.identifier, note);
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+      dbHelper.updateEventNote(event.id, note);
 
       if (tournament.isTournament) {
         for (int i=0; i<finishButtons.length; i++) {
           if (finishButtons[i].isChecked()) {
-            editor.putInt("fin_"+tournament.title, i);
+            dbHelper.updateTournamentFinish(tournament.id, i);
 
-            MainActivity.allTournaments.get(tournament.ID).finish=i;
             break;
           }
         }
       }
-      editor.apply();
     }
 
     if (updateActive) {

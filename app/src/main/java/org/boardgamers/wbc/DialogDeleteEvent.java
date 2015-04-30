@@ -12,8 +12,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.List;
-
 /**
  * Created by Kevin on 4/24/2015.
  * Dialog shown for deleting user events
@@ -22,7 +20,7 @@ public class DialogDeleteEvent extends DialogFragment {
   // private final String TAG="DeleteDialog";
 
   private boolean ALL_EVENTS;
-  protected UserDataFragment fragment;
+  protected UserDataListFragment fragment;
 
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -36,13 +34,13 @@ public class DialogDeleteEvent extends DialogFragment {
                            Bundle savedInstanceState) {
     View view=inflater.inflate(R.layout.dialog_delete, container, false);
 
-    ALL_EVENTS=UserDataFragment.selectedEvent==-1;
+    ALL_EVENTS=UserDataListFragment.selectedEvent==-1;
 
     String string;
     if (ALL_EVENTS) {
       string="all your events?";
     } else {
-      Event event=UserDataFragment.userEvents.get(UserDataFragment.selectedEvent);
+      Event event=UserDataListFragment.userEvents.get(UserDataListFragment.selectedEvent);
       String day=getResources().getStringArray(R.array.days)[event.day];
 
       SharedPreferences settings=getActivity()
@@ -91,41 +89,19 @@ public class DialogDeleteEvent extends DialogFragment {
     if (ALL_EVENTS) {
       index=0;
     } else {
-      index=UserDataFragment.selectedEvent;
+      index=UserDataListFragment.selectedEvent;
     }
-    while (index<UserDataFragment.userEvents.size()) {
-      event=UserDataFragment.userEvents.remove(index);
 
-      // delete from dayList (currentHour)
-      List<Event> scheduleEvents=
-          MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+    dbHelper.getWritableDatabase();
+    while (index<UserDataListFragment.userEvents.size()) {
+      event=UserDataListFragment.userEvents.remove(index);
 
-      for (int j=0; j<scheduleEvents.size(); j++) {
-        if (scheduleEvents.get(j).identifier.equalsIgnoreCase(event.identifier)) {
-          MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6).remove(j);
-          break;
-        }
-      }
-      // delete from dayList (starred)
-      if (event.starred) {
-        scheduleEvents=MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY);
-        for (int j=0; j<scheduleEvents.size(); j++) {
-          if (scheduleEvents.get(j).identifier.equalsIgnoreCase(event.identifier)) {
-            scheduleEvents.remove(j);
-            break;
-          }
-        }
-      }
-
-      // eventsDB.deleteEvent(help.ID);
+      dbHelper.deleteEvent(event.id);
 
       if (!ALL_EVENTS) {
-        index=UserDataFragment.userEvents.size();
+        index=UserDataListFragment.userEvents.size();
       }
-
     }
-
-    UserDataFragment.updateEventsList();
   }
-
 }

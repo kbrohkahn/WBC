@@ -10,19 +10,27 @@ import android.support.v13.app.FragmentPagerAdapter;
  * and UserDataFragment
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
+  private SummaryListFragment summaryListFragment;
+  private ScheduleListFragment scheduleListFragment;
+  private UserDataListFragment userDataListFragment;
+
   public TabsPagerAdapter(FragmentManager fm) {
     super(fm);
+
+    summaryListFragment=new SummaryListFragment();
+    scheduleListFragment=new ScheduleListFragment();
+    userDataListFragment=new UserDataListFragment();
   }
 
   @Override
-  public Fragment getItem(int index) {
+  public DefaultListFragment getItem(int index) {
     switch (index) {
       case 0:
-        return new SummaryFragment();
+        return summaryListFragment;
       case 1:
-        return new ScheduleFragment();
+        return scheduleListFragment;
       case 2:
-        return new UserDataFragment();
+        return userDataListFragment;
     }
 
     return null;

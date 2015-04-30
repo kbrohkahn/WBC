@@ -12,63 +12,44 @@ import java.util.List;
  * Created by Kevin
  * Adapter for full schedule ExpandableListAdapter
  */
-public class ScheduleListAdapter extends DefaultScheduleListAdapter implements SectionIndexer {
+public class ScheduleListAdapter extends DefaultListAdapter implements SectionIndexer {
+  private final int GROUPS_PER_DAY=18+1;
+
   private final String[] hours;
   private final String[] sections;
 
-  public ScheduleListAdapter(Context c, ScheduleFragment f) {
-    super(c, f);
+  public List<Boolean> tournamentsVisible;
 
-    SharedPreferences settings=
-        c.getSharedPreferences(c.getResources().getString(R.string.sp_file_name),
+  public ScheduleListAdapter(DefaultListFragment f, List<List<Event>> e) {
+    super(f, e);
+
+    SharedPreferences settings=f.getActivity()
+        .getSharedPreferences(f.getResources().getString(R.string.sp_file_name),
             Context.MODE_PRIVATE);
     int hoursID=(settings.getBoolean("24_hour", true) ? R.array.hours_24 : R.array.hours_12);
-    hours=c.getResources().getStringArray(hoursID);
+    hours=f.getResources().getStringArray(hoursID);
 
-    sections=new String[MainActivity.TOTAL_DAYS];
-    System.arraycopy(dayStrings, 0, sections, 0, sections.length);
+    sections=dayStrings;
   }
 
   @Override
   public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
                            View view, ViewGroup parent) {
+    Event temp=events.get(groupPosition).get(childPosition);
+    if (tournamentsVisible!=null && !tournamentsVisible.get(temp.tournamentID)) {
+      return inflater.inflate(R.layout.schedule_item_gone, parent, false);
+    }
+
     view=super.getChildView(groupPosition, childPosition, isLastChild, view, parent);
-    if (groupPosition%MainActivity.GROUPS_PER_DAY!=0) {
+    if (groupPosition%GROUPS_PER_DAY!=0) {
       view.findViewById(R.id.si_hour).setVisibility(View.GONE);
     }
     return view;
   }
 
   @Override
-  public void changeEventStar(Event event, int groupPosition, int childPosition) {
-    event.starred=!event.starred;
-
-    if (event.starred) {
-      MainActivity.addStarredEvent(event);
-    } else {
-      if (groupPosition%MainActivity.GROUPS_PER_DAY==0) {
-        MainActivity.dayList.get(groupPosition).remove(childPosition);
-
-        List<Event> events=
-            MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
-        for (Event tempEvent : events) {
-          if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {
-            tempEvent.starred=false;
-            break;
-          }
-        }
-
-      } else {
-        MainActivity.removeStarredEvent(event.identifier, event.day);
-      }
-    }
-
-    super.changeEventStar(event, groupPosition, childPosition);
-  }
-
-  @Override
   public int getGroupViewId(final int groupPosition) {
-    if (groupPosition%MainActivity.GROUPS_PER_DAY==0) {
+    if (groupPosition%GROUPS_PER_DAY==0) {
       return R.layout.schedule_group_large;
     } else {
       return R.layout.schedule_group_small;
@@ -77,16 +58,16 @@ public class ScheduleListAdapter extends DefaultScheduleListAdapter implements S
 
   @Override
   public String getGroupTitle(final int groupPosition) {
-    if (groupPosition%MainActivity.GROUPS_PER_DAY==0) {
-      return dayStrings[groupPosition/MainActivity.GROUPS_PER_DAY];
+    if (groupPosition%GROUPS_PER_DAY==0) {
+      return dayStrings[groupPosition/GROUPS_PER_DAY];
     } else {
-      String groupTitle=hours[(groupPosition%MainActivity.GROUPS_PER_DAY)-1]+": ";
+      String groupTitle=hours[(groupPosition%GROUPS_PER_DAY)-1]+": ";
 
       int day;
-      for (int i=0; i<groupPosition/MainActivity.GROUPS_PER_DAY+1; i++) {
-        for (Event event : MainActivity.dayList.get(i*MainActivity.GROUPS_PER_DAY)) {
+      for (int i=0; i<groupPosition/GROUPS_PER_DAY+1; i++) {
+        for (Event event : events.get(i*GROUPS_PER_DAY)) {
           // check if starred help has started
-          day=groupPosition/MainActivity.GROUPS_PER_DAY;
+          day=groupPosition/GROUPS_PER_DAY;
           if (day*24+groupPosition+6>=i*24+event.hour &&
               day*24+groupPosition+6<i*24+event.hour+event.totalDuration) {
             groupTitle+=event.title+", ";
@@ -99,25 +80,16 @@ public class ScheduleListAdapter extends DefaultScheduleListAdapter implements S
   }
 
   @Override
-  public Object getGroup(int groupPosition) {
-    return MainActivity.dayList.get(groupPosition);
-  }
-
-  @Override
-  public int getGroupCount() {
-    return MainActivity.dayList.size();
-  }
-
-  @Override
   public int getPositionForSection(int sectionIndex) {
-    return sectionIndex*MainActivity.GROUPS_PER_DAY;
+    return sectionIndex*GROUPS_PER_DAY;
   }
 
   public int getSectionForPosition(int position) {
-    return position/MainActivity.GROUPS_PER_DAY;
+    return position/GROUPS_PER_DAY;
   }
 
   public Object[] getSections() {
     return sections;
   }
+
 }

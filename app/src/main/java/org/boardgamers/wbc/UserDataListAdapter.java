@@ -1,7 +1,6 @@
 package org.boardgamers.wbc;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +11,15 @@ import java.util.List;
 /**
  * Created by Kevin Broh-Kahn
  */
-public class UserDataListAdapter extends DefaultScheduleListAdapter {
+public class UserDataListAdapter extends DefaultListAdapter {
   private final String TAG="User Data List Adapter";
 
   private final int EVENTS_INDEX=0;
   private final int NOTES_INDEX=1;
   private final int FINISHES_INDEX=2;
 
-  public UserDataListAdapter(Context c, UserDataFragment f) {
-    super(c, f);
+  public UserDataListAdapter(DefaultListFragment f, List<List<Event>> e) {
+    super(f, e);
   }
 
   @Override
@@ -39,13 +38,13 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
 
           builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-              ((UserDataFragment) fragment).deleteEvents(childPosition);
+              ((UserDataListFragment) fragment).deleteEvents(childPosition);
             }
           });
 
           builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-              ((UserDataFragment) fragment).editEvent(childPosition);
+              ((UserDataListFragment) fragment).editEvent(childPosition);
             }
           });
 
@@ -66,7 +65,7 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
       view=inflater.inflate(R.layout.schedule_item_text, parent, false);
 
       TextView text=(TextView) view.findViewById(R.id.si_text);
-      text.setText(((UserDataFragment) fragment).getNote(childPosition));
+      text.setText(((UserDataListFragment) fragment).getNote(childPosition));
 
       if (childPosition%2==0) {
         view.setBackgroundResource(R.drawable.future_light);
@@ -79,7 +78,7 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
       view=inflater.inflate(R.layout.schedule_item_text, parent, false);
 
       TextView text=(TextView) view.findViewById(R.id.si_text);
-      text.setText(((UserDataFragment) fragment).getFinish(childPosition));
+      text.setText(((UserDataListFragment) fragment).getFinish(childPosition));
 
       if (childPosition%2==0) {
         view.setBackgroundResource(R.drawable.ended_light);
@@ -91,29 +90,6 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
     } else {
       return null;
     }
-  }
-
-  @Override
-  public void changeEventStar(Event event, int groupPosition, int childPosition) {
-    event.starred=!event.starred;
-
-//    if (event.starred) {
-//      MainActivity.addStarredEvent(event);
-//    } else {
-//      List<Event> events=
-//          MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+event.hour-6);
-//      for (Event tempEvent : events) {
-//        if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {
-//          tempEvent.starred=false;
-//          break;
-//        }
-//      }
-//
-//      MainActivity.removeStarredEvent(event.identifier, event.day);
-//
-//    }
-
-    super.changeEventStar(event, groupPosition, childPosition);
   }
 
   @Override
@@ -134,11 +110,11 @@ public class UserDataListAdapter extends DefaultScheduleListAdapter {
   public Object getGroup(int groupPosition) {
     switch (groupPosition) {
       case EVENTS_INDEX:
-        return UserDataFragment.userEvents;
+        return UserDataListFragment.userEvents;
       case NOTES_INDEX:
-        return ((UserDataFragment) fragment).userNotes;
+        return ((UserDataListFragment) fragment).userNotes;
       case FINISHES_INDEX:
-        return ((UserDataFragment) fragment).userFinishes;
+        return ((UserDataListFragment) fragment).userFinishes;
     }
     return null;
   }

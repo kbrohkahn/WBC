@@ -174,46 +174,22 @@ public class DialogCreateEvent extends DialogFragment {
     int duration=durationSpinner.getSelectedItemPosition()+1;
     String location=locationET.getText().toString();
 
-    Event newEvent=null, tempEvent;
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+    dbHelper.getWritableDatabase();
+
     String identifier;
+    long id;
     for (int day=0; day<days.length; day++) {
       if (days[day].isChecked()) {
         identifier=String.valueOf(day*24+hour)+title;
 
-        newEvent=
-            new Event(identifier, -1, day, hour, title, "", "", false, duration, false, duration,
-                location);
+        id=dbHelper
+            .insertEvent(identifier, -1, day, hour, title, "", "", false, duration, false, duration,
+                location, true);
 
-        int index=0;
-        for (; index<UserDataFragment.userEvents.size(); index++) {
-          tempEvent=UserDataFragment.userEvents.get(index);
-          if ((tempEvent.day*24+tempEvent.hour>newEvent.day*24+newEvent.hour) ||
-              (tempEvent.day*24+tempEvent.hour==newEvent.day*24+newEvent.hour &&
-                  tempEvent.title.compareToIgnoreCase(title)==1)) {
-            break;
-          }
-        }
-
-        UserDataFragment.userEvents.add(index, newEvent);
-
-        // TODO
-        //changeEventStar(newEvent.identifier, true, getActivity());
-
-        MainActivity.SELECTED_EVENT_ID=identifier;
-
-        MainActivity.dayList.get(day*MainActivity.GROUPS_PER_DAY+hour-6).add(0, newEvent);
-
+        MainActivity.SELECTED_EVENT_ID=id;
       }
     }
-
-    EventFragment eventFragment=
-        (EventFragment) getActivity().getFragmentManager().findFragmentById(R.id.eventFragment);
-
-    if (eventFragment!=null && eventFragment.isInLayout()) {
-      eventFragment.setEvent(newEvent);
-    }
-
-    UserDataFragment.updateEventsList();
-
+    dbHelper.close();
   }
 }

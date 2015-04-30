@@ -2,7 +2,7 @@ package org.boardgamers.wbc;
 
 public class Tournament {
 
-  public int ID;
+  public int id;
 
   public String title;
   public String label;
@@ -23,14 +23,14 @@ public class Tournament {
    * @param g  - game manager
    */
   public Tournament(int id, String t, String l, boolean i, int p, String g) {
-    ID=id;
+    this.id=id;
 
-    title=t;
-    label=l;
-    isTournament=i;
+    this.title=t;
+    this.label=l;
+    this.isTournament=i;
 
-    prize=p;
-    gm=g;
+    this.prize=p;
+    this.gm=g;
 
   }
 }

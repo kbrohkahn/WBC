@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Fragment containing user's WBC data, including tournament finishes, help notes, and created events
  */
-public class UserDataFragment extends DefaultListFragment {
+public class UserDataListFragment extends DefaultListFragment {
   // private final String TAG="My WBC Data Activity";
 
   public static List<Event> userEvents;
@@ -23,11 +23,6 @@ public class UserDataFragment extends DefaultListFragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
-    dbHelper.getAllNotes();
-
-    refreshUserData(true);
-
     View view=super.onCreateView(inflater, container, savedInstanceState);
 
     if (view!=null) {
@@ -40,50 +35,18 @@ public class UserDataFragment extends DefaultListFragment {
       });
     }
 
+    refreshUserData();
+
     return view;
   }
 
-  public void refreshUserData(boolean allData) {
-    WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
-    dbHelper.onOpen(dbHelper.getReadableDatabase());
-
-    userEvents=dbHelper.getUserEvents();
-    if (allData) {
-      userNotes=dbHelper.getAllNotes();
-      userFinishes=dbHelper.getAllFinishes();
-    }
-
-    dbHelper.close();
-
+  public void refreshUserData() {
+    new PopulateUserDataAdapterTask(this, 3).execute(0, 0, 0);
   }
 
   @Override
   protected int getLayoutId() {
     return R.layout.user_data;
-  }
-
-  public void startLoadTask() {
-    new LoadUserDataAdapterClass(this).doInBackground(0, 0, 0);
-  }
-
-  class LoadUserDataAdapterClass extends DefaultListFragment.LoadAdapterClass {
-    public LoadUserDataAdapterClass(UserDataFragment f) {
-      fragment=f;
-    }
-
-    @Override
-    protected void onPostExecute(Integer integer) {
-      listView.setSelectedGroup(MainActivity.getCurrentGroup()/MainActivity.GROUPS_PER_DAY);
-
-      super.onPostExecute(integer);
-    }
-
-    @Override
-    protected Integer doInBackground(Integer... params) {
-      listAdapter=new UserDataListAdapter(getActivity(), (UserDataFragment) fragment);
-
-      return super.doInBackground(params);
-    }
   }
 
   public String getNote(int index) {
@@ -95,15 +58,34 @@ public class UserDataFragment extends DefaultListFragment {
   }
 
   public void editEvent(int index) {
-    UserDataFragment.selectedEvent=index;
+    UserDataListFragment.selectedEvent=index;
     DialogEditEvent editNameDialog=new DialogEditEvent();
     editNameDialog.show(getFragmentManager(), "edit_event_dialog");
   }
 
   public void deleteEvents(int index) {
-    UserDataFragment.selectedEvent=index;
+    UserDataListFragment.selectedEvent=index;
     DialogDeleteEvent deleteDialog=new DialogDeleteEvent();
     deleteDialog.show(getFragmentManager(), "delete_event_dialog");
   }
 
+  class PopulateUserDataAdapterTask extends PopulateAdapterTask {
+    public PopulateUserDataAdapterTask(DefaultListFragment f, int g) {
+      fragment=f;
+      numGroups=g;
+    }
+
+    @Override
+    protected Integer doInBackground(Integer... params) {
+      listAdapter=new SummaryListAdapter(fragment, events);
+
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+
+      userNotes=dbHelper.getAllNotes();
+      userFinishes=dbHelper.getAllFinishes();
+      userEvents=dbHelper.getUserEvents();
+
+      return 1;
+    }
+  }
 }

@@ -2,8 +2,6 @@ package org.boardgamers.wbc;
 
 import android.view.View;
 
-import java.util.List;
-
 /**
  * Created by Kevin on 4/24/2015.
  * Dialog shown for editing user events. Extended from DialogCreateEvent, just edit existing views
@@ -22,8 +20,8 @@ public class DialogEditEvent extends DialogCreateEvent {
     daysTV.setVisibility(View.GONE);
     daysLL.setVisibility(View.GONE);
 
-    for (Event temp : UserDataFragment.userEvents) {
-      if (temp.identifier.equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID)) {
+    for (Event temp : UserDataListFragment.userEvents) {
+      if (temp.id==MainActivity.SELECTED_EVENT_ID) {
         event=temp;
         break;
       }
@@ -61,27 +59,26 @@ public class DialogEditEvent extends DialogCreateEvent {
     int duration=durationSpinner.getSelectedItemPosition()+1;
     String location=locationET.getText().toString();
 
-    // remove help from global list and edit
+    // remove event from global list and edit
 
     int index=0;
-    for (; index<UserDataFragment.userEvents.size(); index++) {
-      if (UserDataFragment.userEvents.get(index).identifier
-          .equalsIgnoreCase(MainActivity.SELECTED_EVENT_ID)) {
+    for (; index<UserDataListFragment.userEvents.size(); index++) {
+      if (UserDataListFragment.userEvents.get(index).id==MainActivity.SELECTED_EVENT_ID) {
         break;
       }
     }
 
-    Event editedEvent=UserDataFragment.userEvents.remove(index);
+    Event editedEvent=UserDataListFragment.userEvents.remove(index);
     editedEvent.hour=hour;
     editedEvent.title=title;
     editedEvent.duration=duration;
     editedEvent.location=location;
 
-    // add edited help to tournament list
+    // add edited event to tournament list
     Event tempEvent;
     index=0;
-    for (; index<UserDataFragment.userEvents.size(); index++) {
-      tempEvent=UserDataFragment.userEvents.get(index);
+    for (; index<UserDataListFragment.userEvents.size(); index++) {
+      tempEvent=UserDataListFragment.userEvents.get(index);
       if ((tempEvent.day*24+tempEvent.hour>editedEvent.day*24+editedEvent.hour) ||
           (tempEvent.day*24+tempEvent.hour==editedEvent.day*24+editedEvent.hour &&
               tempEvent.title.compareToIgnoreCase(title)==1)) {
@@ -89,35 +86,14 @@ public class DialogEditEvent extends DialogCreateEvent {
       }
 
     }
-    UserDataFragment.userEvents.add(index, editedEvent);
+    UserDataListFragment.userEvents.add(index, editedEvent);
 
-    // remove old help from schedule
-    List<Event> events=MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+oldTime-6);
-    for (int i=0; i<events.size(); i++) {
-      if (events.get(i).identifier.equalsIgnoreCase(event.identifier)) {
-        events.remove(i);
-        break;
-      }
-    }
-
-    // add new help to schedule
-    MainActivity.dayList.get(event.day*MainActivity.GROUPS_PER_DAY+hour-6).add(0, editedEvent);
-
-    // check for starred help
-    if (event.starred) {
-      MainActivity.removeStarredEvent(event.identifier, event.day);
-      MainActivity.addStarredEvent(editedEvent);
-    }
-
-    MainActivity.SELECTED_EVENT_ID=event.identifier;
-
-    UserDataFragment.updateEventsList();
 
     EventFragment fragment=
         (EventFragment) getActivity().getFragmentManager().findFragmentById(R.id.eventFragment);
 
     if (fragment!=null && fragment.isInLayout()) {
-      fragment.setEvent(event);
+      fragment.setEvent();
     }
   }
 }

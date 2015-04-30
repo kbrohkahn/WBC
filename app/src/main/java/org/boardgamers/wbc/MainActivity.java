@@ -22,6 +22,7 @@ import android.widget.SearchView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -30,40 +31,61 @@ import java.util.Locale;
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
   private final static String TAG="Main Activity";
 
-  public static final int HOURS_PER_DAY=18;
-  public static final int GROUPS_PER_DAY=HOURS_PER_DAY+1;
   public static final int TOTAL_DAYS=9;
 
-  public static String SELECTED_EVENT_ID="";
+  public static long SELECTED_EVENT_ID=-1;
   public static int NUM_EVENTS;
 
   private static int currentDay;
   private static int currentHour;
 
-  private static ViewPager viewPager;
-  private static TabsPagerAdapter pagerAdapter;
+  private ViewPager viewPager;
+  private TabsPagerAdapter pagerAdapter;
+
+  public static boolean fromSplash=false;
 
   private Handler handler=new Handler();
 
-  // Tab titles
-  private String[] tabs={"Starred", "Schedule", "My Data"};
+  private String[] tabTitles={"Starred", "Schedule", "My Data"};
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
+    int count=dbHelper.getNumEvents();
+
+    if (count>0) {
+      databaseLoaded();
+    } else {
+      Intent intent=new Intent(this, SplashScreen.class);
+      startActivity(intent);
+    }
+  }
+
+  @Override protected void onResume() {
+    if (fromSplash) {
+      databaseLoaded();
+      fromSplash=false;
+    }
+    super.onResume();
+  }
+
+  public void databaseLoaded() {
     setContentView(R.layout.main_layout);
 
     viewPager=(ViewPager) findViewById(R.id.pager);
     pagerAdapter=new TabsPagerAdapter(getFragmentManager());
+
     viewPager.setAdapter(pagerAdapter);
+    viewPager.setOffscreenPageLimit(3);
 
     NUM_EVENTS=getIntent().getIntExtra("totalEvents", -1);
 
     final ActionBar actionBar=getActionBar();
     if (actionBar!=null) {
       actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-      for (String tabString : tabs) {
+      for (String tabString : tabTitles) {
         actionBar.addTab(actionBar.newTab().setText(tabString).setTabListener(this));
       }
     } else {
@@ -90,6 +112,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       public void onPageScrollStateChanged(int arg0) {
       }
     });
+
+    Log.d(TAG, "viewpager loaded");
 
     // SHOW INITIAL DIALOG
     SharedPreferences sp=
@@ -162,8 +186,101 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     if (currentDay>-1) {
       handler.postAtTime(runnable, calendar.getTimeInMillis()/60*60*1000+60*60*1000);
     }
+  }
 
-    Log.d(TAG, "onCreate finished");
+  public void changeEventStar(Event event) {
+    Log.d(TAG, "Changing event star");
+
+    final int GROUPS_PER_DAY=18+1;
+
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
+    dbHelper.updateEventStarred(event.id, event.starred);
+    dbHelper.close();
+
+    List<Event> searchList;
+    Event tempEvent;
+
+    // add or remove from summary
+    DefaultListFragment summaryListFragment=pagerAdapter.getItem(0);
+    searchList=summaryListFragment.listAdapter.events.get(event.day);
+    if (event.starred) {
+      int index;
+      for (index=0; index<searchList.size(); index++) {
+        tempEvent=searchList.get(index);
+        if (event.hour<tempEvent.hour ||
+            (event.hour==tempEvent.hour && event.title.compareToIgnoreCase(tempEvent.title)==1)) {
+          break;
+        }
+      }
+      searchList.add(index, event);
+    } else {
+      for (int i=0; i<searchList.size(); i++) {
+        tempEvent=searchList.get(i);
+        if (tempEvent.id==event.id) {
+          searchList.remove(tempEvent);
+          break;
+        }
+      }
+    }
+    summaryListFragment.updateList();
+
+    // change star in full schedule
+    DefaultListFragment scheduleListFragment=pagerAdapter.getItem(1);
+    searchList=scheduleListFragment.listAdapter.events.get(event.day*GROUPS_PER_DAY+event.hour-6);
+    for (int i=0; i<searchList.size(); i++) {
+      tempEvent=searchList.get(i);
+      if (tempEvent.id==event.id) {
+        tempEvent.starred=event.starred;
+        break;
+      }
+    }
+    summaryListFragment.updateList();
+
+    // add or remove from my events in full schedule
+    searchList=scheduleListFragment.listAdapter.events.get(event.day*GROUPS_PER_DAY);
+    if (event.starred) {
+      int index;
+      for (index=0; index<searchList.size(); index++) {
+        tempEvent=searchList.get(index);
+        if (event.hour<tempEvent.hour ||
+            (event.hour==tempEvent.hour && event.title.compareToIgnoreCase(tempEvent.title)==1)) {
+          break;
+        }
+      }
+      searchList.add(index, event);
+    } else {
+      for (int i=0; i<searchList.size(); i++) {
+        tempEvent=searchList.get(i);
+        if (tempEvent.id==event.id) {
+          searchList.remove(tempEvent);
+          break;
+        }
+      }
+    }
+    scheduleListFragment.updateList();
+
+    // change star in created events
+    if (event.tournamentID==-1) {
+      DefaultListFragment userDataListFragment=pagerAdapter.getItem(2);
+      searchList=userDataListFragment.listAdapter.events.get(0);
+      for (int i=0; i<searchList.size(); i++) {
+        tempEvent=searchList.get(i);
+        if (tempEvent.id==event.id) {
+          tempEvent.starred=event.starred;
+          userDataListFragment.updateList();
+          break;
+        }
+      }
+    }
+
+    // change in event fragment
+    EventFragment eventFragment=
+        (EventFragment) getFragmentManager().findFragmentById(R.id.eventFragment);
+    if (eventFragment!=null && eventFragment.isAdded() && eventFragment.event.id==event.id) {
+      eventFragment.event.starred=event.starred;
+    }
+
+    Log.d(TAG, "Event star changed");
   }
 
   public void updateFragment(int position) {
@@ -171,7 +288,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       position=viewPager.getCurrentItem();
     }
 
-    DefaultListFragment fragment=(DefaultListFragment) pagerAdapter.getItem(position);
+    DefaultListFragment fragment=pagerAdapter.getItem(position);
     if (fragment!=null && fragment.isAdded()) {
       fragment.updateList();
     }
@@ -187,7 +304,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     viewPager.setCurrentItem(position);
 
-    DefaultListFragment fragment=(DefaultListFragment) pagerAdapter.getItem(position);
+    DefaultListFragment fragment=pagerAdapter.getItem(position);
     if (fragment!=null && fragment.isAdded()) {
       fragment.updateList();
     }
@@ -226,20 +343,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       return currentDay;
     } else {
       return currentDay*24+currentHour;
-    }
-  }
-
-  /**
-   * Get the current group, based on currentDay and currentHour. If hour is between 24
-   * and 7, select group 0 of that day
-   *
-   * @return groupNumber
-   */
-  public static int getCurrentGroup() {
-    if (currentDay==-1) {
-      return 0;
-    } else {
-      return currentDay*GROUPS_PER_DAY+Math.max(0, currentHour-6);
     }
   }
 

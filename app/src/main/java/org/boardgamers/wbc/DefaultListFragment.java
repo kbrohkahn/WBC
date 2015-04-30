@@ -8,11 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Kevin
  */
 public class DefaultListFragment extends Fragment {
-  protected DefaultScheduleListAdapter listAdapter;
+  private final String TAG="Default List Fragment";
+
+  protected DefaultListAdapter listAdapter;
   protected ExpandableListView listView;
 
   @Override
@@ -23,12 +28,8 @@ public class DefaultListFragment extends Fragment {
     listView=(ExpandableListView) view.findViewById(R.id.default_list_view);
     listView.setDividerHeight(0);
 
-    startLoadTask();
-
     return view;
   }
-
-  public void startLoadTask() {}
 
   protected int getLayoutId() {
     return R.layout.default_list;
@@ -60,17 +61,18 @@ public class DefaultListFragment extends Fragment {
     }
   }
 
-  class LoadAdapterClass extends AsyncTask<Integer, Integer, Integer> {
+  class PopulateAdapterTask extends AsyncTask<Integer, Integer, Integer> {
     protected DefaultListFragment fragment;
-
-    public LoadAdapterClass() {}
+    protected List<List<Event>> events;
+    protected int numGroups;
 
     @Override
     protected void onPostExecute(Integer integer) {
-      if (listAdapter.getGroup(0)!=null) {
-        expandGroups(listAdapter.getGroupCount(), 0, true);
-      }
+      listView.setAdapter(listAdapter);
 
+      expandGroups(numGroups, 0, true);
+
+      listAdapter.events=events;
       listAdapter.hoursIntoConvention=MainActivity.getHoursIntoConvention();
       listAdapter.notifyDataSetChanged();
 
@@ -78,10 +80,19 @@ public class DefaultListFragment extends Fragment {
     }
 
     @Override
-    protected Integer doInBackground(Integer... params) {
-      listView.setAdapter(listAdapter);
+    protected void onPreExecute() {
+      super.onPreExecute();
 
-      return null;
+      events=new ArrayList<>();
+      for (int i=0; i<numGroups; i++) {
+        events.add(new ArrayList<Event>());
+      }
+    }
+
+    @Override
+    protected Integer doInBackground(Integer... params) {
+      return -1;
     }
   }
+
 }

@@ -51,8 +51,8 @@ public class SearchResultActivity extends Activity {
     }
 
     if (query!=null) {
-      SearchResultFragment fragment=
-          (SearchResultFragment) getFragmentManager().findFragmentById(R.id.searchFragment);
+      SearchListFragment fragment=
+          (SearchListFragment) getFragmentManager().findFragmentById(R.id.searchFragment);
       fragment.loadEvents(query);
       setTitle(query);
     }
