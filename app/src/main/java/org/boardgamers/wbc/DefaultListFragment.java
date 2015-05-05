@@ -26,9 +26,17 @@ public class DefaultListFragment extends Fragment {
     View view=inflater.inflate(getLayoutId(), container, false);
 
     listView=(ExpandableListView) view.findViewById(R.id.default_list_view);
-    listView.setDividerHeight(0);
+    //listView.setDividerHeight(0);
 
     return view;
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    if (listAdapter!=null) {
+      listAdapter.updateList();
+    }
   }
 
   protected int getLayoutId() {
@@ -52,12 +60,6 @@ public class DefaultListFragment extends Fragment {
       }
     } else {
       listView.collapseGroup(start);
-    }
-  }
-
-  public void updateList() {
-    if (listAdapter!=null) {
-      listAdapter.notifyDataSetChanged();
     }
   }
 

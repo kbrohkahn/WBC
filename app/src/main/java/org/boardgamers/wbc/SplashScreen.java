@@ -2,6 +2,7 @@ package org.boardgamers.wbc;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,9 @@ public class SplashScreen extends Activity {
   }
 
   public void taskFinished(int result) {
+    Intent intent=new Intent(this, UpdateService.class);
+    startService(intent);
+
     if (result>0) {
       finish();
     } else if (result==-1) {
@@ -60,7 +64,8 @@ public class SplashScreen extends Activity {
       context=c;
     }
 
-    @Override protected void onPostExecute(Integer integer) {
+    @Override
+    protected void onPostExecute(Integer integer) {
       taskFinished(integer);
       super.onPostExecute(integer);
     }

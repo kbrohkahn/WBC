@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView android:id="@+id/sg_name"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:orientation="vertical">
-
-  <View style="@style/div_h"/>
-
-  <TextView
-    android:id="@+id/sg_name"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:padding="@dimen/layout_margin_small"
-    android:textColor="@color/white"
-    android:textSize="20sp"
-    android:textStyle="bold|italic"/>
-
-</LinearLayout>
+  android:gravity="center"
+  android:padding="@dimen/layout_margin_small"
+  android:textColor="@color/white"
+  android:textSize="20sp"
+  android:textStyle="bold|italic"/>

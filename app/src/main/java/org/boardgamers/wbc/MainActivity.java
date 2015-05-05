@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -20,10 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.SearchView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Main Activity class
@@ -32,30 +28,38 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   private final static String TAG="Main Activity";
 
   public static final int TOTAL_DAYS=9;
-
   public static long SELECTED_EVENT_ID=-1;
-  public static int NUM_EVENTS;
-
-  private static int currentDay;
-  private static int currentHour;
+  public static long TOTAL_EVENTS;
+  public static long currentDay;
+  public static int currentHour;
 
   private ViewPager viewPager;
   private TabsPagerAdapter pagerAdapter;
 
   public static boolean fromSplash=false;
 
-  private Handler handler=new Handler();
-
   private String[] tabTitles={"Starred", "Schedule", "My Data"};
+
+  public static void updateClock() {
+    currentHour++;
+    if (currentHour==24) {
+      currentHour=0;
+      currentDay++;
+    }
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
-    int count=dbHelper.getNumEvents();
+    TOTAL_EVENTS=dbHelper.getNumEvents();
 
-    if (count>0) {
+    if (currentDay==-1) {
+
+    }
+
+    if (TOTAL_EVENTS>0) {
       databaseLoaded();
     } else {
       Intent intent=new Intent(this, SplashScreen.class);
@@ -63,10 +67,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
   }
 
-  @Override protected void onResume() {
-    if (fromSplash) {
+  @Override
+  protected void onResume() {
+    if (TOTAL_EVENTS==0) {
       databaseLoaded();
-      fromSplash=false;
     }
     super.onResume();
   }
@@ -80,7 +84,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     viewPager.setAdapter(pagerAdapter);
     viewPager.setOffscreenPageLimit(3);
 
-    NUM_EVENTS=getIntent().getIntExtra("totalEvents", -1);
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
+    TOTAL_EVENTS=dbHelper.getNumEvents();
 
     final ActionBar actionBar=getActionBar();
     if (actionBar!=null) {
@@ -163,29 +168,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
       changesBuilder.create().show();
     }
-
-    // SET TIME AND START RUNNABLE
-    Calendar calendar=Calendar.getInstance();
-    currentHour=calendar.get(Calendar.HOUR_OF_DAY);
-
-    SimpleDateFormat dateFormatter=new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-    String dateString=dateFormatter.format(calendar.getTime());
-
-    currentDay=-1;
-    String[] daysForParsing=getResources().getStringArray(R.array.daysForParsing);
-    for (int i=0; i<daysForParsing.length; i++) {
-      if (daysForParsing[i].equalsIgnoreCase(dateString)) {
-        currentDay=i;
-        break;
-      }
-    }
-
-    // TODO TESTING: set currentDay to day of week
-    currentDay=(calendar.get(Calendar.DAY_OF_WEEK));
-
-    if (currentDay>-1) {
-      handler.postAtTime(runnable, calendar.getTimeInMillis()/60*60*1000+60*60*1000);
-    }
   }
 
   public void changeEventStar(Event event) {
@@ -222,7 +204,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
       }
     }
-    summaryListFragment.updateList();
 
     // change star in full schedule
     DefaultListFragment scheduleListFragment=pagerAdapter.getItem(1);
@@ -234,7 +215,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         break;
       }
     }
-    summaryListFragment.updateList();
 
     // add or remove from my events in full schedule
     searchList=scheduleListFragment.listAdapter.events.get(event.day*GROUPS_PER_DAY);
@@ -257,7 +237,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
       }
     }
-    scheduleListFragment.updateList();
 
     // change star in created events
     if (event.tournamentID==-1) {
@@ -267,7 +246,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         tempEvent=searchList.get(i);
         if (tempEvent.id==event.id) {
           tempEvent.starred=event.starred;
-          userDataListFragment.updateList();
           break;
         }
       }
@@ -280,6 +258,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       eventFragment.event.starred=event.starred;
     }
 
+    updateFragment(-1);
+
     Log.d(TAG, "Event star changed");
   }
 
@@ -290,7 +270,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     DefaultListFragment fragment=pagerAdapter.getItem(position);
     if (fragment!=null && fragment.isAdded()) {
-      fragment.updateList();
+      fragment.listAdapter.updateList();
     }
   }
 
@@ -304,10 +284,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     viewPager.setCurrentItem(position);
 
-    DefaultListFragment fragment=pagerAdapter.getItem(position);
-    if (fragment!=null && fragment.isAdded()) {
-      fragment.updateList();
-    }
+    updateFragment(position);
   }
 
   @Override
@@ -315,34 +292,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   }
 
   /**
-   * Update currentHour (and currentDay), run every hour when app is running
-   */
-  private final Runnable runnable=new Runnable() {
-    @Override
-    public void run() {
-      handler.postDelayed(this, 60*60*1000);
-
-      currentHour++;
-      if (currentHour==24) {
-        currentHour=0;
-        currentDay++;
-        if (currentDay==9) {
-          currentDay=0;
-        }
-      }
-    }
-  };
-
-  /**
    * Get hours elapsed since midnight on the first day
    *
    * @return hours elapsed since midnight of the first day
    */
   public static int getHoursIntoConvention() {
-    if (currentDay==-1) {
-      return currentDay;
+    if (currentDay<0 || currentDay>TOTAL_DAYS) {
+      return -1;
     } else {
-      return currentDay*24+currentHour;
+      int day=(int) (long) currentDay;
+      return day*24+currentHour;
     }
   }
 

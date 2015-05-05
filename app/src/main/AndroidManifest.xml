@@ -21,7 +21,7 @@
       </intent-filter>
     </receiver>
     <service
-      android:name=".NotificationService"
+      android:name=".UpdateService"
       android:enabled="true">
     </service>
 

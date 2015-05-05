@@ -29,7 +29,7 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
   protected final DefaultListFragment fragment;
   protected final String[] dayStrings;
 
-  public int hoursIntoConvention;
+  public long hoursIntoConvention;
 
   protected List<List<Event>> events;
 
@@ -270,4 +270,8 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     return events.size();
   }
 
+  public void updateList() {
+    hoursIntoConvention=MainActivity.getHoursIntoConvention();
+    notifyDataSetChanged();
+  }
 }

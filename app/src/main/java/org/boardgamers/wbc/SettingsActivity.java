@@ -64,12 +64,12 @@ public class SettingsActivity extends PreferenceActivity {
   }
 
   @Override
-  public void onPause() {
-    Intent intent=new Intent(this, NotificationService.class);
+  public void onDestroy() {
+    Intent intent=new Intent(this, UpdateService.class);
 
     stopService(intent);
     startService(intent);
 
-    super.onPause();
+    super.onDestroy();
   }
 }

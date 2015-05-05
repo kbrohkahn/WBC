@@ -35,12 +35,12 @@ public class ScheduleListFragment extends DefaultListFragment {
    * @return groupNumber
    */
   public int getCurrentGroup() {
-    int hours=MainActivity.getHoursIntoConvention();
+    int hoursIntoConvention=MainActivity.getHoursIntoConvention();
 
-    if (hours==-1) {
+    if (hoursIntoConvention==-1) {
       return 0;
     } else {
-      return hours/24*GROUPS_PER_DAY+Math.max(0, hours%24-6);
+      return hoursIntoConvention/24*GROUPS_PER_DAY+Math.max(0, hoursIntoConvention%24-6);
     }
   }
 
@@ -50,7 +50,8 @@ public class ScheduleListFragment extends DefaultListFragment {
       numGroups=g;
     }
 
-    @Override protected void onPostExecute(Integer integer) {
+    @Override
+    protected void onPostExecute(Integer integer) {
       super.onPostExecute(integer);
 
       listView.setSelectedGroup(getCurrentGroup());
