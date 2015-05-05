@@ -30,7 +30,7 @@ public class EventActivity extends FragmentActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.help, menu);
+    inflater.inflate(R.menu.menu_event, menu);
     return true;
   }
 
@@ -50,30 +50,36 @@ public class EventActivity extends FragmentActivity {
     return super.onPrepareOptionsMenu(menu);
   }
 
+  public void changeEventStar() {
+    EventFragment eventFragment=
+        (EventFragment) getFragmentManager().findFragmentById(R.id.eventFragment);
+    if (eventFragment!=null && eventFragment.isAdded()) {
+      eventFragment.event.starred=!eventFragment.event.starred;
+
+      invalidateOptionsMenu();
+      ((MainActivity) getParent()).changeEventStar(eventFragment.event);
+    } else {
+      Log.d(TAG, "ERROR: Could not get event fragment");
+    }
+
+  }
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int id=item.getItemId();
 
     if (id==R.id.menu_help) {
-      Intent intent=new Intent(this, getHelpActivityClass());
+      Intent intent=new Intent(this, HelpActivity.class);
       startActivity(intent);
       return true;
     } else if (id==R.id.menu_star) {
-      EventFragment eventFragment=
-          (EventFragment) getFragmentManager().findFragmentById(R.id.eventFragment);
-      if (eventFragment!=null && eventFragment.isAdded()) {
-        eventFragment.changeEventStar();
-        invalidateOptionsMenu();
-      }
+      changeEventStar();
+      return true;
     } else if (id==android.R.id.home) {
       finish();
       return true;
     } else {
       return super.onOptionsItemSelected(item);
     }
-  }
-
-  protected Class getHelpActivityClass() {
-    return null;
   }
 }

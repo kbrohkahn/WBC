@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -52,14 +51,15 @@ public class EventFragment extends Fragment {
   private Tournament tournament;
 
   // event description
-  private TextView eTitle;
-  private TextView eFormat;
-  private TextView eClass;
-  private TextView eLocation;
-  private TextView eTime;
-  private TextView eGM;
-  private TextView previewLink;
-  private TextView reportLink;
+  private TextView titleTV;
+  private TextView dayTV;
+  private TextView timeTV;
+  private TextView locationTV;
+  private TextView formatTV;
+  private TextView classTV;
+  private TextView gMTV;
+  private TextView previewTV;
+  private TextView reportTV;
   private ImageView boxIV;
 
   // user data
@@ -69,10 +69,9 @@ public class EventFragment extends Fragment {
   private RadioButton[] finishButtons;
   // views
   private LinearLayout finishLayout;
-  private RelativeLayout timeLayout;
+  private LinearLayout timeLayout;
   private ImageView map;
   private ImageView mapOverlay;
-  public ImageView star;
 
   private int roomID;
   private boolean overlayOn;
@@ -91,20 +90,16 @@ public class EventFragment extends Fragment {
                            Bundle savedInstanceState) {
     View view=inflater.inflate(R.layout.event_fragment, container, false);
 
-    timeLayout=(RelativeLayout) view.findViewById(R.id.ef_time_layout);
-    eTitle=(TextView) view.findViewById(R.id.ef_title);
-    eFormat=(TextView) view.findViewById(R.id.ef_format);
-    eClass=(TextView) view.findViewById(R.id.ef_class);
-    eLocation=(TextView) view.findViewById(R.id.ef_location);
-    eTime=(TextView) view.findViewById(R.id.ef_time);
-
-    star=(ImageView) view.findViewById(R.id.ef_star);
-    star.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        changeEventStar();
-      }
-    });
+    timeLayout=(LinearLayout) view.findViewById(R.id.ef_time_layout);
+    titleTV=(TextView) view.findViewById(R.id.ef_title);
+    dayTV=(TextView) view.findViewById(R.id.ef_day);
+    timeTV=(TextView) view.findViewById(R.id.ef_time);
+    formatTV=(TextView) view.findViewById(R.id.ef_format);
+    classTV=(TextView) view.findViewById(R.id.ef_class);
+    locationTV=(TextView) view.findViewById(R.id.ef_location);
+    gMTV=(TextView) view.findViewById(R.id.ef_gm);
+    previewTV=(TextView) view.findViewById(R.id.ef_preview_link);
+    reportTV=(TextView) view.findViewById(R.id.ef_report_link);
 
     map=(ImageView) view.findViewById(R.id.ef_map);
     mapOverlay=(ImageView) view.findViewById(R.id.ef_map_overlay);
@@ -127,9 +122,6 @@ public class EventFragment extends Fragment {
     });
 
     noteET=(EditText) view.findViewById(R.id.ef_note);
-    eGM=(TextView) view.findViewById(R.id.ef_gm);
-    previewLink=(TextView) view.findViewById(R.id.ef_preview_link);
-    reportLink=(TextView) view.findViewById(R.id.ef_report_link);
 
     finishGroup=(RadioGroup) view.findViewById(R.id.ef_finish);
     finishLayout=(LinearLayout) view.findViewById(R.id.ef_finish_layout);
@@ -161,11 +153,16 @@ public class EventFragment extends Fragment {
 
     tournament=dbHelper.getTournament(event.tournamentID);
 
-    eTitle.setText(event.title);
-    eLocation.setText("@ "+event.location);
-    eFormat.setText(getResources().getString(R.string.event_format)+event.format);
-    eClass.setText(getResources().getString(R.string.event_class)+event.eClass);
-    eGM.setText(getResources().getString(R.string.event_gm)+tournament.gm);
+    if (getActivity() instanceof EventActivity) {
+      titleTV.setVisibility(View.GONE);
+      getActivity().setTitle(event.title);
+    } else {
+      titleTV.setVisibility(View.VISIBLE);
+      titleTV.setText(event.title);
+    }
+
+    String[] dayStrings=getResources().getStringArray(R.array.days);
+    dayTV.setText(getResources().getString(R.string.event_day)+" "+dayStrings[event.day]);
 
     String minute;
     if (event.duration<1) {
@@ -173,15 +170,16 @@ public class EventFragment extends Fragment {
     } else {
       minute="00";
     }
-
-    String[] dayStrings=getResources().getStringArray(R.array.days);
-    eTime.setText(dayStrings[event.day]+", "+String.valueOf(event.hour)+"00 to "+
+    timeTV.setText(String.valueOf(event.hour)+"00 to "+
         String.valueOf((event.hour+(int) event.duration)+minute));
     if (event.continuous) {
-      eTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
+      timeTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
     }
 
-    star.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);
+    locationTV.setText(getResources().getString(R.string.event_location)+" "+event.location);
+    formatTV.setText(getResources().getString(R.string.event_format)+" "+event.format);
+    classTV.setText(getResources().getString(R.string.event_class)+" "+event.eClass);
+    gMTV.setText(getResources().getString(R.string.event_gm)+" "+tournament.gm);
 
     setRoom(event.location);
 
@@ -205,7 +203,7 @@ public class EventFragment extends Fragment {
 
     // check if last event is class (is tournament)
     if (tournament.isTournament && tournament.id<1000) {
-      previewLink.setOnClickListener(new View.OnClickListener() {
+      previewTV.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
           getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
@@ -213,7 +211,7 @@ public class EventFragment extends Fragment {
         }
       });
 
-      reportLink.setOnClickListener(new View.OnClickListener() {
+      reportTV.setOnClickListener(new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -237,37 +235,17 @@ public class EventFragment extends Fragment {
 
       finishGroup.check(finishIDs[tournament.finish]);
 
-      previewLink.setVisibility(View.VISIBLE);
       finishLayout.setVisibility(View.VISIBLE);
-      reportLink.setVisibility(View.VISIBLE);
+      previewTV.setVisibility(View.VISIBLE);
+      reportTV.setVisibility(View.VISIBLE);
     } else {
       finishLayout.setVisibility(View.GONE);
-      previewLink.setVisibility(View.GONE);
-      reportLink.setVisibility(View.GONE);
+      previewTV.setVisibility(View.INVISIBLE);
+      reportTV.setVisibility(View.INVISIBLE);
     }
 
     if (tournament.isTournament) {
       new DownloadImageTask().execute("http://boardgamers.org/boxart/"+tournament.label+".jpg");
-    }
-  }
-
-  public void changeEventStar() {
-    event.starred=!event.starred;
-    star.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);
-
-    if (event.tournamentID==-1 && UserDataListFragment.userEvents!=null) {
-      for (Event tempEvent : UserDataListFragment.userEvents) {
-        if (tempEvent.identifier.equalsIgnoreCase(event.identifier)) {
-          tempEvent.starred=event.starred;
-          break;
-        }
-      }
-    }
-
-    // TODO
-    if (getActivity() instanceof MainActivity) {
-      Log.d(TAG, "EventFragment's activity ius MainActivity");
-      ((MainActivity) getActivity()).updateFragment(-1);
     }
   }
 

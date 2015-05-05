@@ -31,6 +31,7 @@
     </activity>
     <activity
       android:name=".MainActivity"
+      android:windowSoftInputMode="stateHidden"
       android:label="@string/app_name_short">
 
       <meta-data
@@ -45,6 +46,7 @@
 
     <activity
       android:name=".SearchResultActivity"
+      android:windowSoftInputMode="stateHidden"
       android:launchMode="singleTop"
       android:label="@string/search">
 

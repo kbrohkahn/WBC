@@ -77,12 +77,13 @@
 
   <!-- EVENT FRAGMENT -->
   <string name="event_note_hint">Add event note</string>
-  <string name="event_gm">GM: </string>
-  <string name="event_format">Format: </string>
-  <string name="event_class">Class: </string>
-  <string name="event_time">Time</string>
-  <string name="event_location">Location</string>
-  <string name="event_title">Title</string>
+  <string name="event_title">Title:</string>
+  <string name="event_day">Day:</string>
+  <string name="event_time">Time:</string>
+  <string name="event_location">Location:</string>
+  <string name="event_gm">GM:</string>
+  <string name="event_format">Format:</string>
+  <string name="event_class">Class:</string>
 
   <!-- CREATE EVENT DIALOG -->
   <string name="ce_title">Title *</string>

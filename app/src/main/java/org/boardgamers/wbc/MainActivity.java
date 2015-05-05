@@ -251,13 +251,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       }
     }
 
-    // change in event fragment
-    EventFragment eventFragment=
-        (EventFragment) getFragmentManager().findFragmentById(R.id.eventFragment);
-    if (eventFragment!=null && eventFragment.isAdded() && eventFragment.event.id==event.id) {
-      eventFragment.event.starred=event.starred;
-    }
-
     updateFragment(-1);
 
     Log.d(TAG, "Event star changed");
@@ -308,7 +301,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.main, menu);
+    inflater.inflate(R.menu.menu_main, menu);
 
     SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
     SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
