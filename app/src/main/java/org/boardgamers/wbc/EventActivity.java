@@ -35,6 +35,22 @@ public class EventActivity extends FragmentActivity {
   }
 
   @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    MenuItem item=menu.findItem(R.id.menu_star);
+
+    EventFragment eventFragment=
+        (EventFragment) getFragmentManager().findFragmentById(R.id.eventFragment);
+    if (eventFragment!=null && eventFragment.isAdded()) {
+      if (eventFragment.event.starred) {
+        item.setIcon(R.drawable.star_on);
+      } else {
+        item.setIcon(R.drawable.star_off);
+      }
+    }
+    return super.onPrepareOptionsMenu(menu);
+  }
+
+  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int id=item.getItemId();
 
@@ -42,6 +58,13 @@ public class EventActivity extends FragmentActivity {
       Intent intent=new Intent(this, getHelpActivityClass());
       startActivity(intent);
       return true;
+    } else if (id==R.id.menu_star) {
+      EventFragment eventFragment=
+          (EventFragment) getFragmentManager().findFragmentById(R.id.eventFragment);
+      if (eventFragment!=null && eventFragment.isAdded()) {
+        eventFragment.changeEventStar();
+        invalidateOptionsMenu();
+      }
     } else if (id==android.R.id.home) {
       finish();
       return true;

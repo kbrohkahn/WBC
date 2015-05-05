@@ -5,5 +5,10 @@
     android:icon="@drawable/ic_action_help"
     android:showAsAction="ifRoom"
     android:title="@string/activity_help"/>
+  <item
+    android:id="@+id/menu_star"
+    android:icon="@drawable/star_off"
+    android:showAsAction="ifRoom"
+    android:title="@string/star"/>
 
 </menu>

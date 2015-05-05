@@ -251,7 +251,7 @@ public class EventFragment extends Fragment {
     }
   }
 
-  private void changeEventStar() {
+  public void changeEventStar() {
     event.starred=!event.starred;
     star.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);
 
