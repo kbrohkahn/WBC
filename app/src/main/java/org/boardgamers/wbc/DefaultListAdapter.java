@@ -124,18 +124,24 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     view.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        MainActivity.SELECTED_EVENT_ID=event.id;
-
         EventFragment eventFragment=
             (EventFragment) fragment.getActivity().getSupportFragmentManager()
                 .findFragmentById(R.id.eventFragment);
-        if (eventFragment!=null) {
-          eventFragment.setEvent();
-        } else {
-          Intent intent=new Intent(fragment.getActivity(), EventActivity.class);
-          fragment.getActivity().startActivity(intent);
-        }
 
+        if (MainActivity.SELECTED_EVENT_ID==event.id) {
+          MainActivity.SELECTED_EVENT_ID=-1;
+          if (eventFragment!=null) {
+            eventFragment.setEvent();
+          }
+        } else {
+          MainActivity.SELECTED_EVENT_ID=event.id;
+          if (eventFragment!=null) {
+            eventFragment.setEvent();
+          } else {
+            Intent intent=new Intent(fragment.getActivity(), EventActivity.class);
+            fragment.getActivity().startActivity(intent);
+          }
+        }
         notifyDataSetChanged();
       }
     });

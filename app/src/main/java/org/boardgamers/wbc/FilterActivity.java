@@ -29,6 +29,8 @@ public class FilterActivity extends AppCompatActivity {
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayShowHomeEnabled(true);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
 
@@ -159,20 +161,10 @@ public class FilterActivity extends AppCompatActivity {
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.menu_close, menu);
-    return true;
-  }
-
-  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int id=item.getItemId();
 
-    if (id==R.id.menu_close) {
-      finish();
-      return true;
-    } else if (id==android.R.id.home) {
+    if (id==android.R.id.home) {
       finish();
       return true;
     } else {

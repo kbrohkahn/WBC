@@ -24,6 +24,8 @@ public class AboutActivity extends AppCompatActivity {
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayShowHomeEnabled(true);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     TextView appVersion=(TextView) findViewById(R.id.about_app_version);
 
@@ -59,22 +61,12 @@ public class AboutActivity extends AppCompatActivity {
     appVersion.setText("App version: "+versionString+"\nLast update: "+updateString);
 
   }
-
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.menu_close, menu);
-    return true;
-  }
-
+  
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int id=item.getItemId();
 
-    if (id==R.id.menu_close) {
-      finish();
-      return true;
-    } else if (id==android.R.id.home) {
+    if (id==android.R.id.home) {
       finish();
       return true;
     } else {

@@ -16,12 +16,16 @@ public class SettingsActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    setContentView(R.layout.settings);
+
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayShowHomeEnabled(true);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-    getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment())
+    getFragmentManager().beginTransaction().replace(R.id.setings_content, new SettingsFragment())
         .commit();
   }
 
@@ -35,20 +39,10 @@ public class SettingsActivity extends AppCompatActivity {
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.menu_close, menu);
-    return true;
-  }
-
-  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int id=item.getItemId();
 
-    if (id==R.id.menu_close) {
-      finish();
-      return true;
-    } else if (id==android.R.id.home) {
+    if (id==android.R.id.home) {
       finish();
       return true;
     } else {
