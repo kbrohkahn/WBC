@@ -26,17 +26,19 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class SlidingTabLayout extends HorizontalScrollView {
 
   public interface TabColorizer {
     int getIndicatorColor(int position);
+
     int getDividerColor(int position);
   }
 
   private static final int TITLE_OFFSET_DIPS=24;
-  private static final int TAB_VIEW_PADDING_DIPS=16;
+  private static final int TAB_VIEW_PADDING_DIPS=8;
   private static final int TAB_VIEW_TEXT_SIZE_SP=12;
 
   private int mTitleOffset;
@@ -175,7 +177,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
       tabTitleView.setText(adapter.getPageTitle(i));
       tabView.setOnClickListener(tabClickListener);
 
-      mTabStrip.addView(tabView);
+      LinearLayout.LayoutParams lp=
+          new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+              LinearLayout.LayoutParams.MATCH_PARENT);
+      lp.weight=1;
+      mTabStrip.addView(tabView, lp);
     }
   }
 

@@ -4,19 +4,26 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <include layout="@layout/toolbar_with_tabs"/>
+  <include layout="@layout/toolbar_default"/>
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <android.support.v4.view.ViewPager
-      android:id="@+id/pager"
-      android:layout_width="0dip"
+    <LinearLayout
+      android:layout_width="0dp"
       android:layout_height="match_parent"
-      android:layout_weight="2"/>
+      android:layout_weight="2"
+      android:orientation="vertical">
 
+      <include layout="@layout/sliding_tab_layout"/>
+
+      <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    </LinearLayout>
     <View style="@style/div_v"/>
 
     <fragment
@@ -27,4 +34,5 @@
       android:layout_weight="3">
     </fragment>
   </LinearLayout>
+
 </LinearLayout>
