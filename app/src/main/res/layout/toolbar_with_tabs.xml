@@ -5,6 +5,12 @@
   android:layout_width="match_parent"
   android:layout_height="?attr/actionBarSize"
   android:background="@color/action_bar_background"
-  app:navigationContentDescription="@string/abc_action_bar_up_description"
-  app:navigationIcon="?attr/homeAsUpIndicator"
-  app:title="@string/activity_settings"/>
+  app:titleTextAppearance="@style/ToolbarTitle">
+
+  <org.boardgamers.wbc.SlidingTabLayout
+    android:id="@+id/sliding_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/action_bar_background"/>
+
+</android.support.v7.widget.Toolbar>

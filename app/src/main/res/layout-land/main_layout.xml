@@ -4,20 +4,7 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <android.support.v7.widget.Toolbar
-    android:id="@+id/toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:background="@color/action_bar_background"
-    >
-
-    <org.boardgamers.wbc.SlidingTabLayout
-      android:id="@+id/sliding_layout"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:background="@color/action_bar_background"/>
-
-  </android.support.v7.widget.Toolbar>
+  <include layout="@layout/toolbar_with_tabs"/>
 
   <android.support.v4.view.ViewPager
     android:id="@+id/pager"

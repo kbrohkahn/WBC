@@ -5,6 +5,10 @@
     <item name="windowActionBar">false</item>
   </style>
 
+  <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <item name="android:textSize">17sp</item>
+  </style>
+
   <!--<style name="AppTheme" parent="@android:style/Theme.Holo.Light">--><!--<item name="android:actionBarTabStyle">@style/ActionBarTabStyle</item>--><!--<item name="android:actionBarItemBackground">@drawable/action_bar_tab</item>--><!--<item name="android:popupMenuStyle">@style/PopupMenu.Example</item>--><!--<item name="android:dropDownListViewStyle">@style/DropDownListView</item>--><!--<item name="android:actionDropDownStyle">@style/DropDownNav.Example</item>--><!--<item name="android:actionBarStyle">@style/ActionBarStyle</item>--><!--</style>-->
 
   <!--<style name="DropDownListView" parent="@android:style/Widget.Holo.ListView.DropDown">--><!--<item name="android:background">@color/menu_background</item>--><!--<item name="android:textColor">@color/menu_text</item>--><!--<item name="android:listSelector">@drawable/selectable_background_example</item>--><!--</style>-->

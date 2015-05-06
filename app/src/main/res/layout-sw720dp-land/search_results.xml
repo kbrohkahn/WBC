@@ -2,25 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:baselineAligned="false"
-  android:orientation="horizontal">
+  android:orientation="vertical">
 
-  <fragment
-    android:id="@+id/searchFragment"
-    class="org.boardgamers.wbc.SearchListFragment"
-    android:layout_width="0dp"
+  <include layout="@layout/toolbar_with_tabs"/>
+
+  <LinearLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_weight="2">
-  </fragment>
+    android:orientation="horizontal">
 
-  <View style="@style/div_v"/>
+    <fragment
+      android:id="@+id/searchFragment"
+      class="org.boardgamers.wbc.SearchListFragment"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="2">
+    </fragment>
 
-  <fragment
-    android:id="@+id/eventFragment"
-    class="org.boardgamers.wbc.EventFragment"
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:layout_weight="1">
-  </fragment>
+    <View style="@style/div_v"/>
 
+    <fragment
+      android:id="@+id/eventFragment"
+      class="org.boardgamers.wbc.EventFragment"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1">
+    </fragment>
+
+  </LinearLayout>
 </LinearLayout>
