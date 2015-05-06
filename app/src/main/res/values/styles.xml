@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="list_item">
+  <style name="list_item" parent="AppTheme">
     <item name="android:textSize">14sp</item>
-    <item name="android:textColor">@color/black</item>
     <item name="android:layout_width">0dip</item>
     <item name="android:layout_height">match_parent</item>
     <item name="android:gravity">center</item>
   </style>
 
-  <style name="medium_text">
+  <style name="medium_text" parent="AppTheme">
     <item name="android:gravity">left</item>
     <item name="android:textSize">18sp</item>
-    <item name="android:textColor">@color/black</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
   </style>
 
-  <style name="large_text">
+  <style name="large_text" parent="AppTheme">
     <item name="android:textStyle">bold|italic</item>
     <item name="android:background">@drawable/group_collapsed</item>
     <item name="android:padding">8dp</item>

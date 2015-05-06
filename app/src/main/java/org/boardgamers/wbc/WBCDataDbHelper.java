@@ -157,8 +157,9 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   }
 
   public int getNumEvents() {
-    Cursor cursor=sqLiteDatabase.rawQuery("SELECT * FROM "+EventEntry.TABLE_NAME, null);
-    int count=cursor.getCount();
+    Cursor cursor=sqLiteDatabase.rawQuery("SELECT COUNT (*) FROM "+EventEntry.TABLE_NAME, null);
+    cursor.moveToFirst();
+    int count=cursor.getInt(0);
     cursor.close();
 
     return count;
@@ -291,11 +292,11 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   }
 
   public List<Event> getEvents(String selection) {
-    //String sortOrder=EventEntry.COLUMN_NAME_DAY+" ASC "+EventEntry.COLUMN_NAME_HOUR+" ASC "+
-    //        EventEntry.COLUMN_NAME_QUALIFY+" ASC "+EventEntry.COLUMN_NAME_TITLE+" ASC";
+    String sortOrder=EventEntry.COLUMN_NAME_DAY+" ASC, " +EventEntry.COLUMN_NAME_HOUR+" ASC, "+
+            EventEntry.COLUMN_NAME_QUALIFY+" ASC, "+EventEntry.COLUMN_NAME_TITLE+" ASC";
 
     Cursor cursor=
-        sqLiteDatabase.query(EventEntry.TABLE_NAME, null, selection, null, null, null, null);
+        sqLiteDatabase.query(EventEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
 
     String title, identifier, eClass, format, location, note;
     int id, tournamentId, day, hour, duration, totalDuration;

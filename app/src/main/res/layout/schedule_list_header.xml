@@ -14,6 +14,14 @@
     android:contentDescription="@string/star"
     android:visibility="invisible"/>
 
+  <TextView
+    style="@style/list_item"
+    android:layout_width="0dip"
+    android:layout_height="wrap_content"
+    android:gravity="left"
+    android:layout_weight="8"
+    android:text="@string/event"/>
+
   <View
     android:id="@+id/sl_hour_divider"
     style="@style/div_v"/>
@@ -31,15 +39,6 @@
       android:contentDescription="@string/time"
       android:src="@drawable/clock_icon"/>
   </RelativeLayout>
-
-  <View style="@style/div_v"/>
-
-  <TextView
-    style="@style/list_item"
-    android:layout_width="0dip"
-    android:layout_height="wrap_content"
-    android:layout_weight="8"
-    android:text="@string/event"/>
 
   <View style="@style/div_v"/>
 

@@ -61,7 +61,7 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     int tColor=getTextColor(event);
     int tType=getTextStyle(event);
 
-    TextView title=(TextView) view.findViewById(R.id.li_name);
+    TextView title=(TextView) view.findViewById(R.id.li_title);
     title.setText(event.title);
     title.setTypeface(null, tType);
     title.setTextColor(tColor);
