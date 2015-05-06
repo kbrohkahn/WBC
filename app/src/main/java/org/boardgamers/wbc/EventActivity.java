@@ -16,10 +16,10 @@ public class EventActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    setContentView(R.layout.event_activity);
+
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-
-    setContentView(R.layout.event_activity);
   }
 
   @Override
@@ -52,6 +52,7 @@ public class EventActivity extends AppCompatActivity {
       eventFragment.event.starred=!eventFragment.event.starred;
 
       invalidateOptionsMenu();
+
       ((MainActivity) getParent()).changeEventStar(eventFragment.event);
     } else {
       Log.d(TAG, "ERROR: Could not get event fragment");

@@ -13,6 +13,8 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
   private ScheduleListFragment scheduleListFragment;
   private UserDataListFragment userDataListFragment;
 
+  private final String[] tabTitles={"Starred", "Schedule", "My Data"};
+
   public TabsPagerAdapter(FragmentManager fm) {
     super(fm);
 
@@ -39,6 +41,11 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
   public int getCount() {
     // get item count - equal to number of tabs
     return 3;
+  }
+
+  @Override
+  public CharSequence getPageTitle(int position) {
+    return tabTitles[position];
   }
 }
 

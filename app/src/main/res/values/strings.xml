@@ -23,7 +23,7 @@
   <string name="edit_event">Edit Event</string>
   <string name="add_event">Add Event</string>
   <string name="delete_all">Delete All</string>
-  <string name="star">Star IV</string>
+  <string name="star">Star</string>
   <string name="search">Search</string>
   <string name="search_hint">Search title or format</string>
   <string name="changes_dialog_title">Schedule Changes</string>

@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
   private ViewPager viewPager;
   private TabsPagerAdapter pagerAdapter;
 
-  private String[] tabTitles={"Starred", "Schedule", "My Data"};
-
   public static void updateClock() {
     currentHour++;
     if (currentHour==24) {
