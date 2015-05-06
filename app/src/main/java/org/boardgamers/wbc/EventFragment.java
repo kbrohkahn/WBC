@@ -1,8 +1,6 @@
 package org.boardgamers.wbc;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -22,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -70,6 +69,7 @@ public class EventFragment extends Fragment {
   // views
   private LinearLayout finishLayout;
   private LinearLayout timeLayout;
+  private ScrollView scrollView;
   private ImageView map;
   private ImageView mapOverlay;
 
@@ -91,6 +91,7 @@ public class EventFragment extends Fragment {
     View view=inflater.inflate(R.layout.event_fragment, container, false);
 
     timeLayout=(LinearLayout) view.findViewById(R.id.ef_time_layout);
+    scrollView=(ScrollView) view.findViewById(R.id.ef_scroll_view);
     titleTV=(TextView) view.findViewById(R.id.ef_title);
     dayTV=(TextView) view.findViewById(R.id.ef_day);
     timeTV=(TextView) view.findViewById(R.id.ef_time);
@@ -132,9 +133,8 @@ public class EventFragment extends Fragment {
 
     boxIV=(ImageView) view.findViewById(R.id.ef_box_image);
 
-    if (MainActivity.SELECTED_EVENT_ID>-1) {
-      setEvent();
-    }
+    //setEvent();
+
     return view;
   }
 
@@ -148,105 +148,115 @@ public class EventFragment extends Fragment {
   }
 
   public void setEvent() {
-    WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
-    event=dbHelper.getEvent(MainActivity.SELECTED_EVENT_ID);
-
-    tournament=dbHelper.getTournament(event.tournamentID);
-
-    if (getActivity() instanceof EventActivity) {
-      titleTV.setVisibility(View.GONE);
-      getActivity().setTitle(event.title);
-    } else {
+    //scrollView.fullScroll(ScrollView.FOCUS_UP);
+    if (MainActivity.SELECTED_EVENT_ID==-1) {
       titleTV.setVisibility(View.VISIBLE);
       titleTV.setText(event.title);
-    }
+      dayTV.setText(getResources().getString(R.string.event_day));
+      timeTV.setText(getResources().getString(R.string.event_time));
+      locationTV.setText(getResources().getString(R.string.event_location));
+      formatTV.setText(getResources().getString(R.string.event_format));
+      classTV.setText(getResources().getString(R.string.event_class));
+      gMTV.setText(getResources().getString(R.string.event_gm));
 
-    String[] dayStrings=getResources().getStringArray(R.array.days);
-    dayTV.setText(getResources().getString(R.string.event_day)+" "+dayStrings[event.day]);
-
-    String minute;
-    if (event.duration<1) {
-      minute=String.valueOf((int) (event.duration*60+.5));
+      hideNonTournamentViews();
     } else {
-      minute="00";
-    }
-    timeTV.setText(String.valueOf(event.hour)+"00 to "+
-        String.valueOf((event.hour+(int) event.duration)+minute));
-    if (event.continuous) {
-      timeTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
-    }
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+      event=dbHelper.getEvent(MainActivity.SELECTED_EVENT_ID);
 
-    locationTV.setText(getResources().getString(R.string.event_location)+" "+event.location);
-    formatTV.setText(getResources().getString(R.string.event_format)+" "+event.format);
-    classTV.setText(getResources().getString(R.string.event_class)+" "+event.eClass);
-    gMTV.setText(getResources().getString(R.string.event_gm)+" "+tournament.gm);
+      tournament=dbHelper.getTournament(event.tournamentID);
 
-    setRoom(event.location);
-
-    SharedPreferences sp=getActivity().
-        getSharedPreferences(getResources().getString(R.string.sp_file_name), Context.MODE_PRIVATE);
-    note=sp.getString(getResources().getString(R.string.sp_event_note)+event.identifier, "");
-    noteET.setText(note);
-
-    int hoursIntoConvention=MainActivity.getHoursIntoConvention();
-    boolean started=event.day*24+event.hour<=hoursIntoConvention;
-    boolean ended=event.day*24+event.hour+event.totalDuration<=hoursIntoConvention;
-    boolean happening=started && !ended;
-
-    if (ended) {
-      timeLayout.setBackgroundResource(R.drawable.ended_light);
-    } else if (happening) {
-      timeLayout.setBackgroundResource(R.drawable.current_light);
-    } else {
-      timeLayout.setBackgroundResource(R.drawable.future_light);
-    }
-
-    // check if last event is class (is tournament)
-    if (tournament.isTournament && tournament.id<1000) {
-      previewTV.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
-              Uri.parse("http://boardgamers.org/yearbkex/"+tournament.label+"pge.htm")));
-        }
-      });
-
-      reportTV.setOnClickListener(new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-          getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
-              Uri.parse("http://boardgamers.org/yearbook13/"+tournament.label+"pge.htm")));
-        }
-      });
-
-      // if last event started, allow finish
-      for (int i=0; i<=6; i++) {
-        finishButtons[i].setClickable(started);
-        finishButtons[i].setTextColor(started ? Color.BLACK : Color.GRAY);
-        finishButtons[i].setVisibility(View.VISIBLE);
-
-        if (i>0 && i<=tournament.prize) {
-          finishButtons[i].setTypeface(null, Typeface.BOLD);
-        } else {
-          finishButtons[i].setTypeface(null, Typeface.ITALIC);
-        }
+      if (getActivity() instanceof EventActivity) {
+        titleTV.setVisibility(View.GONE);
+        getActivity().setTitle(event.title);
+      } else {
+        titleTV.setVisibility(View.VISIBLE);
+        titleTV.setText(event.title);
       }
 
-      finishGroup.check(finishIDs[tournament.finish]);
+      String[] dayStrings=getResources().getStringArray(R.array.days);
+      dayTV.setText(dayStrings[event.day]);
 
-      finishLayout.setVisibility(View.VISIBLE);
-      previewTV.setVisibility(View.VISIBLE);
-      reportTV.setVisibility(View.VISIBLE);
-    } else {
-      finishLayout.setVisibility(View.GONE);
-      previewTV.setVisibility(View.INVISIBLE);
-      reportTV.setVisibility(View.INVISIBLE);
-    }
+      String minute;
+      if (event.duration<1) {
+        minute=String.valueOf((int) (event.duration*60+.5));
+      } else {
+        minute="00";
+      }
+      timeTV.setText(String.valueOf(event.hour)+"00 to "+
+          String.valueOf((event.hour+(int) event.duration)+minute));
+      if (event.continuous) {
+        timeTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
+      }
 
-    if (tournament.isTournament) {
-      new DownloadImageTask().execute("http://boardgamers.org/boxart/"+tournament.label+".jpg");
+      locationTV.setText("@"+event.location);
+      formatTV.setText(getResources().getString(R.string.event_format)+" "+event.format);
+      classTV.setText(getResources().getString(R.string.event_class)+" "+event.eClass);
+      gMTV.setText(getResources().getString(R.string.event_gm)+" "+tournament.gm);
+
+      setRoom(event.location);
+
+      noteET.setText(event.note);
+
+      int hoursIntoConvention=MainActivity.getHoursIntoConvention();
+      boolean started=event.day*24+event.hour<=hoursIntoConvention;
+      boolean ended=event.day*24+event.hour+event.totalDuration<=hoursIntoConvention;
+      boolean happening=started && !ended;
+
+      if (ended) {
+        timeLayout.setBackgroundResource(R.drawable.ended_light);
+      } else if (happening) {
+        timeLayout.setBackgroundResource(R.drawable.current_light);
+      } else {
+        timeLayout.setBackgroundResource(R.drawable.future_light);
+      }
+
+      // check if last event is class (is tournament)
+      if (tournament.isTournament) {
+        finishLayout.setVisibility(View.VISIBLE);
+        previewTV.setVisibility(View.VISIBLE);
+        reportTV.setVisibility(View.VISIBLE);
+
+        new DownloadImageTask().execute("http://boardgamers.org/boxart/"+tournament.label+".jpg");
+
+        previewTV.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://boardgamers.org/yearbkex/"+tournament.label+"pge.htm")));
+          }
+        });
+
+        reportTV.setOnClickListener(new View.OnClickListener() {
+
+          @Override
+          public void onClick(View v) {
+            getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://boardgamers.org/yearbook13/"+tournament.label+"pge.htm")));
+          }
+        });
+
+        // if last event started, allow finish
+        for (int i=0; i<=6; i++) {
+          finishButtons[i].setTextColor(started ? Color.BLACK : Color.GRAY);
+
+          if (i>0 && i<=tournament.prize) {
+            finishButtons[i].setTypeface(null, Typeface.BOLD);
+          } else {
+            finishButtons[i].setTypeface(null, Typeface.ITALIC);
+          }
+        }
+        finishGroup.check(finishIDs[tournament.finish]);
+      } else {
+        hideNonTournamentViews();
+      }
     }
+  }
+
+  public void hideNonTournamentViews() {
+    finishLayout.setVisibility(View.GONE);
+    previewTV.setVisibility(View.INVISIBLE);
+    reportTV.setVisibility(View.INVISIBLE);
   }
 
   private void share() {

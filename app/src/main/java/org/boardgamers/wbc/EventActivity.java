@@ -27,7 +27,7 @@ public class EventActivity extends AppCompatActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.menu_event, menu);
+    inflater.inflate(R.menu.menu_light_event, menu);
     return true;
   }
 

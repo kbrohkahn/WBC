@@ -48,10 +48,10 @@ public class UpdateService extends Service {
     MainActivity.currentHour=calendar.get(Calendar.HOUR_OF_DAY);
 
     MainActivity.currentDay=
-        firstDayCalendar.getTimeInMillis()-calendar.getTimeInMillis()/(milliHour*24);
+        (firstDayCalendar.getTimeInMillis()-calendar.getTimeInMillis())/(milliHour*24);
 
     // TODO TESTING: set currentDay to day of week
-    //MainActivity.currentDay=(calendar.get(Calendar.DAY_OF_WEEK));
+    MainActivity.currentDay=(calendar.get(Calendar.DAY_OF_WEEK));
 
     Log.d(TAG, "Day is "+String.valueOf(MainActivity.currentDay));
 

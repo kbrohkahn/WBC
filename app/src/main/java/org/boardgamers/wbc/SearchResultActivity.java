@@ -26,6 +26,8 @@ public class SearchResultActivity extends AppCompatActivity {
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayShowHomeEnabled(true);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     handleIntent(getIntent());
   }
@@ -55,7 +57,7 @@ public class SearchResultActivity extends AppCompatActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.menu_main, menu);
+    inflater.inflate(R.menu.menu_light_main, menu);
 
     SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
     SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
@@ -78,8 +80,8 @@ public class SearchResultActivity extends AppCompatActivity {
       startActivity(new Intent(this, HelpActivity.class));
     } else if (item.getItemId()==R.id.menu_about) {
       startActivity(new Intent(this, AboutActivity.class));
-    } else if (item.getItemId()==R.id.menu_filter) {
-      startActivity(new Intent(this, FilterActivity.class));
+//    } else if (item.getItemId()==R.id.menu_filter) {
+//      startActivity(new Intent(this, FilterActivity.class));
     } else if (item.getItemId()==R.id.menu_settings) {
       startActivity(new Intent(this, SettingsActivity.class));
     } else {

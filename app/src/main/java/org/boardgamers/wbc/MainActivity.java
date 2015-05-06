@@ -80,9 +80,6 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
-    //ViewCompat.setElevation(toolbar, 5);
-    ViewCompat.setTranslationZ(toolbar, 5);
-
     SlidingTabLayout tabs=(SlidingTabLayout) findViewById(R.id.sliding_layout);
     tabs.setViewPager(viewPager);
     tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -198,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.menu_main, menu);
+    inflater.inflate(R.menu.menu_light_main, menu);
 
     SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
     SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
@@ -220,8 +217,8 @@ public class MainActivity extends AppCompatActivity {
       startActivity(new Intent(this, HelpActivity.class));
     } else if (item.getItemId()==R.id.menu_about) {
       startActivity(new Intent(this, AboutActivity.class));
-    } else if (item.getItemId()==R.id.menu_filter) {
-      startActivity(new Intent(this, FilterActivity.class));
+//    } else if (item.getItemId()==R.id.menu_filter) {
+//      startActivity(new Intent(this, FilterActivity.class));
     } else if (item.getItemId()==R.id.menu_settings) {
       startActivity(new Intent(this, SettingsActivity.class));
     } else {

@@ -25,36 +25,44 @@
         <TextView
           android:id="@+id/ef_title"
           style="@style/medium_text"
+          android:gravity="center"
           android:text="@string/event_title"/>
 
         <TextView
           android:id="@+id/ef_day"
           style="@style/medium_text"
+          android:gravity="center"
           android:text="@string/event_day"/>
+
         <TextView
           android:id="@+id/ef_time"
           style="@style/medium_text"
           android:drawablePadding="@dimen/default_margin"
+          android:gravity="center"
           android:text="@string/event_time"/>
 
         <TextView
           android:id="@+id/ef_location"
           style="@style/medium_text"
+          android:gravity="center"
           android:text="@string/event_location"/>
 
         <TextView
           android:id="@+id/ef_gm"
           style="@style/medium_text"
+          android:gravity="center"
           android:text="@string/event_gm"/>
 
         <TextView
           android:id="@+id/ef_format"
           style="@style/medium_text"
+          android:gravity="center"
           android:text="@string/event_format"/>
 
         <TextView
           android:id="@+id/ef_class"
           style="@style/medium_text"
+          android:gravity="center"
           android:text="@string/event_class"/>
 
         <LinearLayout
@@ -108,7 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/event"
+        android:contentDescription="@string/event_box_iv"
         android:padding="@dimen/default_margin"
         android:scaleType="fitXY"/>
 
