@@ -3,12 +3,8 @@ package org.boardgamers.wbc;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 public class HelpActivity extends AppCompatActivity {
@@ -27,43 +23,13 @@ public class HelpActivity extends AppCompatActivity {
     getSupportActionBar().setDisplayShowHomeEnabled(true);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    String[] headerStrings=getResources().getStringArray(R.array.help_headers);
-    String[] textStrings=getResources().getStringArray(R.array.help_texts);
+    HelpListAdapter listAdapter=new HelpListAdapter(this);
 
-    LinearLayout layout=(LinearLayout) findViewById(R.id.help_layout);
-    layout.removeAllViews();
+    ExpandableListView listView=(ExpandableListView) findViewById(R.id.help_list_view);
 
-    int count=headerStrings.length;
-    aboutHeaders=new TextView[count];
-    aboutTexts=new TextView[count];
-    TextView textView;
-    LayoutInflater inflater=getLayoutInflater();
-    for (int i=0; i<count; i++) {
-      textView=(TextView) inflater.inflate(R.layout.help_header, layout, false);
-      textView.setId(i);
-      textView.setText(headerStrings[i]);
-      textView.setClickable(true);
-      aboutHeaders[i]=textView;
-      layout.addView(textView);
-
-      textView=(TextView) inflater.inflate(R.layout.help_text, layout, false);
-      textView.setText(textStrings[i]);
-      aboutTexts[i]=textView;
-      layout.addView(textView);
-    }
+    listView.setAdapter(listAdapter);
   }
 
-  public void headerListener(View view) {
-    int index=view.getId();
-    if (aboutTexts[index].isShown()) {
-      aboutHeaders[index].setBackgroundResource(R.drawable.group_collapsed);
-      aboutTexts[index].setVisibility(View.GONE);
-    } else {
-      aboutHeaders[index].setBackgroundResource(R.drawable.group_expanded);
-      aboutTexts[index].setVisibility(View.VISIBLE);
-    }
-  }
-  
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int id=item.getItemId();

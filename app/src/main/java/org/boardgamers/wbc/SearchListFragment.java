@@ -114,6 +114,14 @@ public class SearchListFragment extends DefaultListFragment {
     }
 
     @Override
+    protected void onPostExecute(Integer integer) {
+      listAdapter.notifyDataSetChanged();
+      setAllStared();
+
+      super.onPostExecute(integer);
+    }
+
+    @Override
     protected Integer doInBackground(Integer... params) {
       listAdapter=new SearchListAdapter(fragment, events, 3);
 
@@ -130,10 +138,6 @@ public class SearchListFragment extends DefaultListFragment {
       }
 
       listAdapter.events=events;
-
-      listAdapter.notifyDataSetChanged();
-
-      setAllStared();
 
       return 1;
     }

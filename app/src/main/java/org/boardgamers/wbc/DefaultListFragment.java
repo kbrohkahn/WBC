@@ -26,7 +26,6 @@ public class DefaultListFragment extends Fragment {
     View view=inflater.inflate(getLayoutId(), container, false);
 
     listView=(ExpandableListView) view.findViewById(R.id.default_list_view);
-    //listView.setDividerHeight(0);
 
     return view;
   }

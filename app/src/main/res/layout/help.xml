@@ -6,27 +6,9 @@
 
   <include layout="@layout/toolbar_default"/>
 
-  <ScrollView
+  <ExpandableListView
+    android:id="@+id/help_list_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical">
+    android:layout_height="match_parent"/>
 
-      <TextView
-        style="@style/medium_text"
-        android:layout_marginBottom="@dimen/layout_margin_small"
-        android:text="@string/how_to_help"/>
-
-      <LinearLayout
-        android:id="@+id/help_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-      </LinearLayout>
-
-    </LinearLayout>
-
-  </ScrollView>
 </LinearLayout>

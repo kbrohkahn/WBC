@@ -35,11 +35,6 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
   @Override
   public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
                            View view, ViewGroup parent) {
-    Event temp=events.get(groupPosition).get(childPosition);
-    if (tournamentsVisible!=null && !tournamentsVisible.get(temp.tournamentID)) {
-      return inflater.inflate(R.layout.schedule_item_gone, parent, false);
-    }
-
     view=super.getChildView(groupPosition, childPosition, isLastChild, view, parent);
     if (groupPosition%GROUPS_PER_DAY!=0) {
       view.findViewById(R.id.li_hour).setVisibility(View.GONE);
