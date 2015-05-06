@@ -124,4 +124,18 @@ public class UserDataListAdapter extends DefaultListAdapter {
     return 3;
   }
 
+
+  @Override
+  public void changeEventStar(Event event) {
+    Event tempEvent;
+
+    for (int i=0; i<events.get(0).size(); i++) {
+      tempEvent=events.get(0).get(i);
+      if (tempEvent.id==event.id) {
+        tempEvent.starred=event.starred;
+        break;
+      }
+    }
+  }
+
 }

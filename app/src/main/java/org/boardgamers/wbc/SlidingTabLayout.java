@@ -136,6 +136,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
    */
   public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
     mViewPagerPageChangeListener=listener;
+    mViewPager.setOnPageChangeListener(new InternalViewPagerListener());
   }
 
   /**
@@ -305,5 +306,4 @@ public class SlidingTabLayout extends HorizontalScrollView {
       }
     }
   }
-
 }

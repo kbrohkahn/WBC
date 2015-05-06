@@ -31,13 +31,12 @@ public class DefaultListFragment extends Fragment {
     return view;
   }
 
-  @Override
-  public void onResume() {
-    super.onResume();
+  public void refreshAdapter() {
     if (listAdapter!=null) {
       listAdapter.updateList();
     }
   }
+
 
   protected int getLayoutId() {
     return R.layout.default_list;
@@ -61,6 +60,10 @@ public class DefaultListFragment extends Fragment {
     } else {
       listView.collapseGroup(start);
     }
+  }
+
+  public void changeEventStar(Event event) {
+    listAdapter.changeEventStar(event);
   }
 
   class PopulateAdapterTask extends AsyncTask<Integer, Integer, Integer> {

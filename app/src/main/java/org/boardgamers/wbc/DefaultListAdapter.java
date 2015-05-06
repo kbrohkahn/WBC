@@ -126,8 +126,9 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
       public void onClick(View view) {
         MainActivity.SELECTED_EVENT_ID=event.id;
 
-        EventFragment eventFragment=(EventFragment) fragment.getActivity().getSupportFragmentManager()
-            .findFragmentById(R.id.eventFragment);
+        EventFragment eventFragment=
+            (EventFragment) fragment.getActivity().getSupportFragmentManager()
+                .findFragmentById(R.id.eventFragment);
         if (eventFragment!=null) {
           eventFragment.setEvent();
         } else {
@@ -274,4 +275,6 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     hoursIntoConvention=MainActivity.getHoursIntoConvention();
     notifyDataSetChanged();
   }
+
+  public void changeEventStar(Event event) {}
 }

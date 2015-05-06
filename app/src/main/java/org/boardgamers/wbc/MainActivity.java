@@ -18,8 +18,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import java.util.List;
-
 /**
  * Main Activity class
  */
@@ -83,6 +81,22 @@ public class MainActivity extends AppCompatActivity {
 
     SlidingTabLayout tabs=(SlidingTabLayout) findViewById(R.id.sliding_layout);
     tabs.setViewPager(viewPager);
+    tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+      }
+
+      @Override
+      public void onPageSelected(int position) {
+        pagerAdapter.getItem(position).refreshAdapter();
+      }
+
+      @Override
+      public void onPageScrollStateChanged(int state) {
+
+      }
+    });
 
     Log.d(TAG, "viewpager loaded");
 
@@ -139,82 +153,12 @@ public class MainActivity extends AppCompatActivity {
   public void changeEventStar(Event event) {
     Log.d(TAG, "Changing event star");
 
-    final int GROUPS_PER_DAY=18+1;
-
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.updateEventStarred(event.id, event.starred);
     dbHelper.close();
 
-    List<Event> searchList;
-    Event tempEvent;
-
-    // add or remove from summary
-    DefaultListFragment summaryListFragment=pagerAdapter.getItem(0);
-    searchList=summaryListFragment.listAdapter.events.get(event.day);
-    if (event.starred) {
-      int index;
-      for (index=0; index<searchList.size(); index++) {
-        tempEvent=searchList.get(index);
-        if (event.hour<tempEvent.hour ||
-            (event.hour==tempEvent.hour && event.title.compareToIgnoreCase(tempEvent.title)==1)) {
-          break;
-        }
-      }
-      searchList.add(index, event);
-    } else {
-      for (int i=0; i<searchList.size(); i++) {
-        tempEvent=searchList.get(i);
-        if (tempEvent.id==event.id) {
-          searchList.remove(tempEvent);
-          break;
-        }
-      }
-    }
-
-    // change star in full schedule
-    DefaultListFragment scheduleListFragment=pagerAdapter.getItem(1);
-    searchList=scheduleListFragment.listAdapter.events.get(event.day*GROUPS_PER_DAY+event.hour-6);
-    for (int i=0; i<searchList.size(); i++) {
-      tempEvent=searchList.get(i);
-      if (tempEvent.id==event.id) {
-        tempEvent.starred=event.starred;
-        break;
-      }
-    }
-
-    // add or remove from my events in full schedule
-    searchList=scheduleListFragment.listAdapter.events.get(event.day*GROUPS_PER_DAY);
-    if (event.starred) {
-      int index;
-      for (index=0; index<searchList.size(); index++) {
-        tempEvent=searchList.get(index);
-        if (event.hour<tempEvent.hour ||
-            (event.hour==tempEvent.hour && event.title.compareToIgnoreCase(tempEvent.title)==1)) {
-          break;
-        }
-      }
-      searchList.add(index, event);
-    } else {
-      for (int i=0; i<searchList.size(); i++) {
-        tempEvent=searchList.get(i);
-        if (tempEvent.id==event.id) {
-          searchList.remove(tempEvent);
-          break;
-        }
-      }
-    }
-
-    // change star in created events
-    if (event.tournamentID==-1) {
-      DefaultListFragment userDataListFragment=pagerAdapter.getItem(2);
-      searchList=userDataListFragment.listAdapter.events.get(0);
-      for (int i=0; i<searchList.size(); i++) {
-        tempEvent=searchList.get(i);
-        if (tempEvent.id==event.id) {
-          tempEvent.starred=event.starred;
-          break;
-        }
-      }
+    for (int i=0; i<3; i++) {
+      pagerAdapter.getItem(i).changeEventStar(event);
     }
 
     updateFragment(-1);

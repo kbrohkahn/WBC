@@ -92,4 +92,39 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
     return sections;
   }
 
+  @Override
+  public void changeEventStar(Event event) {
+    int group=event.day*GROUPS_PER_DAY+event.hour-6;
+    Event tempEvent;
+
+    for (int i=0; i<events.get(group).size(); i++) {
+      tempEvent=events.get(group).get(i);
+      if (tempEvent.id==event.id) {
+        tempEvent.starred=event.starred;
+        break;
+      }
+    }
+
+    // add or remove from my events in full schedule
+    group=event.day*GROUPS_PER_DAY;
+    if (event.starred) {
+      int index;
+      for (index=0; index<events.get(group).size(); index++) {
+        tempEvent=events.get(group).get(index);
+        if (event.hour<tempEvent.hour ||
+            (event.hour==tempEvent.hour && event.title.compareToIgnoreCase(tempEvent.title)==1)) {
+          break;
+        }
+      }
+      events.get(group).add(index, event);
+    } else {
+      for (int i=0; i<events.get(group).size(); i++) {
+        tempEvent=events.get(group).get(i);
+        if (tempEvent.id==event.id) {
+          events.get(group).remove(tempEvent);
+          break;
+        }
+      }
+    }
+  }
 }

@@ -77,7 +77,7 @@ public class UserDataListFragment extends DefaultListFragment {
 
     @Override
     protected Integer doInBackground(Integer... params) {
-      listAdapter=new SummaryListAdapter(fragment, events);
+      listAdapter=new UserDataListAdapter(fragment, events);
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
 
