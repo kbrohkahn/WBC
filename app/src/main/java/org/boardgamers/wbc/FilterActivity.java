@@ -1,11 +1,10 @@
 package org.boardgamers.wbc;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,7 +16,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class FilterActivity extends Activity {
+public class FilterActivity extends AppCompatActivity {
   private final String TAG="Filter Activity";
 
   private static CheckBox[] tournamentCBs;
@@ -28,14 +27,8 @@ public class FilterActivity extends Activity {
 
     setContentView(R.layout.filter);
 
-    // enable home button for navigation drawer
-    final ActionBar ab=getActionBar();
-    if (ab!=null) {
-      ab.setDisplayHomeAsUpEnabled(true);
-      ab.setHomeButtonEnabled(true);
-    } else {
-      Log.d(TAG, "Could not get action bar");
-    }
+    Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
 

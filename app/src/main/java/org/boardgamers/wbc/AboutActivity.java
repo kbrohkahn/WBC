@@ -1,10 +1,9 @@
 package org.boardgamers.wbc;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,22 +14,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AboutActivity extends Activity {
-  private final String TAG="About";
+public class AboutActivity extends AppCompatActivity {
+  //private final String TAG="About";
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.about);
 
-    // enable home button for navigation drawer
-    final ActionBar ab=getActionBar();
-    if (ab!=null) {
-      ab.setDisplayHomeAsUpEnabled(true);
-      ab.setHomeButtonEnabled(true);
-    } else {
-      Log.d(TAG, "Could not get action bar");
-    }
+    Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
     TextView appVersion=(TextView) findViewById(R.id.about_app_version);
 

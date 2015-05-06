@@ -1,9 +1,8 @@
 package org.boardgamers.wbc;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,8 +11,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class HelpActivity extends Activity {
-  private final String TAG="Help Activity";
+public class HelpActivity extends AppCompatActivity {
+  //private final String TAG="Help Activity";
 
   private TextView[] aboutTexts;
   private TextView[] aboutHeaders;
@@ -23,14 +22,8 @@ public class HelpActivity extends Activity {
 
     setContentView(R.layout.help);
 
-    // enable home button for navigation drawer
-    final ActionBar ab=getActionBar();
-    if (ab!=null) {
-      ab.setDisplayHomeAsUpEnabled(true);
-      ab.setHomeButtonEnabled(true);
-    } else {
-      Log.d(TAG, "Could not get action bar");
-    }
+    Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
     String[] headerStrings=getResources().getStringArray(R.array.help_headers);
     String[] textStrings=getResources().getStringArray(R.array.help_texts);

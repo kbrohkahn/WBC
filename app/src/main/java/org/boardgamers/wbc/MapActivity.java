@@ -1,18 +1,17 @@
 package org.boardgamers.wbc;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-public class MapActivity extends Activity {
-  private final String TAG="Map Activity";
+public class MapActivity extends AppCompatActivity {
+  //private final String TAG="Map Activity";
 
   private final int[] upstairsIDs=
       {R.drawable.room_conestoga_1, R.drawable.room_conestoga_2, R.drawable.room_conestoga_3,
@@ -40,14 +39,8 @@ public class MapActivity extends Activity {
 
     setContentView(R.layout.map);
 
-    // enable home button for navigation drawer
-    final ActionBar ab=getActionBar();
-    if (ab!=null) {
-      ab.setDisplayHomeAsUpEnabled(true);
-      ab.setHomeButtonEnabled(true);
-    } else {
-      Log.d(TAG, "Could not get action bar");
-    }
+    Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
     String selectedRoom=getIntent().getStringExtra("room");
     if (selectedRoom==null) {

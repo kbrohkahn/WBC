@@ -11,8 +11,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  * Main Activity class
  */
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
+public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
   private final static String TAG="Main Activity";
 
   public static final int TOTAL_DAYS=9;
@@ -35,8 +36,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
   private ViewPager viewPager;
   private TabsPagerAdapter pagerAdapter;
-
-  public static boolean fromSplash=false;
 
   private String[] tabTitles={"Starred", "Schedule", "My Data"};
 
@@ -87,36 +86,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     TOTAL_EVENTS=dbHelper.getNumEvents();
 
-    final ActionBar actionBar=getActionBar();
-    if (actionBar!=null) {
-      actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-      for (String tabString : tabTitles) {
-        actionBar.addTab(actionBar.newTab().setText(tabString).setTabListener(this));
-      }
-    } else {
-      Log.d(TAG, "Error: could not get action bar");
-    }
+    Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
-    viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-      @Override
-      public void onPageSelected(int position) {
-        if (actionBar!=null) {
-          actionBar.setSelectedNavigationItem(position);
-        } else {
-          Log.d(TAG, "Error: could not get action bar");
-        }
-        updateFragment(position);
-      }
-
-      @Override
-      public void onPageScrolled(int arg0, float arg1, int arg2) {
-      }
-
-      @Override
-      public void onPageScrollStateChanged(int arg0) {
-      }
-    });
+    SlidingTabLayout tabs=(SlidingTabLayout) findViewById(R.id.sliding_layout);
+    tabs.setViewPager(viewPager);
 
     Log.d(TAG, "viewpager loaded");
 

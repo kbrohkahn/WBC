@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <LinearLayout
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_alignParentTop="true"
+    android:background="@color/action_bar_background"
+    android:minHeight="?attr/actionBarSize"/>
 
-    <TextView
-      style="@style/medium_text"
-      android:layout_marginBottom="@dimen/layout_margin_small"
-      android:text="@string/how_to_help"/>
-
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/toolbar">
     <LinearLayout
-      android:id="@+id/help_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical">
+
+      <TextView
+        style="@style/medium_text"
+        android:layout_marginBottom="@dimen/layout_margin_small"
+        android:text="@string/how_to_help"/>
+
+      <LinearLayout
+        android:id="@+id/help_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+      </LinearLayout>
+
     </LinearLayout>
 
-  </LinearLayout>
-
-</ScrollView>
+  </ScrollView>
+</RelativeLayout>

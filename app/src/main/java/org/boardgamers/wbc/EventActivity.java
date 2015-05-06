@@ -1,28 +1,23 @@
 package org.boardgamers.wbc;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class EventActivity extends FragmentActivity {
+public class EventActivity extends AppCompatActivity {
   private final String TAG="Event Activity";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    final ActionBar ab=getActionBar();
-    if (ab!=null) {
-      ab.setDisplayHomeAsUpEnabled(true);
-      ab.setHomeButtonEnabled(true);
-    } else {
-      Log.d(TAG, "No action bar found");
-    }
+    Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
     setContentView(R.layout.event_activity);
   }

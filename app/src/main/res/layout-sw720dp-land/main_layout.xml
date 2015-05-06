@@ -3,23 +3,39 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:baselineAligned="false"
-  android:orientation="horizontal">
+  android:orientation="vertical">
 
-  <android.support.v4.view.ViewPager
-    android:id="@+id/pager"
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:layout_weight="2"/>
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/action_bar_background"
+    android:minHeight="?attr/actionBarSize"/>
 
-  <View style="@style/div_v"/>
+  <org.boardgamers.wbc.SlidingTabLayout
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/action_bar_background"/>
 
-  <fragment
-    android:id="@+id/eventFragment"
-    class="org.boardgamers.wbc.EventFragment"
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:layout_weight="1">
-  </fragment>
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+    <android.support.v4.view.ViewPager
+      android:id="@+id/pager"
+      android:layout_width="0dip"
+      android:layout_height="match_parent"
+      android:layout_weight="2"/>
+
+    <View style="@style/div_v"/>
+
+    <fragment
+      android:id="@+id/eventFragment"
+      class="org.boardgamers.wbc.EventFragment"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1">
+    </fragment>
+  </LinearLayout>
 </LinearLayout>
-
