@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -78,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+
+    //ViewCompat.setElevation(toolbar, 5);
+    ViewCompat.setTranslationZ(toolbar, 5);
 
     SlidingTabLayout tabs=(SlidingTabLayout) findViewById(R.id.sliding_layout);
     tabs.setViewPager(viewPager);
