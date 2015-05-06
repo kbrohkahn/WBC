@@ -7,9 +7,8 @@
   <android.support.v7.widget.Toolbar
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/action_bar_background"
-    android:minHeight="?attr/actionBarSize"/>
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/action_bar_background"/>
 
   <org.boardgamers.wbc.SlidingTabLayout
     android:id="@+id/sliding_layout"

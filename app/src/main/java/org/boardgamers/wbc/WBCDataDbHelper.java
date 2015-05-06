@@ -283,6 +283,12 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return events.get(0);
   }
 
+  public List<Event> getEventsFromQuery(String query) {
+    String where=EventEntry.COLUMN_NAME_TITLE+" LIKE '%"+query+"%' OR "+
+        EventEntry.COLUMN_NAME_FORMAT+" LIKE '%"+query+"%'";
+    return getEvents(where);
+  }
+
   public List<Event> getEvents(String selection) {
     SQLiteDatabase db=getReadableDatabase();
 

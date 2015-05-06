@@ -37,7 +37,6 @@ public class DefaultListFragment extends Fragment {
     }
   }
 
-
   protected int getLayoutId() {
     return R.layout.default_list;
   }
@@ -63,7 +62,9 @@ public class DefaultListFragment extends Fragment {
   }
 
   public void changeEventStar(Event event) {
-    listAdapter.changeEventStar(event);
+    if (listAdapter!=null) {
+      listAdapter.changeEventStar(event);
+    }
   }
 
   class PopulateAdapterTask extends AsyncTask<Integer, Integer, Integer> {

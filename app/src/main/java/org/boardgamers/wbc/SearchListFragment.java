@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SearchListFragment extends DefaultListFragment {
@@ -15,13 +14,12 @@ public class SearchListFragment extends DefaultListFragment {
 
   private boolean allStarred;
   private ImageView star;
+  private String query;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View view=super.onCreateView(inflater, container, savedInstanceState);
-
-    new PopulateSearchAdapterTask(this, 3).execute(0, 0, 0);
 
     star=(ImageView) view.findViewById(R.id.sl_star);
     star.setVisibility(View.VISIBLE);
@@ -34,7 +32,8 @@ public class SearchListFragment extends DefaultListFragment {
     star.setLayoutParams(lp);
 
     star.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
+      @Override
+      public void onClick(View v) {
         changeAllStarred();
       }
     });
@@ -42,19 +41,6 @@ public class SearchListFragment extends DefaultListFragment {
     setGameStarIV();
 
     return view;
-  }
-
-  public void loadEvents(String query) {
-    allStarred=true;
-
-    listAdapter.events=new ArrayList<>();
-    for (int i=0; i<MainActivity.TOTAL_DAYS; i++) {
-      listAdapter.events.add(new ArrayList<Event>());
-    }
-
-    boolean selected=false;
-
-    listAdapter.notifyDataSetChanged();
   }
 
   /**
@@ -73,6 +59,11 @@ public class SearchListFragment extends DefaultListFragment {
         }
       }
     }
+  }
+
+  public void loadEvents(String q) {
+    query=q;
+    new PopulateSearchAdapterTask(this, MainActivity.TOTAL_DAYS).execute(0, 0, 0);
   }
 
   /**
@@ -111,7 +102,7 @@ public class SearchListFragment extends DefaultListFragment {
       listAdapter=new SearchListAdapter(fragment, events);
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
-      List<Event> tempEvents=dbHelper.getAllEvents();
+      List<Event> tempEvents=dbHelper.getEventsFromQuery(query);
 
       List<List<Event>> events=listAdapter.events;
       Event event;

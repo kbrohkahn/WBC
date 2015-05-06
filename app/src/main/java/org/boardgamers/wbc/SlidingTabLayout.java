@@ -28,40 +28,11 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
-/**
- * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
- * the user's scroll progress.
- * <p/>
- * To use the component, simply add it to your view hierarchy. Then in your
- * {@link android.app.Activity} or {@link android.support.v4.app.Fragment} call
- * {@link #setViewPager(ViewPager)} providing it the ViewPager this layout is being used for.
- * <p/>
- * The colors can be customized in two ways. The first and simplest is to provide an array of colors
- * via {@link #setSelectedIndicatorColors(int...)} and {@link #setDividerColors(int...)}. The
- * alternative is via the {@link TabColorizer} interface which provides you complete control over
- * which color is used for any individual position.
- * <p/>
- * The views used as tabs can be customized by calling {@link #setCustomTabView(int, int)},
- * providing the layout ID of your custom layout.
- */
 public class SlidingTabLayout extends HorizontalScrollView {
 
-  /**
-   * Allows complete control over the colors drawn in the tab layout. Set with
-   * {@link #setCustomTabColorizer(TabColorizer)}.
-   */
   public interface TabColorizer {
-
-    /**
-     * @return return the color of the indicator used when {@code position} is selected.
-     */
     int getIndicatorColor(int position);
-
-    /**
-     * @return return the color of the divider drawn to the right of {@code position}.
-     */
     int getDividerColor(int position);
-
   }
 
   private static final int TITLE_OFFSET_DIPS=24;
@@ -97,26 +68,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
     mTitleOffset=(int) (TITLE_OFFSET_DIPS*getResources().getDisplayMetrics().density);
 
     mTabStrip=new SlidingTabStrip(context);
-    addView(mTabStrip, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-  }
 
-  /**
-   * Set the custom {@link TabColorizer} to be used.
-   * <p/>
-   * If you only require simple custmisation then you can use
-   * {@link #setSelectedIndicatorColors(int...)} and {@link #setDividerColors(int...)} to achieve
-   * similar effects.
-   */
-  public void setCustomTabColorizer(TabColorizer tabColorizer) {
-    mTabStrip.setCustomTabColorizer(tabColorizer);
-  }
-
-  /**
-   * Sets the colors to be used for indicating the selected tab. These colors are treated as a
-   * circular array. Providing one color will mean that all tabs are indicated with the same color.
-   */
-  public void setSelectedIndicatorColors(int... colors) {
+    int[] colors={getResources().getColor(R.color.secondary)};
     mTabStrip.setSelectedIndicatorColors(colors);
+
+    addView(mTabStrip, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
   }
 
   /**
