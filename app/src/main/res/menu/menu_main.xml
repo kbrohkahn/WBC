@@ -9,27 +9,22 @@
     app:showAsAction="collapseActionView|ifRoom"/>
   <item
     android:id="@+id/menu_map"
-    android:icon="@drawable/ic_drawer_map"
     android:title="@string/map"
     app:showAsAction="never"/>
   <item
     android:id="@+id/menu_help"
-    android:icon="@drawable/ic_drawer_help"
     android:title="@string/activity_help"
     app:showAsAction="never"/>
   <item
     android:id="@+id/menu_about"
-    android:icon="@drawable/ic_drawer_about"
     android:title="@string/activity_about"
     app:showAsAction="never"/>
   <item
     android:id="@+id/menu_filter"
-    android:icon="@drawable/ic_drawer_filter"
     android:title="@string/activity_filter"
     app:showAsAction="never"/>
   <item
     android:id="@+id/menu_settings"
-    android:icon="@drawable/ic_drawer_settings"
     android:title="@string/activity_settings"
     app:showAsAction="never"/>
 </menu>

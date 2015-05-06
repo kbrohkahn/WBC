@@ -108,6 +108,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:alpha=".75"
         android:contentDescription="@string/mf_upstairs"
         android:scaleType="fitXY"/>
     </RelativeLayout>
