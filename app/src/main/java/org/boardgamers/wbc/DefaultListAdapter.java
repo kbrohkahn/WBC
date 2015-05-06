@@ -28,15 +28,17 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
   protected final LayoutInflater inflater;
   protected final DefaultListFragment fragment;
   protected final String[] dayStrings;
+  private final int id;
 
   public long hoursIntoConvention;
 
   protected List<List<Event>> events;
 
-  public DefaultListAdapter(DefaultListFragment f, List<List<Event>> e) {
+  public DefaultListAdapter(DefaultListFragment f, List<List<Event>> e, int i) {
     inflater=(LayoutInflater) f.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     fragment=f;
     events=e;
+    id=i;
 
     hoursIntoConvention=MainActivity.getHoursIntoConvention();
     dayStrings=f.getResources().getStringArray(R.array.days);
@@ -92,8 +94,7 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     starIV.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        event.starred=!event.starred;
-        ((MainActivity) fragment.getActivity()).changeEventStar(event);
+        changeEventStar(event);
       }
     });
 
@@ -124,29 +125,32 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     view.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        EventFragment eventFragment=
-            (EventFragment) fragment.getActivity().getSupportFragmentManager()
-                .findFragmentById(R.id.eventFragment);
-
-        if (MainActivity.SELECTED_EVENT_ID==event.id) {
-          MainActivity.SELECTED_EVENT_ID=-1;
-          if (eventFragment!=null) {
-            eventFragment.setEvent();
-          }
-        } else {
-          MainActivity.SELECTED_EVENT_ID=event.id;
-          if (eventFragment!=null) {
-            eventFragment.setEvent();
-          } else {
-            Intent intent=new Intent(fragment.getActivity(), EventActivity.class);
-            fragment.getActivity().startActivity(intent);
-          }
-        }
-        notifyDataSetChanged();
+        selectEvent(event);
       }
     });
 
     return view;
+  }
+
+  public void selectEvent(Event event) {
+    EventFragment eventFragment=(EventFragment) fragment.getActivity().getSupportFragmentManager()
+        .findFragmentById(R.id.eventFragment);
+
+    if (MainActivity.SELECTED_EVENT_ID==event.id) {
+      MainActivity.SELECTED_EVENT_ID=-1;
+      if (eventFragment!=null) {
+        eventFragment.setEvent(-1);
+      }
+    } else {
+      MainActivity.SELECTED_EVENT_ID=event.id;
+      if (eventFragment!=null) {
+        eventFragment.setEvent(event.id);
+      } else {
+        Intent intent=new Intent(fragment.getActivity(), EventActivity.class);
+        fragment.getActivity().startActivity(intent);
+      }
+    }
+    notifyDataSetChanged();
   }
 
   @Override
@@ -282,5 +286,16 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     notifyDataSetChanged();
   }
 
-  public void changeEventStar(Event event) {}
+  public void changeEventStar(Event event) {
+    event.starred=!event.starred;
+    updateStarredEvent(event);
+    notifyDataSetChanged();
+
+    Event[] events={event};
+    MainActivity.changeEventStar(fragment.getActivity(), events, id);
+  }
+
+  public void updateStarredEvent(Event event) {
+
+  }
 }

@@ -18,8 +18,8 @@ public class UserDataListAdapter extends DefaultListAdapter {
   private final int NOTES_INDEX=1;
   private final int FINISHES_INDEX=2;
 
-  public UserDataListAdapter(DefaultListFragment f, List<List<Event>> e) {
-    super(f, e);
+  public UserDataListAdapter(DefaultListFragment f, List<List<Event>> e, int i) {
+    super(f, e, i);
   }
 
   @Override
@@ -124,9 +124,10 @@ public class UserDataListAdapter extends DefaultListAdapter {
     return 3;
   }
 
-
   @Override
-  public void changeEventStar(Event event) {
+  public void updateStarredEvent(Event event) {
+    super.updateStarredEvent(event);
+
     Event tempEvent;
 
     for (int i=0; i<events.get(0).size(); i++) {
@@ -137,5 +138,4 @@ public class UserDataListAdapter extends DefaultListAdapter {
       }
     }
   }
-
 }

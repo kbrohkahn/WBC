@@ -77,13 +77,16 @@ public class UserDataListFragment extends DefaultListFragment {
 
     @Override
     protected Integer doInBackground(Integer... params) {
-      listAdapter=new UserDataListAdapter(fragment, events);
+      listAdapter=new UserDataListAdapter(fragment, events, 2);
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+      dbHelper.getReadableDatabase();
 
       userNotes=dbHelper.getAllNotes();
       userFinishes=dbHelper.getAllFinishes();
       userEvents=dbHelper.getUserEvents();
+
+      dbHelper.close();
 
       return 1;
     }

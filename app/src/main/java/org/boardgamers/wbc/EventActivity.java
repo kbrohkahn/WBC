@@ -37,7 +37,7 @@ public class EventActivity extends AppCompatActivity {
 
     EventFragment eventFragment=
         (EventFragment) getSupportFragmentManager().findFragmentById(R.id.eventFragment);
-    if (eventFragment!=null && eventFragment.isAdded()) {
+    if (eventFragment.event!=null) {
       if (eventFragment.event.starred) {
         item.setIcon(R.drawable.star_on);
       } else {
@@ -50,16 +50,17 @@ public class EventActivity extends AppCompatActivity {
   public void changeEventStar() {
     EventFragment eventFragment=
         (EventFragment) getSupportFragmentManager().findFragmentById(R.id.eventFragment);
-    if (eventFragment!=null && eventFragment.isAdded()) {
-      eventFragment.event.starred=!eventFragment.event.starred;
+    Event event=eventFragment.event;
+    if (event!=null) {
+      event.starred=!event.starred;
 
       invalidateOptionsMenu();
-
-      ((MainActivity) getParent()).changeEventStar(eventFragment.event);
+    
+      Event[] events={event};
+      MainActivity.changeEventStar(this, events, 3);
     } else {
       Log.d(TAG, "ERROR: Could not get event fragment");
     }
-
   }
 
   @Override

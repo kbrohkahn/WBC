@@ -8,8 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 /**
  * Main Activity class
@@ -30,9 +31,10 @@ public class MainActivity extends AppCompatActivity {
   public static long TOTAL_EVENTS;
   public static long currentDay;
   public static int currentHour;
+  public static boolean updatingFragments=false;
 
-  private ViewPager viewPager;
-  private TabsPagerAdapter pagerAdapter;
+  private static ViewPager viewPager;
+  private static TabsPagerAdapter pagerAdapter;
 
   public static void updateClock() {
     currentHour++;
@@ -47,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
+    dbHelper.getReadableDatabase();
     TOTAL_EVENTS=dbHelper.getNumEvents();
+    dbHelper.close();
 
     if (TOTAL_EVENTS>0) {
       databaseLoaded();
@@ -75,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
     viewPager.setOffscreenPageLimit(3);
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
+    dbHelper.getReadableDatabase();
     TOTAL_EVENTS=dbHelper.getNumEvents();
+    dbHelper.close();
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -151,30 +157,58 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  public void changeEventStar(Event event) {
-    Log.d(TAG, "Changing event star");
-
-    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
-    dbHelper.updateEventStarred(event.id, event.starred);
-    dbHelper.close();
-
-    for (int i=0; i<3; i++) {
-      pagerAdapter.getItem(i).changeEventStar(event);
-    }
-
-    updateFragment(-1);
-
-    Log.d(TAG, "Event star changed");
+  public static void changeEventStar(Context context, Event[] events, int id) {
+    new ChangeStarTask(context, id).execute(events);
   }
 
-  public void updateFragment(int position) {
-    if (position==-1) {
-      position=viewPager.getCurrentItem();
+  final static class ChangeStarTask extends AsyncTask<Event, Integer, Integer> {
+    final Context context;
+    final int id;
+
+    public ChangeStarTask(Context c, int i) {
+      context=c;
+      id=i;
     }
 
-    DefaultListFragment fragment=pagerAdapter.getItem(position);
-    if (fragment!=null && fragment.isAdded()) {
-      fragment.listAdapter.updateList();
+    @Override
+    protected void onPostExecute(Integer integer) {
+      // refresh current fragment's adapter if changing star from event or search
+      updatingFragments=false;
+      SearchResultActivity.progressBar.setVisibility(View.GONE);
+
+      if (id>2) {
+        pagerAdapter.getItem(viewPager.getCurrentItem()).refreshAdapter();
+      }
+
+      super.onPostExecute(integer);
+    }
+
+    @Override
+    protected Integer doInBackground(Event... events) {
+      updatingFragments=true;
+
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
+      dbHelper.getWritableDatabase();
+
+      Event event;
+      for (int i=0; i<events.length; i++) {
+        event=events[i];
+        SearchResultActivity.progressBar.setProgress(i);
+
+        Log.d(TAG, "Changing event star for: "+event.title);
+
+        dbHelper.updateEventStarred(event.id, event.starred);
+
+        for (int j=0; j<3; j++) {
+          if (j!=id) {
+            pagerAdapter.getItem(j).updateStarredEvent(event);
+          }
+        }
+      }
+      dbHelper.close();
+      Log.d(TAG, "Event stars changed");
+      return 1;
+
     }
   }
 
@@ -217,8 +251,8 @@ public class MainActivity extends AppCompatActivity {
       startActivity(new Intent(this, HelpActivity.class));
     } else if (item.getItemId()==R.id.menu_about) {
       startActivity(new Intent(this, AboutActivity.class));
-//    } else if (item.getItemId()==R.id.menu_filter) {
-//      startActivity(new Intent(this, FilterActivity.class));
+      //    } else if (item.getItemId()==R.id.menu_filter) {
+      //      startActivity(new Intent(this, FilterActivity.class));
     } else if (item.getItemId()==R.id.menu_settings) {
       startActivity(new Intent(this, SettingsActivity.class));
     } else {

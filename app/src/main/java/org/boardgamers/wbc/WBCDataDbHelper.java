@@ -86,6 +86,8 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   private static final String SQL_DELETE_TOURNAMENT_ENTRIES=
       "DROP TABLE IF EXISTS "+TournamentEntry.TABLE_NAME;
 
+  private SQLiteDatabase sqLiteDatabase;
+
   public WBCDataDbHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
@@ -104,6 +106,24 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     onCreate(db);
   }
 
+  @Override
+  public SQLiteDatabase getWritableDatabase() {
+    sqLiteDatabase=super.getWritableDatabase();
+    return sqLiteDatabase;
+  }
+
+  @Override
+  public SQLiteDatabase getReadableDatabase() {
+    sqLiteDatabase=super.getReadableDatabase();
+    return sqLiteDatabase;
+  }
+
+  @Override
+  public synchronized void close() {
+    sqLiteDatabase.close();
+    super.close();
+  }
+
   public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     onUpgrade(db, oldVersion, newVersion);
   }
@@ -112,8 +132,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
                           String eClass, String eFormat, boolean qualify, double duration,
                           boolean continuous, double totalDuration, String location,
                           boolean starred) {
-    SQLiteDatabase db=getWritableDatabase();
-
     ContentValues values=new ContentValues();
     values.put(EventEntry.COLUMN_NAME_ENTRY_ID, identifier);
     values.put(EventEntry.COLUMN_NAME_ENTRY_TOURNAMENT_ID, tournamentID);
@@ -132,33 +150,24 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     values.put(EventEntry.COLUMN_NAME_STARRED, starred ? 1 : 0);
 
     // Insert the new row, returning the primary key value of the new row
-    long id=db.insert(EventEntry.TABLE_NAME, EventEntry.COLUMN_NAME_NULLABLE, values);
-    db.close();
-    return id;
+    return sqLiteDatabase.insert(EventEntry.TABLE_NAME, EventEntry.COLUMN_NAME_NULLABLE, values);
   }
 
   public long deleteEvent(long id) {
-    SQLiteDatabase db=getWritableDatabase();
-
     String where=EventEntry._ID+"="+String.valueOf(id);
-    return db.delete(EventEntry.TABLE_NAME, where, null);
+    return sqLiteDatabase.delete(EventEntry.TABLE_NAME, where, null);
   }
 
   public int getNumEvents() {
-    SQLiteDatabase db=getReadableDatabase();
-
-    Cursor cursor=db.rawQuery("SELECT * FROM "+EventEntry.TABLE_NAME, null);
+    Cursor cursor=sqLiteDatabase.rawQuery("SELECT * FROM "+EventEntry.TABLE_NAME, null);
     int count=cursor.getCount();
     cursor.close();
-    db.close();
-    return count;
 
+    return count;
   }
 
   public long insertTournament(String title, String label, boolean isTournament, int prize,
                                String gm) {
-    SQLiteDatabase db=getWritableDatabase();
-
     ContentValues values=new ContentValues();
     values.put(TournamentEntry.COLUMN_NAME_TITLE, title);
     values.put(TournamentEntry.COLUMN_NAME_LABEL, label);
@@ -170,9 +179,9 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     values.put(TournamentEntry.COLUMN_NAME_VISIBLE, 1);
 
     // Insert the new row, returning the primary key value of the new row
-    long id=db.insert(TournamentEntry.TABLE_NAME, TournamentEntry.COLUMN_NAME_NULLABLE, values);
-    db.close();
-    return id;
+    return sqLiteDatabase
+        .insert(TournamentEntry.TABLE_NAME, TournamentEntry.COLUMN_NAME_NULLABLE, values);
+
   }
 
   /**
@@ -181,14 +190,12 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
    * @return A list of notes sorted by event title
    */
   public List<String> getAllNotes() {
-    SQLiteDatabase db=getReadableDatabase();
-
     String[] projection={EventEntry._ID, EventEntry.COLUMN_NAME_TITLE, EventEntry.COLUMN_NAME_NOTE};
     String selection=EventEntry.COLUMN_NAME_NOTE+" IS NOT NULL";
     String sortOrder=EventEntry.COLUMN_NAME_TITLE+" ASC";
 
-    Cursor cursor=
-        db.query(EventEntry.TABLE_NAME, projection, selection, null, null, null, sortOrder);
+    Cursor cursor=sqLiteDatabase
+        .query(EventEntry.TABLE_NAME, projection, selection, null, null, null, sortOrder);
 
     String title, note;
     List<String> notes=new ArrayList<>();
@@ -210,15 +217,13 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
    * @return A list of all finishes sorted by tournament title
    */
   public List<String> getAllFinishes() {
-    SQLiteDatabase db=getReadableDatabase();
-
     String[] projection={TournamentEntry._ID, TournamentEntry.COLUMN_NAME_TITLE,
         TournamentEntry.COLUMN_NAME_FINISH};
     String selection=TournamentEntry.COLUMN_NAME_FINISH+" IS NOT NULL";
     String sortOrder=TournamentEntry.COLUMN_NAME_TITLE+" ASC";
 
-    Cursor cursor=
-        db.query(TournamentEntry.TABLE_NAME, projection, selection, null, null, null, sortOrder);
+    Cursor cursor=sqLiteDatabase
+        .query(TournamentEntry.TABLE_NAME, projection, selection, null, null, null, sortOrder);
 
     String title;
     int finish;
@@ -241,14 +246,12 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
    * @return A list of all finishes sorted by tournament title
    */
   public List<Boolean> getAllVisible() {
-    SQLiteDatabase db=getReadableDatabase();
-
     String[] projection={TournamentEntry._ID, TournamentEntry.COLUMN_NAME_VISIBLE};
     String selection=TournamentEntry.COLUMN_NAME_VISIBLE+"=1";
     String sortOrder=TournamentEntry.COLUMN_NAME_TITLE+" ASC";
 
-    Cursor cursor=
-        db.query(TournamentEntry.TABLE_NAME, projection, selection, null, null, null, sortOrder);
+    Cursor cursor=sqLiteDatabase
+        .query(TournamentEntry.TABLE_NAME, projection, selection, null, null, null, sortOrder);
 
     boolean visible;
     List<Boolean> visibleTournaments=new ArrayList<>();
@@ -290,12 +293,11 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   }
 
   public List<Event> getEvents(String selection) {
-    SQLiteDatabase db=getReadableDatabase();
-
     //String sortOrder=EventEntry.COLUMN_NAME_DAY+" ASC "+EventEntry.COLUMN_NAME_HOUR+" ASC "+
     //        EventEntry.COLUMN_NAME_QUALIFY+" ASC "+EventEntry.COLUMN_NAME_TITLE+" ASC";
 
-    Cursor cursor=db.query(EventEntry.TABLE_NAME, null, selection, null, null, null, null);
+    Cursor cursor=
+        sqLiteDatabase.query(EventEntry.TABLE_NAME, null, selection, null, null, null, null);
 
     String title, identifier, eClass, format, location, note;
     int id, tournamentId, day, hour, duration, totalDuration;
@@ -335,7 +337,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     }
 
     cursor.close();
-    db.close();
     return events;
   }
 
@@ -347,13 +348,11 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   }
 
   public List<Tournament> getTournaments(String selection) {
-    SQLiteDatabase db=getReadableDatabase();
-
     // How you want the results sorted in the resulting Cursor
     String sortOrder=TournamentEntry.COLUMN_NAME_TITLE+" ASC";
 
     Cursor cursor=
-        db.query(TournamentEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
+        sqLiteDatabase.query(TournamentEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
 
     String title, label, gm;
     int id, prize, finish;
@@ -382,13 +381,10 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
       } while (cursor.moveToNext());
     }
     cursor.close();
-    db.close();
     return tournaments;
   }
 
   public int updateTournament(long rowId, boolean isTournament, int prize) {
-    SQLiteDatabase db=getReadableDatabase();
-
     ContentValues values=new ContentValues();
     values.put(TournamentEntry.COLUMN_NAME_IS_TOURNAMENT, isTournament ? 1 : 0);
     values.put(TournamentEntry.COLUMN_NAME_PRIZE, prize);
@@ -396,46 +392,36 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     String selection=TournamentEntry._ID+" LIKE ?";
     String[] selectionArgs={String.valueOf(rowId)};
 
-    return db.update(TournamentEntry.TABLE_NAME, values, selection, selectionArgs);
+    return sqLiteDatabase.update(TournamentEntry.TABLE_NAME, values, selection, selectionArgs);
   }
 
   public int updateTournamentFinish(long rowId, int finish) {
-    SQLiteDatabase db=getReadableDatabase();
-
     ContentValues values=new ContentValues();
     values.put(TournamentEntry.COLUMN_NAME_FINISH, finish);
 
     String selection=TournamentEntry._ID+" LIKE ?";
     String[] selectionArgs={String.valueOf(rowId)};
 
-    return db.update(TournamentEntry.TABLE_NAME, values, selection, selectionArgs);
+    return sqLiteDatabase.update(TournamentEntry.TABLE_NAME, values, selection, selectionArgs);
   }
 
   public int updateEventStarred(long rowId, boolean starred) {
-    SQLiteDatabase db=getReadableDatabase();
-
     ContentValues values=new ContentValues();
     values.put(EventEntry.COLUMN_NAME_STARRED, starred ? 1 : 0);
 
     String selection=EventEntry._ID+" LIKE ?";
     String[] selectionArgs={String.valueOf(rowId)};
 
-    int row=db.update(EventEntry.TABLE_NAME, values, selection, selectionArgs);
-    db.close();
-    return row;
+    return sqLiteDatabase.update(EventEntry.TABLE_NAME, values, selection, selectionArgs);
   }
 
   public int updateEventNote(long rowId, String note) {
-    SQLiteDatabase db=getReadableDatabase();
-
     ContentValues values=new ContentValues();
     values.put(EventEntry.COLUMN_NAME_NOTE, note);
 
     String selection=EventEntry._ID+" LIKE ?";
     String[] selectionArgs={String.valueOf(rowId)};
 
-    int row=db.update(EventEntry.TABLE_NAME, values, selection, selectionArgs);
-    db.close();
-    return row;
+    return sqLiteDatabase.update(EventEntry.TABLE_NAME, values, selection, selectionArgs);
   }
 }

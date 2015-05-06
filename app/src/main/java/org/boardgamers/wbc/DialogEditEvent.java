@@ -92,7 +92,7 @@ public class DialogEditEvent extends DialogCreateEvent {
         (EventFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.eventFragment);
 
     if (fragment!=null && fragment.isInLayout()) {
-      fragment.setEvent();
+      fragment.setEvent(editedEvent.id);
     }
   }
 }

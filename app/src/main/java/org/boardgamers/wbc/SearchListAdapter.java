@@ -7,8 +7,8 @@ import java.util.List;
  */
 public class SearchListAdapter extends DefaultListAdapter {
 
-  public SearchListAdapter(DefaultListFragment f, List<List<Event>> e) {
-    super(f, e);
+  public SearchListAdapter(DefaultListFragment f, List<List<Event>> e, int i) {
+    super(f, e, i);
   }
 
   @Override
@@ -21,4 +21,16 @@ public class SearchListAdapter extends DefaultListAdapter {
     return R.layout.schedule_group_small;
   }
 
+  @Override
+  public void changeEventStar(Event event) {
+    super.changeEventStar(event);
+
+    ((SearchListFragment) fragment).setAllStared();
+  }
+
+  @Override
+  public void selectEvent(Event event) {
+    super.selectEvent(event);
+    SearchResultActivity.fromEventActivity=true;
+  }
 }

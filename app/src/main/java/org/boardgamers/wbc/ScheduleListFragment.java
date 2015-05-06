@@ -59,10 +59,12 @@ public class ScheduleListFragment extends DefaultListFragment {
 
     @Override
     protected Integer doInBackground(Integer... params) {
-      listAdapter=new ScheduleListAdapter(fragment, events);
+      listAdapter=new ScheduleListAdapter(fragment, events, 1);
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+      dbHelper.getReadableDatabase();
       List<Event> tempEvents=dbHelper.getAllEvents();
+      dbHelper.close();
 
       Event event;
       while (tempEvents.size()>0) {

@@ -88,6 +88,7 @@ public class EventFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+    Log.d(TAG, "Creating");
     View view=inflater.inflate(R.layout.event_fragment, container, false);
 
     timeLayout=(LinearLayout) view.findViewById(R.id.ef_time_layout);
@@ -133,8 +134,9 @@ public class EventFragment extends Fragment {
 
     boxIV=(ImageView) view.findViewById(R.id.ef_box_image);
 
-    //setEvent();
-
+    Log.d(TAG, "Created");
+    setEvent(MainActivity.SELECTED_EVENT_ID);
+    Log.d(TAG, "Event set");
     return view;
   }
 
@@ -147,11 +149,10 @@ public class EventFragment extends Fragment {
     }
   }
 
-  public void setEvent() {
-    //scrollView.fullScroll(ScrollView.FOCUS_UP);
-    if (MainActivity.SELECTED_EVENT_ID==-1) {
+  public void setEvent(long id) {
+    if (id==-1) {
       titleTV.setVisibility(View.VISIBLE);
-      titleTV.setText(event.title);
+      titleTV.setText(getResources().getString(R.string.event_title));
       dayTV.setText(getResources().getString(R.string.event_day));
       timeTV.setText(getResources().getString(R.string.event_time));
       locationTV.setText(getResources().getString(R.string.event_location));
@@ -162,9 +163,18 @@ public class EventFragment extends Fragment {
       hideNonTournamentViews();
     } else {
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
-      event=dbHelper.getEvent(MainActivity.SELECTED_EVENT_ID);
-
+      dbHelper.getReadableDatabase();
+      event=dbHelper.getEvent(id);
       tournament=dbHelper.getTournament(event.tournamentID);
+      dbHelper.close();
+
+      if (event==null) {
+        Log.d(TAG, "ERROR: returned null event from database");
+        MainActivity.SELECTED_EVENT_ID=-1;
+        setEvent(-1);
+        return;
+      }
+
 
       if (getActivity() instanceof EventActivity) {
         titleTV.setVisibility(View.GONE);
@@ -251,6 +261,7 @@ public class EventFragment extends Fragment {
         hideNonTournamentViews();
       }
     }
+    scrollView.fullScroll(ScrollView.FOCUS_UP);
   }
 
   public void hideNonTournamentViews() {
@@ -283,6 +294,7 @@ public class EventFragment extends Fragment {
       note=noteET.getText().toString();
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+      dbHelper.getWritableDatabase();
       dbHelper.updateEventNote(event.id, note);
 
       if (tournament.isTournament) {
@@ -294,6 +306,8 @@ public class EventFragment extends Fragment {
           }
         }
       }
+
+      dbHelper.close();
     }
 
     if (updateActive) {

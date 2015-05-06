@@ -103,6 +103,7 @@ public class SplashScreen extends Activity {
       }
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
+      dbHelper.getWritableDatabase();
       // parse schedule file
       BufferedReader reader=new BufferedReader(isr);
       try {
@@ -403,7 +404,8 @@ public class SplashScreen extends Activity {
         isr.close();
         is.close();
         reader.close();
-
+        dbHelper.close();
+        
         // log statistics
         Log.d(TAG, "Finished load, "+String.valueOf(tournamentID)+" total tournaments and "+
             String.valueOf(lineNum)+" total events");

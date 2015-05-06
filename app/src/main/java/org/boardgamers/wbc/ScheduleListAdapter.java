@@ -20,8 +20,8 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
 
   public List<Boolean> tournamentsVisible;
 
-  public ScheduleListAdapter(DefaultListFragment f, List<List<Event>> e) {
-    super(f, e);
+  public ScheduleListAdapter(DefaultListFragment f, List<List<Event>> e, int i) {
+    super(f, e, i);
 
     SharedPreferences settings=f.getActivity()
         .getSharedPreferences(f.getResources().getString(R.string.sp_file_name),
@@ -93,7 +93,7 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
   }
 
   @Override
-  public void changeEventStar(Event event) {
+  public void updateStarredEvent(Event event) {
     int group=event.day*GROUPS_PER_DAY+event.hour-6;
     Event tempEvent;
 

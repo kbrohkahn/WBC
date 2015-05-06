@@ -7,8 +7,8 @@ import java.util.List;
  * Adapter for SummaryFragment ExpandableListView
  */
 public class SummaryListAdapter extends DefaultListAdapter {
-  public SummaryListAdapter(DefaultListFragment f, List<List<Event>> e) {
-    super(f, e);
+  public SummaryListAdapter(DefaultListFragment f, List<List<Event>> e, int i) {
+    super(f, e, i);
   }
 
   @Override
@@ -17,7 +17,7 @@ public class SummaryListAdapter extends DefaultListAdapter {
   }
 
   @Override
-  public void changeEventStar(Event event) {
+  public void updateStarredEvent(Event event) {
     Event tempEvent;
 
     if (event.starred) {

@@ -33,8 +33,9 @@ public class FilterActivity extends AppCompatActivity {
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
-
+    dbHelper.getReadableDatabase();
     isTournament=dbHelper.getAllVisible();
+    dbHelper.close();
 
     // setup checkboxes
     tournamentCBs=new CheckBox[isTournament.size()];

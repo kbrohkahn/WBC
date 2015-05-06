@@ -32,7 +32,7 @@ public class DefaultListFragment extends Fragment {
   }
 
   public void refreshAdapter() {
-    if (listAdapter!=null) {
+    if (listAdapter!=null && !MainActivity.updatingFragments) {
       listAdapter.updateList();
     }
   }
@@ -61,9 +61,9 @@ public class DefaultListFragment extends Fragment {
     }
   }
 
-  public void changeEventStar(Event event) {
+  public void updateStarredEvent(Event event) {
     if (listAdapter!=null) {
-      listAdapter.changeEventStar(event);
+      listAdapter.updateStarredEvent(event);
     }
   }
 

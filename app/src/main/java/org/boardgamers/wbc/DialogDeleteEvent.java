@@ -103,5 +103,6 @@ public class DialogDeleteEvent extends DialogFragment {
         index=UserDataListFragment.userEvents.size();
       }
     }
+    dbHelper.close();
   }
 }

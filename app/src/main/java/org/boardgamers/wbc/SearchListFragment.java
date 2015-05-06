@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchListFragment extends DefaultListFragment {
@@ -43,22 +44,46 @@ public class SearchListFragment extends DefaultListFragment {
     return view;
   }
 
+  public void changeEventStar(Event event) {
+    List<Event> searchList=listAdapter.events.get(event.day);
+    for (Event tempEvent : searchList) {
+      if (event.id==tempEvent.id) {
+        tempEvent.starred=event.starred;
+        changeAllStarred();
+        setAllStared();
+      }
+    }
+  }
+
   /**
    * Game star button clicked - change allStarred boolean and update events
    */
   public void changeAllStarred() {
+    SearchResultActivity.progressBar.setVisibility(View.VISIBLE);
+    SearchResultActivity.progressBar.setProgress(0);
+
     allStarred=!allStarred;
     setGameStarIV();
 
     Event event;
+    List<Event> changedEvents=new ArrayList<>();
     for (int i=0; i<listAdapter.events.size(); i++) {
       for (int j=0; j<listAdapter.events.get(i).size(); j++) {
         event=listAdapter.events.get(i).get(j);
         if (event.starred^allStarred) {
-          ((MainActivity) getActivity().getParent()).changeEventStar(event);
+          event.starred=!event.starred;
+          changedEvents.add(event);
         }
       }
     }
+
+    refreshAdapter();
+
+    int count=changedEvents.size();
+    SearchResultActivity.progressBar.setMax(count);
+
+    Event[] changedEventsArray=new Event[count];
+    MainActivity.changeEventStar(getActivity(), changedEvents.toArray(changedEventsArray), 3);
   }
 
   public void loadEvents(String q) {
@@ -99,10 +124,12 @@ public class SearchListFragment extends DefaultListFragment {
 
     @Override
     protected Integer doInBackground(Integer... params) {
-      listAdapter=new SearchListAdapter(fragment, events);
+      listAdapter=new SearchListAdapter(fragment, events, 3);
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+      dbHelper.getReadableDatabase();
       List<Event> tempEvents=dbHelper.getEventsFromQuery(query);
+      dbHelper.close();
 
       List<List<Event>> events=listAdapter.events;
       Event event;

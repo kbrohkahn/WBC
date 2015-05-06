@@ -27,10 +27,12 @@ public class SummaryListFragment extends DefaultListFragment {
 
     @Override
     protected Integer doInBackground(Integer... params) {
-      listAdapter=new SummaryListAdapter(fragment, events);
+      listAdapter=new SummaryListAdapter(fragment, events, 0);
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+      dbHelper.getReadableDatabase();
       List<Event> tempEvents=dbHelper.getStarredEvents();
+      dbHelper.close();
 
       List<List<Event>> events=listAdapter.events;
       Event event;
