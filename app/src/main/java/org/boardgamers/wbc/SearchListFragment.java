@@ -71,6 +71,7 @@ public class SearchListFragment extends DefaultListFragment {
     for (Event tempEvent : searchList) {
       if (event.id==tempEvent.id) {
         tempEvent.starred=event.starred;
+        listAdapter.notifyDataSetChanged();
         setAllStared();
         return;
       }

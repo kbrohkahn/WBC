@@ -28,7 +28,9 @@
   <string name="search_hint">Search title or format</string>
   <string name="changes_dialog_title">Schedule Changes</string>
   <string name="initial_dialog_title">Welcome</string>
-  <string name="initial_dialog_text">Star events in the full schedule to add them to your schedule</string>
+  <string
+    name="initial_dialog_text">Star events in the full schedule to add them to your schedule</string>
+  <string name="initial_load_title">Saving events on device</string>
 
   <!-- ACTIVITY TITLES -->
   <string name="activity_tournament">Tournament</string>
@@ -37,6 +39,7 @@
   <string name="activity_filter">Filter Schedule</string>
   <string name="activity_help">Help</string>
   <string name="activity_about">About</string>
+  <string name="activity_splash">Loading events...</string>
 
   <!-- FILTER MENU -->
   <string name="select_all">Select All</string>
@@ -49,13 +52,19 @@
   <string name="deselect_tournament_new_line">Deselect\nTourneys</string>
 
   <!-- SCHEDULE FRAGMENT -->
-  <string name="day">day</string>
-  <string name="time">time</string>
-  <string name="duration">duration</string>
-  <string name="event">EVENT</string>
-  <string name="location">LOCATION</string>
+  <string name="title">Title</string>
+  <string name="day">Day</string>
+  <string name="time">Time</string>
+  <string name="location">Location</string>
+  <string name="gm">GM</string>
+  <string name="format">Format</string>
+  <string name="class_string">Class</string>
+  <string name="duration">Duration</string>
+  <string name="event">Event</string>
 
-  <!-- GAME FRAGMENT -->
+  <!-- EVENT FRAGMENT -->
+  <string name="box_iv">Tournament box image</string>
+  <string name="note_hint">Add event note</string>
   <string name="finish">Finish</string>
   <string name="preview"><u>Preview</u></string>
   <string name="report"><u>Report</u></string>
@@ -72,17 +81,6 @@
   <string name="fourth">4th</string>
   <string name="fifth">5th</string>
   <string name="sixth">6th</string>
-
-  <!-- EVENT FRAGMENT -->
-  <string name="event_box_iv">Tournament box image</string>
-  <string name="event_note_hint">Add event note</string>
-  <string name="event_title">Title</string>
-  <string name="event_day">Day</string>
-  <string name="event_time">Time</string>
-  <string name="event_location">Location</string>
-  <string name="event_gm">GM:</string>
-  <string name="event_format">Format:</string>
-  <string name="event_class">Class:</string>
 
   <!-- CREATE EVENT DIALOG -->
   <string name="ce_title">Title *</string>

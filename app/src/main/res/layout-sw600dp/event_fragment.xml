@@ -27,44 +27,45 @@
           android:id="@+id/ef_title"
           style="@style/medium_text"
           android:gravity="center"
-          android:text="@string/event_title"/>
+          android:text="@string/title"/>
 
         <TextView
           android:id="@+id/ef_day"
           style="@style/medium_text"
           android:gravity="center"
-          android:text="@string/event_day"/>
+          android:text="@string/day"/>
 
         <TextView
           android:id="@+id/ef_time"
           style="@style/medium_text"
+          android:layout_width="wrap_content"
           android:drawablePadding="@dimen/default_margin"
-          android:gravity="center"
-          android:text="@string/event_time"/>
+          android:layout_gravity="center"
+          android:text="@string/time"/>
 
         <TextView
           android:id="@+id/ef_location"
           style="@style/medium_text"
           android:gravity="center"
-          android:text="@string/event_location"/>
+          android:text="@string/location"/>
 
         <TextView
           android:id="@+id/ef_gm"
           style="@style/medium_text"
           android:gravity="center"
-          android:text="@string/event_gm"/>
+          android:text="@string/gm"/>
 
         <TextView
           android:id="@+id/ef_format"
           style="@style/medium_text"
           android:gravity="center"
-          android:text="@string/event_format"/>
+          android:text="@string/format"/>
 
         <TextView
           android:id="@+id/ef_class"
           style="@style/medium_text"
           android:gravity="center"
-          android:text="@string/event_class"/>
+          android:text="@string/class_string"/>
 
         <LinearLayout
           android:layout_width="match_parent"
@@ -94,7 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/event_box_iv"
+        android:contentDescription="@string/box_iv"
         android:padding="@dimen/default_margin"
         android:scaleType="fitXY"/>
 
@@ -205,7 +206,7 @@
       android:layout_marginTop="@dimen/layout_margin_small"
       android:background="@drawable/edit_text_back"
       android:gravity="left"
-      android:hint="@string/event_note_hint"
+      android:hint="@string/note_hint"
       android:minLines="4"
       android:padding="4dp"/>
 

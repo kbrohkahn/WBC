@@ -1,10 +1,8 @@
 package org.boardgamers.wbc;
 
-import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -48,40 +46,27 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    Log.d(TAG, "Check 1");
+
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
     TOTAL_EVENTS=dbHelper.getNumEvents();
+    int starredEvents=dbHelper.getStarredEvents().size();
     dbHelper.close();
 
-    if (TOTAL_EVENTS>0) {
-      databaseLoaded();
-    } else {
-      Intent intent=new Intent(this, SplashScreen.class);
-      startActivity(intent);
-    }
-  }
+    Log.d(TAG, "Check 2");
 
-  @Override
-  protected void onResume() {
-    if (TOTAL_EVENTS==0) {
-      databaseLoaded();
-    }
-    super.onResume();
-  }
-
-  public void databaseLoaded() {
     setContentView(R.layout.main_layout);
 
-    viewPager=(ViewPager) findViewById(R.id.pager);
+    Log.d(TAG, "Check 3");
+
     pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
 
+    Log.d(TAG, "Check 4");
+
+    viewPager=(ViewPager) findViewById(R.id.pager);
     viewPager.setAdapter(pagerAdapter);
     viewPager.setOffscreenPageLimit(3);
-
-    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
-    dbHelper.getReadableDatabase();
-    TOTAL_EVENTS=dbHelper.getNumEvents();
-    dbHelper.close();
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -105,28 +90,11 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    Log.d(TAG, "viewpager loaded");
+    Log.d(TAG, "Check 5");
 
-    // SHOW INITIAL DIALOG
     SharedPreferences sp=
         getSharedPreferences(getResources().getString(R.string.sp_file_name), Context.MODE_PRIVATE);
-    int version=sp.getInt("last_app_version", 0);
     int latestDialogVersion=13;
-    // alert to notify email for questions
-    if (version<latestDialogVersion) {
-      AlertDialog.Builder initialBuilder=new AlertDialog.Builder(this);
-      initialBuilder.setTitle(R.string.initial_dialog_title)
-          .setMessage(R.string.initial_dialog_text)
-          .setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              dialog.dismiss();
-            }
-          });
-      initialBuilder.create().show();
-    }
-
-    // save current version code
     int versionCode;
     try {
       versionCode=getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
@@ -142,19 +110,18 @@ public class MainActivity extends AppCompatActivity {
     editor.putInt("last_app_version", versionCode);
     editor.apply();
 
-    // SHOW CHANGES DIALOG
-    String allChanges=getIntent().getStringExtra("allChanges");
-    if (allChanges!=null && !allChanges.equalsIgnoreCase("")) {
-      AlertDialog.Builder changesBuilder=new AlertDialog.Builder(this);
-      changesBuilder.setTitle(R.string.changes_dialog_title).setMessage(allChanges)
-          .setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-              dialog.dismiss();
-            }
-          });
-
-      changesBuilder.create().show();
+    if (starredEvents==0) {
+      viewPager.setCurrentItem(1);
     }
+
+    Log.d(TAG, "Check 6");
+  }
+
+  @Override
+  protected void onResume() {
+    pagerAdapter.getItem(viewPager.getCurrentItem()).refreshAdapter();
+
+    super.onResume();
   }
 
   public static void changeEventStar(Context context, Event[] events, int id) {
@@ -174,10 +141,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onPostExecute(Integer integer) {
       // refresh current fragment's adapter if changing star from event or search
       updatingFragments=false;
-      SearchResultActivity.progressBar.setVisibility(View.GONE);
-
-      if (id>2) {
-        pagerAdapter.getItem(viewPager.getCurrentItem()).refreshAdapter();
+      if (SearchResultActivity.progressBar!=null) {
+        SearchResultActivity.progressBar.setVisibility(View.GONE);
       }
 
       super.onPostExecute(integer);
@@ -193,7 +158,10 @@ public class MainActivity extends AppCompatActivity {
       Event event;
       for (int i=0; i<events.length; i++) {
         event=events[i];
-        SearchResultActivity.progressBar.setProgress(i);
+
+        if (SearchResultActivity.progressBar!=null) {
+          SearchResultActivity.progressBar.setProgress(i);
+        }
 
         Log.d(TAG, "Changing event star for: "+event.title);
 
@@ -235,8 +203,7 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
     searchView.setSearchableInfo(
         searchManager.getSearchableInfo(new ComponentName(this, SearchResultActivity.class)));
-
-    //searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+    searchView.setIconifiedByDefault(false);
     searchView.setSubmitButtonEnabled(true);
 
     return true;
@@ -244,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-
     if (item.getItemId()==R.id.menu_map) {
       startActivity(new Intent(this, MapActivity.class));
     } else if (item.getItemId()==R.id.menu_help) {

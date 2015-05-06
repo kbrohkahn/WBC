@@ -98,8 +98,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   }
 
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    // This database is only a cache for online data, so its upgrade policy is
-    // to simply to discard the data and start over
     db.execSQL(SQL_DELETE_EVENT_ENTRIES);
     db.execSQL(SQL_DELETE_TOURNAMENT_ENTRIES);
 
@@ -320,7 +318,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
       format=cursor.getString(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_NAME_FORMAT));
       qualify=cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_NAME_QUALIFY))==1;
       duration=cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_NAME_DURATION));
-      continuous=cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_NAME_TITLE))==1;
+      continuous=cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_NAME_CONTINUOUS))==1;
       totalDuration=
           cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_NAME_TOTAL_DURATION));
       location=cursor.getString(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_NAME_LOCATION));
@@ -351,8 +349,8 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     // How you want the results sorted in the resulting Cursor
     String sortOrder=TournamentEntry.COLUMN_NAME_TITLE+" ASC";
 
-    Cursor cursor=
-        sqLiteDatabase.query(TournamentEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
+    Cursor cursor=sqLiteDatabase
+        .query(TournamentEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
 
     String title, label, gm;
     int id, prize, finish;

@@ -26,7 +26,7 @@ import android.widget.TextView;
 import java.io.InputStream;
 
 public class EventFragment extends Fragment {
-  private final String TAG="Event Fragment";
+  //private final String TAG="Event Fragment";
 
   private final int[] finishIDs=
       {R.id.ef_finish_0, R.id.ef_finish_1, R.id.ef_finish_2, R.id.ef_finish_3, R.id.ef_finish_4,
@@ -88,7 +88,6 @@ public class EventFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    Log.d(TAG, "Creating");
     View view=inflater.inflate(R.layout.event_fragment, container, false);
 
     timeLayout=(LinearLayout) view.findViewById(R.id.ef_time_layout);
@@ -103,9 +102,13 @@ public class EventFragment extends Fragment {
     previewTV=(TextView) view.findViewById(R.id.ef_preview_link);
     reportTV=(TextView) view.findViewById(R.id.ef_report_link);
 
+    boxIV=(ImageView) view.findViewById(R.id.ef_box_image);
+
     map=(ImageView) view.findViewById(R.id.ef_map);
     mapOverlay=(ImageView) view.findViewById(R.id.ef_map_overlay);
     updateActive=false;
+
+    noteET=(EditText) view.findViewById(R.id.ef_note);
 
     Button share=(Button) view.findViewById(R.id.ef_share);
     share.setOnClickListener(new View.OnClickListener() {
@@ -123,8 +126,6 @@ public class EventFragment extends Fragment {
       }
     });
 
-    noteET=(EditText) view.findViewById(R.id.ef_note);
-
     finishGroup=(RadioGroup) view.findViewById(R.id.ef_finish);
     finishLayout=(LinearLayout) view.findViewById(R.id.ef_finish_layout);
     finishButtons=new RadioButton[finishIDs.length];
@@ -132,11 +133,7 @@ public class EventFragment extends Fragment {
       finishButtons[i]=(RadioButton) view.findViewById(finishIDs[i]);
     }
 
-    boxIV=(ImageView) view.findViewById(R.id.ef_box_image);
-
-    Log.d(TAG, "Created");
     setEvent(MainActivity.SELECTED_EVENT_ID);
-    Log.d(TAG, "Event set");
     return view;
   }
 
@@ -152,13 +149,27 @@ public class EventFragment extends Fragment {
   public void setEvent(long id) {
     if (id==-1) {
       titleTV.setVisibility(View.VISIBLE);
-      titleTV.setText(getResources().getString(R.string.event_title));
-      dayTV.setText(getResources().getString(R.string.event_day));
-      timeTV.setText(getResources().getString(R.string.event_time));
-      locationTV.setText(getResources().getString(R.string.event_location));
-      formatTV.setText(getResources().getString(R.string.event_format));
-      classTV.setText(getResources().getString(R.string.event_class));
-      gMTV.setText(getResources().getString(R.string.event_gm));
+      titleTV.setText(getResources().getString(R.string.title));
+      dayTV.setText(getResources().getString(R.string.day));
+      timeTV.setText(getResources().getString(R.string.time));
+      timeTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+      locationTV.setText(getResources().getString(R.string.location));
+      formatTV.setText(getResources().getString(R.string.format));
+      classTV.setText(getResources().getString(R.string.class_string));
+      gMTV.setText(getResources().getString(R.string.gm));
+
+      timeLayout.setBackgroundResource(0);
+
+      setRoom("");
+
+      if (updateActive) {
+        updateActive=false;
+        mapOverlay.setImageResource(0);
+        map.setImageResource(0);
+        handler.removeCallbacks(runnable);
+      }
+
+      noteET.setEnabled(false);
 
       hideNonTournamentViews();
     } else {
@@ -169,12 +180,11 @@ public class EventFragment extends Fragment {
       dbHelper.close();
 
       if (event==null) {
-        Log.d(TAG, "ERROR: returned null event from database");
+        //Log.d(TAG, "ERROR: returned null event from database");
         MainActivity.SELECTED_EVENT_ID=-1;
         setEvent(-1);
         return;
       }
-
 
       if (getActivity() instanceof EventActivity) {
         titleTV.setVisibility(View.GONE);
@@ -197,16 +207,19 @@ public class EventFragment extends Fragment {
           String.valueOf((event.hour+(int) event.duration)+minute));
       if (event.continuous) {
         timeTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
+      } else {
+        timeTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
       }
 
-      locationTV.setText("@"+event.location);
-      formatTV.setText(getResources().getString(R.string.event_format)+" "+event.format);
-      classTV.setText(getResources().getString(R.string.event_class)+" "+event.eClass);
-      gMTV.setText(getResources().getString(R.string.event_gm)+" "+tournament.gm);
+      locationTV.setText(getResources().getString(R.string.location)+": "+event.location);
+      formatTV.setText(getResources().getString(R.string.format)+": "+event.format);
+      classTV.setText(getResources().getString(R.string.class_string)+": "+event.eClass);
+      gMTV.setText(getResources().getString(R.string.gm)+": "+tournament.gm);
 
       setRoom(event.location);
 
       noteET.setText(event.note);
+      noteET.setEnabled(true);
 
       int hoursIntoConvention=MainActivity.getHoursIntoConvention();
       boolean started=event.day*24+event.hour<=hoursIntoConvention;
@@ -268,6 +281,8 @@ public class EventFragment extends Fragment {
     finishLayout.setVisibility(View.GONE);
     previewTV.setVisibility(View.INVISIBLE);
     reportTV.setVisibility(View.INVISIBLE);
+    boxIV.setImageResource(0);
+    boxIV.setVisibility(View.INVISIBLE);
   }
 
   private void share() {
@@ -301,7 +316,6 @@ public class EventFragment extends Fragment {
         for (int i=0; i<finishButtons.length; i++) {
           if (finishButtons[i].isChecked()) {
             dbHelper.updateTournamentFinish(tournament.id, i);
-
             break;
           }
         }
@@ -383,6 +397,7 @@ public class EventFragment extends Fragment {
 
     protected void onPostExecute(Bitmap result) {
       boxIV.setImageBitmap(result);
+      boxIV.setVisibility(View.VISIBLE);
     }
   }
 }
