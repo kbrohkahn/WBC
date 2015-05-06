@@ -34,7 +34,7 @@ public class EventActivity extends AppCompatActivity {
     MenuItem item=menu.findItem(R.id.menu_star);
 
     EventFragment eventFragment=
-        (EventFragment) getFragmentManager().findFragmentById(R.id.eventFragment);
+        (EventFragment) getSupportFragmentManager().findFragmentById(R.id.eventFragment);
     if (eventFragment!=null && eventFragment.isAdded()) {
       if (eventFragment.event.starred) {
         item.setIcon(R.drawable.star_on);
@@ -47,7 +47,7 @@ public class EventActivity extends AppCompatActivity {
 
   public void changeEventStar() {
     EventFragment eventFragment=
-        (EventFragment) getFragmentManager().findFragmentById(R.id.eventFragment);
+        (EventFragment) getSupportFragmentManager().findFragmentById(R.id.eventFragment);
     if (eventFragment!=null && eventFragment.isAdded()) {
       eventFragment.event.starred=!eventFragment.event.starred;
 

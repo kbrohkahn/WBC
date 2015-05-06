@@ -1,8 +1,6 @@
 package org.boardgamers.wbc;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,19 +11,19 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.SearchView;
 
 import java.util.List;
 
 /**
  * Main Activity class
  */
-public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
+public class MainActivity extends AppCompatActivity {
   private final static String TAG="Main Activity";
 
   public static final int TOTAL_DAYS=9;
@@ -54,10 +52,6 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     TOTAL_EVENTS=dbHelper.getNumEvents();
 
-    if (currentDay==-1) {
-
-    }
-
     if (TOTAL_EVENTS>0) {
       databaseLoaded();
     } else {
@@ -78,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     setContentView(R.layout.main_layout);
 
     viewPager=(ViewPager) findViewById(R.id.pager);
-    pagerAdapter=new TabsPagerAdapter(getFragmentManager());
+    pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
 
     viewPager.setAdapter(pagerAdapter);
     viewPager.setOffscreenPageLimit(3);
@@ -239,23 +233,6 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     if (fragment!=null && fragment.isAdded()) {
       fragment.listAdapter.updateList();
     }
-  }
-
-  @Override
-  public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-  }
-
-  @Override
-  public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-    int position=tab.getPosition();
-
-    viewPager.setCurrentItem(position);
-
-    updateFragment(position);
-  }
-
-  @Override
-  public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
   }
 
   /**

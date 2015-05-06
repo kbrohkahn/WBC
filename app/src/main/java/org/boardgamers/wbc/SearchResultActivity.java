@@ -1,13 +1,12 @@
 package org.boardgamers.wbc;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,7 +15,7 @@ import android.widget.SearchView;
 /**
  * Created by Kevin
  */
-public class SearchResultActivity extends Activity {
+public class SearchResultActivity extends AppCompatActivity {
   private final String TAG="Search Activity";
 
   @Override
@@ -25,13 +24,8 @@ public class SearchResultActivity extends Activity {
 
     setContentView(R.layout.search_results);
 
-    final ActionBar ab=getActionBar();
-    if (ab!=null) {
-      ab.setDisplayHomeAsUpEnabled(true);
-      ab.setHomeButtonEnabled(true);
-    } else {
-      Log.d(TAG, "Could not get action bar");
-    }
+    Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
     handleIntent(getIntent());
   }
@@ -52,7 +46,7 @@ public class SearchResultActivity extends Activity {
 
     if (query!=null) {
       SearchListFragment fragment=
-          (SearchListFragment) getFragmentManager().findFragmentById(R.id.searchFragment);
+          (SearchListFragment) getSupportFragmentManager().findFragmentById(R.id.searchFragment);
       fragment.loadEvents(query);
       setTitle(query);
     }
