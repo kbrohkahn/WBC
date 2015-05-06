@@ -18,7 +18,7 @@ public class SearchListAdapter extends DefaultListAdapter {
 
   @Override
   public int getGroupViewId(final int groupPosition) {
-    return R.layout.schedule_group_small;
+    return R.layout.list_group_small;
   }
 
   @Override

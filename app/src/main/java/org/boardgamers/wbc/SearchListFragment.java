@@ -35,11 +35,33 @@ public class SearchListFragment extends DefaultListFragment {
     star.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        changeAllStarred();
+        SearchResultActivity.progressBar.setVisibility(View.VISIBLE);
+        SearchResultActivity.progressBar.setProgress(0);
+
+        allStarred=!allStarred;
+        setGameStarIV();
+
+        Event event;
+        List<Event> changedEvents=new ArrayList<>();
+        for (int i=0; i<listAdapter.events.size(); i++) {
+          for (int j=0; j<listAdapter.events.get(i).size(); j++) {
+            event=listAdapter.events.get(i).get(j);
+            if (event.starred^allStarred) {
+              event.starred=!event.starred;
+              changedEvents.add(event);
+            }
+          }
+        }
+
+        refreshAdapter();
+
+        int count=changedEvents.size();
+        SearchResultActivity.progressBar.setMax(count);
+
+        Event[] changedEventsArray=new Event[count];
+        MainActivity.changeEventStar(getActivity(), changedEvents.toArray(changedEventsArray), 3);
       }
     });
-
-    setGameStarIV();
 
     return view;
   }
@@ -49,41 +71,10 @@ public class SearchListFragment extends DefaultListFragment {
     for (Event tempEvent : searchList) {
       if (event.id==tempEvent.id) {
         tempEvent.starred=event.starred;
-        changeAllStarred();
         setAllStared();
+        return;
       }
     }
-  }
-
-  /**
-   * Game star button clicked - change allStarred boolean and update events
-   */
-  public void changeAllStarred() {
-    SearchResultActivity.progressBar.setVisibility(View.VISIBLE);
-    SearchResultActivity.progressBar.setProgress(0);
-
-    allStarred=!allStarred;
-    setGameStarIV();
-
-    Event event;
-    List<Event> changedEvents=new ArrayList<>();
-    for (int i=0; i<listAdapter.events.size(); i++) {
-      for (int j=0; j<listAdapter.events.get(i).size(); j++) {
-        event=listAdapter.events.get(i).get(j);
-        if (event.starred^allStarred) {
-          event.starred=!event.starred;
-          changedEvents.add(event);
-        }
-      }
-    }
-
-    refreshAdapter();
-
-    int count=changedEvents.size();
-    SearchResultActivity.progressBar.setMax(count);
-
-    Event[] changedEventsArray=new Event[count];
-    MainActivity.changeEventStar(getActivity(), changedEvents.toArray(changedEventsArray), 3);
   }
 
   public void loadEvents(String q) {
@@ -141,6 +132,8 @@ public class SearchListFragment extends DefaultListFragment {
       listAdapter.events=events;
 
       listAdapter.notifyDataSetChanged();
+
+      setAllStared();
 
       return 1;
     }

@@ -62,9 +62,9 @@ public class UserDataListAdapter extends DefaultListAdapter {
 
       return view;
     } else if (groupPosition==NOTES_INDEX) {
-      view=inflater.inflate(R.layout.schedule_item_text, parent, false);
+      view=inflater.inflate(R.layout.list_item_text, parent, false);
 
-      TextView text=(TextView) view.findViewById(R.id.si_text);
+      TextView text=(TextView) view.findViewById(R.id.li_text);
       text.setText(((UserDataListFragment) fragment).getNote(childPosition));
 
       if (childPosition%2==0) {
@@ -75,9 +75,9 @@ public class UserDataListAdapter extends DefaultListAdapter {
 
       return view;
     } else if (groupPosition==FINISHES_INDEX) {
-      view=inflater.inflate(R.layout.schedule_item_text, parent, false);
+      view=inflater.inflate(R.layout.list_item_text, parent, false);
 
-      TextView text=(TextView) view.findViewById(R.id.si_text);
+      TextView text=(TextView) view.findViewById(R.id.li_text);
       text.setText(((UserDataListFragment) fragment).getFinish(childPosition));
 
       if (childPosition%2==0) {

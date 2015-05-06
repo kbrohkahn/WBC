@@ -4,7 +4,7 @@
   android:layout_height="wrap_content"
   android:orientation="vertical">
 
-  <include layout="@layout/schedule_item"/>
+  <include layout="@layout/list_item"/>
 
   <TextView
     android:id="@+id/summary_event_note"

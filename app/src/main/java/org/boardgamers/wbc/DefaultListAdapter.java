@@ -56,12 +56,12 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
                            ViewGroup parent) {
     final Event event=(Event) getChild(groupPosition, childPosition);
 
-    view=inflater.inflate(R.layout.schedule_item, parent, false);
+    view=inflater.inflate(R.layout.list_item, parent, false);
 
     int tColor=getTextColor(event);
     int tType=getTextStyle(event);
 
-    TextView title=(TextView) view.findViewById(R.id.si_name);
+    TextView title=(TextView) view.findViewById(R.id.li_name);
     title.setText(event.title);
     title.setTypeface(null, tType);
     title.setTextColor(tColor);
@@ -70,12 +70,12 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
       title.setCompoundDrawablesWithIntrinsicBounds(R.drawable.junior_icon, 0, 0, 0);
     }
 
-    TextView hour=(TextView) view.findViewById(R.id.si_hour);
+    TextView hour=(TextView) view.findViewById(R.id.li_hour);
     hour.setText(String.valueOf(event.hour));
     hour.setTypeface(null, tType);
     hour.setTextColor(tColor);
 
-    TextView duration=(TextView) view.findViewById(R.id.si_duration);
+    TextView duration=(TextView) view.findViewById(R.id.li_duration);
     duration.setText(String.valueOf(event.duration));
     duration.setTypeface(null, tType);
     duration.setTextColor(tColor);
@@ -84,12 +84,12 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
       duration.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
     }
 
-    TextView location=(TextView) view.findViewById(R.id.si_location);
+    TextView location=(TextView) view.findViewById(R.id.li_location);
     location.setText(event.location);
     location.setTypeface(null, tType);
     location.setTextColor(tColor);
 
-    ImageView starIV=(ImageView) view.findViewById(R.id.si_star);
+    ImageView starIV=(ImageView) view.findViewById(R.id.li_star);
     starIV.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);
     starIV.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -197,7 +197,7 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
   }
 
   public int getGroupViewId(int groupPosition) {
-    return R.layout.schedule_group_large;
+    return R.layout.list_group_large;
   }
 
   public String getGroupTitle(int groupPosition) {

@@ -42,7 +42,7 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
 
     view=super.getChildView(groupPosition, childPosition, isLastChild, view, parent);
     if (groupPosition%GROUPS_PER_DAY!=0) {
-      view.findViewById(R.id.si_hour).setVisibility(View.GONE);
+      view.findViewById(R.id.li_hour).setVisibility(View.GONE);
     }
     return view;
   }
@@ -50,9 +50,9 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
   @Override
   public int getGroupViewId(final int groupPosition) {
     if (groupPosition%GROUPS_PER_DAY==0) {
-      return R.layout.schedule_group_large;
+      return R.layout.list_group_large;
     } else {
-      return R.layout.schedule_group_small;
+      return R.layout.list_group_small;
     }
   }
 
