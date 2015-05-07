@@ -2,7 +2,7 @@
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
   android:label="@string/app_name_short"
   android:hint="@string/search_hint"
-  android:searchSuggestAuthority="opg.boardgamers.wbc.SearchSuggestionProvider"
+  android:searchSuggestAuthority="org.boardgamers.wbc.SearchSuggestionsProvider"
   android:searchSuggestSelection="word MATCH ?"
   android:searchSuggestIntentAction="android.Intent.action.VIEW">
 </searchable>

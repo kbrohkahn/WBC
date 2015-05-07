@@ -64,10 +64,12 @@ public class SearchResultActivity extends AppCompatActivity {
 
   private void handleIntent(Intent intent) {
     String query=null;
-    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+    if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SEARCH)) {
       query=intent.getStringExtra(SearchManager.QUERY).toLowerCase();
-    } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+    } else if (intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)) {
+      query=intent.getStringExtra(SearchManager.QUERY).toLowerCase();
       Uri data=intent.getData();
+      String dataString=intent.getDataString();
       query=data.getLastPathSegment().toLowerCase();
     }
 

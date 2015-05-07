@@ -78,6 +78,11 @@
       android:name=".SettingsActivity"
       android:label="@string/activity_settings">
     </activity>
+
+    <provider
+      android:name=".SearchSuggestionsProvider"
+      android:authorities="org.boardgamers.wbc.SearchSuggestionsProvider">
+    </provider>
   </application>
 
 </manifest>

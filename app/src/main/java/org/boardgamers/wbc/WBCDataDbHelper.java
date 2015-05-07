@@ -86,7 +86,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   private static final String SQL_DELETE_TOURNAMENT_ENTRIES=
       "DROP TABLE IF EXISTS "+TournamentEntry.TABLE_NAME;
 
-  private SQLiteDatabase sqLiteDatabase;
+  public SQLiteDatabase sqLiteDatabase;
 
   public WBCDataDbHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -292,8 +292,8 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   }
 
   public List<Event> getEvents(String selection) {
-    String sortOrder=EventEntry.COLUMN_NAME_DAY+" ASC, " +EventEntry.COLUMN_NAME_HOUR+" ASC, "+
-            EventEntry.COLUMN_NAME_QUALIFY+" ASC, "+EventEntry.COLUMN_NAME_TITLE+" ASC";
+    String sortOrder=EventEntry.COLUMN_NAME_DAY+" ASC, "+EventEntry.COLUMN_NAME_HOUR+" ASC, "+
+        EventEntry.COLUMN_NAME_QUALIFY+" ASC, "+EventEntry.COLUMN_NAME_TITLE+" ASC";
 
     Cursor cursor=
         sqLiteDatabase.query(EventEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
@@ -346,12 +346,14 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return tournaments.get(0);
   }
 
-  public List<Tournament> getTournaments(String selection) {
-    // How you want the results sorted in the resulting Cursor
+  public Cursor getSearchCursor(String selection) {
     String sortOrder=TournamentEntry.COLUMN_NAME_TITLE+" ASC";
-
-    Cursor cursor=sqLiteDatabase
+    return sqLiteDatabase
         .query(TournamentEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
+  }
+
+  public List<Tournament> getTournaments(String selection) {
+    Cursor cursor=getSearchCursor(selection);
 
     String title, label, gm;
     int id, prize, finish;
