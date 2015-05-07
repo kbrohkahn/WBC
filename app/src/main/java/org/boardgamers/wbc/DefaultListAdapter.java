@@ -135,20 +135,16 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
   public void selectEvent(Event event) {
     EventFragment eventFragment=(EventFragment) fragment.getActivity().getSupportFragmentManager()
         .findFragmentById(R.id.eventFragment);
-
-    if (MainActivity.SELECTED_EVENT_ID==event.id) {
-      MainActivity.SELECTED_EVENT_ID=-1;
-      if (eventFragment!=null) {
-        eventFragment.setEvent(-1);
+    if (eventFragment!=null) {
+      // don't call setEvent if it's the same event
+      if (MainActivity.SELECTED_EVENT_ID!=event.id) {
+        eventFragment.setEvent(event.id);
+        MainActivity.SELECTED_EVENT_ID=event.id;
       }
     } else {
       MainActivity.SELECTED_EVENT_ID=event.id;
-      if (eventFragment!=null) {
-        eventFragment.setEvent(event.id);
-      } else {
-        Intent intent=new Intent(fragment.getActivity(), EventActivity.class);
-        fragment.getActivity().startActivity(intent);
-      }
+      Intent intent=new Intent(fragment.getActivity(), EventActivity.class);
+      fragment.getActivity().startActivity(intent);
     }
     notifyDataSetChanged();
   }

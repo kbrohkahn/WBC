@@ -63,11 +63,10 @@ public class EventFragment extends Fragment {
 
   // user data
   private EditText noteET;
-  private String note;
+  private TextView finishTV;
   private RadioGroup finishGroup;
   private RadioButton[] finishButtons;
   // views
-  private LinearLayout finishLayout;
   private LinearLayout timeLayout;
   private ScrollView scrollView;
   private ImageView map;
@@ -126,8 +125,8 @@ public class EventFragment extends Fragment {
       }
     });
 
-    finishGroup=(RadioGroup) view.findViewById(R.id.ef_finish);
-    finishLayout=(LinearLayout) view.findViewById(R.id.ef_finish_layout);
+    finishTV=(TextView) view.findViewById(R.id.ef_finish_text);
+    finishGroup=(RadioGroup) view.findViewById(R.id.ef_finish_group);
     finishButtons=new RadioButton[finishIDs.length];
     for (int i=0; i<finishIDs.length; i++) {
       finishButtons[i]=(RadioButton) view.findViewById(finishIDs[i]);
@@ -147,6 +146,10 @@ public class EventFragment extends Fragment {
   }
 
   public void setEvent(long id) {
+    if (event!=null) {
+      saveEventData();
+    }
+
     if (id==-1) {
       titleTV.setVisibility(View.VISIBLE);
       titleTV.setText(getResources().getString(R.string.title));
@@ -254,7 +257,9 @@ public class EventFragment extends Fragment {
 
       // check if last event is class (is tournament)
       if (tournament!=null && tournament.isTournament) {
-        finishLayout.setVisibility(View.VISIBLE);
+        finishTV.setText(getResources().getString(R.string.finish)+" in "+tournament.title);
+        finishTV.setVisibility(View.VISIBLE);
+        finishGroup.setVisibility(View.VISIBLE);
         previewTV.setVisibility(View.VISIBLE);
         reportTV.setVisibility(View.VISIBLE);
 
@@ -296,15 +301,16 @@ public class EventFragment extends Fragment {
   }
 
   public void hideNonTournamentViews() {
-    finishLayout.setVisibility(View.GONE);
-    previewTV.setVisibility(View.INVISIBLE);
-    reportTV.setVisibility(View.INVISIBLE);
+    finishGroup.setVisibility(View.GONE);
+    finishTV.setVisibility(View.GONE);
+    previewTV.setVisibility(View.GONE);
+    reportTV.setVisibility(View.GONE);
     boxIV.setImageResource(0);
     boxIV.setVisibility(View.INVISIBLE);
   }
 
   private void share() {
-    String s=event.title+": "+note;
+    String s=event.title+": "+noteET.getText().toString();
 
     Intent sharingIntent=new Intent(Intent.ACTION_SEND);
     sharingIntent.setType("text/plain");
@@ -320,26 +326,56 @@ public class EventFragment extends Fragment {
 
   }
 
+  public void saveEventData() {
+    String note=noteET.getText().toString();
+    int finish=0;
+
+    if (tournament!=null && tournament.isTournament) {
+      for (int i=0; i<finishButtons.length; i++) {
+        if (finishButtons[i].isChecked()) {
+          finish=i;
+          break;
+        }
+      }
+    }
+
+    Object[] data=new Object[] {event.id, note, tournament.id, finish};
+    new SaveDataTask().execute(data);
+
+  }
+
+  class SaveDataTask extends AsyncTask<Object, String, String> {
+    @Override
+    protected String doInBackground(Object... params) {
+      long eventId=(long) params[0];
+      String note=(String) params[1];
+      int tournamentId=(int) params[2];
+      int finish=(int) params[3];
+
+      // save data
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+      dbHelper.getWritableDatabase();
+      dbHelper.updateEventNote(eventId, note);
+      dbHelper.updateTournamentFinish(tournamentId, finish);
+      dbHelper.close();
+
+      MainActivity.updateUserData(eventId, note, tournamentId, finish);
+
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+      MainActivity.update();
+
+      super.onPostExecute(s);
+    }
+  }
+
   @Override
   public void onPause() {
     if (event!=null) {
-      // save note on pause
-      note=noteET.getText().toString();
-
-      WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
-      dbHelper.getWritableDatabase();
-      dbHelper.updateEventNote(event.id, note);
-
-      if (tournament!=null && tournament.isTournament) {
-        for (int i=0; i<finishButtons.length; i++) {
-          if (finishButtons[i].isChecked()) {
-            dbHelper.updateTournamentFinish(tournament.id, i);
-            break;
-          }
-        }
-      }
-
-      dbHelper.close();
+      saveEventData();
     }
 
     if (updateActive) {

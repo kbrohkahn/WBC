@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -118,11 +117,20 @@ public class MainActivity extends AppCompatActivity {
     Log.d(TAG, "Check 6");
   }
 
-  @Override
-  protected void onResume() {
+  public static void update() {
     pagerAdapter.getItem(viewPager.getCurrentItem()).refreshAdapter();
 
+  }
+
+  @Override
+  protected void onResume() {
+    update();
     super.onResume();
+  }
+
+  public static void updateUserData(long eventId, String note, long tournamentId, int finish) {
+    ((UserDataListFragment) pagerAdapter.getItem(2))
+        .updateUserData(eventId, note, tournamentId, finish);
   }
 
   public static void changeEventStar(Context context, Event[] events, int id) {

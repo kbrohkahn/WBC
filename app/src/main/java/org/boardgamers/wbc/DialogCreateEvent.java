@@ -146,6 +146,6 @@ public class DialogCreateEvent extends DialogFragment {
     }
     dbHelper.close();
 
-    ((UserDataListFragment) getTargetFragment()).refreshUserData();
+    ((UserDataListFragment) getTargetFragment()).reloadUserEvents();
   }
 }

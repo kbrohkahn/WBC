@@ -175,9 +175,9 @@ public class SplashScreen extends AppCompatActivity {
           // time
           boolean halfPast=false;
           tempString=rowData[1];
-          if (rowData[1].contains(":30")) {
-            Log.d(TAG, rowData[2]+" starts at half past");
-            tempString=tempString.substring(0, tempString.length()-3);
+          if (tempString.length()>2) {
+            Log.d(TAG, rowData[2]+" starts at "+tempString);
+            tempString=tempString.substring(0, tempString.indexOf(":"));
             halfPast=true;
           }
 
@@ -286,18 +286,13 @@ public class SplashScreen extends AppCompatActivity {
               break;
             }
           }
-          tournamentID=index;
 
-          if (tournamentID>-1) {
-            if (prize>0 || isTournamentEvent) {
-              dbHelper.updateTournament(tournamentID, isTournamentEvent, prize);
-            }
-          } else {
+          tournamentID=index+1;
+          if (tournamentID==0) {
             tournamentID=dbHelper
-                .insertTournament(tournamentTitle, tournamentLabel, isTournamentEvent, prize, gm);
-
+                .insertTournament(tournamentTitle, tournamentLabel, isTournamentEvent, prize, gm,
+                    lineNum);
             tournamentTitles.add(tournamentTitle);
-
           }
 
           // Log.d(TAG, String.valueOf(tournamentID)+": "+tournamentTitle

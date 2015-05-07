@@ -14,224 +14,38 @@
       android:id="@+id/ef_time_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="horizontal">
+      android:layout_marginRight="@dimen/default_margin"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      android:padding="@dimen/default_margin">
 
-      <LinearLayout
+      <include
+        layout="@layout/event_description"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:orientation="vertical"
-        android:padding="@dimen/default_margin">
-
-        <TextView
-          android:id="@+id/ef_title"
-          style="@style/medium_text"
-          android:gravity="center"
-          android:text="@string/title"/>
-
-        <TextView
-          android:id="@+id/ef_day"
-          style="@style/medium_text"
-          android:gravity="center"
-          android:text="@string/day"/>
-
-        <TextView
-          android:id="@+id/ef_time"
-          style="@style/medium_text"
-          android:layout_width="wrap_content"
-          android:layout_gravity="center"
-          android:drawablePadding="@dimen/default_margin"
-          android:text="@string/time"/>
-
-        <TextView
-          android:id="@+id/ef_location"
-          style="@style/medium_text"
-          android:gravity="center"
-          android:text="@string/location"/>
-
-        <TextView
-          android:id="@+id/ef_gm"
-          style="@style/medium_text"
-          android:gravity="center"
-          android:text="@string/gm"/>
-
-        <TextView
-          android:id="@+id/ef_format"
-          style="@style/medium_text"
-          android:gravity="center"
-          android:text="@string/format"/>
-
-        <TextView
-          android:id="@+id/ef_class"
-          style="@style/medium_text"
-          android:gravity="center"
-          android:text="@string/class_string"/>
-
-        <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-          <TextView
-            android:id="@+id/ef_preview_link"
-            style="@style/medium_text"
-            android:layout_weight="1"
-            android:text="@string/preview"
-            android:textColor="#0000FF"
-            android:visibility="invisible"/>
-
-          <TextView
-            android:id="@+id/ef_report_link"
-            style="@style/medium_text"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="@string/report"
-            android:textColor="#0000FF"
-            android:visibility="invisible"/>
-        </LinearLayout>
-      </LinearLayout>
+        android:layout_weight="3"/>
 
       <ImageView
         android:id="@+id/ef_box_image"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_margin"
         android:layout_weight="2"
         android:adjustViewBounds="true"
         android:contentDescription="@string/box_iv"
-        android:padding="@dimen/default_margin"
         android:scaleType="fitXY"/>
 
     </LinearLayout>
 
-    <RelativeLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/layout_margin_small">
-
-      <ImageView
-        android:id="@+id/ef_map"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/mf_upstairs"
-        android:scaleType="fitXY"/>
-
-      <ImageView
-        android:id="@+id/ef_map_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:alpha=".75"
-        android:contentDescription="@string/mf_upstairs"
-        android:scaleType="fitXY"/>
-    </RelativeLayout>
-
-    <LinearLayout
-      android:id="@+id/ef_finish_layout"
+    <include
+      layout="@layout/event_map"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/default_margin"
-      android:layout_marginTop="@dimen/layout_margin_small"
-      android:orientation="horizontal"
-      android:visibility="gone">
+      android:layout_marginTop="@dimen/layout_margin_large"/>
 
-      <TextView
-        android:id="@+id/ef_finish_text"
-        style="@style/medium_text"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="@string/finish"/>
+    <include layout="@layout/event_finish_and_note"/>
 
-      <RadioGroup
-        android:id="@+id/ef_finish"
-        style="@style/medium_text"
-        android:layout_width="match_parent"
-        android:orientation="horizontal">
-
-        <RadioButton
-          android:id="@+id/ef_finish_0"
-          style="@style/medium_text"
-          android:layout_width="0dip"
-          android:layout_weight="1"
-          android:text="@string/zero"/>
-
-        <RadioButton
-          android:id="@+id/ef_finish_1"
-          style="@style/medium_text"
-          android:layout_width="0dip"
-          android:layout_weight="1"
-          android:text="@string/first_short"/>
-
-        <RadioButton
-          android:id="@+id/ef_finish_2"
-          style="@style/medium_text"
-          android:layout_width="0dip"
-          android:layout_weight="1"
-          android:text="@string/second_short"/>
-
-        <RadioButton
-          android:id="@+id/ef_finish_3"
-          style="@style/medium_text"
-          android:layout_width="0dip"
-          android:layout_weight="1"
-          android:text="@string/third_short"/>
-
-        <RadioButton
-          android:id="@+id/ef_finish_4"
-          style="@style/medium_text"
-          android:layout_width="0dip"
-          android:layout_weight="1"
-          android:text="@string/fourth_short"/>
-
-        <RadioButton
-          android:id="@+id/ef_finish_5"
-          style="@style/medium_text"
-          android:layout_width="0dip"
-          android:layout_weight="1"
-          android:text="@string/fifth_short"/>
-
-        <RadioButton
-          android:id="@+id/ef_finish_6"
-          style="@style/medium_text"
-          android:layout_width="0dip"
-          android:layout_weight="1"
-          android:text="@string/sixth_short"/>
-      </RadioGroup>
-    </LinearLayout>
-
-    <EditText
-      android:id="@+id/ef_note"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="@dimen/default_margin"
-      android:layout_marginRight="@dimen/default_margin"
-      android:layout_marginTop="@dimen/layout_margin_small"
-      android:background="@drawable/edit_text_back"
-      android:gravity="left"
-      android:hint="@string/note_hint"
-      android:minLines="4"
-      android:padding="4dp"/>
-
-    <LinearLayout
-      style="?android:attr/buttonBarStyle"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal">
-
-      <Button
-        android:id="@+id/ef_clear"
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="0dip"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="@string/clear"/>
-
-      <Button
-        android:id="@+id/ef_share"
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="0dip"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="@string/share"/>
-    </LinearLayout>
   </LinearLayout>
 
 </ScrollView>

@@ -25,9 +25,9 @@ public class UserDataListAdapter extends DefaultListAdapter {
   @Override
   public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
                            View view, ViewGroup parent) {
-    if (groupPosition==EVENTS_INDEX) {
-      view=super.getChildView(groupPosition, childPosition, isLastChild, view, parent);
+    view=super.getChildView(groupPosition, childPosition, isLastChild, view, parent);
 
+    if (groupPosition==EVENTS_INDEX) {
       view.setOnLongClickListener(new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View view) {
@@ -63,31 +63,14 @@ public class UserDataListAdapter extends DefaultListAdapter {
       return view;
     } else {
       Event event=events.get(groupPosition).get(childPosition);
-      view=inflater.inflate(R.layout.list_item_text, parent, false);
 
-      if (groupPosition==NOTES_INDEX) {
-        TextView text=(TextView) view.findViewById(R.id.li_text);
-        text.setText(event.title+": "+event.note);
+      view.findViewById(R.id.li_star).setVisibility(View.GONE);
+      view.findViewById(R.id.li_duration).setVisibility(View.GONE);
+      view.findViewById(R.id.li_location).setVisibility(View.GONE);
 
-        if (childPosition%2==0) {
-          view.setBackgroundResource(R.drawable.future_light);
-        } else {
-          view.setBackgroundResource(R.drawable.future_dark);
-        }
+      TextView title=(TextView) view.findViewById(R.id.li_title);
+      title.setText(event.title+": "+event.note);
 
-      } else if (groupPosition==FINISHES_INDEX) {
-        view=inflater.inflate(R.layout.list_item_text, parent, false);
-
-        // event.title set to tournament.title
-        TextView text=(TextView) view.findViewById(R.id.li_text);
-        text.setText(event.title+": "+String.valueOf(event.note));
-
-        if (childPosition%2==0) {
-          view.setBackgroundResource(R.drawable.ended_light);
-        } else {
-          view.setBackgroundResource(R.drawable.ended_dark);
-        }
-      }
       return view;
     }
   }

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView android:id="@+id/sg_name"
+<TextView
+  android:id="@+id/sg_name"
+  style="@style/large_text"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:gravity="center"
-  android:padding="@dimen/layout_margin_small"
-  android:textColor="@color/white"
-  android:textSize="20sp"
-  android:textStyle="bold|italic"/>
+  android:gravity="center_horizontal"
+  android:textColor="@color/white"/>

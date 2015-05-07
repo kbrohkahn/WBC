@@ -47,6 +47,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NAME_IS_TOURNAMENT="is_tournament";
     public static final String COLUMN_NAME_PRIZE="prize";
     public static final String COLUMN_NAME_GM="gm";
+    public static final String COLUMN_NAME_FINAL_EVENT="final_event";
     public static final String COLUMN_NAME_FINISH="finish";
     public static final String COLUMN_NAME_VISIBLE="visible";
     public static final String COLUMN_NAME_NULLABLE="null";
@@ -77,6 +78,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
           TournamentEntry.COLUMN_NAME_IS_TOURNAMENT+" INTEGER,"+
           TournamentEntry.COLUMN_NAME_PRIZE+" INTEGER,"+
           TournamentEntry.COLUMN_NAME_GM+" TEXT,"+
+          TournamentEntry.COLUMN_NAME_FINAL_EVENT+" INTEGER,"+
           TournamentEntry.COLUMN_NAME_FINISH+" INTEGER,"+
           TournamentEntry.COLUMN_NAME_VISIBLE+" INTEGER"+" )";
 
@@ -152,13 +154,14 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   }
 
   public long insertTournament(String title, String label, boolean isTournament, int prize,
-                               String gm) {
+                               String gm, int eventId) {
     ContentValues values=new ContentValues();
     values.put(TournamentEntry.COLUMN_NAME_TITLE, title);
     values.put(TournamentEntry.COLUMN_NAME_LABEL, label);
     values.put(TournamentEntry.COLUMN_NAME_IS_TOURNAMENT, isTournament ? 1 : 0);
     values.put(TournamentEntry.COLUMN_NAME_PRIZE, prize);
     values.put(TournamentEntry.COLUMN_NAME_GM, gm);
+    values.put(TournamentEntry.COLUMN_NAME_FINAL_EVENT, eventId);
 
     values.put(TournamentEntry.COLUMN_NAME_FINISH, 0);
     values.put(TournamentEntry.COLUMN_NAME_VISIBLE, 1);
@@ -166,7 +169,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     // Insert the new row, returning the primary key value of the new row
     return sqLiteDatabase
         .insert(TournamentEntry.TABLE_NAME, TournamentEntry.COLUMN_NAME_NULLABLE, values);
-
   }
 
   public long deleteTournamentEvents(long id) {
@@ -371,17 +373,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     }
     cursor.close();
     return tournaments;
-  }
-
-  public int updateTournament(long rowId, boolean isTournament, int prize) {
-    ContentValues values=new ContentValues();
-    values.put(TournamentEntry.COLUMN_NAME_IS_TOURNAMENT, isTournament ? 1 : 0);
-    values.put(TournamentEntry.COLUMN_NAME_PRIZE, prize);
-
-    String selection=TournamentEntry._ID+" LIKE ?";
-    String[] selectionArgs={String.valueOf(rowId)};
-
-    return sqLiteDatabase.update(TournamentEntry.TABLE_NAME, values, selection, selectionArgs);
   }
 
   public int updateTournamentFinish(long rowId, int finish) {

@@ -66,6 +66,7 @@
   <string name="box_iv">Tournament box image</string>
   <string name="note_hint">Add event note</string>
   <string name="finish">Finish</string>
+  <string name="event_note">Event Note</string>
   <string name="preview"><u>Preview</u></string>
   <string name="report"><u>Report</u></string>
   <string name="zero">-</string>
@@ -83,9 +84,7 @@
   <string name="sixth">6th</string>
 
   <!-- CREATE EVENT DIALOG -->
-  <string name="ce_title">Title *</string>
-  <string name="ce_location">Location *</string>
-  <string name="ce_days">Choose days *</string>
+  <string name="ce_days">Days (must have at least 1)</string>
   <string name="ce_at">At</string>
   <string name="ce_for">for</string>
   <string name="ce_hours">hours</string>
@@ -100,9 +99,6 @@
   <string name="ds_tournament_hint">Enter tournament</string>
   <string name="ds_formats">Formats</string>
   <string name="ds_rooms">Rooms</string>
-
-  <!-- DELETE DIALOG -->
-  <string name="dd_string">Are you sure you want to delete</string>
 
   <!-- SETTINGS -->
   <string name="settings_notifications">Notifications</string>

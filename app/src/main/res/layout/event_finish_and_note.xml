@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_margin="@dimen/default_margin"
+  android:orientation="vertical">
+
+  <TextView
+    android:id="@+id/ef_finish_text"
+    style="@style/large_text"
+    android:layout_marginTop="@dimen/layout_margin_large"
+    android:visibility="gone"/>
+
+  <RadioGroup
+    android:id="@+id/ef_finish_group"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:visibility="gone">
+
+    <RadioButton
+      android:id="@+id/ef_finish_0"
+      style="@style/medium_text"
+      android:layout_width="0dip"
+      android:layout_weight="1"
+      android:text="@string/zero"/>
+
+    <RadioButton
+      android:id="@+id/ef_finish_1"
+      style="@style/medium_text"
+      android:layout_width="0dip"
+      android:layout_weight="1"
+      android:text="@string/first_short"/>
+
+    <RadioButton
+      android:id="@+id/ef_finish_2"
+      style="@style/medium_text"
+      android:layout_width="0dip"
+      android:layout_weight="1"
+      android:text="@string/second_short"/>
+
+    <RadioButton
+      android:id="@+id/ef_finish_3"
+      style="@style/medium_text"
+      android:layout_width="0dip"
+      android:layout_weight="1"
+      android:text="@string/third_short"/>
+
+    <RadioButton
+      android:id="@+id/ef_finish_4"
+      style="@style/medium_text"
+      android:layout_width="0dip"
+      android:layout_weight="1"
+      android:text="@string/fourth_short"/>
+
+    <RadioButton
+      android:id="@+id/ef_finish_5"
+      style="@style/medium_text"
+      android:layout_width="0dip"
+      android:layout_weight="1"
+      android:text="@string/fifth_short"/>
+
+    <RadioButton
+      android:id="@+id/ef_finish_6"
+      style="@style/medium_text"
+      android:layout_width="0dip"
+      android:layout_weight="1"
+      android:text="@string/sixth_short"/>
+  </RadioGroup>
+
+  <TextView
+    style="@style/large_text"
+    android:layout_marginTop="@dimen/layout_margin_large"
+    android:text="@string/event_note"/>
+
+  <EditText
+    android:id="@+id/ef_note"
+    style="@style/medium_text"
+    android:background="@drawable/edit_text_back"
+    android:hint="@string/note_hint"
+    android:minLines="4"
+    android:padding="4dp"/>
+
+  <LinearLayout
+    style="?android:attr/buttonBarStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <Button
+      android:id="@+id/ef_clear"
+      style="?android:attr/buttonBarButtonStyle"
+      android:layout_width="0dip"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:text="@string/clear"/>
+
+    <Button
+      android:id="@+id/ef_share"
+      style="?android:attr/buttonBarButtonStyle"
+      android:layout_width="0dip"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:text="@string/share"/>
+  </LinearLayout>
+
+</LinearLayout>
