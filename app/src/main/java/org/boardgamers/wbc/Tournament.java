@@ -8,6 +8,7 @@ public class Tournament {
   public String label;
   public boolean isTournament;
 
+  public int finalEventId;
   public int prize;
   public String gm;
 

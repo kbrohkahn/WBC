@@ -1,16 +1,12 @@
 package org.boardgamers.wbc;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -25,19 +21,17 @@ import android.widget.TextView;
  * Dialog shown for creating user events
  */
 public class DialogCreateEvent extends DialogFragment {
+  private final String TAG="WBC CreateEventDialog";
 
-  // final String TAG="WBC CreateEventDialog";
   private final int[] ceDayIDs=
       {R.id.ce_repeat_d0, R.id.ce_repeat_d1, R.id.ce_repeat_d2, R.id.ce_repeat_d3,
           R.id.ce_repeat_d4, R.id.ce_repeat_d5, R.id.ce_repeat_d6, R.id.ce_repeat_d7,
           R.id.ce_repeat_d8};
 
-  protected TextView dialogTitle;
   protected Spinner hourSpinner;
   protected Spinner durationSpinner;
   protected Button add;
   protected EditText titleET;
-  protected Button cancel;
   protected EditText locationET;
 
   protected TextView daysTV;
@@ -45,20 +39,14 @@ public class DialogCreateEvent extends DialogFragment {
   private CheckBox[] days;
 
   @Override
-  public Dialog onCreateDialog(Bundle savedInstanceState) {
-    Dialog dialog=super.onCreateDialog(savedInstanceState);
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-    return dialog;
-  }
-
-  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View view=inflater.inflate(R.layout.dialog_event, container);
 
-    dialogTitle=(TextView) view.findViewById(R.id.ce_dialog_title);
-    dialogTitle.setText(getResources().getString(R.string.create_event));
+    getDialog().setTitle(getResources().getString(R.string.create_event));
+
+    titleET=(EditText) view.findViewById(R.id.ce_title);
+    locationET=(EditText) view.findViewById(R.id.ce_location);
 
     daysTV=(TextView) view.findViewById(R.id.ce_days);
     daysTV.setVisibility(View.VISIBLE);
@@ -90,52 +78,16 @@ public class DialogCreateEvent extends DialogFragment {
     add.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        createEvent();
-        getDialog().dismiss();
+        createEvents();
+        dismiss();
       }
     });
-    cancel=(Button) view.findViewById(R.id.ce_cancel);
-    cancel.setEnabled(true);
-    cancel.setOnClickListener(new View.OnClickListener() {
 
+    Button cancel=(Button) view.findViewById(R.id.ce_cancel);
+    cancel.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        getDialog().dismiss();
-      }
-    });
-
-    titleET=(EditText) view.findViewById(R.id.ce_title);
-    titleET.addTextChangedListener(new TextWatcher() {
-
-      @Override
-      public void afterTextChanged(Editable arg0) {
-        checkButton();
-
-      }
-
-      @Override
-      public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-      }
-
-      @Override
-      public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-      }
-    });
-
-    locationET=(EditText) view.findViewById(R.id.ce_location);
-    locationET.addTextChangedListener(new TextWatcher() {
-
-      @Override
-      public void afterTextChanged(Editable arg0) {
-        checkButton();
-      }
-
-      @Override
-      public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-      }
-
-      @Override
-      public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+        dismiss();
       }
     });
 
@@ -148,27 +100,29 @@ public class DialogCreateEvent extends DialogFragment {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-          checkButton();
+          checkButton(true);
         }
       });
     }
     return view;
   }
 
-  public void checkButton() {
-    add.setEnabled(false);
+  public void checkButton(boolean checked) {
+    add.setEnabled(checked);
 
-    if (titleET.getText().toString().length()>0 && locationET.getText().toString().length()>0) {
-      for (CheckBox checkBox : days) {
-        if (checkBox.isChecked()) {
-          add.setEnabled(true);
-          break;
-        }
+    if (checked) {
+      return;
+    }
+
+    for (CheckBox checkBox : days) {
+      if (checkBox.isChecked()) {
+        add.setEnabled(true);
+        return;
       }
     }
   }
 
-  public void createEvent() {
+  public void createEvents() {
     String title=titleET.getText().toString();
     int hour=hourSpinner.getSelectedItemPosition()+7;
     int duration=durationSpinner.getSelectedItemPosition()+1;
@@ -184,12 +138,14 @@ public class DialogCreateEvent extends DialogFragment {
         identifier=String.valueOf(day*24+hour)+title;
 
         id=dbHelper
-            .insertEvent(identifier, -1, day, hour, title, "", "", false, duration, false, duration,
-                location, true);
+            .insertEvent(identifier, UserDataListFragment.USER_TOURNAMENT_ID, day, hour, title, "",
+                "", false, duration, false, duration, location, true);
 
         MainActivity.SELECTED_EVENT_ID=id;
       }
     }
     dbHelper.close();
+
+    ((UserDataListFragment) getTargetFragment()).refreshUserData();
   }
 }

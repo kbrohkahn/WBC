@@ -212,9 +212,27 @@ public class EventFragment extends Fragment {
       }
 
       locationTV.setText(getResources().getString(R.string.location)+": "+event.location);
-      formatTV.setText(getResources().getString(R.string.format)+": "+event.format);
-      classTV.setText(getResources().getString(R.string.class_string)+": "+event.eClass);
-      gMTV.setText(getResources().getString(R.string.gm)+": "+tournament.gm);
+
+      if (event.format.equalsIgnoreCase("")) {
+        formatTV.setVisibility(View.GONE);
+      } else {
+        formatTV.setVisibility(View.VISIBLE);
+        formatTV.setText(getResources().getString(R.string.format)+": "+event.format);
+      }
+
+      if (event.format.equalsIgnoreCase("")) {
+        classTV.setVisibility(View.GONE);
+      } else {
+        classTV.setVisibility(View.VISIBLE);
+        classTV.setText(getResources().getString(R.string.class_string)+": "+event.eClass);
+      }
+
+      if (tournament==null) {
+        gMTV.setVisibility(View.GONE);
+      } else {
+        gMTV.setVisibility(View.VISIBLE);
+        gMTV.setText(getResources().getString(R.string.gm)+": "+tournament.gm);
+      }
 
       setRoom(event.location);
 
@@ -235,7 +253,7 @@ public class EventFragment extends Fragment {
       }
 
       // check if last event is class (is tournament)
-      if (tournament.isTournament) {
+      if (tournament!=null && tournament.isTournament) {
         finishLayout.setVisibility(View.VISIBLE);
         previewTV.setVisibility(View.VISIBLE);
         reportTV.setVisibility(View.VISIBLE);
@@ -312,7 +330,7 @@ public class EventFragment extends Fragment {
       dbHelper.getWritableDatabase();
       dbHelper.updateEventNote(event.id, note);
 
-      if (tournament.isTournament) {
+      if (tournament!=null && tournament.isTournament) {
         for (int i=0; i<finishButtons.length; i++) {
           if (finishButtons[i].isChecked()) {
             dbHelper.updateTournamentFinish(tournament.id, i);

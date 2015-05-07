@@ -38,7 +38,7 @@ public class UserDataListAdapter extends DefaultListAdapter {
 
           builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-              ((UserDataListFragment) fragment).deleteEvents(childPosition);
+              showDeleteDialog(childPosition);
             }
           });
 
@@ -61,34 +61,34 @@ public class UserDataListAdapter extends DefaultListAdapter {
       });
 
       return view;
-    } else if (groupPosition==NOTES_INDEX) {
-      view=inflater.inflate(R.layout.list_item_text, parent, false);
-
-      TextView text=(TextView) view.findViewById(R.id.li_text);
-      text.setText(((UserDataListFragment) fragment).getNote(childPosition));
-
-      if (childPosition%2==0) {
-        view.setBackgroundResource(R.drawable.future_light);
-      } else {
-        view.setBackgroundResource(R.drawable.future_dark);
-      }
-
-      return view;
-    } else if (groupPosition==FINISHES_INDEX) {
-      view=inflater.inflate(R.layout.list_item_text, parent, false);
-
-      TextView text=(TextView) view.findViewById(R.id.li_text);
-      text.setText(((UserDataListFragment) fragment).getFinish(childPosition));
-
-      if (childPosition%2==0) {
-        view.setBackgroundResource(R.drawable.ended_light);
-      } else {
-        view.setBackgroundResource(R.drawable.ended_dark);
-      }
-
-      return view;
     } else {
-      return null;
+      Event event=events.get(groupPosition).get(childPosition);
+      view=inflater.inflate(R.layout.list_item_text, parent, false);
+
+      if (groupPosition==NOTES_INDEX) {
+        TextView text=(TextView) view.findViewById(R.id.li_text);
+        text.setText(event.title+": "+event.note);
+
+        if (childPosition%2==0) {
+          view.setBackgroundResource(R.drawable.future_light);
+        } else {
+          view.setBackgroundResource(R.drawable.future_dark);
+        }
+
+      } else if (groupPosition==FINISHES_INDEX) {
+        view=inflater.inflate(R.layout.list_item_text, parent, false);
+
+        // event.title set to tournament.title
+        TextView text=(TextView) view.findViewById(R.id.li_text);
+        text.setText(event.title+": "+String.valueOf(event.note));
+
+        if (childPosition%2==0) {
+          view.setBackgroundResource(R.drawable.ended_light);
+        } else {
+          view.setBackgroundResource(R.drawable.ended_dark);
+        }
+      }
+      return view;
     }
   }
 
@@ -107,24 +107,6 @@ public class UserDataListAdapter extends DefaultListAdapter {
   }
 
   @Override
-  public Object getGroup(int groupPosition) {
-    switch (groupPosition) {
-      case EVENTS_INDEX:
-        return UserDataListFragment.userEvents;
-      case NOTES_INDEX:
-        return ((UserDataListFragment) fragment).userNotes;
-      case FINISHES_INDEX:
-        return ((UserDataListFragment) fragment).userFinishes;
-    }
-    return null;
-  }
-
-  @Override
-  public int getGroupCount() {
-    return 3;
-  }
-
-  @Override
   public void updateStarredEvent(Event event) {
     super.updateStarredEvent(event);
 
@@ -137,5 +119,36 @@ public class UserDataListAdapter extends DefaultListAdapter {
         break;
       }
     }
+  }
+
+  public void showDeleteDialog(final int index) {
+    Event event=events.get(EVENTS_INDEX).get(index);
+
+    String dayString=fragment.getResources().getStringArray(R.array.days)[event.day];
+    String title="Confirm";
+    String message="Are you sure you want to delete "+event.title+" on "+dayString+" at "+
+        String.valueOf(event.hour)+"?";
+
+    AlertDialog.Builder deleteDialog=new AlertDialog.Builder(fragment.getActivity());
+    deleteDialog.setTitle(title).setMessage(message)
+        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+            dialog.dismiss();
+          }
+        }).setNegativeButton("Yes, "+R.string.delete, new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int id) {
+        deleteEvent(index);
+        dialog.dismiss();
+      }
+    });
+    deleteDialog.create().show();
+
+  }
+
+  public void deleteEvent(int index) {
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(fragment.getActivity());
+    dbHelper.getWritableDatabase();
+    dbHelper.deleteEvent(events.get(EVENTS_INDEX).get(index).id);
+    dbHelper.close();
   }
 }

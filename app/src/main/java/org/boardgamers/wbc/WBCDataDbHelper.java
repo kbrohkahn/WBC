@@ -151,20 +151,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return sqLiteDatabase.insert(EventEntry.TABLE_NAME, EventEntry.COLUMN_NAME_NULLABLE, values);
   }
 
-  public long deleteEvent(long id) {
-    String where=EventEntry._ID+"="+String.valueOf(id);
-    return sqLiteDatabase.delete(EventEntry.TABLE_NAME, where, null);
-  }
-
-  public int getNumEvents() {
-    Cursor cursor=sqLiteDatabase.rawQuery("SELECT COUNT (*) FROM "+EventEntry.TABLE_NAME, null);
-    cursor.moveToFirst();
-    int count=cursor.getInt(0);
-    cursor.close();
-
-    return count;
-  }
-
   public long insertTournament(String title, String label, boolean isTournament, int prize,
                                String gm) {
     ContentValues values=new ContentValues();
@@ -183,60 +169,23 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   }
 
-  /**
-   * Search event table for any event with a note
-   *
-   * @return A list of notes sorted by event title
-   */
-  public List<String> getAllNotes() {
-    String[] projection={EventEntry._ID, EventEntry.COLUMN_NAME_TITLE, EventEntry.COLUMN_NAME_NOTE};
-    String selection=EventEntry.COLUMN_NAME_NOTE+" IS NOT NULL";
-    String sortOrder=EventEntry.COLUMN_NAME_TITLE+" ASC";
-
-    Cursor cursor=sqLiteDatabase
-        .query(EventEntry.TABLE_NAME, projection, selection, null, null, null, sortOrder);
-
-    String title, note;
-    List<String> notes=new ArrayList<>();
-    if (cursor.moveToFirst()) {
-      do {
-        title=cursor.getString(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_NAME_TITLE));
-        note=cursor.getString(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_NAME_NOTE));
-
-        notes.add(title+": "+note);
-      } while (cursor.moveToNext());
-    }
-    cursor.close();
-    return notes;
+  public long deleteTournamentEvents(long id) {
+    String where=EventEntry.COLUMN_NAME_ENTRY_TOURNAMENT_ID+"="+String.valueOf(id);
+    return sqLiteDatabase.delete(EventEntry.TABLE_NAME, where, null);
   }
 
-  /**
-   * Search tournament table for any event with a finish
-   *
-   * @return A list of all finishes sorted by tournament title
-   */
-  public List<String> getAllFinishes() {
-    String[] projection={TournamentEntry._ID, TournamentEntry.COLUMN_NAME_TITLE,
-        TournamentEntry.COLUMN_NAME_FINISH};
-    String selection=TournamentEntry.COLUMN_NAME_FINISH+" IS NOT NULL";
-    String sortOrder=TournamentEntry.COLUMN_NAME_TITLE+" ASC";
+  public long deleteEvent(long id) {
+    String where=EventEntry._ID+"="+String.valueOf(id);
+    return sqLiteDatabase.delete(EventEntry.TABLE_NAME, where, null);
+  }
 
-    Cursor cursor=sqLiteDatabase
-        .query(TournamentEntry.TABLE_NAME, projection, selection, null, null, null, sortOrder);
-
-    String title;
-    int finish;
-    List<String> finishes=new ArrayList<>();
-    if (cursor.moveToFirst()) {
-      do {
-        title=cursor.getString(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_TITLE));
-        finish=cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_FINISH));
-
-        finishes.add(title+": "+String.valueOf(finish));
-      } while (cursor.moveToNext());
-    }
+  public int getNumEvents() {
+    Cursor cursor=sqLiteDatabase.rawQuery("SELECT COUNT (*) FROM "+EventEntry.TABLE_NAME, null);
+    cursor.moveToFirst();
+    int count=cursor.getInt(0);
     cursor.close();
-    return finishes;
+
+    return count;
   }
 
   /**
@@ -274,17 +223,42 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return getEvents(EventEntry.COLUMN_NAME_STARRED+"=1");
   }
 
-  public List<Event> getUserEvents() {
-    return getEvents(EventEntry.COLUMN_NAME_ENTRY_TOURNAMENT_ID+"=-1");
+  public List<Event> getTournamentEvents(long id) {
+    return getEvents(EventEntry.COLUMN_NAME_ENTRY_TOURNAMENT_ID+"="+String.valueOf(id));
   }
 
+  /**
+   * Runs getEvents, selecting events where note is not empty string
+   *
+   * @return A list of notes sorted by event title
+   */
+  public List<Event> getEventsWithNotes() {
+    return getEvents(EventEntry.COLUMN_NAME_NOTE+"!=''");
+  }
+
+  /**
+   * Runs getEvents, selecting events where id = id
+   *
+   * @param id - the id to search for
+   * @return - a single event with id of id, or null if no event exists
+   */
   public Event getEvent(long id) {
     String where=EventEntry._ID+"="+String.valueOf(id);
     List<Event> events=getEvents(where);
 
-    return events.get(0);
+    if (events.size()==0) {
+      return null;
+    } else {
+      return events.get(0);
+    }
   }
 
+  /**
+   * Used in search, runs getEvents on query user searched for. Searches event title and event format
+   *
+   * @param query - string user searched for
+   * @return - a list of events containing query, or null if no event exists
+   */
   public List<Event> getEventsFromQuery(String query) {
     String where=EventEntry.COLUMN_NAME_TITLE+" LIKE '%"+query+"%' OR "+
         EventEntry.COLUMN_NAME_FORMAT+" LIKE '%"+query+"%'";
@@ -339,17 +313,31 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return events;
   }
 
-  public Tournament getTournament(long id) {
-    String where=TournamentEntry._ID+"="+String.valueOf(id);
-    List<Tournament> tournaments=getTournaments(where);
-
-    return tournaments.get(0);
-  }
-
   public Cursor getSearchCursor(String selection) {
     String sortOrder=TournamentEntry.COLUMN_NAME_TITLE+" ASC";
     return sqLiteDatabase
         .query(TournamentEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
+  }
+
+  public Tournament getTournament(long id) {
+    String where=TournamentEntry._ID+"="+String.valueOf(id);
+    List<Tournament> tournaments=getTournaments(where);
+
+    if (tournaments.size()==0) {
+      return null;
+    } else {
+      return tournaments.get(0);
+    }
+  }
+
+  /**
+   * Search tournament table for any event with a finish
+   *
+   * @return A list of all finishes sorted by tournament title
+   */
+  public List<Tournament> getTournamentsWithFinishes() {
+    String where=TournamentEntry.COLUMN_NAME_FINISH+"!=0";
+    return getTournaments(where);
   }
 
   public List<Tournament> getTournaments(String selection) {

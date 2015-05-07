@@ -1,24 +1,24 @@
 package org.boardgamers.wbc;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Fragment containing user's WBC data, including tournament finishes, help notes, and created events
  */
 public class UserDataListFragment extends DefaultListFragment {
-  // private final String TAG="My WBC Data Activity";
+  private final String TAG="My WBC Data Activity";
 
-  public static List<Event> userEvents;
-  public List<String> userNotes;
-  public List<String> userFinishes;
-
-  public static int selectedEvent;
+  public static final int USER_TOURNAMENT_ID=1000;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,16 +28,20 @@ public class UserDataListFragment extends DefaultListFragment {
     if (view!=null) {
       Button addEvent=(Button) view.findViewById(R.id.add_event);
       addEvent.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          DialogCreateEvent dialog=new DialogCreateEvent();
-          dialog.show(getFragmentManager(), "create_event_dialog");
+        @Override
+        public void onClick(View v) {showCreateDialog();
         }
       });
     }
 
+    return view;
+  }
+
+  @Override
+  public void onResume() {
     refreshUserData();
 
-    return view;
+    super.onResume();
   }
 
   public void refreshUserData() {
@@ -49,24 +53,45 @@ public class UserDataListFragment extends DefaultListFragment {
     return R.layout.user_data;
   }
 
-  public String getNote(int index) {
-    return userNotes.get(index);
-  }
-
-  public String getFinish(int index) {
-    return userFinishes.get(index);
-  }
-
   public void editEvent(int index) {
-    UserDataListFragment.selectedEvent=index;
+    MainActivity.SELECTED_EVENT_ID=index;
     DialogEditEvent editNameDialog=new DialogEditEvent();
     editNameDialog.show(getFragmentManager(), "edit_event_dialog");
   }
 
-  public void deleteEvents(int index) {
-    UserDataListFragment.selectedEvent=index;
-    DialogDeleteEvent deleteDialog=new DialogDeleteEvent();
-    deleteDialog.show(getFragmentManager(), "delete_event_dialog");
+  public void showCreateDialog() {
+    DialogCreateEvent dialog=new DialogCreateEvent();
+    dialog.setTargetFragment(this, 0);
+    dialog.show(getFragmentManager(), "create_event_dialog");
+  }
+
+  public void showDeleteDialog() {
+    String title="Confirm";
+    String message="Are you sure you want to delete all your events";
+
+    AlertDialog.Builder deleteDialog=new AlertDialog.Builder(getActivity());
+    deleteDialog.setTitle(title).setMessage(message)
+        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+            dialog.dismiss();
+          }
+        }).setNegativeButton("Yes, "+R.string.delete, new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int id) {
+        deleteAllEvents();
+        dialog.dismiss();
+      }
+    });
+    deleteDialog.create().show();
+
+  }
+
+  public void deleteAllEvents() {
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+    dbHelper.getWritableDatabase();
+    dbHelper.deleteTournamentEvents(USER_TOURNAMENT_ID);
+    dbHelper.close();
+
+    refreshUserData();
   }
 
   class PopulateUserDataAdapterTask extends PopulateAdapterTask {
@@ -82,11 +107,27 @@ public class UserDataListFragment extends DefaultListFragment {
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getReadableDatabase();
 
-      userNotes=dbHelper.getAllNotes();
-      userFinishes=dbHelper.getAllFinishes();
-      userEvents=dbHelper.getUserEvents();
+      events=new ArrayList<>();
+      events.add(dbHelper.getTournamentEvents(USER_TOURNAMENT_ID));
+      events.add(dbHelper.getEventsWithNotes());
+
+      List<Tournament> tournamentFinishes=dbHelper.getTournamentsWithFinishes();
 
       dbHelper.close();
+
+      List<Event> eventFinishes=new ArrayList<>();
+      Event event;
+      for (Tournament tournament : tournamentFinishes) {
+        event=new Event(tournament.finalEventId, null, tournament.id, 0, 0, tournament.title, null,
+            null, false, 0, false, 0, null);
+        event.note=String.valueOf(tournament.finish);
+
+        eventFinishes.add(event);
+      }
+
+      events.add(eventFinishes);
+
+      listAdapter.events=events;
 
       return 1;
     }
