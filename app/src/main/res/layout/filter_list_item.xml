@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
+  style="@style/medium_text"
+  android:id="@+id/filter_list_checkbox"/>

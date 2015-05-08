@@ -39,7 +39,7 @@
   <string name="activity_filter">Filter Schedule</string>
   <string name="activity_help">Help</string>
   <string name="activity_about">About</string>
-  <string name="activity_splash">Loading events...</string>
+  <string name="activity_splash">Saving schedule to device&#8230;</string>
 
   <!-- FILTER MENU -->
   <string name="select_all">Select All</string>
@@ -82,6 +82,9 @@
   <string name="fourth">4th</string>
   <string name="fifth">5th</string>
   <string name="sixth">6th</string>
+  <string name="map_overlay_on">Room showing</string>
+  <string name="map_overlay_off">Room hidden</string>
+
 
   <!-- CREATE EVENT DIALOG -->
   <string name="ce_days">Days (must have at least 1)</string>

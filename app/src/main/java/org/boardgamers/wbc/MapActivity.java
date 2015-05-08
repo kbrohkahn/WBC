@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,8 +39,10 @@ public class MapActivity extends AppCompatActivity {
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-    getSupportActionBar().setDisplayShowHomeEnabled(true);
-    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    if (getSupportActionBar()!=null) {
+      getSupportActionBar().setDisplayShowHomeEnabled(true);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
     String selectedRoom=getIntent().getStringExtra("room");
     if (selectedRoom==null) {

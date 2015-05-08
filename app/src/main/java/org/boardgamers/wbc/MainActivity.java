@@ -213,7 +213,18 @@ public class MainActivity extends AppCompatActivity {
     final SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
     searchView.setSearchableInfo(
         searchManager.getSearchableInfo(new ComponentName(this, SearchResultActivity.class)));
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override
+      public boolean onQueryTextSubmit(String query) {
+        searchView.clearFocus();
+        return false;
+      }
 
+      @Override
+      public boolean onQueryTextChange(String newText) {
+        return false;
+      }
+    });
     searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
       @Override
       public boolean onSuggestionSelect(int position) {
@@ -222,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
       @Override
       public boolean onSuggestionClick(int position) {
+        searchView.clearFocus();
         Cursor cursor=(Cursor) searchView.getSuggestionsAdapter().getItem(position);
         int id=cursor.getInt(cursor.getColumnIndex(BaseColumns._ID));
         String title=cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
@@ -249,8 +261,8 @@ public class MainActivity extends AppCompatActivity {
       startActivity(new Intent(this, HelpActivity.class));
     } else if (item.getItemId()==R.id.menu_about) {
       startActivity(new Intent(this, AboutActivity.class));
-      //    } else if (item.getItemId()==R.id.menu_filter) {
-      //      startActivity(new Intent(this, FilterActivity.class));
+//    } else if (item.getItemId()==R.id.menu_filter) {
+//      startActivity(new Intent(this, FilterActivity.class));
     } else if (item.getItemId()==R.id.menu_settings) {
       startActivity(new Intent(this, SettingsActivity.class));
     } else {

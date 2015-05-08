@@ -24,8 +24,10 @@ public class AboutActivity extends AppCompatActivity {
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-    getSupportActionBar().setDisplayShowHomeEnabled(true);
-    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    if (getSupportActionBar()!=null) {
+      getSupportActionBar().setDisplayShowHomeEnabled(true);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
     TextView appVersion=(TextView) findViewById(R.id.about_app_version);
 

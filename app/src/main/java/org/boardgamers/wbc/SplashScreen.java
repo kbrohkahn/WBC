@@ -39,7 +39,7 @@ public class SplashScreen extends AppCompatActivity {
 
       Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
       setSupportActionBar(toolbar);
-      setTitle("Saving schedule to device...");
+      setTitle(getResources().getString(R.string.activity_splash));
 
       progressBar=(ProgressBar) findViewById(R.id.splash_progress);
       progressBar.setMax(780);

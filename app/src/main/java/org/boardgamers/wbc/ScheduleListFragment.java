@@ -63,16 +63,20 @@ public class ScheduleListFragment extends DefaultListFragment {
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getReadableDatabase();
+      List<Boolean> visible=dbHelper.getAllVisible();
       List<Event> tempEvents=dbHelper.getAllEvents();
       dbHelper.close();
 
       Event event;
       while (tempEvents.size()>0) {
         event=tempEvents.remove(0);
-        events.get(event.day*GROUPS_PER_DAY+event.hour-6).add(event);
 
-        if (event.starred) {
-          events.get(event.day*GROUPS_PER_DAY).add(event);
+        if (event.tournamentID>=1000||visible.get((int) event.tournamentID-1)) {
+          events.get(event.day*GROUPS_PER_DAY+event.hour-6).add(event);
+
+          if (event.starred) {
+            events.get(event.day*GROUPS_PER_DAY).add(event);
+          }
         }
       }
 

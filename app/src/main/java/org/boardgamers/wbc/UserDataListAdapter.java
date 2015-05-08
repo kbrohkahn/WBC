@@ -2,6 +2,7 @@ package org.boardgamers.wbc;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,9 +13,6 @@ import java.util.List;
  * Created by Kevin Broh-Kahn
  */
 public class UserDataListAdapter extends DefaultListAdapter {
-  private final String TAG="User Data List Adapter";
-
-
   public UserDataListAdapter(DefaultListFragment f, List<List<Event>> e, int i) {
     super(f, e, i);
   }
@@ -22,7 +20,9 @@ public class UserDataListAdapter extends DefaultListAdapter {
   @Override
   public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
                            View view, ViewGroup parent) {
-    view=super.getChildView(groupPosition, childPosition, isLastChild, view, parent);
+    view=super.getChildView(groupPosition, childPosition, isLastChild, null, parent);
+
+    Event event=events.get(groupPosition).get(childPosition);
 
     if (groupPosition==UserDataListFragment.EVENTS_INDEX) {
       view.setOnLongClickListener(new View.OnLongClickListener() {
@@ -35,7 +35,6 @@ public class UserDataListAdapter extends DefaultListAdapter {
 
       return view;
     } else {
-      Event event=events.get(groupPosition).get(childPosition);
 
       view.findViewById(R.id.li_star).setVisibility(View.INVISIBLE);
       view.findViewById(R.id.li_hour).setVisibility(View.GONE);

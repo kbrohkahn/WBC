@@ -22,6 +22,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.io.InputStream;
 
@@ -69,20 +70,14 @@ public class EventFragment extends Fragment {
   // views
   private LinearLayout timeLayout;
   private ScrollView scrollView;
+  private ToggleButton mapOverlayToggle;
   private ImageView map;
   private ImageView mapOverlay;
 
   private int roomID;
   private boolean overlayOn;
-  private boolean updateActive;
+  private boolean runnableActive;
   private Handler handler=new Handler();
-  private final Runnable runnable=new Runnable() {
-    @Override
-    public void run() {
-      updateActive=false;
-      changeMapOverlay();
-    }
-  };
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,8 +100,19 @@ public class EventFragment extends Fragment {
 
     map=(ImageView) view.findViewById(R.id.ef_map);
     mapOverlay=(ImageView) view.findViewById(R.id.ef_map_overlay);
-    updateActive=false;
 
+    runnableActive=false;
+    mapOverlayToggle=(ToggleButton) view.findViewById(R.id.ef_map_toggle_button);
+    mapOverlayToggle.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (mapOverlayToggle.isChecked() && !runnableActive) {
+          startOverlayUpdate();
+        } else if (!mapOverlayToggle.isChecked()) {
+          stopOverlayUpdate();
+        }
+      }
+    });
     noteET=(EditText) view.findViewById(R.id.ef_note);
 
     Button share=(Button) view.findViewById(R.id.ef_share);
@@ -150,6 +156,9 @@ public class EventFragment extends Fragment {
       saveEventData();
     }
 
+    stopOverlayUpdate();
+    mapOverlayToggle.setEnabled(false);
+
     if (id==-1) {
       event=null;
       titleTV.setVisibility(View.VISIBLE);
@@ -163,11 +172,11 @@ public class EventFragment extends Fragment {
       gMTV.setText(getResources().getString(R.string.gm));
 
       timeLayout.setBackgroundResource(0);
-
+      mapOverlayToggle.setVisibility(View.GONE);
       setRoom("");
 
-      if (updateActive) {
-        updateActive=false;
+      if (runnableActive) {
+        runnableActive=false;
         mapOverlay.setImageResource(0);
         map.setImageResource(0);
         handler.removeCallbacks(runnable);
@@ -336,6 +345,8 @@ public class EventFragment extends Fragment {
       }
     }
 
+    if (note.equalsIgnoreCase(event.note) && (tournament==null || finish==tournament.finish))
+      return;
     Object[] data=new Object[] {event.id, note, event.tournamentID, finish};
     new SaveDataTask().execute(data);
   }
@@ -345,7 +356,7 @@ public class EventFragment extends Fragment {
     protected String doInBackground(Object... params) {
       long eventId=(long) params[0];
       String note=(String) params[1];
-      int tournamentId=(int) params[2];
+      long tournamentId=(long) params[2];
       int finish=(int) params[3];
 
       // save data
@@ -376,9 +387,8 @@ public class EventFragment extends Fragment {
       saveEventData();
     }
 
-    if (updateActive) {
-      updateActive=false;
-      handler.removeCallbacks(runnable);
+    if (runnableActive) {
+      stopOverlayUpdate();
     }
 
     super.onPause();
@@ -406,6 +416,9 @@ public class EventFragment extends Fragment {
   }
 
   public void setImageViews() {
+    mapOverlayToggle.setEnabled(true);
+    mapOverlayToggle.setVisibility(View.VISIBLE);
+
     if (roomID>=50) {
       map.setImageResource(R.drawable.upstairs);
       mapOverlay.setImageResource(upstairsIDs[roomID-50]);
@@ -419,17 +432,34 @@ public class EventFragment extends Fragment {
 
   }
 
-  private void changeMapOverlay() {
+  private void startOverlayUpdate() {
+    mapOverlay.setVisibility(View.VISIBLE);
+    if (!runnableActive) {
+      mapOverlayToggle.setChecked(true);
+      runnableActive=true;
+      handler.postDelayed(runnable, 500);
+    }
+  }
+
+  private void stopOverlayUpdate() {
+    mapOverlay.setVisibility(View.GONE);
+    mapOverlayToggle.setChecked(false);
+    runnableActive=false;
+    handler.removeCallbacks(runnable);
+  }
+
+  private final Runnable runnable=new Runnable() {
+    @Override
+    public void run() {
+      changeMapOverlayVisibity();
+    }
+  };
+
+  private void changeMapOverlayVisibity() {
+    runnableActive=false;
     mapOverlay.setVisibility(overlayOn ? View.GONE : View.VISIBLE);
     overlayOn=!overlayOn;
     startOverlayUpdate();
-  }
-
-  private void startOverlayUpdate() {
-    if (!updateActive) {
-      updateActive=true;
-      handler.postDelayed(runnable, 500);
-    }
   }
 
   private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

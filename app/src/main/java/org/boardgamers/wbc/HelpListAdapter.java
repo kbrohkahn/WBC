@@ -11,8 +11,6 @@ import android.widget.TextView;
  * Created by Kevin
  */
 public class HelpListAdapter extends BaseExpandableListAdapter {
-  private final String TAG="Default Adapter";
-
   protected final LayoutInflater inflater;
 
   protected final String[] headerStrings;
@@ -29,7 +27,8 @@ public class HelpListAdapter extends BaseExpandableListAdapter {
   @Override
   public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view,
                            ViewGroup parent) {
-    view=inflater.inflate(R.layout.list_item_text, parent, false);
+    if (view==null)
+      view=inflater.inflate(R.layout.list_item_text, parent, false);
 
     TextView title=(TextView) view.findViewById(R.id.li_text);
     title.setText(textStrings[childPosition]);
@@ -40,7 +39,8 @@ public class HelpListAdapter extends BaseExpandableListAdapter {
   @Override
   public View getGroupView(final int groupPosition, final boolean isExpanded, View view,
                            ViewGroup parent) {
-    view=inflater.inflate(R.layout.list_group_large, parent, false);
+    if (view==null)
+      view=inflater.inflate(R.layout.list_group_large, parent, false);
 
     TextView name=(TextView) view.findViewById(R.id.sg_name);
     name.setText(headerStrings[groupPosition]);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,40 +55,52 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
   @Override
   public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view,
                            ViewGroup parent) {
+
     final Event event=(Event) getChild(groupPosition, childPosition);
 
-    view=inflater.inflate(R.layout.list_item, parent, false);
+    if (view==null) {
+      Log.d(TAG, "Drawing view for "+event.title+" in group "+String.valueOf(groupPosition));
 
-    int tColor=getTextColor(event);
-    int tType=getTextStyle(event);
+      view=inflater.inflate(R.layout.list_item, parent, false);
 
-    TextView title=(TextView) view.findViewById(R.id.li_title);
-    title.setText(event.title);
-    title.setTypeface(null, tType);
-    title.setTextColor(tColor);
+      int tColor=getTextColor(event);
+      int tType=getTextStyle(event);
 
-    if (event.title.contains("Junior")) {
-      title.setCompoundDrawablesWithIntrinsicBounds(R.drawable.junior_icon, 0, 0, 0);
+      TextView title=(TextView) view.findViewById(R.id.li_title);
+      title.setText(event.title);
+      title.setTypeface(null, tType);
+      title.setTextColor(tColor);
+
+      if (event.title.contains("Junior")) {
+        title.setCompoundDrawablesWithIntrinsicBounds(R.drawable.junior_icon, 0, 0, 0);
+      }
+
+      TextView hour=(TextView) view.findViewById(R.id.li_hour);
+      hour.setText(String.valueOf(event.hour));
+      hour.setTypeface(null, tType);
+      hour.setTextColor(tColor);
+
+      TextView duration=(TextView) view.findViewById(R.id.li_duration);
+      duration.setText(String.valueOf(event.duration));
+      duration.setTypeface(null, tType);
+      duration.setTextColor(tColor);
+
+      if (event.continuous) {
+        duration.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
+      }
+
+      TextView location=(TextView) view.findViewById(R.id.li_location);
+      location.setText(event.location);
+      location.setTypeface(null, tType);
+      location.setTextColor(tColor);
+
+      view.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          selectEvent(event);
+        }
+      });
     }
-
-    TextView hour=(TextView) view.findViewById(R.id.li_hour);
-    hour.setText(String.valueOf(event.hour));
-    hour.setTypeface(null, tType);
-    hour.setTextColor(tColor);
-
-    TextView duration=(TextView) view.findViewById(R.id.li_duration);
-    duration.setText(String.valueOf(event.duration));
-    duration.setTypeface(null, tType);
-    duration.setTextColor(tColor);
-
-    if (event.continuous) {
-      duration.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
-    }
-
-    TextView location=(TextView) view.findViewById(R.id.li_location);
-    location.setText(event.location);
-    location.setTypeface(null, tType);
-    location.setTextColor(tColor);
 
     ImageView starIV=(ImageView) view.findViewById(R.id.li_star);
     starIV.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);
@@ -121,13 +134,6 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
         view.setBackgroundResource(R.drawable.future_dark);
       }
     }
-
-    view.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        selectEvent(event);
-      }
-    });
 
     return view;
   }
@@ -177,22 +183,28 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public boolean isChildSelectable(int groupPosition, int childPosition) {
-    return false;
+    return true;
   }
 
   @Override
   public long getChildId(int groupPosition, int childPosition) {
-    return childPosition;
+    long id;
+    try {
+      id=getGroupId(groupPosition)+events.get(groupPosition).get(childPosition).id;
+    } catch (NullPointerException e) {
+      id=-1;
+    }
+    return id;
   }
 
   @Override
   public long getGroupId(int groupPosition) {
-    return groupPosition;
+    return groupPosition*1000;
   }
 
   @Override
   public boolean hasStableIds() {
-    return false;
+    return true;
   }
 
   /**

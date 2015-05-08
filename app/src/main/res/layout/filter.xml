@@ -10,20 +10,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_above="@+id/filter_batch_layout"
-      android:layout_alignParentTop="true"
-      android:layout_marginLeft="@dimen/default_margin"
-      android:layout_marginRight="@dimen/default_margin">
-
-      <LinearLayout
-        android:id="@+id/filter_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"/>
-    </ScrollView>
+    <ListView
+      android:id="@+id/filter_list_view"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent">
+    </ListView>
 
     <LinearLayout
       android:id="@+id/filter_batch_layout"
@@ -46,7 +37,7 @@
         android:text="@string/select_all_new_line"/>
 
       <Button
-        android:id="@+id/filter_select_non_tournament"
+        android:id="@+id/filter_select_tournament"
         style="?android:buttonBarButtonStyle"
         android:layout_width="0dip"
         android:layout_height="wrap_content"

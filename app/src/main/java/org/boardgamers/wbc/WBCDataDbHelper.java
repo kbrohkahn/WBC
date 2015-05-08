@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,12 @@ import java.util.List;
  * Database used for storing all data
  */
 public class WBCDataDbHelper extends SQLiteOpenHelper {
+  private final String TAG="Database";
   // TODO
   // If you change the database schema, you must increment the database version.
   public static final int DATABASE_VERSION=1;
+
+  private boolean isOpen=false;
 
   public static final String DATABASE_NAME="WBCdata.db";
 
@@ -108,18 +112,45 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   @Override
   public SQLiteDatabase getWritableDatabase() {
+    while (isOpen) {
+      Log.d(TAG, "DB is open");
+      try {
+        Log.d(TAG, "Sleeping");
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        Log.d(TAG, "Could not sleep");
+      }
+    }
+
+    isOpen=true;
+    Log.d(TAG, "Getting writeable db");
+
     sqLiteDatabase=super.getWritableDatabase();
     return sqLiteDatabase;
   }
 
   @Override
   public SQLiteDatabase getReadableDatabase() {
+    while (isOpen) {
+      Log.d(TAG, "DB is open");
+      try {
+        Log.d(TAG, "Sleeping");
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        Log.d(TAG, "Could not sleep");
+      }
+    }
+
+    isOpen=true;
+    Log.d(TAG, "Getting readable db");
     sqLiteDatabase=super.getReadableDatabase();
     return sqLiteDatabase;
   }
 
   @Override
   public synchronized void close() {
+    isOpen=false;
+    Log.d(TAG, "Closing db");
     sqLiteDatabase.close();
     super.close();
   }
@@ -197,11 +228,10 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
    */
   public List<Boolean> getAllVisible() {
     String[] projection={TournamentEntry._ID, TournamentEntry.COLUMN_NAME_VISIBLE};
-    String selection=TournamentEntry.COLUMN_NAME_VISIBLE+"=1";
     String sortOrder=TournamentEntry.COLUMN_NAME_TITLE+" ASC";
 
     Cursor cursor=sqLiteDatabase
-        .query(TournamentEntry.TABLE_NAME, projection, selection, null, null, null, sortOrder);
+        .query(TournamentEntry.TABLE_NAME, projection, null, null, null, null, sortOrder);
 
     boolean visible;
     List<Boolean> visibleTournaments=new ArrayList<>();
@@ -322,6 +352,10 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
         .query(TournamentEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
   }
 
+  public List<Tournament> getAllTournaments() {
+    return getTournaments(null);
+  }
+
   public Tournament getTournament(long id) {
     String where=TournamentEntry._ID+"="+String.valueOf(id);
     List<Tournament> tournaments=getTournaments(where);
@@ -380,33 +414,35 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return tournaments;
   }
 
+  public int updateTournamentVisible(long rowId, boolean visible) {
+    ContentValues values=new ContentValues();
+    values.put(TournamentEntry.COLUMN_NAME_VISIBLE, visible ? 1 : 0);
+
+    String selection=TournamentEntry._ID+"="+String.valueOf(rowId);
+    return sqLiteDatabase.update(TournamentEntry.TABLE_NAME, values, selection, null);
+  }
+
   public int updateTournamentFinish(long rowId, int finish) {
     ContentValues values=new ContentValues();
     values.put(TournamentEntry.COLUMN_NAME_FINISH, finish);
 
-    String selection=TournamentEntry._ID+" LIKE ?";
-    String[] selectionArgs={String.valueOf(rowId)};
-
-    return sqLiteDatabase.update(TournamentEntry.TABLE_NAME, values, selection, selectionArgs);
+    String selection=TournamentEntry._ID+"="+String.valueOf(rowId);
+    return sqLiteDatabase.update(TournamentEntry.TABLE_NAME, values, selection, null);
   }
 
   public int updateEventStarred(long rowId, boolean starred) {
     ContentValues values=new ContentValues();
     values.put(EventEntry.COLUMN_NAME_STARRED, starred ? 1 : 0);
 
-    String selection=EventEntry._ID+" LIKE ?";
-    String[] selectionArgs={String.valueOf(rowId)};
-
-    return sqLiteDatabase.update(EventEntry.TABLE_NAME, values, selection, selectionArgs);
+    String selection=EventEntry._ID+"="+String.valueOf(rowId);
+    return sqLiteDatabase.update(EventEntry.TABLE_NAME, values, selection, null);
   }
 
   public int updateEventNote(long rowId, String note) {
     ContentValues values=new ContentValues();
     values.put(EventEntry.COLUMN_NAME_NOTE, note);
 
-    String selection=EventEntry._ID+" LIKE ?";
-    String[] selectionArgs={String.valueOf(rowId)};
-
-    return sqLiteDatabase.update(EventEntry.TABLE_NAME, values, selection, selectionArgs);
+    String selection=EventEntry._ID+"="+String.valueOf(rowId);
+    return sqLiteDatabase.update(EventEntry.TABLE_NAME, values, selection, null);
   }
 }

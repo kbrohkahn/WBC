@@ -27,9 +27,9 @@ public class DialogCreateEvent extends DialogFragment {
           R.id.ce_repeat_d4, R.id.ce_repeat_d5, R.id.ce_repeat_d6, R.id.ce_repeat_d7,
           R.id.ce_repeat_d8};
 
+  protected Button add;
   protected Spinner hourSpinner;
   protected Spinner durationSpinner;
-  protected Button add;
   protected EditText titleET;
   protected EditText locationET;
 
@@ -73,7 +73,6 @@ public class DialogCreateEvent extends DialogFragment {
     durationSpinner.setAdapter(durationA);
 
     add=(Button) view.findViewById(R.id.ce_add);
-    add.setEnabled(false);
     add.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

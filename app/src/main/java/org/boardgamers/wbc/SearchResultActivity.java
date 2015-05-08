@@ -20,7 +20,7 @@ import android.widget.Toast;
  * Created by Kevin
  */
 public class SearchResultActivity extends AppCompatActivity {
-  private final String TAG="Search Activity";
+  //private final String TAG="Search Activity";
 
   public static boolean fromEventActivity=false;
 
@@ -36,8 +36,10 @@ public class SearchResultActivity extends AppCompatActivity {
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-    getSupportActionBar().setDisplayShowHomeEnabled(true);
-    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    if (getSupportActionBar()!=null) {
+      getSupportActionBar().setDisplayShowHomeEnabled(true);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
     handleIntent(getIntent());
   }
@@ -89,7 +91,18 @@ public class SearchResultActivity extends AppCompatActivity {
     final SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
     searchView.setSearchableInfo(
         searchManager.getSearchableInfo(new ComponentName(this, SearchResultActivity.class)));
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override
+      public boolean onQueryTextSubmit(String query) {
+        searchView.clearFocus();
+        return false;
+      }
 
+      @Override
+      public boolean onQueryTextChange(String newText) {
+        return false;
+      }
+    });
     searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
       @Override
       public boolean onSuggestionSelect(int position) {
@@ -98,6 +111,7 @@ public class SearchResultActivity extends AppCompatActivity {
 
       @Override
       public boolean onSuggestionClick(int position) {
+        searchView.clearFocus();
         Cursor cursor=(Cursor) searchView.getSuggestionsAdapter().getItem(position);
         int id=cursor.getInt(cursor.getColumnIndex(BaseColumns._ID));
         String title=cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));

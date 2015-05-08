@@ -2,6 +2,7 @@ package org.boardgamers.wbc;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SectionIndexer;
@@ -19,8 +20,6 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
   private final String[] hours;
   private final String[] sections;
 
-  public List<Boolean> tournamentsVisible;
-
   public ScheduleListAdapter(DefaultListFragment f, List<List<Event>> e, int i) {
     super(f, e, i);
 
@@ -36,23 +35,23 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
   @Override
   public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
                            View view, ViewGroup parent) {
-    view=super.getChildView(groupPosition, childPosition, isLastChild, view, parent);
+    view=super.getChildView(groupPosition, childPosition, isLastChild, null, parent);
+
+    Event event=events.get(groupPosition).get(childPosition);
 
     view.findViewById(R.id.li_hour).setVisibility(View.GONE);
     if (groupPosition%GROUPS_PER_DAY==0) {
-      Event event=events.get(groupPosition).get(childPosition);
 
-//      int minutes=0;
-//      if (event.duration%1!=0) {
-//        minutes=(int) (event.duration%1*60);
-//      }
-//      int lastHour=((event.hour+(int) event.duration)%24)*100 + minutes;
+      //      int minutes=0;
+      //      if (event.duration%1!=0) {
+      //        minutes=(int) (event.duration%1*60);
+      //      }
+      //      int lastHour=((event.hour+(int) event.duration)%24)*100 + minutes;
       TextView titleTV=(TextView) view.findViewById(R.id.li_title);
-      titleTV.setText(event.hour*100 + ": " + event.title);
+      titleTV.setText(event.hour*100+": "+event.title);
     }
     return view;
   }
-
 
   @Override
   public int getGroupViewId(final int groupPosition) {

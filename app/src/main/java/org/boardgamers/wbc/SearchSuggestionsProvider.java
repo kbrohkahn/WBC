@@ -27,7 +27,6 @@ public class SearchSuggestionsProvider extends ContentProvider {
     Log.d(TAG, "onCreate");
 
     dbHelper=new WBCDataDbHelper(getContext());
-    dbHelper.getReadableDatabase();
 
     return true;
   }
@@ -42,7 +41,9 @@ public class SearchSuggestionsProvider extends ContentProvider {
                       String sortOrder) {
     MatrixCursor matrixCursor=new MatrixCursor(SEARCH_SUGGEST_COLUMNS);
 
+    dbHelper.getReadableDatabase();
     Cursor c=dbHelper.getSearchCursor(selectionArgs[0]);
+    dbHelper.close();
 
     String title;
     int id;
