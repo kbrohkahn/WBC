@@ -65,8 +65,8 @@ public class UpdateService extends Service {
     if (!sharedPref.getBoolean(getResources().getString(R.string.pref_key_notify), false)) {
       Log.d(TAG, "No notifications");
     } else {
-      int notificationTime=Integer.valueOf(
-          sharedPref.getString(getResources().getString(R.string.pref_key_notify_time), "5"));
+      int notificationTime=
+          sharedPref.getInt(getResources().getString(R.string.pref_key_notify_time), 5);
       notificationType=Integer.valueOf(
           sharedPref.getString(getResources().getString(R.string.pref_key_notify_type), "2"));
 
@@ -83,7 +83,7 @@ public class UpdateService extends Service {
         calendar.set(Calendar.SECOND, 0);
       }
 
-      //Log.d(TAG, "First exec of notificationUpdate "+calendar.getTime().toString());
+      Log.d(TAG, "First exec of notificationUpdate "+calendar.getTime().toString());
 
       handler.postDelayed(notificationUpdate, calendar.getTimeInMillis());
     }

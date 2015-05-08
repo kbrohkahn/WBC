@@ -11,11 +11,9 @@
       android:summary="@string/settings_notify_summary"
       android:title="@string/settings_notify"/>
 
-    <ListPreference
-      android:defaultValue="5"
+    <org.boardgamers.wbc.DialogNumberPicker
+      android:persistent="true"
       android:dependency="notify_starred"
-      android:entries="@array/settings_notify_time_entries"
-      android:entryValues="@array/settings_notify_time_values"
       android:key="@string/pref_key_notify_time"
       android:title="@string/settings_notify_time"/>
 

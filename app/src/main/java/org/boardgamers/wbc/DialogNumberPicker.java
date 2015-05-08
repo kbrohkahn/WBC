@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
@@ -17,49 +18,37 @@ public class DialogNumberPicker extends DialogPreference {
   public static final int DEFAULT_VALUE=5;
 
   private NumberPicker picker;
-  private int value;
+
+  int value;
 
   public DialogNumberPicker(Context context, AttributeSet attrs) {
     super(context, attrs);
-    setDialogLayoutResource(R.layout.dialog_notify_time);
-
-
-    setPositiveButtonText(android.R.string.ok);
-    setNegativeButtonText(android.R.string.cancel);
-
-    setDialogIcon(null);
-
   }
 
   @Override
   protected View onCreateDialogView() {
-//    NumberPicker picker=(NumberPicker) getDialog().findViewById(R.id.dialog_notify_time_picker);
-//    picker.setMinValue(MIN_VALUE);
-//    picker. setMaxValue(MAX_VALUE);
-    return super.onCreateDialogView();
-  }
+    LayoutInflater inflater=
+        (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    View view=inflater.inflate(R.layout.dialog_notify_time, null);
 
-  @Override
-  protected void onDialogClosed(boolean positiveResult) {
-    if (positiveResult) {
-      setValue(value);
-    }
+    picker=(NumberPicker) view.findViewById(R.id.dialog_notify_time_picker);
+    picker.setMaxValue(MAX_VALUE);
+    picker.setMinValue(MIN_VALUE);
+    picker.setValue(getPersistedInt(DEFAULT_VALUE));
+    picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+    picker.setWrapSelectorWheel(false);
+
+    return view;
   }
 
   @Override
   protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
     if (restorePersistedValue) {
-      // Restore existing state
       value=getPersistedInt(DEFAULT_VALUE);
     } else {
-      // Set default state from the XML attribute
       value=(Integer) defaultValue;
       persistInt(value);
     }
-  }
-
-  public void setValue(int v) {
-    value=v;
   }
 
   @Override
@@ -67,4 +56,11 @@ public class DialogNumberPicker extends DialogPreference {
     return a.getInteger(index, DEFAULT_VALUE);
   }
 
+  @Override
+  protected void onDialogClosed(boolean positiveResult) {
+    if (positiveResult) {
+      this.setSummary(String.valueOf(picker.getValue()));
+      persistInt(picker.getValue());
+    }
+  }
 }
