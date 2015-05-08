@@ -151,6 +151,7 @@ public class EventFragment extends Fragment {
     }
 
     if (id==-1) {
+      event=null;
       titleTV.setVisibility(View.VISIBLE);
       titleTV.setText(getResources().getString(R.string.title));
       dayTV.setText(getResources().getString(R.string.day));
@@ -181,13 +182,6 @@ public class EventFragment extends Fragment {
       event=dbHelper.getEvent(id);
       tournament=dbHelper.getTournament(event.tournamentID);
       dbHelper.close();
-
-      if (event==null) {
-        //Log.d(TAG, "ERROR: returned null event from database");
-        MainActivity.SELECTED_EVENT_ID=-1;
-        setEvent(-1);
-        return;
-      }
 
       if (getActivity() instanceof EventActivity) {
         titleTV.setVisibility(View.GONE);
@@ -230,11 +224,11 @@ public class EventFragment extends Fragment {
         classTV.setText(getResources().getString(R.string.class_string)+": "+event.eClass);
       }
 
-      if (tournament==null) {
-        gMTV.setVisibility(View.GONE);
-      } else {
+      if (tournament!=null) {
         gMTV.setVisibility(View.VISIBLE);
         gMTV.setText(getResources().getString(R.string.gm)+": "+tournament.gm);
+      } else {
+        gMTV.setVisibility(View.GONE);
       }
 
       setRoom(event.location);
@@ -328,9 +322,12 @@ public class EventFragment extends Fragment {
 
   public void saveEventData() {
     String note=noteET.getText().toString();
-    int finish=0;
+    int finish;
 
-    if (tournament!=null && tournament.isTournament) {
+    if (event.tournamentID==UserDataListFragment.USER_TOURNAMENT_ID || !tournament.isTournament) {
+      finish=-1;
+    } else {
+      finish=0;
       for (int i=0; i<finishButtons.length; i++) {
         if (finishButtons[i].isChecked()) {
           finish=i;
@@ -339,9 +336,8 @@ public class EventFragment extends Fragment {
       }
     }
 
-    Object[] data=new Object[] {event.id, note, tournament.id, finish};
+    Object[] data=new Object[] {event.id, note, event.tournamentID, finish};
     new SaveDataTask().execute(data);
-
   }
 
   class SaveDataTask extends AsyncTask<Object, String, String> {
@@ -356,7 +352,9 @@ public class EventFragment extends Fragment {
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getWritableDatabase();
       dbHelper.updateEventNote(eventId, note);
-      dbHelper.updateTournamentFinish(tournamentId, finish);
+      if (finish>-1) {
+        dbHelper.updateTournamentFinish(tournamentId, finish);
+      }
       dbHelper.close();
 
       MainActivity.updateUserData(eventId, note, tournamentId, finish);

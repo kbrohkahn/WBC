@@ -1,8 +1,8 @@
 package org.boardgamers.wbc;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,9 @@ public class UserDataListFragment extends DefaultListFragment {
   private final String TAG="My WBC Data Activity";
 
   public static final int USER_TOURNAMENT_ID=1000;
+  public static final int EVENTS_INDEX=0;
+  public static final int NOTES_INDEX=1;
+  public static final int FINISHES_INDEX=2;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,7 +37,7 @@ public class UserDataListFragment extends DefaultListFragment {
       });
 
       Button deleteAll=(Button) view.findViewById(R.id.delete_all);
-      addEvent.setOnClickListener(new View.OnClickListener() {
+      deleteAll.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
           showDeleteDialog();
@@ -50,8 +53,8 @@ public class UserDataListFragment extends DefaultListFragment {
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
     dbHelper.getReadableDatabase();
 
-    listAdapter.events.remove(0);
-    listAdapter.events.add(0, dbHelper.getTournamentEvents(USER_TOURNAMENT_ID));
+    listAdapter.events.remove(EVENTS_INDEX);
+    listAdapter.events.add(EVENTS_INDEX, dbHelper.getTournamentEvents(USER_TOURNAMENT_ID));
 
     dbHelper.close();
 
@@ -59,19 +62,83 @@ public class UserDataListFragment extends DefaultListFragment {
   }
 
   public void updateUserData(long eventId, String note, long tournamentId, int finish) {
-    for (Event event : listAdapter.events.get(1)) {
+    if (listAdapter==null || listAdapter.events==null) {
+      return;
+    }
+
+    boolean noteInList=false;
+    for (Event event : listAdapter.events.get(NOTES_INDEX)) {
       if (event.id==eventId) {
-        event.note=note;
+        noteInList=true;
+        if (note.equalsIgnoreCase("")) {
+          listAdapter.events.get(NOTES_INDEX).remove(event);
+        } else {
+          event.note=note;
+        }
+
         break;
       }
     }
 
-    for (Event event : listAdapter.events.get(2)) {
+    boolean finishInList=false;
+    for (Event event : listAdapter.events.get(FINISHES_INDEX)) {
       if (event.tournamentID==tournamentId) {
-        event.note=String.valueOf(finish);
+        finishInList=true;
+        if (finish==0) {
+          listAdapter.events.get(FINISHES_INDEX).remove(event);
+        } else {
+          event.note=String.valueOf(finish);
+        }
         break;
       }
     }
+
+    Event eventNote=null;
+    Tournament tournamentFinish=null;
+
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+    dbHelper.getReadableDatabase();
+    if (!noteInList && !note.equalsIgnoreCase("")) {
+      eventNote=dbHelper.getEvent(eventId);
+    }
+
+    if (!finishInList && finish>0) {
+      tournamentFinish=dbHelper.getTournament(tournamentId);
+    }
+
+    int index;
+    List<Event> searchList;
+    if (eventNote!=null) {
+      searchList=listAdapter.events.get(NOTES_INDEX);
+      index=0;
+      for (; index<searchList.size(); index++) {
+        if (eventNote.title.compareToIgnoreCase(searchList.get(index).title)==1) {
+          break;
+        }
+      }
+      searchList.add(index, eventNote);
+    }
+
+    if (tournamentFinish!=null) {
+      searchList=listAdapter.events.get(FINISHES_INDEX);
+      index=0;
+      for (; index<searchList.size(); index++) {
+        if (tournamentFinish.title.compareToIgnoreCase(searchList.get(index).title)==1) {
+          break;
+        }
+      }
+      searchList.add(index, getEventFromTournament(tournamentFinish));
+    }
+    dbHelper.close();
+  }
+
+  public Event getEventFromTournament(Tournament tournament) {
+    Event event=
+        new Event(tournament.finalEventId, "", tournament.id, 0, 0, tournament.title, "", "", false,
+            0, false, 0, "");
+
+    event.note=String.valueOf(tournament.finish);
+    return event;
   }
 
   @Override
@@ -97,16 +164,18 @@ public class UserDataListFragment extends DefaultListFragment {
 
     AlertDialog.Builder deleteDialog=new AlertDialog.Builder(getActivity());
     deleteDialog.setTitle(title).setMessage(message)
-        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        .setNegativeButton(getResources().getString(R.string.cancel),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+              }
+            }).setPositiveButton("Yes, "+getResources().getString(R.string.delete),
+        new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
+            deleteAllEvents();
             dialog.dismiss();
           }
-        }).setNegativeButton("Yes, "+R.string.delete, new DialogInterface.OnClickListener() {
-      public void onClick(DialogInterface dialog, int id) {
-        deleteAllEvents();
-        dialog.dismiss();
-      }
-    });
+        });
     deleteDialog.create().show();
 
   }
@@ -144,13 +213,8 @@ public class UserDataListFragment extends DefaultListFragment {
       dbHelper.close();
 
       List<Event> eventFinishes=new ArrayList<>();
-      Event event;
       for (Tournament tournament : tournamentFinishes) {
-        event=new Event(tournament.finalEventId, "", tournament.id, 0, 0, tournament.title, "",
-            "", false, 0, false, 0, "");
-        event.note=String.valueOf(tournament.finish);
-
-        eventFinishes.add(event);
+        eventFinishes.add(getEventFromTournament(tournament));
       }
 
       events.add(eventFinishes);

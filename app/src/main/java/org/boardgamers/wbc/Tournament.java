@@ -23,7 +23,7 @@ public class Tournament {
    * @param p  - prize
    * @param g  - game manager
    */
-  public Tournament(int id, String t, String l, boolean i, int p, String g) {
+  public Tournament(int id, String t, String l, boolean i, int p, String g, int f) {
     this.id=id;
 
     this.title=t;
@@ -32,6 +32,7 @@ public class Tournament {
 
     this.prize=p;
     this.gm=g;
+    this.finalEventId=f;
 
   }
 }

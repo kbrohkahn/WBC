@@ -14,9 +14,6 @@ import java.util.List;
 public class UserDataListAdapter extends DefaultListAdapter {
   private final String TAG="User Data List Adapter";
 
-  private final int EVENTS_INDEX=0;
-  private final int NOTES_INDEX=1;
-  private final int FINISHES_INDEX=2;
 
   public UserDataListAdapter(DefaultListFragment f, List<List<Event>> e, int i) {
     super(f, e, i);
@@ -27,36 +24,12 @@ public class UserDataListAdapter extends DefaultListAdapter {
                            View view, ViewGroup parent) {
     view=super.getChildView(groupPosition, childPosition, isLastChild, view, parent);
 
-    if (groupPosition==EVENTS_INDEX) {
+    if (groupPosition==UserDataListFragment.EVENTS_INDEX) {
       view.setOnLongClickListener(new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View view) {
-          AlertDialog.Builder builder=new AlertDialog.Builder(fragment.getActivity());
-
-          builder.setTitle("Choose an action");
-          builder.setMessage("What do you want to do?");
-
-          builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-              showDeleteDialog(childPosition);
-            }
-          });
-
-          builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-              ((UserDataListFragment) fragment).editEvent(childPosition);
-            }
-          });
-
-          builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-              dialog.dismiss();
-            }
-          });
-
-          builder.create().show();
-
-          return false;
+          showDeleteDialog(childPosition);
+          return true;
         }
       });
 
@@ -64,7 +37,8 @@ public class UserDataListAdapter extends DefaultListAdapter {
     } else {
       Event event=events.get(groupPosition).get(childPosition);
 
-      view.findViewById(R.id.li_star).setVisibility(View.GONE);
+      view.findViewById(R.id.li_star).setVisibility(View.INVISIBLE);
+      view.findViewById(R.id.li_hour).setVisibility(View.GONE);
       view.findViewById(R.id.li_duration).setVisibility(View.GONE);
       view.findViewById(R.id.li_location).setVisibility(View.GONE);
 
@@ -78,11 +52,11 @@ public class UserDataListAdapter extends DefaultListAdapter {
   @Override
   public String getGroupTitle(int groupPosition) {
     switch (groupPosition) {
-      case EVENTS_INDEX:
+      case UserDataListFragment.EVENTS_INDEX:
         return fragment.getResources().getString(R.string.user_events);
-      case NOTES_INDEX:
+      case UserDataListFragment.NOTES_INDEX:
         return fragment.getResources().getString(R.string.user_notes);
-      case FINISHES_INDEX:
+      case UserDataListFragment.FINISHES_INDEX:
         return fragment.getResources().getString(R.string.user_finishes);
       default:
         return null;
@@ -105,7 +79,7 @@ public class UserDataListAdapter extends DefaultListAdapter {
   }
 
   public void showDeleteDialog(final int index) {
-    Event event=events.get(EVENTS_INDEX).get(index);
+    Event event=events.get(UserDataListFragment.EVENTS_INDEX).get(index);
 
     String dayString=fragment.getResources().getStringArray(R.array.days)[event.day];
     String title="Confirm";
@@ -114,16 +88,18 @@ public class UserDataListAdapter extends DefaultListAdapter {
 
     AlertDialog.Builder deleteDialog=new AlertDialog.Builder(fragment.getActivity());
     deleteDialog.setTitle(title).setMessage(message)
-        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        .setNegativeButton(fragment.getResources().getString(R.string.cancel),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+              }
+            }).setPositiveButton("Yes, "+fragment.getResources().getString(R.string.delete),
+        new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
+            deleteEvent(index);
             dialog.dismiss();
           }
-        }).setNegativeButton("Yes, "+R.string.delete, new DialogInterface.OnClickListener() {
-      public void onClick(DialogInterface dialog, int id) {
-        deleteEvent(index);
-        dialog.dismiss();
-      }
-    });
+        });
     deleteDialog.create().show();
 
   }
@@ -131,7 +107,7 @@ public class UserDataListAdapter extends DefaultListAdapter {
   public void deleteEvent(int index) {
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(fragment.getActivity());
     dbHelper.getWritableDatabase();
-    dbHelper.deleteEvent(events.get(EVENTS_INDEX).get(index).id);
+    dbHelper.deleteEvent(events.get(UserDataListFragment.EVENTS_INDEX).get(index).id);
     dbHelper.close();
   }
 }

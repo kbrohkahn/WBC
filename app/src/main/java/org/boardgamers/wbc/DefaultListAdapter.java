@@ -151,37 +151,12 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public View getGroupView(final int groupPosition, final boolean isExpanded, View view,
-                           ViewGroup parent) {
+                           final ViewGroup parent) {
     view=inflater.inflate(getGroupViewId(groupPosition), parent, false);
 
     TextView name=(TextView) view.findViewById(R.id.sg_name);
     name.setText(getGroupTitle(groupPosition));
     name.setSelected(true);
-
-    view.setLongClickable(true);
-    view.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        if (isExpanded) {
-          fragment.collapseGroups(getGroupCount(), groupPosition, true);
-        } else {
-          fragment.expandGroups(getGroupCount(), groupPosition, true);
-        }
-        return true;
-      }
-    });
-
-    view.setClickable(true);
-    view.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (isExpanded) {
-          fragment.collapseGroups(-1, groupPosition, false);
-        } else {
-          fragment.expandGroups(-1, groupPosition, false);
-        }
-      }
-    });
 
     if (isExpanded) {
       view.setBackgroundResource(R.drawable.group_expanded);

@@ -11,17 +11,17 @@
       android:summary="@string/settings_notify_summary"
       android:title="@string/settings_notify"/>
 
-    <EditTextPreference
+    <ListPreference
       android:defaultValue="5"
       android:dependency="notify_starred"
-      android:inputType="number"
+      android:entries="@array/settings_notify_time_entries"
+      android:entryValues="@array/settings_notify_time_values"
       android:key="@string/pref_key_notify_time"
       android:title="@string/settings_notify_time"/>
 
     <ListPreference
       android:defaultValue="2"
       android:dependency="notify_starred"
-      android:dialogTitle="@string/settings_notify_type"
       android:entries="@array/settings_notify_type_entries"
       android:entryValues="@array/settings_notify_type_values"
       android:key="@string/pref_key_notify_type"

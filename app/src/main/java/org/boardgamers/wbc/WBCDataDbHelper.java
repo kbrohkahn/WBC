@@ -346,7 +346,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     Cursor cursor=getSearchCursor(selection);
 
     String title, label, gm;
-    int id, prize, finish;
+    int id, prize, finish, finalEventId;
     boolean isTournament, visible;
 
     List<Tournament> tournaments=new ArrayList<>();
@@ -361,10 +361,11 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
                 1;
         prize=cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_PRIZE));
         gm=cursor.getString(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_GM));
+        finalEventId=cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_FINAL_EVENT));
         finish=cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_FINISH));
         visible=cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_VISIBLE))==1;
 
-        tournament=new Tournament(id, title, label, isTournament, prize, gm);
+        tournament=new Tournament(id, title, label, isTournament, prize, gm, finalEventId);
         tournament.finish=finish;
         tournament.visible=visible;
 

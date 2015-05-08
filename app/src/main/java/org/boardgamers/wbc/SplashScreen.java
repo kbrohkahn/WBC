@@ -39,7 +39,7 @@ public class SplashScreen extends AppCompatActivity {
 
       Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
       setSupportActionBar(toolbar);
-      setTitle("Loading events...");
+      setTitle("Saving schedule to device...");
 
       progressBar=(ProgressBar) findViewById(R.id.splash_progress);
       progressBar.setMax(780);
@@ -114,16 +114,6 @@ public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected Integer doInBackground(Integer... params) {
-      String identifier, eventTitle, eClass, format, gm, tempString, location;
-      String[] rowData;
-      int index, day, hour, prize, lineNum=0;
-      double duration, totalDuration;
-      boolean continuous, qualify, isTournamentEvent;
-
-      long tournamentID;
-      String tournamentTitle, tournamentLabel, shortEventTitle="";
-      List<String> tournamentTitles=new ArrayList<>();
-
       // find schedule file
       InputStream is;
       try {
@@ -153,6 +143,15 @@ public class SplashScreen extends AppCompatActivity {
         final String daysForParsing[]=getResources().getStringArray(R.array.daysForParsing);
 
         String line;
+        String identifier, eventTitle, eClass, format, gm, tempString, location;
+        String[] rowData;
+        int eventId=1, index, day, hour, prize;
+        double duration, totalDuration;
+        boolean continuous, qualify, isTournamentEvent;
+
+        long tournamentId;
+        String tournamentTitle, tournamentLabel, shortEventTitle="";
+        List<String> tournamentTitles=new ArrayList<>();
         while ((line=reader.readLine())!=null) {
           rowData=line.split("~");
 
@@ -287,15 +286,15 @@ public class SplashScreen extends AppCompatActivity {
             }
           }
 
-          tournamentID=index+1;
-          if (tournamentID==0) {
-            tournamentID=dbHelper
+          tournamentId=index+1;
+          if (tournamentId==0) {
+            tournamentId=dbHelper
                 .insertTournament(tournamentTitle, tournamentLabel, isTournamentEvent, prize, gm,
-                    lineNum);
+                    eventId);
             tournamentTitles.add(tournamentTitle);
           }
 
-          // Log.d(TAG, String.valueOf(tournamentID)+": "+tournamentTitle
+          // Log.d(TAG, String.valueOf(tournamentId)+": "+tournamentTitle
           // +";;;E: "+eventTitle);
 
           totalDuration=duration;
@@ -345,10 +344,11 @@ public class SplashScreen extends AppCompatActivity {
           identifier=String.valueOf(day*24+hour)+eventTitle;
 
           dbHelper
-              .insertEvent(identifier, tournamentID, day, hour, eventTitle, eClass, format, qualify,
+              .insertEvent(identifier, tournamentId, day, hour, eventTitle, eClass, format, qualify,
                   duration, continuous, totalDuration, location, false);
 
-          progressBar.setProgress(lineNum++);
+          progressBar.setProgress(eventId);
+          eventId++;
         }
 
         // close streams and number of events
@@ -360,8 +360,8 @@ public class SplashScreen extends AppCompatActivity {
         // log statistics
         Log.d(TAG,
             "Finished load, "+String.valueOf(tournamentTitles.size())+" total tournaments and "+
-                String.valueOf(lineNum)+" total events");
-        return lineNum;
+                String.valueOf(eventId)+" total events");
+        return eventId;
       } catch (IOException e) {
         e.printStackTrace();
         return -1;

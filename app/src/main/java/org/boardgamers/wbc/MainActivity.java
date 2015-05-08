@@ -212,8 +212,6 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
     searchView.setSearchableInfo(
         searchManager.getSearchableInfo(new ComponentName(this, SearchResultActivity.class)));
-    searchView.setIconifiedByDefault(false);
-    searchView.setSubmitButtonEnabled(true);
 
     return true;
   }

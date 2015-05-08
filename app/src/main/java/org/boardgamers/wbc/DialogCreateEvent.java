@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -96,30 +95,8 @@ public class DialogCreateEvent extends DialogFragment {
     for (int i=0; i<dayStrings.length; i++) {
       days[i]=(CheckBox) view.findViewById(ceDayIDs[i]);
       days[i].setText(dayStrings[i]);
-      days[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-          checkButton(true);
-        }
-      });
     }
     return view;
-  }
-
-  public void checkButton(boolean checked) {
-    add.setEnabled(checked);
-
-    if (checked) {
-      return;
-    }
-
-    for (CheckBox checkBox : days) {
-      if (checkBox.isChecked()) {
-        add.setEnabled(true);
-        return;
-      }
-    }
   }
 
   public void createEvents() {

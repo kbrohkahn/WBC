@@ -124,13 +124,34 @@
 
   <string-array name="settings_notify_type_entries">
     <item>Vibrate</item>
-    <item>Ring</item>
-    <item>Sound+vibrate</item>
+    <item>Sound</item>
+    <item>Both</item>
   </string-array>
   <string-array name="settings_notify_type_values">
     <item>0</item>
     <item>1</item>
     <item>2</item>
+  </string-array>
+
+  <string-array name="settings_notify_time_entries">
+    <item>1</item>
+    <item>2</item>
+    <item>5</item>
+    <item>10</item>
+    <item>15</item>
+    <item>30</item>
+    <item>45</item>
+    <item>60</item>
+  </string-array>
+  <string-array name="settings_notify_time_values">
+    <item>1</item>
+    <item>2</item>
+    <item>5</item>
+    <item>10</item>
+    <item>15</item>
+    <item>30</item>
+    <item>45</item>
+    <item>60</item>
   </string-array>
 
   <!-- TIMES AND DURATION -->

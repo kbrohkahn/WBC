@@ -40,26 +40,6 @@ public class DefaultListFragment extends Fragment {
     return R.layout.default_list;
   }
 
-  public void expandGroups(int count, int start, boolean all) {
-    if (all) {
-      for (int i=start; i<count; i++) {
-        listView.expandGroup(i);
-      }
-    } else {
-      listView.expandGroup(start);
-    }
-  }
-
-  public void collapseGroups(int count, int start, boolean all) {
-    if (all) {
-      for (int i=start; i<count; i++) {
-        listView.collapseGroup(i);
-      }
-    } else {
-      listView.collapseGroup(start);
-    }
-  }
-
   public void updateStarredEvent(Event event) {
     if (listAdapter!=null) {
       listAdapter.updateStarredEvent(event);
@@ -75,7 +55,9 @@ public class DefaultListFragment extends Fragment {
     protected void onPostExecute(Integer integer) {
       listView.setAdapter(listAdapter);
 
-      expandGroups(numGroups, 0, true);
+      for (int i=0; i<numGroups; i++) {
+        listView.expandGroup(i);
+      }
 
       listAdapter.events=events;
       listAdapter.hoursIntoConvention=MainActivity.getHoursIntoConvention();
