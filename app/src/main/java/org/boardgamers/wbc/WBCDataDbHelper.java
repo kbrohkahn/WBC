@@ -315,8 +315,9 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return events;
   }
 
-  public Cursor getSearchCursor(String selection) {
+  public Cursor getSearchCursor(String query) {
     String sortOrder=TournamentEntry.COLUMN_NAME_TITLE+" ASC";
+    String selection=EventEntry.COLUMN_NAME_TITLE+" LIKE '%"+query+"%'";
     return sqLiteDatabase
         .query(TournamentEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
   }
@@ -343,7 +344,9 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   }
 
   public List<Tournament> getTournaments(String selection) {
-    Cursor cursor=getSearchCursor(selection);
+    String sortOrder=TournamentEntry.COLUMN_NAME_TITLE+" ASC";
+    Cursor cursor=sqLiteDatabase
+        .query(TournamentEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
 
     String title, label, gm;
     int id, prize, finish, finalEventId;
@@ -361,7 +364,8 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
                 1;
         prize=cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_PRIZE));
         gm=cursor.getString(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_GM));
-        finalEventId=cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_FINAL_EVENT));
+        finalEventId=
+            cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_FINAL_EVENT));
         finish=cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_FINISH));
         visible=cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_NAME_VISIBLE))==1;
 

@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -208,11 +210,35 @@ public class MainActivity extends AppCompatActivity {
     inflater.inflate(R.menu.menu_light_main, menu);
 
     SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
-    SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
+    final SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
     searchView.setSearchableInfo(
         searchManager.getSearchableInfo(new ComponentName(this, SearchResultActivity.class)));
 
+    searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+      @Override
+      public boolean onSuggestionSelect(int position) {
+        return false;
+      }
+
+      @Override
+      public boolean onSuggestionClick(int position) {
+        Cursor cursor=(Cursor) searchView.getSuggestionsAdapter().getItem(position);
+        int id=cursor.getInt(cursor.getColumnIndex(BaseColumns._ID));
+        String title=cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+        startSearchActivity(id, title);
+        return true;
+      }
+    });
+
     return true;
+
+  }
+
+  public void startSearchActivity(int id, String title) {
+    Intent intent=new Intent(this, SearchResultActivity.class);
+    intent.putExtra("query_title", title);
+    intent.putExtra("query_id", id);
+    startActivity(intent);
   }
 
   @Override

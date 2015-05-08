@@ -1,10 +1,12 @@
 package org.boardgamers.wbc;
 
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -63,21 +65,18 @@ public class SearchResultActivity extends AppCompatActivity {
   }
 
   private void handleIntent(Intent intent) {
-    String query=null;
-    if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SEARCH)) {
+    String query=intent.getStringExtra("query_title");
+    int id=intent.getIntExtra("query_id", -1);
+
+    if (intent.getAction()!=null && intent.getAction().equalsIgnoreCase(Intent.ACTION_SEARCH)) {
       query=intent.getStringExtra(SearchManager.QUERY).toLowerCase();
-    } else if (intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)) {
-      query=intent.getStringExtra(SearchManager.QUERY).toLowerCase();
-      Uri data=intent.getData();
-      String dataString=intent.getDataString();
-      query=data.getLastPathSegment().toLowerCase();
     }
 
-    if (query!=null) {
+    if (query!=null || id>-1) {
+      setTitle(query);
       SearchListFragment fragment=
           (SearchListFragment) getSupportFragmentManager().findFragmentById(R.id.searchFragment);
-      fragment.loadEvents(query);
-      setTitle(query);
+      fragment.loadEvents(query, id);
     }
   }
 
@@ -87,10 +86,35 @@ public class SearchResultActivity extends AppCompatActivity {
     inflater.inflate(R.menu.menu_light_main, menu);
 
     SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
-    SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
-    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+    final SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
+    searchView.setSearchableInfo(
+        searchManager.getSearchableInfo(new ComponentName(this, SearchResultActivity.class)));
+
+    searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+      @Override
+      public boolean onSuggestionSelect(int position) {
+        return false;
+      }
+
+      @Override
+      public boolean onSuggestionClick(int position) {
+        Cursor cursor=(Cursor) searchView.getSuggestionsAdapter().getItem(position);
+        int id=cursor.getInt(cursor.getColumnIndex(BaseColumns._ID));
+        String title=cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+        startSearchActivity(id, title);
+        return true;
+      }
+    });
 
     return true;
+
+  }
+
+  public void startSearchActivity(int id, String title) {
+    Intent intent=new Intent(this, SearchResultActivity.class);
+    intent.putExtra("query_title", title);
+    intent.putExtra("query_id", id);
+    startActivity(intent);
   }
 
   @Override

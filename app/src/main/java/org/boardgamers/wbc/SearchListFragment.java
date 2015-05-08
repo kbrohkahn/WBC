@@ -16,6 +16,7 @@ public class SearchListFragment extends DefaultListFragment {
   private boolean allStarred;
   private ImageView star;
   private String query;
+  private int id;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,8 +79,10 @@ public class SearchListFragment extends DefaultListFragment {
     }
   }
 
-  public void loadEvents(String q) {
+  public void loadEvents(String q, int i) {
     query=q;
+    id=i;
+
     new PopulateSearchAdapterTask(this, MainActivity.TOTAL_DAYS).execute(0, 0, 0);
   }
 
@@ -128,7 +131,13 @@ public class SearchListFragment extends DefaultListFragment {
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getReadableDatabase();
-      List<Event> tempEvents=dbHelper.getEventsFromQuery(query);
+
+      List<Event> tempEvents;
+      if (id>-1) {
+        tempEvents=dbHelper.getTournamentEvents(id);
+      } else {
+        tempEvents=dbHelper.getEventsFromQuery(query);
+      }
       dbHelper.close();
 
       List<List<Event>> events=listAdapter.events;
