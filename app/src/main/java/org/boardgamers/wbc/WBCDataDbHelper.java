@@ -57,6 +57,28 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NAME_NULLABLE="null";
   }
 
+  public static abstract class UserEntry implements BaseColumns {
+    public static final String TABLE_NAME="user";
+    public static final String COLUMN_NAME_NAME="name";
+    public static final String COLUMN_NAME_EMAIL="email";
+  }
+
+  public static abstract class UserEventDataEntry implements BaseColumns {
+    public static final String TABLE_NAME="user_event_data";
+    public static final String COLUMN_USER_ID="user_id";
+    public static final String COLUMN_NAME_EVENT_ID="event_id";
+    public static final String COLUMN_NAME_STARRED="starred";
+    public static final String COLUMN_NAME_NOTE="note";
+  }
+
+  public static abstract class UserTournamentDataEntry implements BaseColumns {
+    public static final String TABLE_NAME="user_tournament_data";
+    public static final String COLUMN_USER_ID="user_id";
+    public static final String COLUMN_NAME_TOURNAMENT_ID="tournament_id";
+    public static final String COLUMN_NAME_FINISH="finish";
+    public static final String COLUMN_NAME_VISIBLE="visible";
+  }
+
   private static final String SQL_CREATE_EVENT_ENTRIES="CREATE TABLE "+EventEntry.TABLE_NAME+" ("+
       EventEntry._ID+" INTEGER PRIMARY KEY,"+
       EventEntry.COLUMN_NAME_ENTRY_ID+" TEXT,"+

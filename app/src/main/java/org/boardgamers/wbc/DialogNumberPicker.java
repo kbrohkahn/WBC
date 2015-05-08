@@ -59,7 +59,6 @@ public class DialogNumberPicker extends DialogPreference {
   @Override
   protected void onDialogClosed(boolean positiveResult) {
     if (positiveResult) {
-      this.setSummary(String.valueOf(picker.getValue()));
       persistInt(picker.getValue());
     }
   }

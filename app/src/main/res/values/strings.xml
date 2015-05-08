@@ -39,6 +39,7 @@
   <string name="activity_filter">Filter Schedule</string>
   <string name="activity_help">Help</string>
   <string name="activity_about">About</string>
+  <string name="activity_view_schedule">View Schedule</string>
   <string name="activity_splash">Saving schedule to device&#8230;</string>
 
   <!-- FILTER MENU -->
@@ -109,6 +110,9 @@
   <string name="settings_notify_summary">Notify me before my starred events start</string>
   <string name="settings_notify_type">Notification type</string>
   <string name="settings_notify_time">Minutes before event starts</string>
+  <string name="settings_schedule">Schedules</string>
+  <string name="settings_schedule_load">Open schedule</string>
+  <string name="settings_schedule_load_summary">Load another WBC schedule from file</string>
 
   <!-- PREFERENCES FILES -->
   <string name="sp_file_name">SettingsSPFile</string>
@@ -124,6 +128,7 @@
   <string name="pref_key_notify">notify_starred</string>
   <string name="pref_key_notify_time">notify_time</string>
   <string name="pref_key_notify_type">notify_type</string>
+  <string name="pref_key_schedule_load">schedule_load</string>
 
   <string-array name="settings_notify_type_entries">
     <item>Vibrate</item>

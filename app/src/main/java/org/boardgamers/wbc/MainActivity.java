@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.BaseColumns;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -20,11 +22,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Main Activity class
  */
 public class MainActivity extends AppCompatActivity {
   private final static String TAG="Main Activity";
+  private final String FILENAME="wbcData.txt";
 
   public static final int TOTAL_DAYS=9;
   public static long SELECTED_EVENT_ID=-1;
@@ -68,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
     viewPager=(ViewPager) findViewById(R.id.pager);
     viewPager.setAdapter(pagerAdapter);
-    viewPager.setOffscreenPageLimit(3);
+    viewPager.setOffscreenPageLimit(2);
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -253,16 +262,126 @@ public class MainActivity extends AppCompatActivity {
     startActivity(intent);
   }
 
+  public void share() {
+    Log.d(TAG, "Share start");
+    //    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
+    //    dbHelper.getReadableDatabase();
+    //    List<Event> starred=dbHelper.getStarredEvents();
+    //    List<Event> notes=dbHelper.getEventsWithNotes();
+    //    List<Tournament> tFinishes=dbHelper.getTournamentsWithFinishes();
+    //    dbHelper.close();
+    //    Log.d(TAG, "Received from DB");
+
+    UserDataListFragment userDataListFragment=(UserDataListFragment) pagerAdapter.getItem(2);
+    List<Event> notes=userDataListFragment.listAdapter.events.get(UserDataListFragment.NOTES_INDEX);
+    List<Event> eFinishes=
+        userDataListFragment.listAdapter.events.get(UserDataListFragment.FINISHES_INDEX);
+    List<Event> userEvents=
+        userDataListFragment.listAdapter.events.get(UserDataListFragment.EVENTS_INDEX);
+    SummaryListFragment summaryListFragment=(SummaryListFragment) pagerAdapter.getItem(0);
+
+    List<List<Event>> starredGroups=summaryListFragment.listAdapter.events;
+    List<Event> starred=new ArrayList<>();
+    for (List<Event> events : starredGroups) {
+      for (Event event : events) {
+        starred.add(event);
+      }
+    }
+    List<Event> user=new ArrayList<>();
+    for (List<Event> events : starredGroups) {
+      for (Event event : events) {
+        starred.add(event);
+      }
+    }
+    Log.d(TAG, "Received from fragments");
+
+    String delimitter="~";
+    String sameObject=";";
+
+    String outputString="wbc_data_file"+delimitter;
+
+    outputString+="\n"+delimitter;
+    for (Event event : userEvents) {
+      outputString+=String.valueOf(event.id)+sameObject+event.title+sameObject+event.day+sameObject+
+          event.hour+sameObject+event.duration+sameObject+event.location+delimitter;
+    }
+    outputString+="\n"+delimitter;
+    for (Event event : starred) {
+      outputString+=String.valueOf(event.id)+delimitter;
+    }
+    outputString+="\n"+delimitter;
+    for (Event event : eFinishes) {
+      outputString+=String.valueOf(event.tournamentID)+sameObject+event.note+delimitter;
+    }
+    outputString+="\n"+delimitter;
+    for (Event event : notes) {
+      outputString+=String.valueOf(event.id)+sameObject+event.note+delimitter;
+    }
+
+    File file;
+    if (isExternalStorageWritable()) {
+      File sdCard=Environment.getExternalStorageDirectory();
+      File dir=new File(sdCard.getAbsolutePath()+"/WBC/");
+      dir.mkdirs();
+      file=new File(dir, FILENAME);
+    } else {
+      file=new File(getCacheDir(), FILENAME);
+    }
+
+    Log.d(TAG, "File location: "+file.getAbsolutePath());
+
+    FileOutputStream fileOutputStream;
+    try {
+      fileOutputStream=new FileOutputStream(file);
+      fileOutputStream.write(outputString.getBytes());
+      fileOutputStream.close();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    Intent shareIntent=new Intent();
+    shareIntent.setAction(Intent.ACTION_SEND);
+    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+    shareIntent.setType("text/plain");
+    startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share)));
+  }
+
+  /* Checks if external storage is available for read and write */
+
+  public boolean isExternalStorageWritable() {
+    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+      return true;
+    } else {
+      Log.d(TAG, "Error: external storage not writable");
+      return false;
+    }
+  }
+
+  /* Checks if external storage is available to at least read */
+  public boolean isExternalStorageReadable() {
+    String state=Environment.getExternalStorageState();
+    if (state.equals(Environment.MEDIA_MOUNTED) ||
+        state.equals(Environment.MEDIA_MOUNTED_READ_ONLY)) {
+      return true;
+    } else {
+      Log.d(TAG, "Error: external storage not writable");
+      return false;
+    }
+  }
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId()==R.id.menu_map) {
       startActivity(new Intent(this, MapActivity.class));
+    } else if (item.getItemId()==R.id.menu_share) {
+      share();
     } else if (item.getItemId()==R.id.menu_help) {
       startActivity(new Intent(this, HelpActivity.class));
     } else if (item.getItemId()==R.id.menu_about) {
       startActivity(new Intent(this, AboutActivity.class));
-//    } else if (item.getItemId()==R.id.menu_filter) {
-//      startActivity(new Intent(this, FilterActivity.class));
+      //    } else if (item.getItemId()==R.id.menu_filter) {
+      //      startActivity(new Intent(this, FilterActivity.class));
     } else if (item.getItemId()==R.id.menu_settings) {
       startActivity(new Intent(this, SettingsActivity.class));
     } else {
@@ -271,5 +390,4 @@ public class MainActivity extends AppCompatActivity {
 
     return true;
   }
-
 }
