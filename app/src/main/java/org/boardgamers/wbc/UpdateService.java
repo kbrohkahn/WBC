@@ -45,6 +45,7 @@ public class UpdateService extends Service {
     int milliHour=60*60*1000;
 
     Calendar calendar=Calendar.getInstance();
+
     MainActivity.currentHour=calendar.get(Calendar.HOUR_OF_DAY);
 
     MainActivity.currentDay=
@@ -57,9 +58,9 @@ public class UpdateService extends Service {
 
     // set calendar to next hour
     calendar.setTimeInMillis(calendar.getTimeInMillis()/milliHour*milliHour+milliHour);
-    //Log.d(TAG, "First execution of clockUpdate: "+calendar.getTime().toString());
 
-    handler.postDelayed(clockUpdate, calendar.getTimeInMillis());
+    long delay=calendar.getTimeInMillis()-Calendar.getInstance().getTimeInMillis();
+    handler.postDelayed(clockUpdate, delay);
 
     SharedPreferences sharedPref=PreferenceManager.getDefaultSharedPreferences(this);
     if (!sharedPref.getBoolean(getResources().getString(R.string.pref_key_notify), false)) {
@@ -73,8 +74,9 @@ public class UpdateService extends Service {
       if (MainActivity.currentDay<0) {
         calendar=firstDayCalendar;
       } else {
+        calendar=Calendar.getInstance();
         int hour=calendar.get(Calendar.HOUR_OF_DAY);
-        if (60-notificationTime<=calendar.get(Calendar.MINUTE)+1) {
+        if (60-notificationTime<=calendar.get(Calendar.MINUTE)) {
           hour++;
         }
 
@@ -83,9 +85,8 @@ public class UpdateService extends Service {
         calendar.set(Calendar.SECOND, 0);
       }
 
-      Log.d(TAG, "First exec of notificationUpdate "+calendar.getTime().toString());
-
-      handler.postDelayed(notificationUpdate, calendar.getTimeInMillis());
+      delay=calendar.getTimeInMillis()-Calendar.getInstance().getTimeInMillis();
+      handler.postDelayed(notificationUpdate, delay);
     }
 
     return super.onStartCommand(intent, flags, startId);

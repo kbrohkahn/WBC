@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
   public static void update() {
     pagerAdapter.getItem(viewPager.getCurrentItem()).refreshAdapter();
-
   }
 
   @Override

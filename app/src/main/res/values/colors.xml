@@ -24,7 +24,7 @@
   <color name="non_tournament">#004688</color>
   <color name="seminar">#6B0B68</color>
   <color name="qualify">#ED2024</color>
-  <color name="divider">#000000</color>
+  <color name="divider">@android:color/darker_gray</color>
 
   <!-- list -->
   <color name="item_focused">@color/secondary</color>
