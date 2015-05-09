@@ -347,24 +347,25 @@ public class EventFragment extends Fragment {
 
     if (note.equalsIgnoreCase(event.note) && (tournament==null || finish==tournament.finish))
       return;
-    Object[] data=new Object[] {event.id, note, event.tournamentID, finish};
+    Object[] data=new Object[] {event.id, note, event.starred, event.tournamentID, finish};
     new SaveDataTask().execute(data);
   }
 
   class SaveDataTask extends AsyncTask<Object, String, String> {
     @Override
     protected String doInBackground(Object... params) {
-      long eventId=(long) params[0];
+      int eventId=(int) params[0];
       String note=(String) params[1];
-      long tournamentId=(long) params[2];
-      int finish=(int) params[3];
+      boolean starred=(boolean) params[2];
+      int tournamentId=(int) params[3];
+      int finish=(int) params[4];
 
       // save data
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getWritableDatabase();
-      dbHelper.updateEventNote(MainActivity.userId, eventId, note);
+      dbHelper.insertUserEventData(MainActivity.userId, eventId, starred, note);
       if (finish>-1) {
-        dbHelper.updateTournamentFinish(MainActivity.userId, tournamentId, finish);
+        dbHelper.insertUserTournamentData(MainActivity.userId, tournamentId, finish);
       }
       dbHelper.close();
 

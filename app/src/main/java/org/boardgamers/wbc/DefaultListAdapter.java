@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import java.util.List;
  * Created by Kevin
  */
 public class DefaultListAdapter extends BaseExpandableListAdapter {
-  private final String TAG="Default Adapter";
+  //private final String TAG="Default Adapter";
 
   private int COLOR_JUNIOR;
   private int COLOR_SEMINAR;
@@ -59,8 +58,6 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     final Event event=(Event) getChild(groupPosition, childPosition);
 
     if (view==null) {
-      Log.d(TAG, "Drawing view for "+event.title+" in group "+String.valueOf(groupPosition));
-
       view=inflater.inflate(R.layout.list_item, parent, false);
 
       int tColor=getTextColor(event);

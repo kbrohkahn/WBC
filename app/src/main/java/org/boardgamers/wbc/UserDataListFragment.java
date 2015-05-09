@@ -21,6 +21,7 @@ public class UserDataListFragment extends DefaultListFragment {
   public static final int EVENTS_INDEX=0;
   public static final int NOTES_INDEX=1;
   public static final int FINISHES_INDEX=2;
+  public static int TOTAL_USER_EVENTS=0;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -187,6 +188,7 @@ public class UserDataListFragment extends DefaultListFragment {
     dbHelper.deleteTournamentEvents(USER_TOURNAMENT_ID);
     dbHelper.close();
 
+    TOTAL_USER_EVENTS=0;
     listAdapter.events.get(0).clear();
 
     refreshAdapter();
@@ -212,6 +214,8 @@ public class UserDataListFragment extends DefaultListFragment {
       List<Tournament> tournamentFinishes=dbHelper.getTournamentsWithFinishes(MainActivity.userId);
 
       dbHelper.close();
+
+      TOTAL_USER_EVENTS=events.get(EVENTS_INDEX).size();
 
       List<Event> eventFinishes=new ArrayList<>();
       for (Tournament tournament : tournamentFinishes) {

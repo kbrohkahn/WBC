@@ -27,7 +27,7 @@ public class SplashScreen extends AppCompatActivity {
     super.onCreate(savedInstanceState);
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
-    //dbHelper.onUpgrade(dbHelper.getWritableDatabase(), 0, 0);
+    //dbHelper.onUpgrade(dbHelper.getWritableDatabase(),0, 0);
     dbHelper.getReadableDatabase();
     int totalEvents=dbHelper.getNumEvents();
     dbHelper.close();
@@ -133,7 +133,7 @@ public class SplashScreen extends AppCompatActivity {
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
       dbHelper.getWritableDatabase();
-      MainActivity.userId=(int) dbHelper.insertUser("My Schedule", "");
+      MainActivity.userId=(int) dbHelper.insertUser(0, "My Schedule", "");
 
       // parse schedule file
       BufferedReader reader=new BufferedReader(isr);
@@ -147,7 +147,7 @@ public class SplashScreen extends AppCompatActivity {
         String line;
         String eventTitle, eClass, format, gm, tempString, location;
         String[] rowData;
-        int eventId=1, tournamentId, index, day, hour, prize;
+        int eventId=0, tournamentId, index, day, hour, prize;
         double duration, totalDuration;
         boolean continuous, qualify, isTournamentEvent;
 
@@ -287,15 +287,14 @@ public class SplashScreen extends AppCompatActivity {
             }
           }
 
-          tournamentId=index+1;
-          if (tournamentId==0) {
+          tournamentId=index;
+          if (tournamentId==-1) {
             tournamentId=tournamentTitles.size();
             tournamentTitles.add(tournamentTitle);
 
             dbHelper
-                .insertTournament(tournamentTitle, tournamentLabel, isTournamentEvent, prize, gm,
-                    eventId);
-            dbHelper.insertUserTournament(MainActivity.userId, tournamentId);
+                .insertTournament(tournamentId, tournamentTitle, tournamentLabel, isTournamentEvent,
+                    prize, gm, eventId);
           }
 
           // Log.d(TAG, String.valueOf(tournamentId)+": "+tournamentTitle
@@ -346,9 +345,8 @@ public class SplashScreen extends AppCompatActivity {
           }
 
           dbHelper
-              .insertEvent(tournamentId, day, hour, eventTitle, eClass, format, qualify, duration,
-                  continuous, totalDuration, location, false);
-          dbHelper.insertUserEvent(MainActivity.userId, eventId);
+              .insertEvent(eventId, tournamentId, day, hour, eventTitle, eClass, format, qualify,
+                  duration, continuous, totalDuration, location);
 
           progressBar.setProgress(eventId);
           eventId++;

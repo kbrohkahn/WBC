@@ -43,16 +43,17 @@ public class SearchSuggestionsProvider extends ContentProvider {
 
     dbHelper.getReadableDatabase();
     Cursor c=dbHelper.getSearchCursor(selectionArgs[0]);
-    dbHelper.close();
 
     String title;
     int id;
     while (c.moveToNext()) {
-      id=c.getInt(c.getColumnIndexOrThrow(WBCDataDbHelper.TournamentEntry._ID));
+      id=c.getInt(c.getColumnIndexOrThrow(WBCDataDbHelper.TournamentEntry.COLUMN_NAME_TOURNAMENT_ID));
       title=c.getString(c.getColumnIndexOrThrow(WBCDataDbHelper.TournamentEntry.COLUMN_NAME_TITLE));
 
       matrixCursor.addRow(new Object[] {id, title,});
     }
+    c.close();
+    dbHelper.close();
 
     return matrixCursor;
   }

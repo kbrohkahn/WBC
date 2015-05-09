@@ -36,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
   private final static String TAG="Main Activity";
   private final String FILENAME="wbcData.txt";
 
-  public static final int PRIMARY_USER_ID=1;
+  public static final int PRIMARY_USER_ID=0;
   public static final int TOTAL_DAYS=9;
-  public static long SELECTED_EVENT_ID=-1;
-  public static long TOTAL_EVENTS;
+  public static int SELECTED_EVENT_ID=-1;
+  public static int TOTAL_EVENTS;
   public static long currentDay;
   public static int currentHour;
   public static int userId;
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "Changing event star for: "+event.title);
 
-        dbHelper.updateEventStarred(userId, event.id, event.starred);
+        dbHelper.insertUserEventData(userId, event.id, event.starred, event.note);
 
         for (int j=0; j<3; j++) {
           if (j!=id) {
