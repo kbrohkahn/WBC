@@ -89,6 +89,7 @@
         <data android:pathPattern=".*\\.txt"/>
       </intent-filter>
     </activity>
+
     <provider
       android:name=".SearchSuggestionsProvider"
       android:authorities="org.boardgamers.wbc.SearchSuggestionsProvider">

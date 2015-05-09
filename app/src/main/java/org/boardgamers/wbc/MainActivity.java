@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
   private final static String TAG="Main Activity";
   private final String FILENAME="wbcData.txt";
 
+  public static final int PRIMARY_USER_ID=1;
   public static final int TOTAL_DAYS=9;
   public static long SELECTED_EVENT_ID=-1;
   public static long TOTAL_EVENTS;
@@ -59,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
 
     Log.d(TAG, "Check 1");
+
+    userId=PreferenceManager.getDefaultSharedPreferences(this)
+        .getInt(getResources().getString(R.string.pref_key_schedule_select), PRIMARY_USER_ID);
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
@@ -104,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
 
     Log.d(TAG, "Check 5");
 
-    SharedPreferences sp=
-        getSharedPreferences(getResources().getString(R.string.sp_file_name), Context.MODE_PRIVATE);
+    SharedPreferences sp=getSharedPreferences(getResources().getString(R.string.user_data_file),
+        Context.MODE_PRIVATE);
     int latestDialogVersion=13;
     int versionCode;
     try {
@@ -296,27 +301,27 @@ public class MainActivity extends AppCompatActivity {
     }
     Log.d(TAG, "Received from fragments");
 
-    String delimitter="~";
-    String sameObject=";";
+    String contentBreak="~~~";
+    String delimitter=";;;";
 
     String outputString="wbc_data_file"+delimitter;
 
-    outputString+="\n"+delimitter;
+    outputString+=contentBreak;
     for (Event event : userEvents) {
-      outputString+=String.valueOf(event.id)+sameObject+event.title+sameObject+event.day+sameObject+
-          event.hour+sameObject+event.duration+sameObject+event.location+delimitter;
+      outputString+=String.valueOf(event.id)+delimitter+event.title+delimitter+event.day+delimitter+
+          event.hour+delimitter+event.duration+delimitter+event.location+delimitter;
     }
-    outputString+="\n"+delimitter;
+    outputString+=contentBreak;
     for (Event event : starred) {
       outputString+=String.valueOf(event.id)+delimitter;
     }
-    outputString+="\n"+delimitter;
+    outputString+=contentBreak;
     for (Event event : eFinishes) {
-      outputString+=String.valueOf(event.tournamentID)+sameObject+event.note+delimitter;
+      outputString+=String.valueOf(event.tournamentID)+delimitter+event.note+delimitter;
     }
-    outputString+="\n"+delimitter;
+    outputString+=contentBreak;
     for (Event event : notes) {
-      outputString+=String.valueOf(event.id)+sameObject+event.note+delimitter;
+      outputString+=String.valueOf(event.id)+delimitter+event.note+delimitter;
     }
 
     File file;

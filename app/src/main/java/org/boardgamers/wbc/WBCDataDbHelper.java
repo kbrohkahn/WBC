@@ -258,6 +258,33 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return sqLiteDatabase.delete(EventEntry.TABLE_NAME, where, null);
   }
 
+  public String[] getUser(int id) {
+    List<String[]> users=getUsers(UserEntry._ID+"="+String.valueOf(id));
+
+    if (users.size()==0) {
+      return null;
+    } else {
+      return users.get(0);
+    }
+  }
+
+  public List<String[]> getUsers(String where) {
+    Cursor cursor=sqLiteDatabase.query(UserEntry.TABLE_NAME, null, where, null, null, null, null);
+
+    List<String[]> users=new ArrayList<>();
+    int id;
+    String name, email;
+    if (cursor.moveToFirst()) {
+      id=cursor.getInt(cursor.getColumnIndex(UserEntry._ID));
+      name=cursor.getString(cursor.getColumnIndex(UserEntry.COLUMN_NAME_NAME));
+      email=cursor.getString(cursor.getColumnIndex(UserEntry.COLUMN_NAME_EMAIL));
+
+      users.add(new String[] {String.valueOf(id), name, email});
+    }
+    cursor.close();
+    return users;
+  }
+
   public int getNumEvents() {
     Cursor cursor=sqLiteDatabase.rawQuery("SELECT COUNT (*) FROM "+EventEntry.TABLE_NAME, null);
     cursor.moveToFirst();

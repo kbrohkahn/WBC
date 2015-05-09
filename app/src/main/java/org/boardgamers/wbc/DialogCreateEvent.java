@@ -54,15 +54,8 @@ public class DialogCreateEvent extends DialogFragment {
 
     hourSpinner=(Spinner) view.findViewById(R.id.ce_hour);
 
-    SharedPreferences settings=getActivity()
-        .getSharedPreferences(getResources().getString(R.string.sp_file_name),
-            Context.MODE_PRIVATE);
-
-    boolean hours24=settings.getBoolean("24_hour", true);
-    int hoursID=(hours24 ? R.array.hours_24 : R.array.hours_12);
-
     ArrayAdapter<CharSequence> hourA=ArrayAdapter
-        .createFromResource(getActivity(), hoursID, android.R.layout.simple_spinner_item);
+        .createFromResource(getActivity(), R.array.hours_24, android.R.layout.simple_spinner_item);
     hourA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     hourSpinner.setAdapter(hourA);
 

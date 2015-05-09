@@ -23,11 +23,7 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
   public ScheduleListAdapter(DefaultListFragment f, List<List<Event>> e, int i) {
     super(f, e, i);
 
-    SharedPreferences settings=f.getActivity()
-        .getSharedPreferences(f.getResources().getString(R.string.sp_file_name),
-            Context.MODE_PRIVATE);
-    int hoursID=(settings.getBoolean("24_hour", true) ? R.array.hours_24 : R.array.hours_12);
-    hours=f.getResources().getStringArray(hoursID);
+    hours=f.getResources().getStringArray(R.array.hours_24);
 
     sections=dayStrings;
   }

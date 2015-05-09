@@ -113,22 +113,20 @@
   <string name="settings_schedule">Schedules</string>
   <string name="settings_schedule_load">Open schedule</string>
   <string name="settings_schedule_load_summary">Load another WBC schedule from file</string>
+  <string name="settings_schedule_select">Select schedule</string>
+  <string name="settings_schedule_save">Save schedule</string>
+  <string name="settings_schedule_save_summary">Save current schedule as your own</string>
 
   <!-- PREFERENCES FILES -->
-  <string name="sp_file_name">SettingsSPFile</string>
-  <string name="sp_notify_starred">notify_starred</string>
-  <string name="sp_notify_type">notify_type</string>
-  <string name="sp_notify_time">notify_time</string>
-  <string name="sp_2014_schedule_version">2014_schedule_version</string>
-  <string name="sp_event_starred">2014_event_starred_</string>
-  <string name="sp_event_note">2014_event_note_</string>
-  <string name="sp_user_event">2014_user_event_</string>
+  <string name="user_data_file">UserDataPrefFile</string>
 
   <!-- PREFERENCE KEYS -->
   <string name="pref_key_notify">notify_starred</string>
   <string name="pref_key_notify_time">notify_time</string>
   <string name="pref_key_notify_type">notify_type</string>
   <string name="pref_key_schedule_load">schedule_load</string>
+  <string name="pref_key_schedule_select">schedule_select</string>
+  <string name="pref_key_schedule_save">schedule_save</string>
 
   <string-array name="settings_notify_type_entries">
     <item>Vibrate</item>

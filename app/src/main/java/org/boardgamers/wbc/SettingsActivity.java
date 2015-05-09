@@ -1,8 +1,10 @@
 package org.boardgamers.wbc;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -11,9 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
   private final String TAG="Settings";
@@ -50,14 +54,32 @@ public class SettingsActivity extends AppCompatActivity {
     }
   }
 
-  void handleSendText(Intent intent) {
+  public void getFile() {
+    Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+    intent.setType("file/*");
+    startActivityForResult(intent, GET_FILE_REQUEST_CODE);
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode==GET_FILE_REQUEST_CODE) {
+      if (resultCode==RESULT_OK) {
+        handleSendText(data);
+      } else {
+        Log.d(TAG, "Bad result");
+      }
+    }
+
+    super.onActivityResult(requestCode, resultCode, data);
+  }
+
+  public void handleSendText(Intent intent) {
     Uri data=intent.getData();
 
     FileInputStream inputStream;
     try {
-
       inputStream=openFileInput(data.getLastPathSegment());
-      StringBuffer fileContent=new StringBuffer("");
+      StringBuilder fileContent=new StringBuilder("");
 
       byte[] buffer=new byte[1024];
       int n;
@@ -65,16 +87,48 @@ public class SettingsActivity extends AppCompatActivity {
         fileContent.append(new String(buffer, 0, n));
       }
 
-      Log.d(TAG, fileContent.toString());
+      if (fileContent.toString().indexOf("wbc_data_file")==0) {
+        new SaveScheduleTask(this).execute(fileContent.toString());
+      } else {
+        Toast.makeText(this, "This is not an authentic WBC schedule file!", Toast.LENGTH_SHORT)
+            .show();
+      }
     } catch (IOException e) {
-
       e.printStackTrace();
+    }
+  }
 
+  class SaveScheduleTask extends AsyncTask<String, Integer, Integer> {
+    private Context context;
+
+    public SaveScheduleTask(Context c) {
+      context=c;
     }
 
+    @Override
+    protected Integer doInBackground(String... params) {
+      String data=params[0];
+
+      String contentBreak="~~~";
+      String delimitter=";;;";
+
+      String[] splitData=data.split(contentBreak);
+
+      // events
+      String[] eventData=splitData[1].split(delimitter);
+
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
+      dbHelper.getWritableDatabase();
+
+      dbHelper.close();
+
+
+      return null;
+    }
   }
 
   public static class SettingsFragment extends PreferenceFragment {
+    private List<String[]> users;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,29 +179,50 @@ public class SettingsActivity extends AppCompatActivity {
       loadSchedule.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-          Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
-          intent.setType("text/plain");
-          //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          startActivityForResult(intent, GET_FILE_REQUEST_CODE);
+          ((SettingsActivity) getActivity()).getFile();
+          return true;
+        }
+      });
+
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+      dbHelper.getReadableDatabase();
+      users=dbHelper.getUsers(null);
+      dbHelper.close();
+
+      Preference selectSchedule=
+          findPreference(getResources().getString(R.string.pref_key_schedule_select));
+      selectSchedule.setSummary("Current: "+users.get(MainActivity.userId-1)[1]);
+      selectSchedule.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+          showSaveScheduleDialog();
+          return true;
+        }
+      });
+      selectSchedule.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+          MainActivity.userId=(int) newValue;
+          preference.setSummary(users.get(MainActivity.userId-1)[1]);
+          return false;
+        }
+      });
+
+      Preference saveSchedule=
+          findPreference(getResources().getString(R.string.pref_key_schedule_save));
+      saveSchedule.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+          showSaveScheduleDialog();
           return true;
         }
       });
 
     }
-  }
 
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (resultCode==-1) {
-      Log.d(TAG, "Bad result");
-    } else {
-      Log.d(TAG, "Good resuilt");
-      if (requestCode==GET_FILE_REQUEST_CODE) {
-        handleSendText(data);
-      }
+    public void showSaveScheduleDialog() {
+      // TODO
     }
-
-    super.onActivityResult(requestCode, resultCode, data);
   }
 
   @Override

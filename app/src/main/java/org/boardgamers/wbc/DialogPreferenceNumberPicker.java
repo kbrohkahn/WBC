@@ -8,10 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
-/**
- * A {@link android.preference.Preference} that displays a number picker as a dialog.
- */
-public class DialogNumberPicker extends DialogPreference {
+public class DialogPreferenceNumberPicker extends DialogPreference {
 
   public static final int MAX_VALUE=60;
   public static final int MIN_VALUE=0;
@@ -21,7 +18,7 @@ public class DialogNumberPicker extends DialogPreference {
 
   int value;
 
-  public DialogNumberPicker(Context context, AttributeSet attrs) {
+  public DialogPreferenceNumberPicker(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 

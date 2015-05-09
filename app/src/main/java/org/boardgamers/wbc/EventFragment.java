@@ -433,7 +433,6 @@ public class EventFragment extends Fragment {
   }
 
   private void startOverlayUpdate() {
-    mapOverlay.setVisibility(View.VISIBLE);
     if (!runnableActive) {
       mapOverlayToggle.setChecked(true);
       runnableActive=true;
