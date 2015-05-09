@@ -133,6 +133,8 @@ public class SplashScreen extends AppCompatActivity {
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
       dbHelper.getWritableDatabase();
+      MainActivity.userId=(int) dbHelper.insertUser("Kevin", "kbkrunner@gmail.com");
+
       // parse schedule file
       BufferedReader reader=new BufferedReader(isr);
       try {
@@ -143,13 +145,12 @@ public class SplashScreen extends AppCompatActivity {
         final String daysForParsing[]=getResources().getStringArray(R.array.daysForParsing);
 
         String line;
-        String identifier, eventTitle, eClass, format, gm, tempString, location;
+        String eventTitle, eClass, format, gm, tempString, location;
         String[] rowData;
-        int eventId=1, index, day, hour, prize;
+        int eventId=1, tournamentId, index, day, hour, prize;
         double duration, totalDuration;
         boolean continuous, qualify, isTournamentEvent;
 
-        long tournamentId;
         String tournamentTitle, tournamentLabel, shortEventTitle="";
         List<String> tournamentTitles=new ArrayList<>();
         while ((line=reader.readLine())!=null) {
@@ -288,10 +289,13 @@ public class SplashScreen extends AppCompatActivity {
 
           tournamentId=index+1;
           if (tournamentId==0) {
-            tournamentId=dbHelper
+            tournamentId=tournamentTitles.size();
+            tournamentTitles.add(tournamentTitle);
+
+            dbHelper
                 .insertTournament(tournamentTitle, tournamentLabel, isTournamentEvent, prize, gm,
                     eventId);
-            tournamentTitles.add(tournamentTitle);
+            dbHelper.insertUserTournament(MainActivity.userId, tournamentId);
           }
 
           // Log.d(TAG, String.valueOf(tournamentId)+": "+tournamentTitle
@@ -341,11 +345,10 @@ public class SplashScreen extends AppCompatActivity {
             eventTitle=eventTitle+" ("+rowData[1]+")";
           }
 
-          identifier=String.valueOf(day*24+hour)+eventTitle;
-
           dbHelper
-              .insertEvent(identifier, tournamentId, day, hour, eventTitle, eClass, format, qualify,
-                  duration, continuous, totalDuration, location, false);
+              .insertEvent(tournamentId, day, hour, eventTitle, eClass, format, qualify, duration,
+                  continuous, totalDuration, location, false);
+          dbHelper.insertUserEvent(MainActivity.userId, eventId);
 
           progressBar.setProgress(eventId);
           eventId++;

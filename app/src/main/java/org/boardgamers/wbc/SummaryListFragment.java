@@ -31,7 +31,7 @@ public class SummaryListFragment extends DefaultListFragment {
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getReadableDatabase();
-      List<Event> tempEvents=dbHelper.getStarredEvents();
+      List<Event> tempEvents=dbHelper.getStarredEvents(MainActivity.userId);
       dbHelper.close();
 
       List<List<Event>> events=listAdapter.events;

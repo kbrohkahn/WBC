@@ -54,7 +54,8 @@ public class UserDataListFragment extends DefaultListFragment {
     dbHelper.getReadableDatabase();
 
     listAdapter.events.remove(EVENTS_INDEX);
-    listAdapter.events.add(EVENTS_INDEX, dbHelper.getTournamentEvents(USER_TOURNAMENT_ID));
+    listAdapter.events
+        .add(EVENTS_INDEX, dbHelper.getTournamentEvents(MainActivity.userId, USER_TOURNAMENT_ID));
 
     dbHelper.close();
 
@@ -99,11 +100,11 @@ public class UserDataListFragment extends DefaultListFragment {
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
     dbHelper.getReadableDatabase();
     if (!noteInList && !note.equalsIgnoreCase("")) {
-      eventNote=dbHelper.getEvent(eventId);
+      eventNote=dbHelper.getEvent(MainActivity.userId, eventId);
     }
 
     if (!finishInList && finish>0) {
-      tournamentFinish=dbHelper.getTournament(tournamentId);
+      tournamentFinish=dbHelper.getTournament(MainActivity.userId, tournamentId);
     }
 
     int index;
@@ -134,8 +135,8 @@ public class UserDataListFragment extends DefaultListFragment {
 
   public Event getEventFromTournament(Tournament tournament) {
     Event event=
-        new Event(tournament.finalEventId, "", tournament.id, 0, 0, tournament.title, "", "", false,
-            0, false, 0, "");
+        new Event(tournament.finalEventId, tournament.id, 0, 0, tournament.title, "", "", false, 0,
+            false, 0, "");
 
     event.note=String.valueOf(tournament.finish);
     return event;
@@ -205,10 +206,10 @@ public class UserDataListFragment extends DefaultListFragment {
       dbHelper.getReadableDatabase();
 
       events=new ArrayList<>();
-      events.add(dbHelper.getTournamentEvents(USER_TOURNAMENT_ID));
-      events.add(dbHelper.getEventsWithNotes());
+      events.add(dbHelper.getTournamentEvents(MainActivity.userId, USER_TOURNAMENT_ID));
+      events.add(dbHelper.getEventsWithNotes(MainActivity.userId));
 
-      List<Tournament> tournamentFinishes=dbHelper.getTournamentsWithFinishes();
+      List<Tournament> tournamentFinishes=dbHelper.getTournamentsWithFinishes(MainActivity.userId);
 
       dbHelper.close();
 

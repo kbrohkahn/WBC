@@ -2,7 +2,6 @@ package org.boardgamers.wbc;
 
 public class Event {
   public long id;
-  public String identifier;
   public long tournamentID;
 
   public int day;
@@ -22,11 +21,10 @@ public class Event {
   public boolean starred;
   public String note;
 
-  public Event(long id, String identifier, long tournamentID, int day, int hour, String title,
+  public Event(long id, long tournamentID, int day, int hour, String title,
                String eClass, String eFormat, boolean qualify, double duration, boolean continuous,
                double totalDuration, String location) {
     this.id=id;
-    this.identifier=identifier;
     this.tournamentID=tournamentID;
 
     this.day=day;

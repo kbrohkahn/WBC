@@ -134,9 +134,9 @@ public class SearchListFragment extends DefaultListFragment {
 
       List<Event> tempEvents;
       if (id>-1) {
-        tempEvents=dbHelper.getTournamentEvents(id);
+        tempEvents=dbHelper.getTournamentEvents(MainActivity.userId, id);
       } else {
-        tempEvents=dbHelper.getEventsFromQuery(query);
+        tempEvents=dbHelper.getEventsFromQuery(MainActivity.userId, query);
       }
       dbHelper.close();
 

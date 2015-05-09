@@ -52,7 +52,7 @@ public class SearchResultActivity extends AppCompatActivity {
       fromEventActivity=false;
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
       dbHelper.getReadableDatabase();
-      Event event=dbHelper.getEvent(MainActivity.SELECTED_EVENT_ID);
+      Event event=dbHelper.getEvent(MainActivity.userId, MainActivity.SELECTED_EVENT_ID);
       dbHelper.close();
 
       SearchListFragment fragment=

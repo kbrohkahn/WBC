@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
   public static long TOTAL_EVENTS;
   public static long currentDay;
   public static int currentHour;
+  public static int userId;
   public static boolean updatingFragments=false;
 
   private static ViewPager viewPager;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
     TOTAL_EVENTS=dbHelper.getNumEvents();
-    int starredEvents=dbHelper.getStarredEvents().size();
+    int starredEvents=dbHelper.getStarredEvents(userId).size();
     dbHelper.close();
 
     Log.d(TAG, "Check 2");
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "Changing event star for: "+event.title);
 
-        dbHelper.updateEventStarred(event.id, event.starred);
+        dbHelper.updateEventStarred(userId, event.id, event.starred);
 
         for (int j=0; j<3; j++) {
           if (j!=id) {

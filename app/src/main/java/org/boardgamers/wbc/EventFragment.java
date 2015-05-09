@@ -188,8 +188,8 @@ public class EventFragment extends Fragment {
     } else {
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getReadableDatabase();
-      event=dbHelper.getEvent(id);
-      tournament=dbHelper.getTournament(event.tournamentID);
+      event=dbHelper.getEvent(MainActivity.userId, id);
+      tournament=dbHelper.getTournament(MainActivity.userId, event.tournamentID);
       dbHelper.close();
 
       if (getActivity() instanceof EventActivity) {
@@ -362,9 +362,9 @@ public class EventFragment extends Fragment {
       // save data
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getWritableDatabase();
-      dbHelper.updateEventNote(eventId, note);
+      dbHelper.updateEventNote(MainActivity.userId, eventId, note);
       if (finish>-1) {
-        dbHelper.updateTournamentFinish(tournamentId, finish);
+        dbHelper.updateTournamentFinish(MainActivity.userId, tournamentId, finish);
       }
       dbHelper.close();
 

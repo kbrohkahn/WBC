@@ -12,7 +12,6 @@ public class DialogEditEvent extends DialogCreateEvent {
   // private final String TAG="WBC EditEventDialog";
 
   List<Event> userEvents;
-  private int oldTime;
   private Event event;
 
   @Override
@@ -29,8 +28,6 @@ public class DialogEditEvent extends DialogCreateEvent {
         break;
       }
     }
-
-    oldTime=event.hour;
 
     hourSpinner.setSelection(event.hour-7);
     durationSpinner.setSelection((int) event.duration-1);

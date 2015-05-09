@@ -36,7 +36,7 @@ public class FilterActivity extends AppCompatActivity {
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
-    tournaments=dbHelper.getAllTournaments();
+    tournaments=dbHelper.getAllTournaments(MainActivity.userId);
     dbHelper.close();
 
     initialVisible=new boolean[tournaments.size()];
@@ -143,7 +143,7 @@ public class FilterActivity extends AppCompatActivity {
     for (int i=0; i<initialVisible.length; i++) {
       tournament=tournaments.get(i);
       if (initialVisible[i]^tournament.visible) {
-        dbHelper.updateTournamentVisible(tournament.id, tournament.visible);
+        dbHelper.updateTournamentVisible(MainActivity.userId, tournament.id, tournament.visible);
       }
     }
     dbHelper.close();

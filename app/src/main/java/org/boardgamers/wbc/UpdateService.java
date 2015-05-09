@@ -95,7 +95,7 @@ public class UpdateService extends Service {
   private void checkEvents() {
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
-    List<Event> starredEvents=dbHelper.getStarredEvents();
+    List<Event> starredEvents=dbHelper.getStarredEvents(MainActivity.userId);
     dbHelper.close();
 
     int hoursIntoConvention=MainActivity.getHoursIntoConvention();
