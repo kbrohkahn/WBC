@@ -27,10 +27,4 @@ public class SearchListAdapter extends DefaultListAdapter {
 
     ((SearchListFragment) fragment).setAllStared();
   }
-
-  @Override
-  public void selectEvent(Event event) {
-    super.selectEvent(event);
-    SearchResultActivity.fromEventActivity=true;
-  }
 }

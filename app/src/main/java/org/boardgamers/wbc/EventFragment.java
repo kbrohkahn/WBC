@@ -29,6 +29,8 @@ import java.io.InputStream;
 public class EventFragment extends Fragment {
   //private final String TAG="Event Fragment";
 
+  private int initialFinish=-1;
+
   private final int[] finishIDs=
       {R.id.ef_finish_0, R.id.ef_finish_1, R.id.ef_finish_2, R.id.ef_finish_3, R.id.ef_finish_4,
           R.id.ef_finish_5, R.id.ef_finish_6};
@@ -189,7 +191,12 @@ public class EventFragment extends Fragment {
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getReadableDatabase();
       event=dbHelper.getEvent(MainActivity.userId, id);
-      tournament=dbHelper.getTournament(MainActivity.userId, event.tournamentID);
+
+      if (event.tournamentID<MainActivity.USER_TOURNAMENT_ID) {
+        tournament=dbHelper.getTournament(MainActivity.userId, event.tournamentID);
+      } else {
+        tournament=null;
+      }
       dbHelper.close();
 
       if (getActivity() instanceof EventActivity) {
@@ -295,7 +302,8 @@ public class EventFragment extends Fragment {
             finishButtons[i].setTypeface(null, Typeface.ITALIC);
           }
         }
-        finishGroup.check(finishIDs[tournament.finish]);
+        initialFinish=tournament.finish;
+        finishGroup.check(finishIDs[initialFinish]);
       } else {
         hideNonTournamentViews();
       }
@@ -347,39 +355,18 @@ public class EventFragment extends Fragment {
 
     if (note.equalsIgnoreCase(event.note) && (tournament==null || finish==tournament.finish))
       return;
-    Object[] data=new Object[] {event.id, note, event.starred, event.tournamentID, finish};
-    new SaveDataTask().execute(data);
-  }
 
-  class SaveDataTask extends AsyncTask<Object, String, String> {
-    @Override
-    protected String doInBackground(Object... params) {
-      int eventId=(int) params[0];
-      String note=(String) params[1];
-      boolean starred=(boolean) params[2];
-      int tournamentId=(int) params[3];
-      int finish=(int) params[4];
-
-      // save data
-      WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
-      dbHelper.getWritableDatabase();
-      dbHelper.insertUserEventData(MainActivity.userId, eventId, starred, note);
-      if (finish>-1) {
-        dbHelper.insertUserTournamentData(MainActivity.userId, tournamentId, finish);
-      }
-      dbHelper.close();
-
-      MainActivity.updateUserData(eventId, note, tournamentId, finish);
-
-      return null;
+    // save data
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+    dbHelper.getWritableDatabase();
+    dbHelper.insertUserEventData(MainActivity.userId, event.id, event.starred, note);
+    if (finish>-1 && finish!=initialFinish) {
+      dbHelper.insertUserTournamentData(MainActivity.userId, event.tournamentID, finish);
     }
+    dbHelper.close();
 
-    @Override
-    protected void onPostExecute(String s) {
-      MainActivity.update();
-
-      super.onPostExecute(s);
-    }
+    MainActivity.updateUserData(event.id, note, event.tournamentID, finish);
+    MainActivity.update();
   }
 
   @Override

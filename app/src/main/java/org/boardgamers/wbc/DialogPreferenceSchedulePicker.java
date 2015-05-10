@@ -26,12 +26,6 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
     View view=inflater.inflate(R.layout.dialog_radio, null);
 
     group=(RadioGroup) view.findViewById(R.id.dialog_radio_group);
-    group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-      }
-    });
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(getContext());
     dbHelper.getReadableDatabase();
@@ -46,7 +40,7 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
       group.addView(button);
     }
 
-    value=getPersistedInt(MainActivity.PRIMARY_USER_ID);
+    value=getPersistedInt(MainActivity.userId);
     group.check(value);
 
     return view;
@@ -55,7 +49,7 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
   @Override
   protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
     if (restorePersistedValue) {
-      value=getPersistedInt(MainActivity.PRIMARY_USER_ID);
+      value=getPersistedInt(MainActivity.userId);
     } else {
       value=(Integer) defaultValue;
       persistInt(value);

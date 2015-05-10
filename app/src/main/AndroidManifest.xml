@@ -78,16 +78,6 @@
     <activity
       android:name=".SettingsActivity"
       android:label="@string/activity_settings">
-      <intent-filter>
-        <data android:mimeType="text/plain"/>
-        <action android:name="android.intent.action.VIEW"/>
-
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
-
-        <data android:scheme="file"/>
-        <data android:pathPattern=".*\\.txt"/>
-      </intent-filter>
     </activity>
 
     <provider

@@ -22,8 +22,6 @@ import android.widget.Toast;
 public class SearchResultActivity extends AppCompatActivity {
   //private final String TAG="Search Activity";
 
-  public static boolean fromEventActivity=false;
-
   public static ProgressBar progressBar;
 
   @Override
@@ -42,23 +40,6 @@ public class SearchResultActivity extends AppCompatActivity {
     }
 
     handleIntent(getIntent());
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-
-    if (fromEventActivity) {
-      fromEventActivity=false;
-      WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
-      dbHelper.getReadableDatabase();
-      Event event=dbHelper.getEvent(MainActivity.userId, MainActivity.selectedEventId);
-      dbHelper.close();
-
-      SearchListFragment fragment=
-          (SearchListFragment) getSupportFragmentManager().findFragmentById(R.id.searchFragment);
-      fragment.changeEventStar(event);
-    }
   }
 
   @Override
@@ -85,7 +66,7 @@ public class SearchResultActivity extends AppCompatActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.menu_light_main, menu);
+    inflater.inflate(R.menu.menu_light_search, menu);
 
     SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
     final SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
@@ -145,18 +126,6 @@ public class SearchResultActivity extends AppCompatActivity {
     if (item.getItemId()==android.R.id.home) {
       finish();
       return true;
-    } else if (item.getItemId()==R.id.menu_map) {
-      startActivity(new Intent(this, MapActivity.class));
-    } else if (item.getItemId()==R.id.menu_help) {
-      startActivity(new Intent(this, HelpActivity.class));
-    } else if (item.getItemId()==R.id.menu_about) {
-      startActivity(new Intent(this, AboutActivity.class));
-      //    } else if (item.getItemId()==R.id.menu_filter) {
-      //      startActivity(new Intent(this, FilterActivity.class));
-    } else if (item.getItemId()==R.id.menu_settings) {
-      startActivity(new Intent(this, SettingsActivity.class));
-    } else {
-      return super.onOptionsItemSelected(item);
     }
 
     return true;

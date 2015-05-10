@@ -57,11 +57,17 @@ public class EventActivity extends AppCompatActivity {
       event.starred=!event.starred;
 
       invalidateOptionsMenu();
-    
+
       Event[] events={event};
       MainActivity.changeEventStar(this, events, 3);
     } else {
       Log.d(TAG, "ERROR: Could not get event fragment");
+    }
+
+    SearchListFragment fragment=
+        (SearchListFragment) getSupportFragmentManager().findFragmentById(R.id.searchFragment);
+    if (fragment!=null) {
+      fragment.changeEventStar(event);
     }
   }
 

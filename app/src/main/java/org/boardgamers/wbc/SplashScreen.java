@@ -133,7 +133,7 @@ public class SplashScreen extends AppCompatActivity {
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
       dbHelper.getWritableDatabase();
-      MainActivity.userId=(int) dbHelper.insertUser(0, "My Schedule", "");
+      MainActivity.userId=(int) dbHelper.insertUser(MainActivity.PRIMARY_USER_ID, "My Schedule", "");
 
       // parse schedule file
       BufferedReader reader=new BufferedReader(isr);

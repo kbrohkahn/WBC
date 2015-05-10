@@ -14,6 +14,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -192,19 +194,12 @@ public class SettingsActivity extends AppCompatActivity {
 
       Preference selectSchedule=
           findPreference(getResources().getString(R.string.pref_key_schedule_select));
-      selectSchedule.setSummary("Current: "+users.get(MainActivity.userId-1)[1]);
-      selectSchedule.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-          showSaveScheduleDialog();
-          return true;
-        }
-      });
+      selectSchedule.setSummary("Current: "+users.get(MainActivity.userId)[1]);
       selectSchedule.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
           MainActivity.userId=(int) newValue;
-          preference.setSummary(users.get(MainActivity.userId-1)[1]);
+          preference.setSummary(users.get(MainActivity.userId)[1]);
           return true;
         }
       });
@@ -279,15 +274,49 @@ public class SettingsActivity extends AppCompatActivity {
   }
 
   @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater=getMenuInflater();
+    inflater.inflate(R.menu.menu_light_settings, menu);
+
+    return true;
+  }
+
+  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int id=item.getItemId();
 
     if (id==android.R.id.home) {
       finish();
       return true;
+    } else if (id==R.id.menu_reset) {
+      showResetDialog();
+      return true;
     } else {
       return super.onOptionsItemSelected(item);
     }
+  }
+
+  public void showResetDialog() {
+    AlertDialog.Builder builder=new AlertDialog.Builder(this);
+    builder.setTitle(R.string.reset).setMessage(R.string.reset_message)
+        .setPositiveButton("Yes, reset", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            resetPrefs();
+          }
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+      }
+    });
+
+    builder.create().show();
+  }
+
+  public void resetPrefs() {
+
+    PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
   }
 
   @Override

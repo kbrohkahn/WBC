@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     userId=PreferenceManager.getDefaultSharedPreferences(this)
         .getInt(getResources().getString(R.string.pref_key_schedule_select), PRIMARY_USER_ID);
 
+
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
     totalEvents=dbHelper.getNumEvents();

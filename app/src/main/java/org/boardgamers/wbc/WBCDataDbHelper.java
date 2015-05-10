@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
  * Database used for storing all data
  */
 public class WBCDataDbHelper extends SQLiteOpenHelper {
-  private final String TAG="Database";
+  //private final String TAG="Database";
 
   public static final int DATABASE_VERSION=1;
 
@@ -281,7 +280,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
         UserEventDataEntry.TABLE_NAME+"."+UserEventDataEntry.COLUMN_NAME_EVENT_ID+" WHERE "+
         where+" ORDER BY "+sortOrder;
 
-    Log.d(TAG, "Full query: "+query);
+    //Log.d(TAG, "Full query: "+query);
 
     Cursor cursor=sqLiteDatabase.rawQuery(query, null);
 
@@ -397,7 +396,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
         UserEventDataEntry.TABLE_NAME+"."+UserEventDataEntry.COLUMN_NAME_EVENT_ID+" WHERE "+
         where+" ORDER BY "+sortOrder;
 
-    Log.d(TAG, "Full query: "+query);
+    //Log.d(TAG, "Full query: "+query);
 
     Cursor cursor=sqLiteDatabase.rawQuery(query, null);
 
@@ -489,7 +488,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
         TournamentEntry.COLUMN_NAME_TOURNAMENT_ID+"="+UserTournamentDataEntry.TABLE_NAME+"."+
         UserTournamentDataEntry.COLUMN_NAME_TOURNAMENT_ID+" WHERE "+where+" ORDER BY "+sortOrder;
 
-    Log.d(TAG, "Full query: "+query);
+    //Log.d(TAG, "Full query: "+query);
 
     Cursor cursor=sqLiteDatabase.rawQuery(query, null);
 
@@ -582,7 +581,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     int id;
     String name, email;
     if (cursor.moveToFirst()) {
-      id=cursor.getInt(cursor.getColumnIndex(UserEntry._ID));
+      id=cursor.getInt(cursor.getColumnIndex(UserEntry.COLUMN_NAME_USER_ID));
       name=cursor.getString(cursor.getColumnIndex(UserEntry.COLUMN_NAME_NAME));
       email=cursor.getString(cursor.getColumnIndex(UserEntry.COLUMN_NAME_EMAIL));
 
@@ -653,7 +652,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
         UserEventDataEntry.COLUMN_USER_ID+"="+String.valueOf(userId);
     long result=sqLiteDatabase.update(UserEventDataEntry.TABLE_NAME, values, where, null);
 
-    Log.d(TAG, String.valueOf(result));
     if (result==0) {
       values.put(UserEventDataEntry.COLUMN_USER_ID, userId);
       values.put(UserEventDataEntry.COLUMN_NAME_EVENT_ID, eventId);

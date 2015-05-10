@@ -9,7 +9,7 @@
 
   <!-- COMMON AND MENUS -->
   <string name="ok">Ok</string>
-  <string name="edit">Edit</string>
+    <string name="edit">Edit</string>
   <string name="delete">Delete</string>
   <string name="close">Close</string>
   <string name="create_event">Create Event</string>
@@ -29,6 +29,8 @@
   <string name="search_hint">Search title or format</string>
   <string name="changes_dialog_title">Schedule Changes</string>
   <string name="initial_dialog_title">Welcome</string>
+  <string name="reset">Reset</string>
+  <string name="reset_message">Are you sure you want to reset all your settings?</string>
   <string
     name="initial_dialog_text">Star events in the full schedule to add them to your schedule</string>
   <string name="initial_load_title">Saving events on device</string>
