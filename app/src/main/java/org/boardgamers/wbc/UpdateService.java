@@ -45,9 +45,7 @@ public class UpdateService extends Service {
     int milliHour=60*60*1000;
 
     Calendar calendar=Calendar.getInstance();
-
     MainActivity.currentHour=calendar.get(Calendar.HOUR_OF_DAY);
-
     MainActivity.currentDay=
         (firstDayCalendar.getTimeInMillis()-calendar.getTimeInMillis())/(milliHour*24);
 
@@ -58,7 +56,6 @@ public class UpdateService extends Service {
 
     // set calendar to next hour
     calendar.setTimeInMillis(calendar.getTimeInMillis()/milliHour*milliHour+milliHour);
-
     long delay=calendar.getTimeInMillis()-Calendar.getInstance().getTimeInMillis();
     handler.postDelayed(clockUpdate, delay);
 
@@ -79,16 +76,13 @@ public class UpdateService extends Service {
         if (60-notificationTime<=calendar.get(Calendar.MINUTE)) {
           hour++;
         }
-
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, 60-notificationTime);
         calendar.set(Calendar.SECOND, 0);
       }
-
       delay=calendar.getTimeInMillis()-Calendar.getInstance().getTimeInMillis();
       handler.postDelayed(notificationUpdate, delay);
     }
-
     return super.onStartCommand(intent, flags, startId);
   }
 

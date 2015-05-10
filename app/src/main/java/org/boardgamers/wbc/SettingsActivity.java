@@ -315,8 +315,8 @@ public class SettingsActivity extends AppCompatActivity {
   }
 
   public void resetPrefs() {
-
     PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
+    recreate();
   }
 
   @Override
