@@ -322,18 +322,16 @@ public class MainActivity extends AppCompatActivity {
         starred.add(event);
       }
     }
-    List<Event> user=new ArrayList<>();
-    for (List<Event> events : starredGroups) {
-      for (Event event : events) {
-        starred.add(event);
-      }
-    }
+
     Log.d(TAG, "Received from fragments");
 
     String contentBreak="~~~";
     String delimitter=";;;";
 
     String outputString="wbc_data_file"+delimitter;
+
+    outputString+=contentBreak;
+    outputString+=fileName;
 
     outputString+=contentBreak;
     for (Event event : userEvents) {
@@ -357,7 +355,11 @@ public class MainActivity extends AppCompatActivity {
     if (isExternalStorageWritable()) {
       File sdCard=Environment.getExternalStorageDirectory();
       File dir=new File(sdCard.getAbsolutePath()+"/WBC/");
-      dir.mkdirs();
+
+      if (dir.mkdirs()) {
+        Log.d(TAG, "Successfully created directory");
+      }
+
       file=new File(dir, fileName);
     } else {
       file=new File(getCacheDir(), fileName);

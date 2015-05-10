@@ -265,8 +265,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   public List<Event> getUserEvents(int uId, String where) {
     String sortOrder=
         UserCreatedEventEntry.COLUMN_NAME_DAY+" ASC, "+UserCreatedEventEntry.COLUMN_NAME_HOUR+
-            " ASC, "+
-            UserCreatedEventEntry.COLUMN_NAME_TITLE+" ASC";
+            " ASC, "+UserCreatedEventEntry.COLUMN_NAME_TITLE+" ASC";
 
     if (!where.equalsIgnoreCase("")) {
       where+=" AND ";
@@ -309,8 +308,8 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
           cursor.getInt(cursor.getColumnIndexOrThrow(UserEventDataEntry.COLUMN_NAME_STARRED))==1;
       note=cursor.getString(cursor.getColumnIndexOrThrow(UserEventDataEntry.COLUMN_NAME_NOTE));
 
-      event=new Event(id, MainActivity.USER_TOURNAMENT_ID+uId, day, hour, title, "", "", false, duration, false, duration,
-          location);
+      event=new Event(id, MainActivity.USER_TOURNAMENT_ID+uId, day, hour, title, "", "", false,
+          duration, false, duration, location);
 
       event.starred=starred;
       event.note=note;
@@ -325,25 +324,36 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   public List<Event> getAllEvents(int userId) {
     String where="";
-    return getEvents(userId, where);
+    List<Event> events=getUserEvents(userId, where);
+    events.addAll(getEvents(userId, where));
+    return events;
   }
 
   public List<Event> getStarredEvents(int userId) {
     String where=UserEventDataEntry.TABLE_NAME+"."+UserEventDataEntry.COLUMN_NAME_STARRED+"=1";
-    return getEvents(userId, where);
+    List<Event> events=getUserEvents(userId, where);
+    events.addAll(getEvents(userId, where));
+    return events;
   }
 
   public List<Event> getEventsWithNotes(int userId) {
     String where=UserEventDataEntry.TABLE_NAME+"."+UserEventDataEntry.COLUMN_NAME_NOTE+"!='' AND "+
         UserEventDataEntry.TABLE_NAME+"."+UserEventDataEntry.COLUMN_NAME_NOTE+" IS NOT NULL";
-    return getEvents(userId, where);
+    List<Event> events=getUserEvents(userId, where);
+    events.addAll(getEvents(userId, where));
+    return events;
   }
 
   public List<Event> getEventsFromQuery(int userId, String query) {
     String where=
-        "("+EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_NAME_TITLE+" LIKE '%"+query+"%' OR "+
-            EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_NAME_FORMAT+" LIKE '%"+query+"%')";
-    return getEvents(userId, where);
+        UserCreatedEventEntry.TABLE_NAME+"."+UserCreatedEventEntry.COLUMN_NAME_TITLE+" LIKE '%"+
+            query+"%'";
+    List<Event> events=getUserEvents(userId, where);
+    where="("+EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_NAME_TITLE+" LIKE '%"+query+"%' OR "+
+        EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_NAME_FORMAT+" LIKE '%"+query+"%')";
+
+    events.addAll(getEvents(userId, where));
+    return events;
   }
 
   public List<Event> getTournamentEvents(int userId, long tournamentId) {
@@ -354,8 +364,12 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   public Event getEvent(int userId, long eventId) {
     String where=
-        EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_NAME_EVENT_ID+"="+String.valueOf(eventId);
-    List<Event> events=getEvents(userId, where);
+        UserCreatedEventEntry.TABLE_NAME+"."+UserCreatedEventEntry.COLUMN_NAME_EVENT_ID+"="+
+            String.valueOf(eventId);
+    List<Event> events=getUserEvents(userId, where);
+    where=EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_NAME_EVENT_ID+"="+String.valueOf(eventId);
+
+    events.addAll(getEvents(userId, where));
 
     if (events.size()==0) {
       return null;
@@ -365,9 +379,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   }
 
   public List<Event> getEvents(int uId, String whereClause) {
-    // add user events first
-    List<Event> events=getUserEvents(uId, whereClause);
-
     String sortOrder=EventEntry.COLUMN_NAME_DAY+" ASC, "+EventEntry.COLUMN_NAME_HOUR+" ASC, "+
         EventEntry.COLUMN_NAME_QUALIFY+" ASC, "+EventEntry.COLUMN_NAME_TITLE+" ASC";
 
@@ -398,6 +409,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     cursor.moveToFirst();
     cursor.moveToPrevious();
 
+    List<Event> events=new ArrayList<>();
     while (cursor.moveToNext()) {
       id=cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_NAME_EVENT_ID));
       tournamentId=
