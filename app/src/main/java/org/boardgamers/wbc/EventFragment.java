@@ -138,7 +138,7 @@ public class EventFragment extends Fragment {
       finishButtons[i]=(RadioButton) view.findViewById(finishIDs[i]);
     }
 
-    setEvent(MainActivity.SELECTED_EVENT_ID);
+    setEvent(MainActivity.selectedEventId);
     return view;
   }
 
@@ -333,7 +333,7 @@ public class EventFragment extends Fragment {
     String note=noteET.getText().toString();
     int finish;
 
-    if (event.tournamentID==UserDataListFragment.USER_TOURNAMENT_ID || !tournament.isTournament) {
+    if (event.tournamentID==MainActivity.USER_TOURNAMENT_ID || !tournament.isTournament) {
       finish=-1;
     } else {
       finish=0;

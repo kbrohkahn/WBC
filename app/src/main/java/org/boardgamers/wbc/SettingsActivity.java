@@ -1,6 +1,7 @@
 package org.boardgamers.wbc;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,10 +22,11 @@ import java.io.IOException;
 import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
-  private final String TAG="Settings";
+  private static final String TAG="Settings";
 
-  public static final int GET_FILE_REQUEST_CODE=0;
-  public static boolean notifyChanged=false;
+  private static final int GET_FILE_REQUEST_CODE=0;
+  private static boolean overwrite;
+  private static boolean notifyChanged=false;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -122,7 +125,6 @@ public class SettingsActivity extends AppCompatActivity {
 
       dbHelper.close();
 
-
       return null;
     }
   }
@@ -143,7 +145,7 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
           notifyChanged=true;
-          return false;
+          return true;
         }
       });
 
@@ -154,8 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
           notifyChanged=true;
-          preference.setSummary(String.valueOf(newValue));
-          return false;
+          return true;
         }
       });
 
@@ -170,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity {
         public boolean onPreferenceChange(Preference preference, Object newValue) {
           notifyChanged=true;
           preference.setSummary(notifyTypeEntries[Integer.valueOf((String) newValue)]);
-          return false;
+          return true;
         }
       });
 
@@ -204,7 +205,7 @@ public class SettingsActivity extends AppCompatActivity {
         public boolean onPreferenceChange(Preference preference, Object newValue) {
           MainActivity.userId=(int) newValue;
           preference.setSummary(users.get(MainActivity.userId-1)[1]);
-          return false;
+          return true;
         }
       });
 
@@ -221,7 +222,59 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void showSaveScheduleDialog() {
-      // TODO
+      String newSchedule=users.get(MainActivity.userId)[1];
+      String mySchedule=users.get(0)[1];
+
+      String[] choices=new String[] {"Overwrite "+mySchedule, "Merge with "+mySchedule};
+
+      AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+      builder.setTitle(getResources().getString(R.string.settings_schedule_save))
+          .setSingleChoiceItems(choices, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              overwrite=which==0;
+            }
+          }).setMessage("How do you want to merge the schedule "+newSchedule+
+          "?").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          ((SettingsActivity) getActivity()).mergeSchedule();
+          dialog.dismiss();
+        }
+      }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          dialog.dismiss();
+        }
+      });
+      builder.create().show();
+    }
+  }
+
+  public void mergeSchedule() {
+    new MergeScheduleTask(this).execute(0, 0, 0);
+  }
+
+  class MergeScheduleTask extends AsyncTask<Integer, Integer, Integer> {
+    private Context context;
+
+    public MergeScheduleTask(Context c) {
+      context=c;
+    }
+
+    @Override
+    protected Integer doInBackground(Integer... params) {
+      int userId=MainActivity.userId;
+
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
+      dbHelper.getWritableDatabase();
+      if (overwrite) {
+        dbHelper.deleteUserData(userId);
+      }
+      dbHelper.mergeUserData(userId);
+      dbHelper.close();
+
+      return null;
     }
   }
 
@@ -239,10 +292,11 @@ public class SettingsActivity extends AppCompatActivity {
 
   @Override
   public void onDestroy() {
-    Intent intent=new Intent(this, UpdateService.class);
-
-    stopService(intent);
-    startService(intent);
+    if (notifyChanged) {
+      Intent intent=new Intent(this, UpdateService.class);
+      stopService(intent);
+      startService(intent);
+    }
 
     super.onDestroy();
   }

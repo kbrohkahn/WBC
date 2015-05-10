@@ -112,7 +112,7 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     boolean ended=event.day*24+event.hour+event.totalDuration<=hoursIntoConvention;
     boolean happening=started && !ended;
 
-    if (event.id==MainActivity.SELECTED_EVENT_ID) {
+    if (event.id==MainActivity.selectedEventId) {
       view.setBackgroundResource(R.drawable.selected);
     } else if (childPosition%2==0) {
       if (ended) {
@@ -140,12 +140,12 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
         .findFragmentById(R.id.eventFragment);
     if (eventFragment!=null) {
       // don't call setEvent if it's the same event
-      if (MainActivity.SELECTED_EVENT_ID!=event.id) {
+      if (MainActivity.selectedEventId!=event.id) {
         eventFragment.setEvent(event.id);
-        MainActivity.SELECTED_EVENT_ID=event.id;
+        MainActivity.selectedEventId=event.id;
       }
     } else {
-      MainActivity.SELECTED_EVENT_ID=event.id;
+      MainActivity.selectedEventId=event.id;
       Intent intent=new Intent(fragment.getActivity(), EventActivity.class);
       fragment.getActivity().startActivity(intent);
     }

@@ -23,7 +23,7 @@ public class DialogEditEvent extends DialogCreateEvent {
     daysLL.setVisibility(View.GONE);
 
     for (Event temp : userEvents) {
-      if (temp.id==MainActivity.SELECTED_EVENT_ID) {
+      if (temp.id==MainActivity.selectedEventId) {
         event=temp;
         break;
       }
@@ -56,7 +56,7 @@ public class DialogEditEvent extends DialogCreateEvent {
 
     int index=0;
     for (; index<userEvents.size(); index++) {
-      if (userEvents.get(index).id==MainActivity.SELECTED_EVENT_ID) {
+      if (userEvents.get(index).id==MainActivity.selectedEventId) {
         break;
       }
     }

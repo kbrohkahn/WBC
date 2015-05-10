@@ -98,17 +98,16 @@ public class DialogCreateEvent extends DialogFragment {
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
     dbHelper.getWritableDatabase();
 
-    int id=MainActivity.TOTAL_EVENTS+UserDataListFragment.TOTAL_USER_EVENTS;
+    int id=MainActivity.totalEvents+UserDataListFragment.TOTAL_USER_EVENTS;
     for (int day=0; day<days.length; day++) {
       if (days[day].isChecked()) {
-        dbHelper.insertEvent(id, UserDataListFragment.USER_TOURNAMENT_ID, day, hour, title, "", "",
-            false, duration, false, duration, location);
+        dbHelper.insertUserEvent(id, MainActivity.userId, title, day, hour, duration, location);
         UserDataListFragment.TOTAL_USER_EVENTS++;
         id++;
       }
     }
     dbHelper.close();
-    MainActivity.SELECTED_EVENT_ID=id;
+    MainActivity.selectedEventId=id;
     ((UserDataListFragment) getTargetFragment()).reloadUserEvents();
   }
 }

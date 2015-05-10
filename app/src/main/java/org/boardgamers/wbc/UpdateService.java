@@ -103,7 +103,7 @@ public class UpdateService extends Service {
     String eventsString="";
     for (Event event : starredEvents) {
       if (hoursIntoConvention+1==event.day*24+event.hour) {
-        MainActivity.SELECTED_EVENT_ID=event.id;
+        MainActivity.selectedEventId=event.id;
         eventsString+=event.title+", ";
       }
     }

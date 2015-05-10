@@ -3,6 +3,7 @@ package org.boardgamers.wbc;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,12 +37,12 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
   private final static String TAG="Main Activity";
-  private final String FILENAME="wbcData.txt";
 
   public static final int PRIMARY_USER_ID=0;
   public static final int TOTAL_DAYS=9;
-  public static int SELECTED_EVENT_ID=-1;
-  public static int TOTAL_EVENTS;
+  public static final int USER_TOURNAMENT_ID=1000;
+  public static int selectedEventId=-1;
+  public static int totalEvents;
   public static long currentDay;
   public static int currentHour;
   public static int userId;
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
-    TOTAL_EVENTS=dbHelper.getNumEvents();
+    totalEvents=dbHelper.getNumEvents();
     int starredEvents=dbHelper.getStarredEvents(userId).size();
     dbHelper.close();
 
@@ -261,6 +264,32 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
+  public void openShareDialog() {
+    AlertDialog.Builder builder=new AlertDialog.Builder(this);
+
+    View dialogView=getLayoutInflater().inflate(R.layout.dialog_edit_text, null);
+
+    final EditText editText=(EditText) dialogView.findViewById(R.id.dialog_edit_text);
+    editText.getText().clear();
+
+    builder.setView(dialogView);
+
+    builder.setTitle(R.string.file_name_title).setMessage(R.string.file_name_message)
+        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            share(editText.getText().toString());
+            dialog.dismiss();
+          }
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+      }
+    });
+    builder.create().show();
+  }
+
   public void startSearchActivity(int id, String title) {
     Intent intent=new Intent(this, SearchResultActivity.class);
     intent.putExtra("query_title", title);
@@ -268,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
     startActivity(intent);
   }
 
-  public void share() {
+  public void share(String fileName) {
     Log.d(TAG, "Share start");
     //    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     //    dbHelper.getReadableDatabase();
@@ -329,9 +358,9 @@ public class MainActivity extends AppCompatActivity {
       File sdCard=Environment.getExternalStorageDirectory();
       File dir=new File(sdCard.getAbsolutePath()+"/WBC/");
       dir.mkdirs();
-      file=new File(dir, FILENAME);
+      file=new File(dir, fileName);
     } else {
-      file=new File(getCacheDir(), FILENAME);
+      file=new File(getCacheDir(), fileName);
     }
 
     Log.d(TAG, "File location: "+file.getAbsolutePath());
@@ -381,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
     if (item.getItemId()==R.id.menu_map) {
       startActivity(new Intent(this, MapActivity.class));
     } else if (item.getItemId()==R.id.menu_share) {
-      share();
+      openShareDialog();
     } else if (item.getItemId()==R.id.menu_help) {
       startActivity(new Intent(this, HelpActivity.class));
     } else if (item.getItemId()==R.id.menu_about) {

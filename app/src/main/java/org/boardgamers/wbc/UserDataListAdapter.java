@@ -2,7 +2,6 @@ package org.boardgamers.wbc;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -107,7 +106,8 @@ public class UserDataListAdapter extends DefaultListAdapter {
     UserDataListFragment.TOTAL_USER_EVENTS--;
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(fragment.getActivity());
     dbHelper.getWritableDatabase();
-    dbHelper.deleteEvent(events.get(UserDataListFragment.EVENTS_INDEX).get(index).id);
+    dbHelper.deleteUserEvent(MainActivity.userId,
+        events.get(UserDataListFragment.EVENTS_INDEX).get(index).id);
     dbHelper.close();
   }
 }

@@ -15,9 +15,8 @@ import java.util.List;
  * Fragment containing user's WBC data, including tournament finishes, help notes, and created events
  */
 public class UserDataListFragment extends DefaultListFragment {
-  private final String TAG="My WBC Data Activity";
+  //private final String TAG="My WBC Data Activity";
 
-  public static final int USER_TOURNAMENT_ID=1000;
   public static final int EVENTS_INDEX=0;
   public static final int NOTES_INDEX=1;
   public static final int FINISHES_INDEX=2;
@@ -55,8 +54,7 @@ public class UserDataListFragment extends DefaultListFragment {
     dbHelper.getReadableDatabase();
 
     listAdapter.events.remove(EVENTS_INDEX);
-    listAdapter.events
-        .add(EVENTS_INDEX, dbHelper.getTournamentEvents(MainActivity.userId, USER_TOURNAMENT_ID));
+    listAdapter.events.add(EVENTS_INDEX, dbHelper.getUserEvents(MainActivity.userId, ""));
 
     dbHelper.close();
 
@@ -148,11 +146,11 @@ public class UserDataListFragment extends DefaultListFragment {
     return R.layout.user_data;
   }
 
-  public void editEvent(int index) {
-    MainActivity.SELECTED_EVENT_ID=index;
-    DialogEditEvent editNameDialog=new DialogEditEvent();
-    editNameDialog.show(getFragmentManager(), "edit_event_dialog");
-  }
+  //  public void editEvent(int index) {
+  //    MainActivity.selectedEventId=index;
+  //    DialogEditEvent editNameDialog=new DialogEditEvent();
+  //    editNameDialog.show(getFragmentManager(), "edit_event_dialog");
+  //  }
 
   public void showCreateDialog() {
     DialogCreateEvent dialog=new DialogCreateEvent();
@@ -185,7 +183,7 @@ public class UserDataListFragment extends DefaultListFragment {
   public void deleteAllEvents() {
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
     dbHelper.getWritableDatabase();
-    dbHelper.deleteTournamentEvents(USER_TOURNAMENT_ID);
+    dbHelper.deleteAllUserEvents(MainActivity.userId);
     dbHelper.close();
 
     TOTAL_USER_EVENTS=0;
@@ -208,7 +206,7 @@ public class UserDataListFragment extends DefaultListFragment {
       dbHelper.getReadableDatabase();
 
       events=new ArrayList<>();
-      events.add(dbHelper.getTournamentEvents(MainActivity.userId, USER_TOURNAMENT_ID));
+      events.add(dbHelper.getUserEvents(MainActivity.userId, ""));
       events.add(dbHelper.getEventsWithNotes(MainActivity.userId));
 
       List<Tournament> tournamentFinishes=dbHelper.getTournamentsWithFinishes(MainActivity.userId);

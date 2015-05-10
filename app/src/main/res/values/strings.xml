@@ -8,6 +8,7 @@
   <string name="notification_title">WBC: Events starting soon</string>
 
   <!-- COMMON AND MENUS -->
+  <string name="ok">Ok</string>
   <string name="edit">Edit</string>
   <string name="delete">Delete</string>
   <string name="close">Close</string>
@@ -31,6 +32,9 @@
   <string
     name="initial_dialog_text">Star events in the full schedule to add them to your schedule</string>
   <string name="initial_load_title">Saving events on device</string>
+  <string name="file_name_title">Schedule name</string>
+  <string name="file_name_et_hint">Schedule name</string>
+  <string name="file_name_message">Enter a schedule name for others to identify your schedule </string>
 
   <!-- ACTIVITY TITLES -->
   <string name="activity_tournament">Tournament</string>
@@ -85,7 +89,6 @@
   <string name="sixth">6th</string>
   <string name="map_overlay_on">Room showing</string>
   <string name="map_overlay_off">Room hidden</string>
-
 
   <!-- CREATE EVENT DIALOG -->
   <string name="ce_days">Days (must have at least 1)</string>
