@@ -103,7 +103,6 @@ public class UserDataListAdapter extends DefaultListAdapter {
   }
 
   public void deleteEvent(int index) {
-    UserDataListFragment.TOTAL_USER_EVENTS--;
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(fragment.getActivity());
     dbHelper.getWritableDatabase();
     dbHelper.deleteUserEvent(MainActivity.userId,

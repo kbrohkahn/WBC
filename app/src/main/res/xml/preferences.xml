@@ -31,20 +31,27 @@
     android:key="pref_key_schedules"
     android:title="@string/settings_schedule">
 
-    <Preference
-      android:key="@string/pref_key_schedule_load"
-      android:summary="@string/settings_schedule_load_summary"
-      android:title="@string/settings_schedule_load"/>
-
     <org.boardgamers.wbc.DialogPreferenceSchedulePicker
-      android:persistent="true"
       android:key="@string/pref_key_schedule_select"
+      android:persistent="true"
       android:title="@string/settings_schedule_select"/>
 
     <Preference
-      android:key="@string/pref_key_schedule_save"
-      android:summary="@string/settings_schedule_save_summary"
-      android:title="@string/settings_schedule_save"/>
+      android:key="@string/pref_key_schedule_import"
+      android:summary="@string/settings_schedule_import_summary"
+      android:title="@string/settings_schedule_import"/>
+
+    <Preference
+      android:key="@string/pref_key_schedule_delete"
+      android:title="@string/settings_schedule_delete"/>
+
+    <Preference
+      android:key="@string/pref_key_schedule_merge"
+      android:title="@string/settings_schedule_merge"/>
+
+    <Preference
+      android:key="@string/pref_key_schedule_export"
+      android:title="@string/settings_schedule_export"/>
 
   </PreferenceCategory>
 </PreferenceScreen>

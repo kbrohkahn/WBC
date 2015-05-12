@@ -8,11 +8,7 @@
     <item name="android:windowActionBarOverlay">true</item>
     <item name="colorPrimary">@color/primary_light</item>
     <item name="colorPrimaryDark">@color/primary</item>
-
-    <!-- colorAccent is used as the default value for colorControlActivated
-         which is used to tint widgets -->
     <item name="colorAccent">@color/secondary</item>
-
     <item name="android:dialogTheme">@style/MyDialogTheme</item>
     <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
   </style>

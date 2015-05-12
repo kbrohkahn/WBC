@@ -9,7 +9,7 @@
 
   <!-- COMMON AND MENUS -->
   <string name="ok">Ok</string>
-    <string name="edit">Edit</string>
+  <string name="edit">Edit</string>
   <string name="delete">Delete</string>
   <string name="close">Close</string>
   <string name="create_event">Create Event</string>
@@ -46,8 +46,8 @@
   <string name="activity_filter">Filter Schedule</string>
   <string name="activity_help">Help</string>
   <string name="activity_about">About</string>
-  <string name="activity_view_schedule">View Schedule</string>
   <string name="activity_splash">Saving schedule to device&#8230;</string>
+  <string name="activity_import_schedule">Import Schedule</string>
 
   <!-- FILTER MENU -->
   <string name="select_all">Select All</string>
@@ -117,11 +117,12 @@
   <string name="settings_notify_type">Notification type</string>
   <string name="settings_notify_time">Minutes before event starts</string>
   <string name="settings_schedule">Schedules</string>
-  <string name="settings_schedule_load">Open schedule</string>
-  <string name="settings_schedule_load_summary">Load another WBC schedule from file</string>
   <string name="settings_schedule_select">Select schedule</string>
-  <string name="settings_schedule_save">Save schedule</string>
-  <string name="settings_schedule_save_summary">Save current schedule as your own</string>
+  <string name="settings_schedule_import">Import</string>
+  <string name="settings_schedule_import_summary">Load a WBC schedule from .txt.wbc file</string>
+  <string name="settings_schedule_merge">Save as My Schedule</string>
+  <string name="settings_schedule_delete">Delete</string>
+  <string name="settings_schedule_export">Export</string>
 
   <!-- PREFERENCES FILES -->
   <string name="user_data_file">UserDataPrefFile</string>
@@ -130,9 +131,11 @@
   <string name="pref_key_notify">notify_starred</string>
   <string name="pref_key_notify_time">notify_time</string>
   <string name="pref_key_notify_type">notify_type</string>
-  <string name="pref_key_schedule_load">schedule_load</string>
   <string name="pref_key_schedule_select">schedule_select</string>
-  <string name="pref_key_schedule_save">schedule_save</string>
+  <string name="pref_key_schedule_import">schedule_import</string>
+  <string name="pref_key_schedule_merge">schedule_merge</string>
+  <string name="pref_key_schedule_delete">schedule_delete</string>
+  <string name="pref_key_schedule_export">schedule_export</string>
 
   <string-array name="settings_notify_type_entries">
     <item>Vibrate</item>

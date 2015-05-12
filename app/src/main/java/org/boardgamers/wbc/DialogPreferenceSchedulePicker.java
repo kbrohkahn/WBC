@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioButton;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class DialogPreferenceSchedulePicker extends DialogPreference {
   private RadioGroup group;
+  private List<User> users;
   private int value;
 
   public DialogPreferenceSchedulePicker(Context context, AttributeSet attrs) {
@@ -29,14 +31,14 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(getContext());
     dbHelper.getReadableDatabase();
-    List<String[]> users=dbHelper.getUsers(null);
+    users=dbHelper.getUsers(null);
     dbHelper.close();
 
     RadioButton button;
     for (int i=0; i<users.size(); i++) {
       button=new RadioButton(getContext());
-      button.setId(Integer.valueOf(users.get(i)[0]));
-      button.setText(users.get(i)[1]);
+      button.setId(users.get(i).id);
+      button.setText(users.get(i).name);
       group.addView(button);
     }
 
@@ -52,7 +54,9 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
       value=getPersistedInt(MainActivity.userId);
     } else {
       value=(Integer) defaultValue;
-      persistInt(value);
+      if (persistInt(value)) {
+        Log.d("", "Success");
+      };
     }
   }
 
@@ -64,7 +68,12 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
   @Override
   protected void onDialogClosed(boolean positiveResult) {
     if (positiveResult) {
-      persistInt(group.getCheckedRadioButtonId());
+      value=group.getCheckedRadioButtonId();
+      persistInt(value);
+
+      MainActivity.userId=value;
+      setSummary(users.get(value).name);
+      SettingsActivity.SettingsFragment.updatePreferences();
     }
   }
 }

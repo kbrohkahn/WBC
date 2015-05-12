@@ -68,11 +68,12 @@ public class MainActivity extends AppCompatActivity {
     userId=PreferenceManager.getDefaultSharedPreferences(this)
         .getInt(getResources().getString(R.string.pref_key_schedule_select), PRIMARY_USER_ID);
 
-
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
     totalEvents=dbHelper.getNumEvents();
     int starredEvents=dbHelper.getStarredEvents(userId).size();
+    String scheduleName=dbHelper.getUser(userId).name;
+    setTitle("WBC: "+scheduleName);
     dbHelper.close();
 
     Log.d(TAG, "Check 2");
@@ -265,6 +266,13 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
+  public void startSearchActivity(int id, String title) {
+    Intent intent=new Intent(this, SearchResultActivity.class);
+    intent.putExtra("query_title", title);
+    intent.putExtra("query_id", id);
+    startActivity(intent);
+  }
+
   public void openShareDialog() {
     AlertDialog.Builder builder=new AlertDialog.Builder(this);
 
@@ -291,15 +299,7 @@ public class MainActivity extends AppCompatActivity {
     builder.create().show();
   }
 
-  public void startSearchActivity(int id, String title) {
-    Intent intent=new Intent(this, SearchResultActivity.class);
-    intent.putExtra("query_title", title);
-    intent.putExtra("query_id", id);
-    startActivity(intent);
-  }
-
   public void share(String fileName) {
-    Log.d(TAG, "Share start");
     //    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     //    dbHelper.getReadableDatabase();
     //    List<Event> starred=dbHelper.getStarredEvents();
@@ -324,8 +324,6 @@ public class MainActivity extends AppCompatActivity {
       }
     }
 
-    Log.d(TAG, "Received from fragments");
-
     String contentBreak="~~~";
     String delimitter=";;;";
 
@@ -343,26 +341,31 @@ public class MainActivity extends AppCompatActivity {
     for (Event event : starred) {
       outputString+=String.valueOf(event.id)+delimitter;
     }
-    outputString+=contentBreak;
-    for (Event event : eFinishes) {
-      outputString+=String.valueOf(event.tournamentID)+delimitter+event.note+delimitter;
-    }
+
     outputString+=contentBreak;
     for (Event event : notes) {
       outputString+=String.valueOf(event.id)+delimitter+event.note+delimitter;
     }
 
+    outputString+=contentBreak;
+    for (Event event : eFinishes) {
+      outputString+=String.valueOf(event.tournamentID)+delimitter+event.note+delimitter;
+    }
+
     File file;
+    fileName=fileName+".wbc.txt";
     if (isExternalStorageWritable()) {
+      Log.d(TAG, "Saving in external");
       File sdCard=Environment.getExternalStorageDirectory();
       File dir=new File(sdCard.getAbsolutePath()+"/WBC/");
 
-      if (dir.mkdirs()) {
-        Log.d(TAG, "Successfully created directory");
+      if (!dir.mkdirs()) {
+        Log.d(TAG, "Directory not created");
       }
 
       file=new File(dir, fileName);
     } else {
+      Log.d(TAG, "Saving in internal");
       file=new File(getCacheDir(), fileName);
     }
 
@@ -389,18 +392,6 @@ public class MainActivity extends AppCompatActivity {
 
   public boolean isExternalStorageWritable() {
     if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-      return true;
-    } else {
-      Log.d(TAG, "Error: external storage not writable");
-      return false;
-    }
-  }
-
-  /* Checks if external storage is available to at least read */
-  public boolean isExternalStorageReadable() {
-    String state=Environment.getExternalStorageState();
-    if (state.equals(Environment.MEDIA_MOUNTED) ||
-        state.equals(Environment.MEDIA_MOUNTED_READ_ONLY)) {
       return true;
     } else {
       Log.d(TAG, "Error: external storage not writable");

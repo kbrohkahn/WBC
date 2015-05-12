@@ -77,7 +77,15 @@
     </activity>
     <activity
       android:name=".SettingsActivity"
-      android:label="@string/activity_settings">
+      android:label="@string/activity_import_schedule">
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data
+          android:host="*" android:mimeType="*/*" android:pathPattern=".*\\.wbc.txt"
+          android:scheme="file"/>
+      </intent-filter>
     </activity>
 
     <provider
