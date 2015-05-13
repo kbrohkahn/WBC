@@ -42,7 +42,7 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
       group.addView(button);
     }
 
-    value=getPersistedInt(MainActivity.userId);
+    value=getPersistedInt(SettingsActivity.currentUserId);
     group.check(value);
 
     return view;
@@ -51,12 +51,13 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
   @Override
   protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
     if (restorePersistedValue) {
-      value=getPersistedInt(MainActivity.userId);
+      value=getPersistedInt(SettingsActivity.currentUserId);
     } else {
       value=(Integer) defaultValue;
       if (persistInt(value)) {
         Log.d("", "Success");
-      };
+      }
+      ;
     }
   }
 
@@ -71,8 +72,7 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
       value=group.getCheckedRadioButtonId();
       persistInt(value);
 
-      MainActivity.userId=value;
-      setSummary(users.get(value).name);
+      SettingsActivity.currentUserId=value;
       SettingsActivity.SettingsFragment.updatePreferences();
     }
   }

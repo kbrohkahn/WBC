@@ -46,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
   public static long currentDay;
   public static int currentHour;
   public static int userId;
+
   public static boolean updatingFragments=false;
+  public static boolean differentUser=false;
 
   private static ViewPager viewPager;
   private static TabsPagerAdapter pagerAdapter;
@@ -62,29 +64,11 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    Log.d(TAG, "Check 1");
-
-    userId=PreferenceManager.getDefaultSharedPreferences(this)
-        .getInt(getResources().getString(R.string.pref_key_schedule_select), PRIMARY_USER_ID);
-
-    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
-    dbHelper.getReadableDatabase();
-    totalEvents=dbHelper.getNumEvents();
-    int starredEvents=dbHelper.getStarredEvents(userId).size();
-    String scheduleName=dbHelper.getUser(userId).name;
-    setTitle("WBC: "+scheduleName);
-    dbHelper.close();
-
-    Log.d(TAG, "Check 2");
+    Log.d(TAG, "Init");
 
     setContentView(R.layout.main_layout);
 
-    Log.d(TAG, "Check 3");
-
     pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
-
-    Log.d(TAG, "Check 4");
 
     viewPager=(ViewPager) findViewById(R.id.pager);
     viewPager.setAdapter(pagerAdapter);
@@ -97,9 +81,7 @@ public class MainActivity extends AppCompatActivity {
     tabs.setViewPager(viewPager);
     tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
       @Override
-      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-      }
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
       @Override
       public void onPageSelected(int position) {
@@ -107,12 +89,8 @@ public class MainActivity extends AppCompatActivity {
       }
 
       @Override
-      public void onPageScrollStateChanged(int state) {
-
-      }
+      public void onPageScrollStateChanged(int state) {}
     });
-
-    Log.d(TAG, "Check 5");
 
     SharedPreferences sp=getSharedPreferences(getResources().getString(R.string.user_data_file),
         Context.MODE_PRIVATE);
@@ -132,11 +110,26 @@ public class MainActivity extends AppCompatActivity {
     editor.putInt("last_app_version", versionCode);
     editor.apply();
 
+    loadUserData();
+  }
+
+  public void loadUserData() {
+    Log.d(TAG, "Loading");
+    userId=PreferenceManager.getDefaultSharedPreferences(this)
+        .getInt(getResources().getString(R.string.pref_key_schedule_select), PRIMARY_USER_ID);
+
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
+    dbHelper.getReadableDatabase();
+    totalEvents=dbHelper.getNumEvents();
+    int starredEvents=dbHelper.getStarredEvents(userId).size();
+    String scheduleName=dbHelper.getUser(userId).name;
+    setTitle("WBC: "+scheduleName);
+    dbHelper.close();
+
     if (starredEvents==0) {
       viewPager.setCurrentItem(1);
     }
-
-    Log.d(TAG, "Check 6");
+    Log.d(TAG, "Loading complete");
   }
 
   public static void update() {
@@ -145,7 +138,16 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onResume() {
-    update();
+    if (differentUser) {
+      differentUser=false;
+
+      recreate();
+      // TODO better implementation
+      //loadUserData();
+      //pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
+    } else {
+      update();
+    }
     super.onResume();
   }
 
@@ -332,22 +334,22 @@ public class MainActivity extends AppCompatActivity {
     outputString+=contentBreak;
     outputString+=fileName;
 
-    outputString+=contentBreak;
+    outputString+=contentBreak+delimitter;
     for (Event event : userEvents) {
       outputString+=String.valueOf(event.id)+delimitter+event.title+delimitter+event.day+delimitter+
           event.hour+delimitter+event.duration+delimitter+event.location+delimitter;
     }
-    outputString+=contentBreak;
+    outputString+=contentBreak+delimitter;
     for (Event event : starred) {
       outputString+=String.valueOf(event.id)+delimitter;
     }
 
-    outputString+=contentBreak;
+    outputString+=contentBreak+delimitter;
     for (Event event : notes) {
       outputString+=String.valueOf(event.id)+delimitter+event.note+delimitter;
     }
 
-    outputString+=contentBreak;
+    outputString+=contentBreak+delimitter;
     for (Event event : eFinishes) {
       outputString+=String.valueOf(event.tournamentID)+delimitter+event.note+delimitter;
     }

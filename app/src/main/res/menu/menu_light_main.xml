@@ -10,7 +10,7 @@
     app:showAsAction="collapseActionView|ifRoom"/>
   <item
     android:id="@+id/menu_share"
-    android:title="@string/share"
+    android:title="@string/share_schedule"
     app:showAsAction="never"/>
   <item
     android:id="@+id/menu_map"

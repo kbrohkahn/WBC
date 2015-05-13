@@ -89,7 +89,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   }
 
   private static final String SQL_CREATE_EVENT_ENTRIES="CREATE TABLE "+EventEntry.TABLE_NAME+" ("+
-      EventEntry._ID+" INTEGER PRIMARY KEY,"+
+      EventEntry._ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+
       EventEntry.COLUMN_NAME_EVENT_ID+" INTEGER UNIQUE,"+
       EventEntry.COLUMN_NAME_TOURNAMENT_ID+" INTEGER,"+
       EventEntry.COLUMN_NAME_TITLE+" TEXT,"+
@@ -105,7 +105,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   private static final String SQL_CREATE_TOURNAMENT_ENTRIES=
       "CREATE TABLE "+TournamentEntry.TABLE_NAME+" ("+
-          TournamentEntry._ID+" INTEGER PRIMARY KEY,"+
+          TournamentEntry._ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+
           TournamentEntry.COLUMN_NAME_TOURNAMENT_ID+" INTEGER UNIQUE,"+
           TournamentEntry.COLUMN_NAME_TITLE+" TEXT UNIQUE,"+
           TournamentEntry.COLUMN_NAME_LABEL+" TEXT,"+
@@ -115,14 +115,14 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
           TournamentEntry.COLUMN_NAME_FINAL_EVENT+" INTEGER)";
 
   private static final String SQL_CREATE_USER_ENTRIES="CREATE TABLE "+UserEntry.TABLE_NAME+" ("+
-      UserEntry._ID+" INTEGER PRIMARY KEY,"+
+      UserEntry._ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+
       UserEntry.COLUMN_NAME_USER_ID+" INTEGER UNIQUE,"+
       UserEntry.COLUMN_NAME_NAME+" TEXT,"+
       UserEntry.COLUMN_NAME_EMAIL+" TEXT)";
 
   private static final String SQL_CREATE_USER_TOURNAMENT_DATA_ENTRIES=
       "CREATE TABLE "+UserTournamentDataEntry.TABLE_NAME+" ("+
-          UserTournamentDataEntry._ID+" INTEGER PRIMARY KEY,"+
+          UserTournamentDataEntry._ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+
           UserTournamentDataEntry.COLUMN_USER_ID+" INTEGER,"+
           UserTournamentDataEntry.COLUMN_NAME_TOURNAMENT_ID+" INTEGER,"+
           UserTournamentDataEntry.COLUMN_NAME_FINISH+" INTEGER,"+
@@ -130,7 +130,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   private static final String SQL_CREATE_USER_EVENT_DATA_ENTRIES=
       "CREATE TABLE "+UserEventDataEntry.TABLE_NAME+" ("+
-          UserEventDataEntry._ID+" INTEGER PRIMARY KEY,"+
+          UserEventDataEntry._ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+
           UserEventDataEntry.COLUMN_USER_ID+" INTEGER,"+
           UserEventDataEntry.COLUMN_NAME_EVENT_ID+" INTEGER,"+
           UserEventDataEntry.COLUMN_NAME_STARRED+" INTEGER,"+
@@ -142,7 +142,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   private static final String SQL_CREATE_USER_EVENT_ENTRIES=
       "CREATE TABLE "+UserCreatedEventEntry.TABLE_NAME+" ("+
-          UserCreatedEventEntry._ID+" INTEGER PRIMARY KEY,"+
+          UserCreatedEventEntry._ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+
           UserCreatedEventEntry.COLUMN_NAME_EVENT_ID+" INTEGER UNIQUE,"+
           UserCreatedEventEntry.COLUMN_USER_ID+" INTEGER,"+
           UserCreatedEventEntry.COLUMN_NAME_TITLE+" TEXT,"+
@@ -270,9 +270,8 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
       where+=" AND ";
     }
 
-    where+="("+UserEventDataEntry.TABLE_NAME+"."+UserEventDataEntry.COLUMN_USER_ID+"="+
-        String.valueOf(uId)+" OR "+UserEventDataEntry.TABLE_NAME+"."+
-        UserEventDataEntry.COLUMN_USER_ID+" IS NULL)";
+    where+=UserCreatedEventEntry.TABLE_NAME+"."+UserCreatedEventEntry.COLUMN_USER_ID+"="+
+        String.valueOf(uId);
 
     String query="SELECT * FROM "+UserCreatedEventEntry.TABLE_NAME+" LEFT JOIN "+
         UserEventDataEntry.TABLE_NAME+" ON "+UserCreatedEventEntry.TABLE_NAME+"."+
@@ -611,9 +610,16 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     if (userId==-1) {
       where="";
     } else {
+      where=UserEntry.COLUMN_NAME_USER_ID+"="+String.valueOf(userId);
+    }
+    int result=sqLiteDatabase.delete(UserEntry.TABLE_NAME, where, null);
+
+    if (userId==-1) {
+      where="";
+    } else {
       where=UserEventDataEntry.COLUMN_USER_ID+"="+String.valueOf(userId);
     }
-    int result=sqLiteDatabase.delete(UserEventDataEntry.TABLE_NAME, where, null);
+    result+=sqLiteDatabase.delete(UserEventDataEntry.TABLE_NAME, where, null);
 
     if (userId==-1) {
       where="";
