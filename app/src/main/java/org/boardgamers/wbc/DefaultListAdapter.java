@@ -73,7 +73,7 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
       }
 
       TextView hour=(TextView) view.findViewById(R.id.li_hour);
-      hour.setText(String.valueOf(event.hour));
+      hour.setText(String.valueOf(event.hour*100));
       hour.setTypeface(null, tType);
       hour.setTextColor(tColor);
 
@@ -268,14 +268,14 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
 
   public void changeEventStar(Event event) {
     event.starred=!event.starred;
-    updateStarredEvent(event);
+    updateEvent(event);
     notifyDataSetChanged();
 
     Event[] events={event};
-    MainActivity.changeEventStar(fragment.getActivity(), events, id);
+    MainActivity.changeEvents(fragment.getActivity(), events, id);
   }
 
-  public void updateStarredEvent(Event event) {
+  public void updateEvent(Event event) {}
 
-  }
+  public void removeEvents(List<Event> deletedEvents) {}
 }

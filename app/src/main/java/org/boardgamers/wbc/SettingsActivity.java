@@ -35,7 +35,6 @@ public class SettingsActivity extends AppCompatActivity {
   public static int currentUserId;
 
   private static final int GET_FILE_REQUEST_CODE=0;
-  private static boolean overwrite;
   public static boolean notifyChanged=false;
 
   protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
       getSupportActionBar().setDisplayShowHomeEnabled(true);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+    setTitle(R.string.activity_settings);
 
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     currentUserId=PreferenceManager.getDefaultSharedPreferences(this)
@@ -110,12 +110,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
   }
 
-  public void setDefaultSchedule() {
-    currentUserId=users.get(users.size()-1).id;
-    SettingsFragment.updatePreferences();
-  }
-
-  class SaveScheduleTask extends AsyncTask<String, Integer, Integer> {
+  class SaveScheduleTask extends AsyncTask<String, Void, Integer> {
     private Context context;
 
     public SaveScheduleTask(Context c) {
@@ -125,10 +120,32 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onPostExecute(Integer integer) {
       if (integer>0) {
-        Toast.makeText(context, "Schedule successfully imported!", Toast.LENGTH_SHORT).show();
-        setDefaultSchedule();
+        AlertDialog.Builder dialogBuilder=new AlertDialog.Builder(context);
+        dialogBuilder.setTitle("Success!").setMessage(
+            "Schedule successfully imported, do you want to view this schedule now or merge it with your schedule?")
+            .setPositiveButton("Merge", new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                showMergeScheduleDialog();
+                dialog.dismiss();
+              }
+            }).setNeutralButton("View", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            currentUserId=users.get(users.size()-1).id;
+            dialog.dismiss();
+            finish();
+          }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+          }
+        });
+        dialogBuilder.create().show();
       } else {
-        Toast.makeText(context, "Schedule import failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Schedule import failed, contact developer for support",
+            Toast.LENGTH_LONG).show();
       }
       super.onPostExecute(integer);
     }
@@ -173,12 +190,15 @@ public class SettingsActivity extends AppCompatActivity {
       String title, location;
       int eId, day, hour;
       double duration;
-      int newEId=MainActivity.totalEvents+dbHelper.getNumUserEvents();
+      int newEId=MainActivity.USER_EVENT_ID+dbHelper.getNumUserEvents();
 
       int[] oldIds=new int[createdEvents.length/6];
       int[] newEIds=new int[createdEvents.length/6];
 
       for (int i=0; i+6<=createdEvents.length; i+=6) {
+        if (createdEvents[i].equalsIgnoreCase("")) {
+          break;
+        }
         eId=Integer.valueOf(createdEvents[i]);
         title=createdEvents[i+1];
         day=Integer.valueOf(createdEvents[i+2]);
@@ -198,11 +218,14 @@ public class SettingsActivity extends AppCompatActivity {
       String note;
       boolean starred;
       for (int i=0; i+2<=eventNotes.length; i+=2) {
+        if (eventNotes[i].equalsIgnoreCase("")) {
+          break;
+        }
         eId=Integer.valueOf(eventNotes[i]);
         note=eventNotes[i+1];
 
         newEId=-1;
-        if (eId>=MainActivity.totalEvents) {
+        if (eId>=MainActivity.USER_EVENT_ID) {
           for (int j=0; j<oldIds.length; j++) {
             if (oldIds[j]==eId) {
               newEId=newEIds[j];
@@ -229,9 +252,12 @@ public class SettingsActivity extends AppCompatActivity {
 
       // insert user event data (starred)
       for (String eIdString : starredEvents) {
+        if (eIdString.equalsIgnoreCase("")) {
+          break;
+        }
         eId=Integer.valueOf(eIdString);
         newEId=-1;
-        if (eId>=MainActivity.totalEvents) {
+        if (eId>=MainActivity.USER_EVENT_ID) {
           for (int i=0; i<oldIds.length; i++) {
             if (oldIds[i]==eId) {
               newEId=newEIds[i];
@@ -250,6 +276,9 @@ public class SettingsActivity extends AppCompatActivity {
 
       int finish, tId;
       for (int i=0; i+2<=tournamentFinishes.length; i+=2) {
+        if (tournamentFinishes[i].equalsIgnoreCase("")) {
+          break;
+        }
         tId=Integer.valueOf(tournamentFinishes[i]);
         finish=Integer.valueOf(tournamentFinishes[i+1]);
 
@@ -262,6 +291,75 @@ public class SettingsActivity extends AppCompatActivity {
       Log.d(TAG, "Finish");
 
       return 1;
+    }
+  }
+
+  public void showMergeScheduleDialog() {
+    String newSchedule=users.get(currentUserId).name;
+    String mySchedule=users.get(0).name;
+
+    AlertDialog.Builder builder=new AlertDialog.Builder(this);
+    builder.setTitle(getResources().getString(R.string.settings_schedule_merge))
+        .setMessage("How do you want to merge the schedule "+newSchedule+" with "+mySchedule+
+            "?").setPositiveButton("Overwrite "+mySchedule, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        mergeSchedule(true, currentUserId);
+        dialog.dismiss();
+      }
+    }).setNeutralButton("Merge with "+mySchedule, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        mergeSchedule(false, currentUserId);
+        dialog.dismiss();
+      }
+    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+      }
+    });
+    builder.create().show();
+  }
+
+  public void mergeSchedule(boolean overwrite, int uId) {
+    new MergeScheduleTask(this).execute(uId, overwrite ? 1 : 0);
+  }
+
+  class MergeScheduleTask extends AsyncTask<Integer, Void, Void> {
+    private Context context;
+
+    public MergeScheduleTask(Context c) {
+      context=c;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      currentUserId=MainActivity.PRIMARY_USER_ID;
+
+      PreferenceManager.getDefaultSharedPreferences(context).edit()
+          .putInt(getResources().getString(R.string.pref_key_schedule_select), currentUserId)
+          .apply();
+
+      SettingsFragment.updatePreferences();
+
+      super.onPostExecute(aVoid);
+    }
+
+    @Override
+    protected Void doInBackground(Integer... params) {
+      int userId=params[0];
+      boolean overwrite=params[0]==1;
+
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
+      dbHelper.getWritableDatabase();
+      if (overwrite) {
+        dbHelper.deleteUserData(userId);
+      }
+      dbHelper.mergeUserData(userId);
+      dbHelper.close();
+
+      return null;
     }
   }
 
@@ -328,7 +426,7 @@ public class SettingsActivity extends AppCompatActivity {
       scheduleMerge.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-          showMergeScheduleDialog();
+          ((SettingsActivity) getActivity()).showMergeScheduleDialog();
           return true;
         }
       });
@@ -374,37 +472,6 @@ public class SettingsActivity extends AppCompatActivity {
       scheduleSelect.setSummary("Current: "+users.get(currentUserId).name);
     }
 
-    public void showMergeScheduleDialog() {
-      String newSchedule=users.get(currentUserId).name;
-      String mySchedule=users.get(0).name;
-
-      String[] choices=new String[] {"Overwrite "+mySchedule, "Merge with "+mySchedule};
-
-      AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-      builder.setTitle(getResources().getString(R.string.settings_schedule_merge))
-          .setSingleChoiceItems(choices, 0, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              overwrite=which==0;
-            }
-          }).setMessage("How do you want to merge the schedule "+newSchedule+
-          "?").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-          ((SettingsActivity) getActivity()).mergeSchedule(currentUserId);
-          currentUserId=MainActivity.PRIMARY_USER_ID;
-          updatePreferences();
-          dialog.dismiss();
-        }
-      }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-          dialog.dismiss();
-        }
-      });
-      builder.create().show();
-    }
-
     public void showDeleteScheduleDialog() {
       String newSchedule=users.get(currentUserId).name;
 
@@ -415,8 +482,6 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onClick(DialogInterface dialog, int which) {
           deleteSchedule();
-          currentUserId=MainActivity.PRIMARY_USER_ID;
-          updatePreferences();
           dialog.dismiss();
         }
       }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -434,8 +499,13 @@ public class SettingsActivity extends AppCompatActivity {
       dbHelper.deleteUserData(currentUserId);
       dbHelper.close();
 
-      users.remove(currentUserId);
-      currentUserId--;
+      currentUserId=MainActivity.PRIMARY_USER_ID;
+
+      PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+          .putInt(getResources().getString(R.string.pref_key_schedule_select), currentUserId)
+          .apply();
+
+      updatePreferences();
     }
 
     public void showShareScheduleDialog() {
@@ -466,33 +536,6 @@ public class SettingsActivity extends AppCompatActivity {
 
   }
 
-  public void mergeSchedule(int uId) {
-    new MergeScheduleTask(this).execute(uId, 0, 0);
-  }
-
-  class MergeScheduleTask extends AsyncTask<Integer, Integer, Integer> {
-    private Context context;
-
-    public MergeScheduleTask(Context c) {
-      context=c;
-    }
-
-    @Override
-    protected Integer doInBackground(Integer... params) {
-      int userId=params[0];
-
-      WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
-      dbHelper.getWritableDatabase();
-      if (overwrite) {
-        dbHelper.deleteUserData(userId);
-      }
-      dbHelper.mergeUserData(userId);
-      dbHelper.close();
-
-      return null;
-    }
-  }
-
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
@@ -516,7 +559,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
   }
 
-  public void share(String fileName) {
+  public void share(String scheduleName) {
     int uId=currentUserId;
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
@@ -533,7 +576,7 @@ public class SettingsActivity extends AppCompatActivity {
     String outputString="wbc_data_file"+delimitter;
 
     outputString+=contentBreak;
-    outputString+=fileName;
+    outputString+=scheduleName;
 
     outputString+=contentBreak+delimitter;
     for (Event event : userEvents) {
@@ -557,7 +600,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     File file;
-    fileName=fileName+".wbc.txt";
+    String fileName="Schedule.wbc.txt";
     if (isExternalStorageWritable()) {
       Log.d(TAG, "Saving in external");
       File sdCard=Environment.getExternalStorageDirectory();
@@ -629,9 +672,6 @@ public class SettingsActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    PreferenceManager.getDefaultSharedPreferences(this).edit()
-        .putInt(getResources().getString(R.string.pref_key_schedule_select), currentUserId).apply();
-
     if (notifyChanged) {
       Intent intent=new Intent(this, UpdateService.class);
       stopService(intent);
@@ -643,5 +683,4 @@ public class SettingsActivity extends AppCompatActivity {
     }
     super.onPause();
   }
-
 }

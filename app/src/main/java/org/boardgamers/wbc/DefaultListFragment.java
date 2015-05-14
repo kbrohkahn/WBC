@@ -40,9 +40,15 @@ public class DefaultListFragment extends Fragment {
     return R.layout.default_list;
   }
 
-  public void updateStarredEvent(Event event) {
+  public void updateEvent(Event event) {
     if (listAdapter!=null) {
-      listAdapter.updateStarredEvent(event);
+      listAdapter.updateEvent(event);
+    }
+  }
+
+  public void removeEvents(List<Event> events) {
+    if (listAdapter!=null) {
+      listAdapter.removeEvents(events);
     }
   }
 

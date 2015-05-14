@@ -307,7 +307,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
           cursor.getInt(cursor.getColumnIndexOrThrow(UserEventDataEntry.COLUMN_NAME_STARRED))==1;
       note=cursor.getString(cursor.getColumnIndexOrThrow(UserEventDataEntry.COLUMN_NAME_NOTE));
 
-      event=new Event(id, MainActivity.USER_TOURNAMENT_ID+uId, day, hour, title, "", "", false,
+      event=new Event(id, MainActivity.USER_EVENT_ID+uId, day, hour, title, "", "", false,
           duration, false, duration, location);
 
       event.starred=starred;
@@ -558,12 +558,12 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   public long deleteUserEvent(int uId, int eId) {
     String where=UserCreatedEventEntry.COLUMN_USER_ID+"="+String.valueOf(uId)+" AND "+
         UserCreatedEventEntry.COLUMN_NAME_EVENT_ID+"="+String.valueOf(eId);
-    return sqLiteDatabase.delete(EventEntry.TABLE_NAME, where, null);
+    return sqLiteDatabase.delete(UserCreatedEventEntry.TABLE_NAME, where, null);
   }
 
   public long deleteAllUserEvents(int uID) {
     String where=UserCreatedEventEntry.COLUMN_USER_ID+"="+String.valueOf(uID);
-    return sqLiteDatabase.delete(EventEntry.TABLE_NAME, where, null);
+    return sqLiteDatabase.delete(UserCreatedEventEntry.TABLE_NAME, where, null);
   }
 
   public long insertUser(int uId, String name, String email) {

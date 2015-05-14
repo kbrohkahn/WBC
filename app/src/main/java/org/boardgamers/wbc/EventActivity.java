@@ -59,7 +59,7 @@ public class EventActivity extends AppCompatActivity {
       invalidateOptionsMenu();
 
       Event[] events={event};
-      MainActivity.changeEventStar(this, events, 3);
+      MainActivity.changeEvents(this, events, -1);
     } else {
       Log.d(TAG, "ERROR: Could not get event fragment");
     }

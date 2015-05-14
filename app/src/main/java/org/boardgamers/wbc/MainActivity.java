@@ -40,9 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
   public static final int PRIMARY_USER_ID=0;
   public static final int TOTAL_DAYS=9;
-  public static final int USER_TOURNAMENT_ID=1000;
+  public static final int USER_EVENT_ID=5000;
   public static int selectedEventId=-1;
-  public static int totalEvents;
   public static long currentDay;
   public static int currentHour;
   public static int userId;
@@ -120,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
-    totalEvents=dbHelper.getNumEvents();
     int starredEvents=dbHelper.getStarredEvents(userId).size();
     String scheduleName=dbHelper.getUser(userId).name;
     setTitle("WBC: "+scheduleName);
@@ -151,22 +149,34 @@ public class MainActivity extends AppCompatActivity {
     super.onResume();
   }
 
+  public static void removeEvents(List<Event> events) {
+    for (Event event : events) {
+      event.starred=false;
+    }
+
+    pagerAdapter.getItem(1).removeEvents(events);
+
+    for (Event event : events) {
+      pagerAdapter.getItem(0).updateEvent(event);
+    }
+  }
+
   public static void updateUserData(long eventId, String note, long tournamentId, int finish) {
     ((UserDataListFragment) pagerAdapter.getItem(2))
         .updateUserData(eventId, note, tournamentId, finish);
   }
 
-  public static void changeEventStar(Context context, Event[] events, int id) {
-    new ChangeStarTask(context, id).execute(events);
+  public static void changeEvents(Context context, Event[] events, int id) {
+    new ChangeEventTask(context, id).execute(events);
   }
 
-  final static class ChangeStarTask extends AsyncTask<Event, Integer, Integer> {
+  static class ChangeEventTask extends AsyncTask<Event, Integer, Integer> {
     final Context context;
-    final int id;
+    final int currentPage;
 
-    public ChangeStarTask(Context c, int i) {
+    public ChangeEventTask(Context c, int i) {
       context=c;
-      id=i;
+      currentPage=i;
     }
 
     @Override
@@ -175,6 +185,10 @@ public class MainActivity extends AppCompatActivity {
       updatingFragments=false;
       if (SearchResultActivity.progressBar!=null) {
         SearchResultActivity.progressBar.setVisibility(View.GONE);
+      }
+
+      if (currentPage==3) {
+        pagerAdapter.getItem(2).refreshAdapter();
       }
 
       super.onPostExecute(integer);
@@ -200,8 +214,8 @@ public class MainActivity extends AppCompatActivity {
         dbHelper.insertUserEventData(userId, event.id, event.starred, event.note);
 
         for (int j=0; j<3; j++) {
-          if (j!=id) {
-            pagerAdapter.getItem(j).updateStarredEvent(event);
+          if (j!=currentPage) {
+            pagerAdapter.getItem(j).updateEvent(event);
           }
         }
       }
@@ -301,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
     builder.create().show();
   }
 
-  public void share(String fileName) {
+  public void share(String scheduleName) {
     //    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     //    dbHelper.getReadableDatabase();
     //    List<Event> starred=dbHelper.getStarredEvents();
@@ -332,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
     String outputString="wbc_data_file"+delimitter;
 
     outputString+=contentBreak;
-    outputString+=fileName;
+    outputString+=scheduleName;
 
     outputString+=contentBreak+delimitter;
     for (Event event : userEvents) {
@@ -355,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     File file;
-    fileName=fileName+".wbc.txt";
+    String fileName="Schedule.wbc.txt";
     if (isExternalStorageWritable()) {
       Log.d(TAG, "Saving in external");
       File sdCard=Environment.getExternalStorageDirectory();

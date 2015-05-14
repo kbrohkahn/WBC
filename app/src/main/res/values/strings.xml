@@ -38,7 +38,7 @@
   <string name="file_name_title">Schedule name</string>
   <string name="file_name_et_hint">Schedule name</string>
   <string name="file_name_message">Enter a schedule name for others to identify your schedule. File
-  will also be saved on your device in WBC folder.</string>
+  will also be saved on your device in "WBC" folder.</string>
 
   <!-- ACTIVITY TITLES -->
   <string name="activity_tournament">Tournament</string>

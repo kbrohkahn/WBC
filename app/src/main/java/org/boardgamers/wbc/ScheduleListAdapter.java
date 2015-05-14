@@ -1,8 +1,5 @@
 package org.boardgamers.wbc;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SectionIndexer;
@@ -95,16 +92,22 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
   }
 
   @Override
-  public void updateStarredEvent(Event event) {
+  public void updateEvent(Event event) {
     int group=event.day*GROUPS_PER_DAY+event.hour-6;
     Event tempEvent;
 
+    boolean isInList=false;
     for (int i=0; i<events.get(group).size(); i++) {
       tempEvent=events.get(group).get(i);
       if (tempEvent.id==event.id) {
         tempEvent.starred=event.starred;
+        isInList=true;
         break;
       }
+    }
+
+    if (!isInList) {
+      events.get(group).add(0, event);
     }
 
     // add or remove from my events in full schedule
@@ -127,6 +130,29 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
           break;
         }
       }
+    }
+  }
+
+  @Override
+  public void removeEvents(List<Event> deletedEvents) {
+    int group;
+    for (Event event : deletedEvents) {
+      group=event.day*GROUPS_PER_DAY+event.hour-6;
+      for (int i=0; i<events.get(group).size(); i++) {
+        if (events.get(group).get(i).id==event.id) {
+          events.get(group).remove(i);
+          break;
+        }
+      }
+
+      group=event.day*GROUPS_PER_DAY;
+      for (int i=0; i<events.get(group).size(); i++) {
+        if (events.get(group).get(i).id==event.id) {
+          events.get(group).remove(i);
+          break;
+        }
+      }
+
     }
   }
 }

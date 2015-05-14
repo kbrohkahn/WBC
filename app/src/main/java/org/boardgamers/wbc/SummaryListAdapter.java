@@ -17,7 +17,7 @@ public class SummaryListAdapter extends DefaultListAdapter {
   }
 
   @Override
-  public void updateStarredEvent(Event event) {
+  public void updateEvent(Event event) {
     Event tempEvent;
 
     if (event.starred) {

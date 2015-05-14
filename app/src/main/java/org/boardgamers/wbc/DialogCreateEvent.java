@@ -13,6 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Kevin on 4/24/2015
  * Dialog shown for creating user events
@@ -68,7 +71,6 @@ public class DialogCreateEvent extends DialogFragment {
       @Override
       public void onClick(View v) {
         createEvents();
-        dismiss();
       }
     });
 
@@ -98,15 +100,24 @@ public class DialogCreateEvent extends DialogFragment {
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
     dbHelper.getWritableDatabase();
 
-    int id=dbHelper.getNumUserEvents();
+    int id=MainActivity.USER_EVENT_ID+dbHelper.getNumUserEvents();
+    List<Event> newEvents=new ArrayList<>();
+    Event event;
     for (int day=0; day<days.length; day++) {
       if (days[day].isChecked()) {
         dbHelper.insertUserEvent(id, MainActivity.userId, title, day, hour, duration, location);
+        event=
+            new Event(id, MainActivity.USER_EVENT_ID+MainActivity.userId, day, hour, title, "", "",
+                false, duration, false, duration, location);
+        newEvents.add(event);
         id++;
       }
     }
+
     dbHelper.close();
-    MainActivity.selectedEventId=id;
-    ((UserDataListFragment) getTargetFragment()).reloadUserEvents();
+
+    MainActivity.changeEvents(getActivity(), newEvents.toArray(new Event[newEvents.size()]), 3);
+
+    dismiss();
   }
 }

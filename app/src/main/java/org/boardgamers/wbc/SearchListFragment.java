@@ -60,7 +60,7 @@ public class SearchListFragment extends DefaultListFragment {
         SearchResultActivity.progressBar.setMax(count);
 
         Event[] changedEventsArray=new Event[count];
-        MainActivity.changeEventStar(getActivity(), changedEvents.toArray(changedEventsArray), 3);
+        MainActivity.changeEvents(getActivity(), changedEvents.toArray(changedEventsArray), -1);
       }
     });
 

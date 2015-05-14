@@ -192,7 +192,7 @@ public class EventFragment extends Fragment {
       dbHelper.getReadableDatabase();
       event=dbHelper.getEvent(MainActivity.userId, id);
 
-      if (event.tournamentID<MainActivity.USER_TOURNAMENT_ID) {
+      if (event.tournamentID<MainActivity.USER_EVENT_ID) {
         tournament=dbHelper.getTournament(MainActivity.userId, event.tournamentID);
       } else {
         tournament=null;
@@ -341,9 +341,7 @@ public class EventFragment extends Fragment {
     String note=noteET.getText().toString();
     int finish;
 
-    if (event.tournamentID==MainActivity.USER_TOURNAMENT_ID || !tournament.isTournament) {
-      finish=-1;
-    } else {
+    if (event.tournamentID<MainActivity.USER_EVENT_ID && tournament.isTournament) {
       finish=0;
       for (int i=0; i<finishButtons.length; i++) {
         if (finishButtons[i].isChecked()) {
@@ -351,6 +349,8 @@ public class EventFragment extends Fragment {
           break;
         }
       }
+    } else {
+      finish=-1;
     }
 
     if (note.equalsIgnoreCase(event.note) && (tournament==null || finish==tournament.finish))

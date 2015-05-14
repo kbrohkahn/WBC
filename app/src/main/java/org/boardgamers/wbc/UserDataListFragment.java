@@ -48,18 +48,6 @@ public class UserDataListFragment extends DefaultListFragment {
     return view;
   }
 
-  public void reloadUserEvents() {
-    WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
-    dbHelper.getReadableDatabase();
-
-    listAdapter.events.remove(EVENTS_INDEX);
-    listAdapter.events.add(EVENTS_INDEX, dbHelper.getUserEvents(MainActivity.userId, ""));
-
-    dbHelper.close();
-
-    refreshAdapter();
-  }
-
   public void updateUserData(long eventId, String note, long tournamentId, int finish) {
     if (listAdapter==null || listAdapter.events==null) {
       return;
@@ -185,9 +173,16 @@ public class UserDataListFragment extends DefaultListFragment {
     dbHelper.deleteAllUserEvents(MainActivity.userId);
     dbHelper.close();
 
-    listAdapter.events.get(0).clear();
-
+    List<Event> events=new ArrayList<>();
+    while (listAdapter.events.get(EVENTS_INDEX).size()>0) {
+      events.add(listAdapter.events.get(EVENTS_INDEX).remove(0));
+    }
     refreshAdapter();
+    deleteEvents(events);
+  }
+
+  public void deleteEvents(List<Event> events) {
+    MainActivity.removeEvents(events);
   }
 
   class PopulateUserDataAdapterTask extends PopulateAdapterTask {
