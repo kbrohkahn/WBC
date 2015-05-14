@@ -51,9 +51,12 @@ public class SettingsActivity extends AppCompatActivity {
     setTitle(R.string.activity_settings);
 
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-    currentUserId=PreferenceManager.getDefaultSharedPreferences(this)
-        .getInt(getResources().getString(R.string.pref_key_schedule_select),
-            MainActivity.PRIMARY_USER_ID);
+    currentUserId=MainActivity.userId;
+    if (currentUserId==-1) {
+      currentUserId=PreferenceManager.getDefaultSharedPreferences(this)
+          .getInt(getResources().getString(R.string.pref_key_schedule_select),
+              MainActivity.PRIMARY_USER_ID);
+    }
 
     getFragmentManager().beginTransaction().replace(R.id.setings_content, new SettingsFragment())
         .commit();
@@ -682,5 +685,13 @@ public class SettingsActivity extends AppCompatActivity {
       MainActivity.differentUser=true;
     }
     super.onPause();
+  }
+
+  @Override
+  public void finish() {
+    super.finish();
+    if (!MainActivity.opened) {
+      startActivity(new Intent(this, MainActivity.class));
+    }
   }
 }

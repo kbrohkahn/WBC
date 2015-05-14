@@ -44,10 +44,11 @@ public class MainActivity extends AppCompatActivity {
   public static int selectedEventId=-1;
   public static long currentDay;
   public static int currentHour;
-  public static int userId;
+  public static int userId=-1;
 
   public static boolean updatingFragments=false;
   public static boolean differentUser=false;
+  public static boolean opened=false;
 
   private static ViewPager viewPager;
   private static TabsPagerAdapter pagerAdapter;
@@ -61,12 +62,19 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
+  public void finish() {
+    opened=false;
+    super.finish();
+  }
+
+  @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Log.d(TAG, "Init");
 
     setContentView(R.layout.main_layout);
 
+    opened=true;
     pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
 
     viewPager=(ViewPager) findViewById(R.id.pager);
