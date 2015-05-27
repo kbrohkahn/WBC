@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -102,21 +103,28 @@ public class MainActivity extends AppCompatActivity {
 
     SharedPreferences sp=getSharedPreferences(getResources().getString(R.string.user_data_file),
         Context.MODE_PRIVATE);
-    int latestDialogVersion=13;
-    int versionCode;
+    int latestVersion=sp.getInt("last_app_version", 0);
+    int currentVersion;
     try {
-      versionCode=getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+      currentVersion=getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
     } catch (PackageManager.NameNotFoundException e) {
-      Log.d(TAG,
-          "ERROR: Could not find version code,"+"contact "+getResources().getString(R.string.email)+
-              " for help.");
-      versionCode=latestDialogVersion;
+      Log.d(TAG, "ERROR: Unable to not find version code");
+      Toast.makeText(this,
+          "ERROR: Could not find version code, contact "+getResources().getString(R.string.email)+
+              " for help.", Toast.LENGTH_LONG).show();
+      currentVersion=latestVersion; // TODO set as version code
       e.printStackTrace();
     }
 
-    SharedPreferences.Editor editor=sp.edit();
-    editor.putInt("last_app_version", versionCode);
-    editor.apply();
+    if (latestVersion<currentVersion) {
+      Intent intent=new Intent(this, UpdateService.class);
+      stopService(intent);
+      startService(intent);
+
+      SharedPreferences.Editor editor=sp.edit();
+      editor.putInt("last_app_version", currentVersion);
+      editor.apply();
+    }
 
     loadUserData();
   }
@@ -326,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
     String contentBreak="~~~";
     String delimitter=";;;";
 
-    String outputString="wbc_data_file"+contentBreak;
+    String outputString=getResources().getString(R.string.settings_schedule_name_check)+contentBreak;
 
     String email="Unknown user";
     Pattern emailPattern=Patterns.EMAIL_ADDRESS;
@@ -358,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     File file;
-    String fileName="Schedule.wbc.txt";
+    String fileName="Schedule.wbc";
     if (isExternalStorageWritable()) {
       Log.d(TAG, "Saving in external");
       File sdCard=Environment.getExternalStorageDirectory();
@@ -389,7 +397,7 @@ public class MainActivity extends AppCompatActivity {
     Intent shareIntent=new Intent();
     shareIntent.setAction(Intent.ACTION_SEND);
     shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-    shareIntent.setType("text/plain");
+    shareIntent.setType("application/wbc");
     startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share)));
   }
 

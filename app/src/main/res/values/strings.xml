@@ -128,6 +128,7 @@
   <string name="settings_schedule_merge">Save as My Schedule</string>
   <string name="settings_schedule_delete">Delete</string>
   <string name="settings_schedule_export">Export</string>
+  <string name="settings_schedule_name_check">wbc_data_file_2015</string>
 
   <!-- PREFERENCES FILES -->
   <string name="user_data_file">UserDataPrefFile</string>

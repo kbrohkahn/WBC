@@ -84,9 +84,17 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <data
-          android:host="*" android:mimeType="*/*" android:pathPattern=".*\\.wbc.txt"
+          android:host="*" android:mimeType="application/wbc"/>
+      </intent-filter>
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data
+          android:host="*" android:mimeType="*/*" android:pathPattern=".*\\.wbc"
           android:scheme="file"/>
       </intent-filter>
+
     </activity>
 
     <provider

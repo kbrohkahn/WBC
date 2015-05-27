@@ -73,7 +73,7 @@ public class SettingsActivity extends AppCompatActivity {
     String type=intent.getType();
 
     if (Intent.ACTION_VIEW.equals(action) && type!=null) {
-      if ("text/plain".equals(type)) {
+      if ("application/wbc".equals(type)) {
         handleSendText(intent); // Handle text being sent
       }
     }
@@ -162,7 +162,7 @@ public class SettingsActivity extends AppCompatActivity {
                 } else {
                   String scheduleName=editText.getText().toString();
                   if (scheduleName.equalsIgnoreCase("")) {
-                    scheduleName="WBC Schedule " + String.valueOf(userId);
+                    scheduleName="WBC Schedule "+String.valueOf(userId);
                   }
 
                   WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
@@ -211,7 +211,8 @@ public class SettingsActivity extends AppCompatActivity {
 
       String[] splitData=data.split(contentBreak);
 
-      if (!splitData[0].equalsIgnoreCase("wbc_data_file")) {
+      if (!splitData[0]
+          .equalsIgnoreCase(getResources().getString(R.string.settings_schedule_name_check))) {
         return -1;
       }
 
@@ -592,7 +593,7 @@ public class SettingsActivity extends AppCompatActivity {
     String contentBreak="~~~";
     String delimitter=";;;";
 
-    String outputString="wbc_data_file"+contentBreak;
+    String outputString=getResources().getString(R.string.settings_schedule_name_check)+contentBreak;
 
     String email="Unknown user";
     Pattern emailPattern=Patterns.EMAIL_ADDRESS;
@@ -625,7 +626,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     File file;
-    String fileName="Schedule.wbc.txt";
+    String fileName="Schedule.wbc";
     if (isExternalStorageWritable()) {
       Log.d(TAG, "Saving in external");
       File sdCard=Environment.getExternalStorageDirectory();
@@ -656,7 +657,7 @@ public class SettingsActivity extends AppCompatActivity {
     Intent shareIntent=new Intent();
     shareIntent.setAction(Intent.ACTION_SEND);
     shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-    shareIntent.setType("text/plain");
+    shareIntent.setType("application/wbc");
     startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share)));
   }
 
