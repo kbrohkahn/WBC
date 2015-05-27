@@ -35,10 +35,14 @@
   <string
     name="initial_dialog_text">Star events in the full schedule to add them to your schedule</string>
   <string name="initial_load_title">Saving events on device</string>
-  <string name="file_name_title">Schedule name</string>
-  <string name="file_name_et_hint">Schedule name</string>
-  <string name="file_name_message">Enter a schedule name for others to identify your schedule. File
+  <string name="schedule_import_merge_message">How do you want to merge with My Schedule?</string>
+  <string name="schedule_import_neither">Neither</string>
+  <string name="schedule_import_merge">Merge</string>
+  <string name="schedule_import_replace">Replace</string>
+  <string name="schedule_import_name_message">Enter a schedule name for others to identify your schedule. File
   will also be saved on your device in "WBC" folder.</string>
+  <string name="schedule_import_name_hint">Schedule name</string>
+  <string name="schedule_import_view">Set as current schedule</string>
 
   <!-- ACTIVITY TITLES -->
   <string name="activity_tournament">Tournament</string>

@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -14,7 +13,6 @@ import java.util.List;
 
 public class DialogPreferenceSchedulePicker extends DialogPreference {
   private RadioGroup group;
-  private List<User> users;
   private int value;
 
   public DialogPreferenceSchedulePicker(Context context, AttributeSet attrs) {
@@ -23,15 +21,14 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
 
   @Override
   protected View onCreateDialogView() {
-    LayoutInflater inflater=
-        (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View view=inflater.inflate(R.layout.dialog_radio, null);
+    View view=View.inflate(getContext(), R.layout.dialog_radio, null);
 
     group=(RadioGroup) view.findViewById(R.id.dialog_radio_group);
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(getContext());
     dbHelper.getReadableDatabase();
-    users=dbHelper.getUsers(null);
+
+    List<User> users=dbHelper.getUsers(null);
     dbHelper.close();
 
     RadioButton button;
@@ -39,6 +36,7 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
       button=new RadioButton(getContext());
       button.setId(users.get(i).id);
       button.setText(users.get(i).name);
+      //button.setTextSize(textSize);
       group.addView(button);
     }
 
@@ -57,7 +55,6 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
       if (persistInt(value)) {
         Log.d("", "Success");
       }
-      ;
     }
   }
 

@@ -307,8 +307,8 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
           cursor.getInt(cursor.getColumnIndexOrThrow(UserEventDataEntry.COLUMN_NAME_STARRED))==1;
       note=cursor.getString(cursor.getColumnIndexOrThrow(UserEventDataEntry.COLUMN_NAME_NOTE));
 
-      event=new Event(id, MainActivity.USER_EVENT_ID+uId, day, hour, title, "", "", false,
-          duration, false, duration, location);
+      event=new Event(id, MainActivity.USER_EVENT_ID+uId, day, hour, title, "", "", false, duration,
+          false, duration, location);
 
       event.starred=starred;
       event.note=note;
@@ -449,10 +449,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     String selection=TournamentEntry.COLUMN_NAME_TITLE+" LIKE '%"+query+"%'";
     return sqLiteDatabase
         .query(TournamentEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
-  }
-
-  public List<Tournament> getAllTournaments(int userId) {
-    return getTournaments(userId, "");
   }
 
   public Tournament getTournament(int userId, long tournamentId) {

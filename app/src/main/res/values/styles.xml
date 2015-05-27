@@ -10,7 +10,7 @@
 
   <style name="medium_text" parent="AppTheme">
     <item name="android:gravity">left</item>
-    <item name="android:textSize">18sp</item>
+    <item name="android:textSize">@dimen/default_text_size</item>
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
   </style>

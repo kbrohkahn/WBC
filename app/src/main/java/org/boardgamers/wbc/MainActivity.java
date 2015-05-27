@@ -1,9 +1,10 @@
 package org.boardgamers.wbc;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,22 +16,22 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Main Activity class
@@ -297,33 +298,7 @@ public class MainActivity extends AppCompatActivity {
     startActivity(intent);
   }
 
-  public void openShareDialog() {
-    AlertDialog.Builder builder=new AlertDialog.Builder(this);
-
-    View dialogView=getLayoutInflater().inflate(R.layout.dialog_edit_text, null);
-
-    final EditText editText=(EditText) dialogView.findViewById(R.id.dialog_edit_text);
-    editText.getText().clear();
-
-    builder.setView(dialogView);
-
-    builder.setTitle(R.string.file_name_title).setMessage(R.string.file_name_message)
-        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            share(editText.getText().toString());
-            dialog.dismiss();
-          }
-        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        dialog.dismiss();
-      }
-    });
-    builder.create().show();
-  }
-
-  public void share(String scheduleName) {
+  public void share() {
     //    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     //    dbHelper.getReadableDatabase();
     //    List<Event> starred=dbHelper.getStarredEvents();
@@ -351,27 +326,33 @@ public class MainActivity extends AppCompatActivity {
     String contentBreak="~~~";
     String delimitter=";;;";
 
-    String outputString="wbc_data_file"+delimitter;
+    String outputString="wbc_data_file"+contentBreak;
 
-    outputString+=contentBreak;
-    outputString+=scheduleName;
-
-    outputString+=contentBreak+delimitter;
+    String email="Unknown user";
+    Pattern emailPattern=Patterns.EMAIL_ADDRESS;
+    Account[] accounts=AccountManager.get(this).getAccounts();
+    for (Account account : accounts) {
+      if (emailPattern.matcher(account.name).matches()) {
+        email=account.name;
+        break;
+      }
+    }
+    outputString+=email+contentBreak;
     for (Event event : userEvents) {
       outputString+=String.valueOf(event.id)+delimitter+event.title+delimitter+event.day+delimitter+
           event.hour+delimitter+event.duration+delimitter+event.location+delimitter;
     }
-    outputString+=contentBreak+delimitter;
+    outputString+=contentBreak;
     for (Event event : starred) {
       outputString+=String.valueOf(event.id)+delimitter;
     }
 
-    outputString+=contentBreak+delimitter;
+    outputString+=contentBreak;
     for (Event event : notes) {
       outputString+=String.valueOf(event.id)+delimitter+event.note+delimitter;
     }
 
-    outputString+=contentBreak+delimitter;
+    outputString+=contentBreak;
     for (Event event : eFinishes) {
       outputString+=String.valueOf(event.tournamentID)+delimitter+event.note+delimitter;
     }
@@ -428,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
     if (item.getItemId()==R.id.menu_map) {
       startActivity(new Intent(this, MapActivity.class));
     } else if (item.getItemId()==R.id.menu_share) {
-      openShareDialog();
+      share();
     } else if (item.getItemId()==R.id.menu_help) {
       startActivity(new Intent(this, HelpActivity.class));
     } else if (item.getItemId()==R.id.menu_about) {

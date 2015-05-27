@@ -1,5 +1,7 @@
 package org.boardgamers.wbc;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,11 +17,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.io.File;
@@ -27,14 +32,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class SettingsActivity extends AppCompatActivity {
   private static final String TAG="Settings";
 
+  private static final int GET_FILE_REQUEST_CODE=0;
+
   private static List<User> users;
   public static int currentUserId;
-
-  private static final int GET_FILE_REQUEST_CODE=0;
   public static boolean notifyChanged=false;
 
   protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +120,9 @@ public class SettingsActivity extends AppCompatActivity {
   }
 
   class SaveScheduleTask extends AsyncTask<String, Void, Integer> {
+    private String scheduleSource;
+    private int userId;
+
     private Context context;
 
     public SaveScheduleTask(Context c) {
@@ -121,36 +130,74 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPostExecute(Integer integer) {
-      if (integer>0) {
-        AlertDialog.Builder dialogBuilder=new AlertDialog.Builder(context);
-        dialogBuilder.setTitle("Success!").setMessage(
-            "Schedule successfully imported, do you want to view this schedule now or merge it with your schedule?")
-            .setPositiveButton("Merge", new DialogInterface.OnClickListener() {
+    protected void onPostExecute(Integer result) {
+      if (result>0) {
+        AlertDialog.Builder builder=new AlertDialog.Builder(context);
+
+        View dialogView=View.inflate(context, R.layout.dialog_import_schedule, null);
+
+        final EditText editText=(EditText) dialogView.findViewById(R.id.schedule_import_name_et);
+        editText.getText().clear();
+
+        final RadioGroup radioGroup=
+            (RadioGroup) dialogView.findViewById(R.id.schedule_import_merge_rg);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(RadioGroup group, int checkedId) {
+            editText.setEnabled(checkedId==R.id.schedule_import_neither);
+          }
+        });
+
+        final CheckBox checkBox=(CheckBox) dialogView.findViewById(R.id.schedule_import_view);
+
+        builder.setView(dialogView);
+        builder.setTitle("Schedule successfully imported!")
+            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
-                showMergeScheduleDialog();
+                if (radioGroup.getCheckedRadioButtonId()==R.id.schedule_import_replace) {
+                  mergeSchedule(true, currentUserId);
+                } else if (radioGroup.getCheckedRadioButtonId()==R.id.schedule_import_merge) {
+                  mergeSchedule(false, currentUserId);
+                } else {
+                  String scheduleName=editText.getText().toString();
+                  if (scheduleName.equalsIgnoreCase("")) {
+                    scheduleName="WBC Schedule " + String.valueOf(userId);
+                  }
+
+                  WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
+                  dbHelper.getWritableDatabase();
+                  dbHelper.insertUser(userId, scheduleName, scheduleSource);
+                  dbHelper.close();
+
+                  users.add(new User(userId, editText.getText().toString(), scheduleSource));
+                }
+
+                if (checkBox.isChecked()) {
+                  PreferenceManager.getDefaultSharedPreferences(context).edit()
+                      .putInt(getResources().getString(R.string.pref_key_schedule_select), userId)
+                      .apply();
+
+                  currentUserId=userId;
+                  SettingsFragment.updatePreferences();
+                }
+
                 dialog.dismiss();
               }
-            }).setNeutralButton("View", new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            currentUserId=users.get(users.size()-1).id;
-            dialog.dismiss();
-            finish();
-          }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
           }
         });
-        dialogBuilder.create().show();
+        builder.create().show();
+
       } else {
-        Toast.makeText(context, "Schedule import failed, contact developer for support",
-            Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "This is not an authentic WBC schedule file!", Toast.LENGTH_SHORT)
+            .show();
       }
-      super.onPostExecute(integer);
+
+      super.onPostExecute(result);
     }
 
     @Override
@@ -163,16 +210,12 @@ public class SettingsActivity extends AppCompatActivity {
       String delimitter=";;;";
 
       String[] splitData=data.split(contentBreak);
-      String dataCheck=splitData[0];
 
-      if (!dataCheck.substring(0, dataCheck.indexOf(delimitter))
-          .equalsIgnoreCase("wbc_data_file")) {
-        Toast.makeText(context, "This is not an authentic WBC schedule file!", Toast.LENGTH_SHORT)
-            .show();
+      if (!splitData[0].equalsIgnoreCase("wbc_data_file")) {
         return -1;
       }
 
-      String scheduleName=splitData[1];
+      scheduleSource=splitData[1];
       String[] createdEvents=splitData[2].split(delimitter);
       String[] starredEvents=splitData[3].split(delimitter);
       String[] eventNotes=splitData[4].split(delimitter);
@@ -185,9 +228,7 @@ public class SettingsActivity extends AppCompatActivity {
       if (users==null) {
         users=dbHelper.getUsers(null);
       }
-      int uId=users.size();
-      dbHelper.insertUser(uId, scheduleName, "");
-      users.add(new User(uId, scheduleName, ""));
+      userId=users.size();
 
       // insert created events
       String title, location;
@@ -209,7 +250,7 @@ public class SettingsActivity extends AppCompatActivity {
         duration=Double.valueOf(createdEvents[i+4]);
         location=createdEvents[i+5];
 
-        dbHelper.insertUserEvent(newEId, uId, title, day, hour, duration, location);
+        dbHelper.insertUserEvent(newEId, userId, title, day, hour, duration, location);
 
         oldIds[i/6]=eId;
         newEIds[i/6]=newEId;
@@ -250,7 +291,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         // insert user event data with note and starred
-        dbHelper.insertUserEventData(uId, newEId, starred, note);
+        dbHelper.insertUserEventData(userId, newEId, starred, note);
       }
 
       // insert user event data (starred)
@@ -273,7 +314,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // if star added in notes, don't edit event and erase note
         if (newEId>-1) {
-          dbHelper.insertUserEventData(uId, newEId, true, "");
+          dbHelper.insertUserEventData(userId, newEId, true, "");
         }
       }
 
@@ -285,7 +326,7 @@ public class SettingsActivity extends AppCompatActivity {
         tId=Integer.valueOf(tournamentFinishes[i]);
         finish=Integer.valueOf(tournamentFinishes[i+1]);
 
-        dbHelper.insertUserTournamentData(uId, tId, finish);
+        dbHelper.insertUserTournamentData(userId, tId, finish);
 
       }
 
@@ -302,21 +343,22 @@ public class SettingsActivity extends AppCompatActivity {
     String mySchedule=users.get(0).name;
 
     AlertDialog.Builder builder=new AlertDialog.Builder(this);
-    builder.setTitle(getResources().getString(R.string.settings_schedule_merge))
-        .setMessage("How do you want to merge the schedule "+newSchedule+" with "+mySchedule+
-            "?").setPositiveButton("Overwrite "+mySchedule, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        mergeSchedule(true, currentUserId);
-        dialog.dismiss();
-      }
-    }).setNeutralButton("Merge with "+mySchedule, new DialogInterface.OnClickListener() {
+    builder.setTitle(getResources().getString(R.string.settings_schedule_merge)).setMessage(
+        "How do you want to save "+newSchedule+"? Do you want to merge with "+mySchedule+" or"+
+            "replace it? This operation cannot be undone.")
+        .setPositiveButton("Replace", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            mergeSchedule(true, currentUserId);
+            dialog.dismiss();
+          }
+        }).setNegativeButton("Merge", new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         mergeSchedule(false, currentUserId);
         dialog.dismiss();
       }
-    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+    }).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();
@@ -447,7 +489,7 @@ public class SettingsActivity extends AppCompatActivity {
       scheduleExport.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-          showShareScheduleDialog();
+          ((SettingsActivity) getActivity()).share();
           return true;
         }
       });
@@ -511,32 +553,6 @@ public class SettingsActivity extends AppCompatActivity {
       updatePreferences();
     }
 
-    public void showShareScheduleDialog() {
-      AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-
-      View dialogView=getActivity().getLayoutInflater().inflate(R.layout.dialog_edit_text, null);
-
-      final EditText editText=(EditText) dialogView.findViewById(R.id.dialog_edit_text);
-      editText.getText().clear();
-
-      builder.setView(dialogView);
-
-      builder.setTitle(R.string.file_name_title).setMessage(R.string.file_name_message)
-          .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              ((SettingsActivity) getActivity()).share(editText.getText().toString());
-              dialog.dismiss();
-            }
-          }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-          dialog.dismiss();
-        }
-      });
-      builder.create().show();
-    }
-
   }
 
   @Override
@@ -562,7 +578,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
   }
 
-  public void share(String scheduleName) {
+  public void share() {
     int uId=currentUserId;
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
@@ -576,27 +592,33 @@ public class SettingsActivity extends AppCompatActivity {
     String contentBreak="~~~";
     String delimitter=";;;";
 
-    String outputString="wbc_data_file"+delimitter;
+    String outputString="wbc_data_file"+contentBreak;
 
-    outputString+=contentBreak;
-    outputString+=scheduleName;
-
-    outputString+=contentBreak+delimitter;
+    String email="Unknown user";
+    Pattern emailPattern=Patterns.EMAIL_ADDRESS;
+    Account[] accounts=AccountManager.get(this).getAccounts();
+    for (Account account : accounts) {
+      if (emailPattern.matcher(account.name).matches()) {
+        email=account.name;
+        break;
+      }
+    }
+    outputString+=email+contentBreak;
     for (Event event : userEvents) {
       outputString+=String.valueOf(event.id)+delimitter+event.title+delimitter+event.day+delimitter+
           event.hour+delimitter+event.duration+delimitter+event.location+delimitter;
     }
-    outputString+=contentBreak+delimitter;
+    outputString+=contentBreak;
     for (Event event : starred) {
       outputString+=String.valueOf(event.id)+delimitter;
     }
 
-    outputString+=contentBreak+delimitter;
+    outputString+=contentBreak;
     for (Event event : notes) {
       outputString+=String.valueOf(event.id)+delimitter+event.note+delimitter;
     }
 
-    outputString+=contentBreak+delimitter;
+    outputString+=contentBreak;
     for (Tournament tournament : tFinishes) {
       outputString+=
           String.valueOf(tournament.id)+delimitter+String.valueOf(tournament.finish)+delimitter;

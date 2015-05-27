@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <CheckBox
+    android:id="@+id/schedule_import_view"
+    style="@style/medium_text"
+    android:layout_marginTop="@dimen/layout_margin_small"
+    android:text="@string/schedule_import_view"/>
+
+  <TextView
+    style="@style/medium_text"
+    android:layout_marginTop="@dimen/layout_margin_small"
+    android:text="@string/schedule_import_merge_message"/>
+
+  <RadioGroup
+    android:id="@+id/schedule_import_merge_rg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:checkedButton="@+id/schedule_import_neither">
+
+    <RadioButton
+      android:id="@+id/schedule_import_neither"
+      style="@style/medium_text"
+      android:text="@string/schedule_import_neither"/>
+
+    <RadioButton
+      android:id="@+id/schedule_import_merge"
+      style="@style/medium_text"
+      android:text="@string/schedule_import_merge"/>
+
+    <RadioButton
+      android:id="@+id/schedule_import_replace"
+      style="@style/medium_text"
+      android:text="@string/schedule_import_replace"/>
+
+  </RadioGroup>
+
+  <TextView
+    style="@style/medium_text"
+    android:layout_marginTop="@dimen/layout_margin_small"
+    android:text="@string/schedule_import_name_message"/>
+
+  <EditText
+    android:id="@+id/schedule_import_name_et"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="@string/schedule_import_name_hint"
+    android:inputType="text"/>
+
+</LinearLayout>
