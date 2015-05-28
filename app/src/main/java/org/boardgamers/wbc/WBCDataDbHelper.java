@@ -126,7 +126,9 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
           UserTournamentDataEntry.COLUMN_USER_ID+" INTEGER,"+
           UserTournamentDataEntry.COLUMN_NAME_TOURNAMENT_ID+" INTEGER,"+
           UserTournamentDataEntry.COLUMN_NAME_FINISH+" INTEGER,"+
-          UserTournamentDataEntry.COLUMN_NAME_VISIBLE+" INTEGER)";
+          UserTournamentDataEntry.COLUMN_NAME_VISIBLE+" INTEGER, "+
+          "UNIQUE("+UserTournamentDataEntry.COLUMN_USER_ID+","+
+          UserTournamentDataEntry.COLUMN_NAME_TOURNAMENT_ID+") ON CONFLICT REPLACE)";
 
   private static final String SQL_CREATE_USER_EVENT_DATA_ENTRIES=
       "CREATE TABLE "+UserEventDataEntry.TABLE_NAME+" ("+
@@ -138,18 +140,23 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
           " FOREIGN KEY("+UserEventDataEntry.COLUMN_NAME_EVENT_ID+") REFERENCES "+
           EventEntry.TABLE_NAME+"("+EventEntry._ID+"), "+
           " FOREIGN KEY("+UserEventDataEntry.COLUMN_USER_ID+") REFERENCES "+
-          UserEntry.TABLE_NAME+"("+UserEntry._ID+"))";
+          UserEntry.TABLE_NAME+"("+UserEntry._ID+"), "+
+          "UNIQUE("+UserEventDataEntry.COLUMN_USER_ID+","+
+          UserEventDataEntry.COLUMN_NAME_EVENT_ID+") ON CONFLICT REPLACE)";
+  ;
 
   private static final String SQL_CREATE_USER_EVENT_ENTRIES=
       "CREATE TABLE "+UserCreatedEventEntry.TABLE_NAME+" ("+
           UserCreatedEventEntry._ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+
           UserCreatedEventEntry.COLUMN_NAME_EVENT_ID+" INTEGER UNIQUE,"+
-          UserCreatedEventEntry.COLUMN_USER_ID+" INTEGER,"+
+          UserCreatedEventEntry.COLUMN_USER_ID+" INTEGER UNIQUE,"+
           UserCreatedEventEntry.COLUMN_NAME_TITLE+" TEXT,"+
           UserCreatedEventEntry.COLUMN_NAME_DAY+" INTEGER,"+
           UserCreatedEventEntry.COLUMN_NAME_HOUR+" INTEGER,"+
           UserCreatedEventEntry.COLUMN_NAME_DURATION+" REAL,"+
-          UserCreatedEventEntry.COLUMN_NAME_LOCATION+" TEXT)";
+          UserCreatedEventEntry.COLUMN_NAME_LOCATION+" TEXT, "+
+          "UNIQUE("+UserCreatedEventEntry.COLUMN_USER_ID+","+
+          UserCreatedEventEntry.COLUMN_NAME_EVENT_ID+") ON CONFLICT REPLACE)";
 
   private static final String SQL_DELETE_EVENT_ENTRIES=
       "DROP TABLE IF EXISTS "+EventEntry.TABLE_NAME;
@@ -644,15 +651,19 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     values.put("user_id", MainActivity.PRIMARY_USER_ID);
 
     String where=UserEventDataEntry.COLUMN_USER_ID+"="+String.valueOf(userId);
-    int result=sqLiteDatabase.updateWithOnConflict(UserEventDataEntry.TABLE_NAME, values, where, null, SQLiteDatabase.CONFLICT_REPLACE);
+    int result=sqLiteDatabase
+        .updateWithOnConflict(UserEventDataEntry.TABLE_NAME, values, where, null,
+            SQLiteDatabase.CONFLICT_REPLACE);
 
     where=UserTournamentDataEntry.COLUMN_USER_ID+"="+String.valueOf(userId);
-    result+=sqLiteDatabase.updateWithOnConflict(UserTournamentDataEntry.TABLE_NAME, values, where,
-        null, SQLiteDatabase.CONFLICT_REPLACE);
+    result+=sqLiteDatabase
+        .updateWithOnConflict(UserTournamentDataEntry.TABLE_NAME, values, where, null,
+            SQLiteDatabase.CONFLICT_REPLACE);
 
     where=UserCreatedEventEntry.COLUMN_USER_ID+"="+String.valueOf(userId);
-    result+=sqLiteDatabase.updateWithOnConflict(UserCreatedEventEntry.TABLE_NAME, values, where,
-        null, SQLiteDatabase.CONFLICT_REPLACE);
+    result+=sqLiteDatabase
+        .updateWithOnConflict(UserCreatedEventEntry.TABLE_NAME, values, where, null,
+            SQLiteDatabase.CONFLICT_REPLACE);
 
     return result;
   }

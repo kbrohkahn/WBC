@@ -66,6 +66,8 @@ public class EventFragment extends Fragment {
 
   // user data
   private EditText noteET;
+  private Button shareButton;
+  private Button clearButton;
   private TextView finishTV;
   private RadioGroup finishGroup;
   private RadioButton[] finishButtons;
@@ -117,16 +119,16 @@ public class EventFragment extends Fragment {
     });
     noteET=(EditText) view.findViewById(R.id.ef_note);
 
-    Button share=(Button) view.findViewById(R.id.ef_share);
-    share.setOnClickListener(new View.OnClickListener() {
+    shareButton=(Button) view.findViewById(R.id.ef_share);
+    shareButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         share();
       }
     });
 
-    Button clear=(Button) view.findViewById(R.id.ef_clear);
-    clear.setOnClickListener(new View.OnClickListener() {
+    clearButton=(Button) view.findViewById(R.id.ef_clear);
+    clearButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         noteET.getText().clear();
@@ -185,6 +187,8 @@ public class EventFragment extends Fragment {
       }
 
       noteET.setEnabled(false);
+      clearButton.setEnabled(false);
+      shareButton.setEnabled(true);
 
       hideNonTournamentViews();
     } else {
@@ -251,6 +255,8 @@ public class EventFragment extends Fragment {
 
       noteET.setText(event.note);
       noteET.setEnabled(true);
+      clearButton.setEnabled(false);
+      shareButton.setEnabled(true);
 
       int hoursIntoConvention=MainActivity.getHoursIntoConvention();
       boolean started=event.day*24+event.hour<=hoursIntoConvention;
