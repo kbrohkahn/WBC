@@ -185,17 +185,11 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public long getChildId(int groupPosition, int childPosition) {
-    long id;
-    try {
-      id=getGroupId(groupPosition)+events.get(groupPosition).get(childPosition).id;
-    } catch (NullPointerException e) {
-      e.printStackTrace();
-      id=-1;
-    } catch (IndexOutOfBoundsException e) {
-      e.printStackTrace();
-      id=-2;
+    if (childPosition<events.get(groupPosition).size()) {
+      return getGroupId(groupPosition)+events.get(groupPosition).get(childPosition).id;
+    } else {
+      return -1;
     }
-    return id;
   }
 
   @Override
@@ -275,8 +269,12 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     updateEvents(new Event[] {event});
     notifyDataSetChanged();
 
-    Event[] events={event};
-    MainActivity.changeEvents(fragment.getActivity(), events, id);
+    WBCDataDbHelper dbHelper=new WBCDataDbHelper(fragment.getActivity());
+    dbHelper.getWritableDatabase();
+    dbHelper.insertUserEventData(MainActivity.userId, event.id, event.starred, event.note);
+    dbHelper.close();
+
+    MainActivity.changeEventsInLists(new Event[] {event}, id);
   }
 
   public void updateEvents(Event[] events) {}

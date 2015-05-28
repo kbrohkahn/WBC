@@ -97,8 +97,22 @@ public class EventFragment extends Fragment {
     classTV=(TextView) view.findViewById(R.id.ef_class);
     locationTV=(TextView) view.findViewById(R.id.ef_location);
     gMTV=(TextView) view.findViewById(R.id.ef_gm);
+
     previewTV=(TextView) view.findViewById(R.id.ef_preview_link);
+    previewTV.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        openPreviewLink();
+      }
+    });
+
     reportTV=(TextView) view.findViewById(R.id.ef_report_link);
+    reportTV.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        openReportLink();
+      }
+    });
 
     boxIV=(ImageView) view.findViewById(R.id.ef_box_image);
 
@@ -161,7 +175,6 @@ public class EventFragment extends Fragment {
     }
 
     stopOverlayUpdate();
-    mapOverlayToggle.setEnabled(false);
 
     if (id==-1) {
       event=null;
@@ -176,14 +189,12 @@ public class EventFragment extends Fragment {
       gMTV.setText(getResources().getString(R.string.gm));
 
       timeLayout.setBackgroundResource(0);
-      mapOverlayToggle.setVisibility(View.GONE);
-      setRoom("");
 
+      setRoom("");
+      mapOverlay.setImageResource(0);
+      map.setImageResource(0);
       if (runnableActive) {
-        runnableActive=false;
-        mapOverlay.setImageResource(0);
-        map.setImageResource(0);
-        handler.removeCallbacks(runnable);
+        stopOverlayUpdate();
       }
 
       noteET.setEnabled(false);
@@ -196,7 +207,7 @@ public class EventFragment extends Fragment {
       dbHelper.getReadableDatabase();
       event=dbHelper.getEvent(MainActivity.userId, id);
 
-      if (event.tournamentID<MainActivity.USER_EVENT_ID) {
+      if (event.id<MainActivity.USER_EVENT_ID) {
         tournament=dbHelper.getTournament(MainActivity.userId, event.tournamentID);
       } else {
         tournament=null;
@@ -282,23 +293,6 @@ public class EventFragment extends Fragment {
 
         new DownloadImageTask().execute("http://boardgamers.org/boxart/"+tournament.label+".jpg");
 
-        previewTV.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://boardgamers.org/yearbkex/"+tournament.label+"pge.htm")));
-          }
-        });
-
-        reportTV.setOnClickListener(new View.OnClickListener() {
-
-          @Override
-          public void onClick(View v) {
-            getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://boardgamers.org/yearbook14/"+tournament.label+"pge.htm")));
-          }
-        });
-
         // if last event started, allow finish
         for (int i=0; i<=6; i++) {
           finishButtons[i].setTextColor(started ? Color.BLACK : Color.GRAY);
@@ -318,6 +312,20 @@ public class EventFragment extends Fragment {
 
     scrollView.fullScroll(View.FOCUS_UP);
     noteET.clearFocus();
+  }
+
+  public void openPreviewLink() {
+    if (tournament!=null && tournament.isTournament) {
+      getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
+          Uri.parse("http://boardgamers.org/yearbkex/"+tournament.label+"pge.htm")));
+    }
+  }
+
+  public void openReportLink() {
+    if (tournament!=null && tournament.isTournament) {
+      getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
+          Uri.parse("http://boardgamers.org/yearbook14/"+tournament.label+"pge.htm")));
+    }
   }
 
   public void hideNonTournamentViews() {
@@ -375,7 +383,6 @@ public class EventFragment extends Fragment {
     dbHelper.close();
 
     MainActivity.updateUserData(event.id, note, event.tournamentID, finish);
-    MainActivity.update();
   }
 
   @Override
@@ -392,6 +399,7 @@ public class EventFragment extends Fragment {
   }
 
   public void setRoom(String room) {
+    mapOverlayToggle.setVisibility(View.GONE);
     roomID=-1;
     String[] roomsDownstairs=getResources().getStringArray(R.array.rooms_downstairs);
     for (int i=0; i<roomsDownstairs.length; i++) {
@@ -413,7 +421,6 @@ public class EventFragment extends Fragment {
   }
 
   public void setImageViews() {
-    mapOverlayToggle.setEnabled(true);
     mapOverlayToggle.setVisibility(View.VISIBLE);
 
     if (roomID>=50) {

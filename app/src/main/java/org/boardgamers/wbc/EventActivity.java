@@ -55,11 +55,14 @@ public class EventActivity extends AppCompatActivity {
     Event event=eventFragment.event;
     if (event!=null) {
       event.starred=!event.starred;
-
       invalidateOptionsMenu();
 
-      Event[] events={event};
-      MainActivity.changeEvents(this, events, -1);
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
+      dbHelper.getWritableDatabase();
+      dbHelper.insertUserEventData(MainActivity.userId, event.id, event.starred, event.note);
+      dbHelper.close();
+
+      MainActivity.changeEventsInLists(new Event[] {event}, -1);
     } else {
       Log.d(TAG, "ERROR: Could not get event fragment");
     }

@@ -13,8 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 /**
  * Created by Kevin
@@ -22,15 +20,11 @@ import android.widget.Toast;
 public class SearchResultActivity extends AppCompatActivity {
   //private final String TAG="Search Activity";
 
-  public static ProgressBar progressBar;
-
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.search_results);
-
-    progressBar=(ProgressBar) findViewById(R.id.search_progress_bar);
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -113,15 +107,6 @@ public class SearchResultActivity extends AppCompatActivity {
   }
 
   @Override
-  public void finish() {
-    if (MainActivity.updatingFragments) {
-      Toast.makeText(this, "Updating lists, please wait", Toast.LENGTH_SHORT).show();
-    } else {
-      super.finish();
-    }
-  }
-
-  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId()==android.R.id.home) {
       finish();
@@ -130,5 +115,4 @@ public class SearchResultActivity extends AppCompatActivity {
 
     return true;
   }
-
 }

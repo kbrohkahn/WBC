@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -24,7 +23,6 @@ import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
@@ -48,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
   public static int currentHour;
   public static int userId=-1;
 
-  public static boolean updatingFragments=false;
   public static boolean differentUser=false;
   public static boolean opened=false;
 
@@ -136,19 +133,15 @@ public class MainActivity extends AppCompatActivity {
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
-    int starredEvents=dbHelper.getStarredEvents(userId).size();
+    int numStarredEvents=dbHelper.getStarredEvents(userId).size();
     String scheduleName=dbHelper.getUser(userId).name;
     setTitle("WBC: "+scheduleName);
     dbHelper.close();
 
-    if (starredEvents==0) {
+    if (numStarredEvents==0) {
       viewPager.setCurrentItem(1);
     }
     Log.d(TAG, "Loading complete");
-  }
-
-  public static void update() {
-    pagerAdapter.getItem(viewPager.getCurrentItem()).refreshAdapter();
   }
 
   @Override
@@ -161,9 +154,8 @@ public class MainActivity extends AppCompatActivity {
       // TODO better implementation
       //loadUserData();
       //pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
-    } else {
-      update();
     }
+
     super.onResume();
   }
 
@@ -179,62 +171,20 @@ public class MainActivity extends AppCompatActivity {
   public static void updateUserData(long eventId, String note, long tournamentId, int finish) {
     ((UserDataListFragment) pagerAdapter.getItem(2))
         .updateUserData(eventId, note, tournamentId, finish);
+    pagerAdapter.getItem(2).refreshAdapter();
+
   }
 
-  public static void changeEvents(Context context, Event[] events, int id) {
-    new ChangeEventTask(context, id).execute(events);
-  }
-
-  static class ChangeEventTask extends AsyncTask<Event, Integer, Integer> {
-    final Context context;
-    final int currentPage;
-
-    public ChangeEventTask(Context c, int i) {
-      context=c;
-      currentPage=i;
+  public static void changeEventsInLists(Event[] events, int currentPage) {
+    for (int j=0; j<3; j++) {
+      if (j!=currentPage) {
+        pagerAdapter.getItem(j).updateEvents(events);
+      }
     }
 
-    @Override
-    protected void onPostExecute(Integer integer) {
-      // refresh current fragment's adapter if changing star from event or search
-      updatingFragments=false;
-      if (SearchResultActivity.progressBar!=null) {
-        SearchResultActivity.progressBar.setVisibility(View.GONE);
-      }
-
-      if (currentPage==3) {
-        pagerAdapter.getItem(2).refreshAdapter();
-      }
-
-      super.onPostExecute(integer);
-    }
-
-    @Override
-    protected Integer doInBackground(Event... events) {
-      updatingFragments=true;
-
-      WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
-      dbHelper.getWritableDatabase();
-
-      Event event;
-      for (int i=0; i<events.length; i++) {
-        event=events[i];
-
-        if (SearchResultActivity.progressBar!=null) {
-          SearchResultActivity.progressBar.setProgress(i);
-        }
-
-        dbHelper.insertUserEventData(userId, event.id, event.starred, event.note);
-      }
-      dbHelper.close();
-
-      for (int j=0; j<3; j++) {
-        if (j!=currentPage) {
-          pagerAdapter.getItem(j).updateEvents(events);
-        }
-      }
-
-      return 1;
+    // sent from create event dialog, so refresh UserData list
+    if (currentPage==3) {
+      pagerAdapter.getItem(2).refreshAdapter();
     }
   }
 

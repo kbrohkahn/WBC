@@ -31,9 +31,7 @@ public class DefaultListFragment extends Fragment {
   }
 
   public void refreshAdapter() {
-    if (listAdapter!=null && !MainActivity.updatingFragments) {
-      listAdapter.updateList();
-    }
+    listAdapter.updateList();
   }
 
   protected int getLayoutId() {
@@ -41,15 +39,11 @@ public class DefaultListFragment extends Fragment {
   }
 
   public void updateEvents(Event[] events) {
-    if (listAdapter!=null) {
-      listAdapter.updateEvents(events);
-    }
+    listAdapter.updateEvents(events);
   }
 
   public void removeEvents(Event[] events) {
-    if (listAdapter!=null) {
-      listAdapter.removeEvents(events);
-    }
+    listAdapter.removeEvents(events);
   }
 
   class PopulateAdapterTask extends AsyncTask<Integer, Integer, Integer> {

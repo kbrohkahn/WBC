@@ -121,7 +121,7 @@ public class DialogCreateEvent extends DialogFragment {
 
     dbHelper.close();
 
-    MainActivity.changeEvents(getActivity(), newEvents.toArray(new Event[newEvents.size()]), 3);
+    MainActivity.changeEventsInLists(newEvents.toArray(new Event[newEvents.size()]), 3);
 
     dismiss();
   }

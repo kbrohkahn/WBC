@@ -1,5 +1,7 @@
 package org.boardgamers.wbc;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ public class SearchListFragment extends DefaultListFragment {
   private ImageView star;
   private String query;
   private int id;
+  private ProgressDialog dialog;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -24,7 +27,6 @@ public class SearchListFragment extends DefaultListFragment {
     View view=super.onCreateView(inflater, container, savedInstanceState);
 
     star=(ImageView) view.findViewById(R.id.sl_star);
-    star.setVisibility(View.VISIBLE);
 
     int margin=(int) getResources().getDimension(R.dimen.activity_margin);
     LinearLayout.LayoutParams lp=
@@ -32,39 +34,86 @@ public class SearchListFragment extends DefaultListFragment {
             LinearLayout.LayoutParams.WRAP_CONTENT);
     lp.setMargins(margin, margin, margin, margin);
     star.setLayoutParams(lp);
-
+    star.setVisibility(View.VISIBLE);
     star.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        SearchResultActivity.progressBar.setVisibility(View.VISIBLE);
-        SearchResultActivity.progressBar.setProgress(0);
-
-        allStarred=!allStarred;
-        setGameStarIV();
-
-        Event event;
-        List<Event> changedEvents=new ArrayList<>();
-        for (int i=0; i<listAdapter.events.size(); i++) {
-          for (int j=0; j<listAdapter.events.get(i).size(); j++) {
-            event=listAdapter.events.get(i).get(j);
-            if (event.starred^allStarred) {
-              event.starred=!event.starred;
-              changedEvents.add(event);
-            }
-          }
-        }
-
-        refreshAdapter();
-
-        int count=changedEvents.size();
-        SearchResultActivity.progressBar.setMax(count);
-
-        Event[] changedEventsArray=new Event[count];
-        MainActivity.changeEvents(getActivity(), changedEvents.toArray(changedEventsArray), -1);
+        new SaveEventData().execute();
       }
     });
 
     return view;
+  }
+
+  class SaveEventData extends AsyncTask<Integer, Integer, Void> {
+    List<Event> changedEvents;
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+      super.onProgressUpdate(values);
+
+      dialog.setProgress(values[0]);
+    }
+
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
+
+      allStarred=!allStarred;
+      setGameStarIV();
+
+      dialog=new ProgressDialog(getActivity());
+      dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+      dialog.setCancelable(false);
+      dialog.setTitle("Saving, please wait...");
+      dialog.show();
+
+      // update events in list
+      Event event;
+      changedEvents=new ArrayList<>();
+      for (int i=0; i<listAdapter.events.size(); i++) {
+        for (int j=0; j<listAdapter.events.get(i).size(); j++) {
+          event=listAdapter.events.get(i).get(j);
+          if (event.starred^allStarred) {
+            event.starred=!event.starred;
+            changedEvents.add(event);
+          }
+        }
+      }
+
+      dialog.setMax(changedEvents.size());
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      // update events in Main lists
+      Event[] changedEventsArray=new Event[changedEvents.size()];
+      MainActivity.changeEventsInLists(changedEvents.toArray(changedEventsArray), -1);
+
+      if (dialog.isShowing()) {
+        dialog.dismiss();
+      }
+      refreshAdapter();
+      super.onPostExecute(aVoid);
+    }
+
+    @Override
+    protected Void doInBackground(Integer... params) {
+      // save events in DB
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+      dbHelper.getWritableDatabase();
+      Event event;
+      for (int i=0; i<changedEvents.size(); i++) {
+        event=changedEvents.get(i);
+
+        dbHelper.insertUserEventData(MainActivity.userId, event.id, event.starred, event.note);
+
+        onProgressUpdate(i);
+      }
+      dbHelper.close();
+
+      return null;
+    }
   }
 
   public void changeEventStar(Event event) {
@@ -151,5 +200,14 @@ public class SearchListFragment extends DefaultListFragment {
 
       return 1;
     }
+  }
+
+  @Override
+  public void onPause() {
+    if (dialog!=null && dialog.isShowing()) {
+      dialog.dismiss();
+    }
+
+    super.onPause();
   }
 }
