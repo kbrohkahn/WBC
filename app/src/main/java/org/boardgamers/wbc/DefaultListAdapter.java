@@ -272,14 +272,14 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
 
   public void changeEventStar(Event event) {
     event.starred=!event.starred;
-    updateEvent(event);
+    updateEvents(new Event[] {event});
     notifyDataSetChanged();
 
     Event[] events={event};
     MainActivity.changeEvents(fragment.getActivity(), events, id);
   }
 
-  public void updateEvent(Event event) {}
+  public void updateEvents(Event[] events) {}
 
-  public void removeEvents(List<Event> deletedEvents) {}
+  public void removeEvents(Event[] deletedEvents) {}
 }

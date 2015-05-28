@@ -173,15 +173,18 @@ public class UserDataListFragment extends DefaultListFragment {
     dbHelper.deleteAllUserEvents(MainActivity.userId);
     dbHelper.close();
 
-    List<Event> events=new ArrayList<>();
-    while (listAdapter.events.get(EVENTS_INDEX).size()>0) {
-      events.add(listAdapter.events.get(EVENTS_INDEX).remove(0));
+
+    int count=listAdapter.events.get(EVENTS_INDEX).size();
+    Event[] events=new Event[count];
+    while (count>0) {
+      events[count-1]=listAdapter.events.get(EVENTS_INDEX).remove(count-1);
+      count--;
     }
     refreshAdapter();
     deleteEvents(events);
   }
 
-  public void deleteEvents(List<Event> events) {
+  public void deleteEvents(Event[] events) {
     MainActivity.removeEvents(events);
   }
 

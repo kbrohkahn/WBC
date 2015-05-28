@@ -17,25 +17,27 @@ public class SummaryListAdapter extends DefaultListAdapter {
   }
 
   @Override
-  public void updateEvent(Event event) {
+  public void updateEvents(Event[] updatedEvents) {
     Event tempEvent;
 
-    if (event.starred) {
-      int index;
-      for (index=0; index<events.get(event.day).size(); index++) {
-        tempEvent=events.get(event.day).get(index);
-        if (event.hour<tempEvent.hour ||
-            (event.hour==tempEvent.hour && event.title.compareToIgnoreCase(tempEvent.title)==1)) {
-          break;
+    for (Event event : updatedEvents) {
+      if (event.starred) {
+        int index;
+        for (index=0; index<events.get(event.day).size(); index++) {
+          tempEvent=events.get(event.day).get(index);
+          if (event.hour<tempEvent.hour ||
+              (event.hour==tempEvent.hour && event.title.compareToIgnoreCase(tempEvent.title)==1)) {
+            break;
+          }
         }
-      }
-      events.get(event.day).add(index, event);
-    } else {
-      for (int i=0; i<events.get(event.day).size(); i++) {
-        tempEvent=events.get(event.day).get(i);
-        if (tempEvent.id==event.id) {
-          events.get(event.day).remove(tempEvent);
-          break;
+        events.get(event.day).add(index, event);
+      } else {
+        for (int i=0; i<events.get(event.day).size(); i++) {
+          tempEvent=events.get(event.day).get(i);
+          if (tempEvent.id==event.id) {
+            events.get(event.day).remove(tempEvent);
+            break;
+          }
         }
       }
     }

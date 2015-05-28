@@ -240,7 +240,7 @@ public class SettingsActivity extends AppCompatActivity {
       int[] newEIds=new int[createdEvents.length/6];
 
       for (int i=0; i+6<=createdEvents.length; i+=6) {
-        if (createdEvents[i].equalsIgnoreCase("")) {
+        if (createdEvents[i].equalsIgnoreCase("0")) {
           break;
         }
         eId=Integer.valueOf(createdEvents[i]);
@@ -262,7 +262,7 @@ public class SettingsActivity extends AppCompatActivity {
       String note;
       boolean starred;
       for (int i=0; i+2<=eventNotes.length; i+=2) {
-        if (eventNotes[i].equalsIgnoreCase("")) {
+        if (eventNotes[i].equalsIgnoreCase("0")) {
           break;
         }
         eId=Integer.valueOf(eventNotes[i]);
@@ -296,7 +296,7 @@ public class SettingsActivity extends AppCompatActivity {
 
       // insert user event data (starred)
       for (String eIdString : starredEvents) {
-        if (eIdString.equalsIgnoreCase("")) {
+        if (eIdString.equalsIgnoreCase("0")) {
           break;
         }
         eId=Integer.valueOf(eIdString);
@@ -320,7 +320,7 @@ public class SettingsActivity extends AppCompatActivity {
 
       int finish, tId;
       for (int i=0; i+2<=tournamentFinishes.length; i+=2) {
-        if (tournamentFinishes[i].equalsIgnoreCase("")) {
+        if (tournamentFinishes[i].equalsIgnoreCase("0")) {
           break;
         }
         tId=Integer.valueOf(tournamentFinishes[i]);
@@ -603,22 +603,22 @@ public class SettingsActivity extends AppCompatActivity {
         break;
       }
     }
-    outputString+=email+contentBreak;
+    outputString+=email+contentBreak+"0";
     for (Event event : userEvents) {
       outputString+=String.valueOf(event.id)+delimitter+event.title+delimitter+event.day+delimitter+
           event.hour+delimitter+event.duration+delimitter+event.location+delimitter;
     }
-    outputString+=contentBreak;
+    outputString+=contentBreak+"0";
     for (Event event : starred) {
       outputString+=String.valueOf(event.id)+delimitter;
     }
 
-    outputString+=contentBreak;
+    outputString+=contentBreak+"0";
     for (Event event : notes) {
       outputString+=String.valueOf(event.id)+delimitter+event.note+delimitter;
     }
 
-    outputString+=contentBreak;
+    outputString+=contentBreak+"0";
     for (Tournament tournament : tFinishes) {
       outputString+=
           String.valueOf(tournament.id)+delimitter+String.valueOf(tournament.finish)+delimitter;

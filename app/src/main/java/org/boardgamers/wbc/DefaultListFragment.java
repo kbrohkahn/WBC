@@ -15,7 +15,7 @@ import java.util.List;
  * Created by Kevin
  */
 public class DefaultListFragment extends Fragment {
-  private final String TAG="Default List Fragment";
+  //private final String TAG="Default List Fragment";
 
   protected DefaultListAdapter listAdapter;
   protected ExpandableListView listView;
@@ -40,13 +40,13 @@ public class DefaultListFragment extends Fragment {
     return R.layout.default_list;
   }
 
-  public void updateEvent(Event event) {
+  public void updateEvents(Event[] events) {
     if (listAdapter!=null) {
-      listAdapter.updateEvent(event);
+      listAdapter.updateEvents(events);
     }
   }
 
-  public void removeEvents(List<Event> events) {
+  public void removeEvents(Event[] events) {
     if (listAdapter!=null) {
       listAdapter.removeEvents(events);
     }

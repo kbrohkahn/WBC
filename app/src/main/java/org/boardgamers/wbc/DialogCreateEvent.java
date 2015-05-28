@@ -5,6 +5,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,7 +22,7 @@ import java.util.List;
  * Dialog shown for creating user events
  */
 public class DialogCreateEvent extends DialogFragment {
-  private final String TAG="WBC CreateEventDialog";
+  //private final String TAG="WBC CreateEventDialog";
 
   private final int[] ceDayIDs=
       {R.id.ce_repeat_d0, R.id.ce_repeat_d1, R.id.ce_repeat_d2, R.id.ce_repeat_d3,
@@ -88,6 +89,10 @@ public class DialogCreateEvent extends DialogFragment {
       days[i]=(CheckBox) view.findViewById(ceDayIDs[i]);
       days[i].setText(dayStrings[i]);
     }
+
+    getDialog().getWindow()
+        .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
     return view;
   }
 

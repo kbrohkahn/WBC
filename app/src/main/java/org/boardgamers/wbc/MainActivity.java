@@ -167,16 +167,13 @@ public class MainActivity extends AppCompatActivity {
     super.onResume();
   }
 
-  public static void removeEvents(List<Event> events) {
+  public static void removeEvents(Event[] events) {
     for (Event event : events) {
       event.starred=false;
     }
 
     pagerAdapter.getItem(1).removeEvents(events);
-
-    for (Event event : events) {
-      pagerAdapter.getItem(0).updateEvent(event);
-    }
+    pagerAdapter.getItem(0).updateEvents(events);
   }
 
   public static void updateUserData(long eventId, String note, long tournamentId, int finish) {
@@ -227,20 +224,17 @@ public class MainActivity extends AppCompatActivity {
           SearchResultActivity.progressBar.setProgress(i);
         }
 
-        Log.d(TAG, "Changing event star for: "+event.title);
-
         dbHelper.insertUserEventData(userId, event.id, event.starred, event.note);
-
-        for (int j=0; j<3; j++) {
-          if (j!=currentPage) {
-            pagerAdapter.getItem(j).updateEvent(event);
-          }
-        }
       }
       dbHelper.close();
-      Log.d(TAG, "Event stars changed");
-      return 1;
 
+      for (int j=0; j<3; j++) {
+        if (j!=currentPage) {
+          pagerAdapter.getItem(j).updateEvents(events);
+        }
+      }
+
+      return 1;
     }
   }
 
@@ -335,7 +329,8 @@ public class MainActivity extends AppCompatActivity {
     String contentBreak="~~~";
     String delimitter=";;;";
 
-    String outputString=getResources().getString(R.string.settings_schedule_name_check)+contentBreak;
+    String outputString=
+        getResources().getString(R.string.settings_schedule_name_check)+contentBreak;
 
     String email="Unknown user";
     Pattern emailPattern=Patterns.EMAIL_ADDRESS;
@@ -346,22 +341,22 @@ public class MainActivity extends AppCompatActivity {
         break;
       }
     }
-    outputString+=email+contentBreak;
+    outputString+=email+contentBreak+"0";
     for (Event event : userEvents) {
       outputString+=String.valueOf(event.id)+delimitter+event.title+delimitter+event.day+delimitter+
           event.hour+delimitter+event.duration+delimitter+event.location+delimitter;
     }
-    outputString+=contentBreak;
+    outputString+=contentBreak+"0";
     for (Event event : starred) {
       outputString+=String.valueOf(event.id)+delimitter;
     }
 
-    outputString+=contentBreak;
+    outputString+=contentBreak+"0";
     for (Event event : notes) {
       outputString+=String.valueOf(event.id)+delimitter+event.note+delimitter;
     }
 
-    outputString+=contentBreak;
+    outputString+=contentBreak+"0";
     for (Event event : eFinishes) {
       outputString+=String.valueOf(event.tournamentID)+delimitter+event.note+delimitter;
     }

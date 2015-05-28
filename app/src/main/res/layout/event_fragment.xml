@@ -17,6 +17,7 @@
       android:layout_marginRight="@dimen/default_margin"
       android:gravity="center_vertical"
       android:orientation="horizontal"
+      android:focusableInTouchMode="true"
       android:padding="@dimen/default_margin">
 
       <include

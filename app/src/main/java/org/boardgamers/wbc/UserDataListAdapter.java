@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,33 +65,38 @@ public class UserDataListAdapter extends DefaultListAdapter {
   }
 
   @Override
-  public void updateEvent(Event event) {
-    if (event.id<MainActivity.USER_EVENT_ID)
-      return;
-
-    boolean inList=false;
+  public void updateEvents(Event[] updatedEvents) {
+    boolean inList;
     Event tempEvent;
-    for (int i=0; i<events.get(UserDataListFragment.EVENTS_INDEX).size(); i++) {
-      tempEvent=events.get(UserDataListFragment.EVENTS_INDEX).get(i);
-      if (tempEvent.id==event.id) {
-        tempEvent.starred=event.starred;
-        inList=true;
-        break;
-      }
-    }
 
-    if (!inList) {
-      int index;
-      for (index=0; index<events.get(UserDataListFragment.EVENTS_INDEX).size(); index++) {
-        tempEvent=events.get(0).get(index);
-        if (tempEvent.day*24+tempEvent.hour>event.day*24+event.hour ||
-            (tempEvent.day*24+tempEvent.hour==event.day*24+event.hour &&
-                tempEvent.title.compareToIgnoreCase(event.title)==-1)) {
+    for (Event event : updatedEvents) {
+      if (event.id<MainActivity.USER_EVENT_ID) {
+        continue;
+      }
+
+      inList=false;
+      for (int i=0; i<events.get(UserDataListFragment.EVENTS_INDEX).size(); i++) {
+        tempEvent=events.get(UserDataListFragment.EVENTS_INDEX).get(i);
+        if (tempEvent.id==event.id) {
           tempEvent.starred=event.starred;
+          inList=true;
           break;
         }
       }
-      events.get(UserDataListFragment.EVENTS_INDEX).add(index, event);
+
+      if (!inList) {
+        int index;
+        for (index=0; index<events.get(UserDataListFragment.EVENTS_INDEX).size(); index++) {
+          tempEvent=events.get(0).get(index);
+          if (tempEvent.day*24+tempEvent.hour>event.day*24+event.hour ||
+              (tempEvent.day*24+tempEvent.hour==event.day*24+event.hour &&
+                  tempEvent.title.compareToIgnoreCase(event.title)==-1)) {
+            tempEvent.starred=event.starred;
+            break;
+          }
+        }
+        events.get(UserDataListFragment.EVENTS_INDEX).add(index, event);
+      }
     }
   }
 
@@ -129,8 +133,7 @@ public class UserDataListAdapter extends DefaultListAdapter {
         events.get(UserDataListFragment.EVENTS_INDEX).get(index).id);
     dbHelper.close();
 
-    List<Event> deletedEvents=new ArrayList<>();
-    deletedEvents.add(events.get(UserDataListFragment.EVENTS_INDEX).remove(index));
+    Event[] deletedEvents=new Event[] {events.get(UserDataListFragment.EVENTS_INDEX).remove(index)};
     notifyDataSetChanged();
     ((UserDataListFragment) fragment).deleteEvents(deletedEvents);
   }

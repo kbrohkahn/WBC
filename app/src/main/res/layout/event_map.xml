@@ -1,38 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:orientation="vertical">
+  android:layout_height="wrap_content">
 
-  <RelativeLayout
+  <ImageView
+    android:id="@+id/ef_map"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:adjustViewBounds="true"
+    android:contentDescription="@string/mf_upstairs"
+    android:scaleType="fitXY"/>
 
-    <ImageView
-      android:id="@+id/ef_map"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:adjustViewBounds="true"
-      android:contentDescription="@string/mf_upstairs"
-      android:scaleType="fitXY"/>
-
-    <ImageView
-      android:id="@+id/ef_map_overlay"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:adjustViewBounds="true"
-      android:alpha=".75"
-      android:contentDescription="@string/mf_upstairs"
-      android:scaleType="fitXY"/>
-  </RelativeLayout>
+  <ImageView
+    android:id="@+id/ef_map_overlay"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:adjustViewBounds="true"
+    android:alpha=".75"
+    android:contentDescription="@string/mf_upstairs"
+    android:scaleType="fitXY"/>
 
   <ToggleButton
-    android:checked="false"
-    android:layout_gravity="center_horizontal"
     android:id="@+id/ef_map_toggle_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:checked="false"
     android:textOff="@string/map_overlay_off"
     android:textOn="@string/map_overlay_on"/>
-</LinearLayout>
+</RelativeLayout>

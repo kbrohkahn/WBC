@@ -125,7 +125,8 @@
   <string name="schedule_import_neither">Neither</string>
   <string name="schedule_import_merge">Merge</string>
   <string name="schedule_import_replace">Replace</string>
-  <string name="schedule_import_name_message">Enter a name for the schedule (N/A if merging)</string>
+  <string
+    name="schedule_import_name_message">Enter a name for the schedule (N/A if merging)</string>
   <string name="schedule_import_name_hint">Schedule name</string>
 
   <!-- PREFERENCES FILES -->
@@ -213,17 +214,6 @@
     <item>SOG</item>
   </string-array>
   <string-array name="daysForParsing">
-    <item>2014&#45;08&#45;02</item>
-    <item>2014&#45;08&#45;03</item>
-    <item>2014&#45;08&#45;04</item>
-    <item>2014&#45;08&#45;05</item>
-    <item>2014&#45;08&#45;06</item>
-    <item>2014&#45;08&#45;07</item>
-    <item>2014&#45;08&#45;08</item>
-    <item>2014&#45;08&#45;09</item>
-    <item>2014&#45;08&#45;10</item>
-  </string-array>
-  <string-array name="daysForParsing_2015">
     <item>2015&#45;08&#45;01</item>
     <item>2015&#45;08&#45;02</item>
     <item>2015&#45;08&#45;03</item>
@@ -314,7 +304,7 @@
 
   <!-- ABOUT -->
   <string name="about_developer_text">Created by Kevin Broh-Kahn\ndev@boardgamers.org</string>
-  <string name="about_others_text">Schedule files courtesy of Craig Trader\nMaps courtesy of Jason Long</string>
+  <string name="about_others_text">Schedule file courtesy of Craig Trader\nMaps courtesy of Jason Long</string>
 
   <!-- HELP -->
   <string name="how_to_help">Select a help topic to expand and show info</string>
@@ -338,9 +328,6 @@
   <string-array name="help_texts">
   <item>DAYS &amp; TIMES: The app displays ongoing events with a green background,
     future events yellow, and ended events gray.
-    To change the displayed day, swipe left and right from the main schedule or
-    select
-    a day from the drop down in the action bar.
     \n\nCUSTOMIZE SCHEDULE: Touch the star to the left of an event to add it to "My Events"
     list at the top of each day. Use the main menu to access "Created Events,"
     where you can add custom events to your schedule, and "Filter,"

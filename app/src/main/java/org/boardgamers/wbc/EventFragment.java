@@ -201,6 +201,7 @@ public class EventFragment extends Fragment {
       } else {
         tournament=null;
       }
+
       dbHelper.close();
 
       if (getActivity() instanceof EventActivity) {
@@ -255,7 +256,7 @@ public class EventFragment extends Fragment {
 
       noteET.setText(event.note);
       noteET.setEnabled(true);
-      clearButton.setEnabled(false);
+      clearButton.setEnabled(true);
       shareButton.setEnabled(true);
 
       int hoursIntoConvention=MainActivity.getHoursIntoConvention();
@@ -294,7 +295,7 @@ public class EventFragment extends Fragment {
           @Override
           public void onClick(View v) {
             getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://boardgamers.org/yearbook13/"+tournament.label+"pge.htm")));
+                Uri.parse("http://boardgamers.org/yearbook14/"+tournament.label+"pge.htm")));
           }
         });
 
@@ -315,6 +316,7 @@ public class EventFragment extends Fragment {
       }
     }
 
+    scrollView.fullScroll(View.FOCUS_UP);
     noteET.clearFocus();
   }
 

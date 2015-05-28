@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchListFragment extends DefaultListFragment {
-  private final String TAG="Search Fragment";
+  //private final String TAG="Search Fragment";
 
   private boolean allStarred;
   private ImageView star;
