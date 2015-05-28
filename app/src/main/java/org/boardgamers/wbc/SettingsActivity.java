@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -42,6 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
   private static List<User> users;
   public static int currentUserId;
   public static boolean notifyChanged=false;
+  public static String folder=Environment.getExternalStorageDirectory().getAbsolutePath()+"/WBC/";
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -75,6 +75,8 @@ public class SettingsActivity extends AppCompatActivity {
     if (Intent.ACTION_VIEW.equals(action) && type!=null) {
       if ("application/wbc".equals(type)) {
         handleSendText(intent); // Handle text being sent
+      } else {
+        Log.d(TAG, type);
       }
     }
   }
@@ -144,41 +146,39 @@ public class SettingsActivity extends AppCompatActivity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
           @Override
           public void onCheckedChanged(RadioGroup group, int checkedId) {
-            editText.setEnabled(checkedId==R.id.schedule_import_neither);
+            boolean noMerging=checkedId==R.id.schedule_import_neither;
+
+            editText.setEnabled(noMerging);
           }
         });
-
-        final CheckBox checkBox=(CheckBox) dialogView.findViewById(R.id.schedule_import_view);
 
         builder.setView(dialogView);
         builder.setTitle("Schedule successfully imported!")
             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
+                String scheduleName=editText.getText().toString();
+                if (scheduleName.equalsIgnoreCase("")) {
+                  scheduleName="WBC Schedule "+String.valueOf(userId);
+                }
+                WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
+                dbHelper.getWritableDatabase();
+                dbHelper.insertUser(userId, scheduleName, scheduleSource);
+                dbHelper.close();
+
+                users.add(new User(userId, editText.getText().toString(), scheduleSource));
+
+                PreferenceManager.getDefaultSharedPreferences(context).edit()
+                    .putInt(getResources().getString(R.string.pref_key_schedule_select), userId)
+                    .apply();
+
+                currentUserId=userId;
+
                 if (radioGroup.getCheckedRadioButtonId()==R.id.schedule_import_replace) {
                   mergeSchedule(true);
                 } else if (radioGroup.getCheckedRadioButtonId()==R.id.schedule_import_merge) {
                   mergeSchedule(false);
                 } else {
-                  String scheduleName=editText.getText().toString();
-                  if (scheduleName.equalsIgnoreCase("")) {
-                    scheduleName="WBC Schedule "+String.valueOf(userId);
-                  }
-
-                  WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
-                  dbHelper.getWritableDatabase();
-                  dbHelper.insertUser(userId, scheduleName, scheduleSource);
-                  dbHelper.close();
-
-                  users.add(new User(userId, editText.getText().toString(), scheduleSource));
-                }
-
-                if (checkBox.isChecked()) {
-                  PreferenceManager.getDefaultSharedPreferences(context).edit()
-                      .putInt(getResources().getString(R.string.pref_key_schedule_select), userId)
-                      .apply();
-
-                  currentUserId=userId;
                   SettingsFragment.updatePreferences();
                 }
 
@@ -189,9 +189,8 @@ public class SettingsActivity extends AppCompatActivity {
           public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
           }
-        });
+        }).setCancelable(false);
         builder.create().show();
-
       } else {
         Toast.makeText(context, "This is not an authentic WBC schedule file!", Toast.LENGTH_SHORT)
             .show();
@@ -381,6 +380,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onPostExecute(Void aVoid) {
+      MainActivity.differentUser=true;
       currentUserId=MainActivity.PRIMARY_USER_ID;
 
       PreferenceManager.getDefaultSharedPreferences(context).edit()
@@ -512,7 +512,7 @@ public class SettingsActivity extends AppCompatActivity {
           users.get(MainActivity.PRIMARY_USER_ID).name+".");
       scheduleDelete.setSummary("Remove "+users.get(currentUserId).name+" from schedules");
       scheduleExport
-          .setSummary("Export "+users.get(currentUserId).name+" to device storage and share");
+          .setSummary("Export "+users.get(currentUserId).name+" to device storage ("+folder+") and share");
       scheduleSelect.setSummary("Current: "+users.get(currentUserId).name);
     }
 
@@ -628,8 +628,7 @@ public class SettingsActivity extends AppCompatActivity {
     String fileName="Schedule.wbc";
     if (isExternalStorageWritable()) {
       Log.d(TAG, "Saving in external");
-      File sdCard=Environment.getExternalStorageDirectory();
-      File dir=new File(sdCard.getAbsolutePath()+"/WBC/");
+      File dir=new File(folder);
 
       if (!dir.mkdirs()) {
         Log.d(TAG, "Directory not created");

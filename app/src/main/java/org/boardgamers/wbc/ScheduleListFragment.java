@@ -1,6 +1,7 @@
 package org.boardgamers.wbc;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,9 @@ public class ScheduleListFragment extends DefaultListFragment {
       while (tempEvents.size()>0) {
         event=tempEvents.remove(0);
 
+        if (event.day*GROUPS_PER_DAY+event.hour-6>=events.size()) {
+          Log.d("TEST", "Bad day for " + event.title);
+        }
         events.get(event.day*GROUPS_PER_DAY+event.hour-6).add(event);
 
         if (event.starred) {

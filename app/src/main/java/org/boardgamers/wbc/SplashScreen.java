@@ -26,13 +26,15 @@ public class SplashScreen extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    int TOTAL_EVENTS=780;
+
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
-    //dbHelper.onUpgrade(dbHelper.getWritableDatabase(),0, 0);
+    //dbHelper.onUpgrade(dbHelper.getWritableDatabase(), 0, 0);
     dbHelper.getReadableDatabase();
     int totalEvents=dbHelper.getNumEvents();
     dbHelper.close();
 
-    if (totalEvents>0) {
+    if (totalEvents>=TOTAL_EVENTS) {
       checkForChanges();
     } else {
       setContentView(R.layout.splash);
@@ -42,7 +44,7 @@ public class SplashScreen extends AppCompatActivity {
       setTitle(getResources().getString(R.string.activity_splash));
 
       progressBar=(ProgressBar) findViewById(R.id.splash_progress);
-      progressBar.setMax(780);
+      progressBar.setMax(TOTAL_EVENTS);
 
       new LoadEventsTask(this).execute(0, 0, 0);
     }
@@ -117,7 +119,7 @@ public class SplashScreen extends AppCompatActivity {
       // find schedule file
       InputStream is;
       try {
-        is=getAssets().open("schedule2014.txt");
+        is=getAssets().open("schedule.txt");
       } catch (IOException e2) {
         e2.printStackTrace();
         return -2;
@@ -133,7 +135,8 @@ public class SplashScreen extends AppCompatActivity {
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
       dbHelper.getWritableDatabase();
-      MainActivity.userId=(int) dbHelper.insertUser(MainActivity.PRIMARY_USER_ID, "My Schedule", "");
+      MainActivity.userId=
+          (int) dbHelper.insertUser(MainActivity.PRIMARY_USER_ID, "My Schedule", "");
 
       // parse schedule file
       BufferedReader reader=new BufferedReader(isr);
@@ -163,7 +166,7 @@ public class SplashScreen extends AppCompatActivity {
               break;
             }
           }
-          if (index==-1) {
+          if (index==daysForParsing.length) {
             Log.d(TAG, "Unknown date: "+rowData[2]+" in "+line);
             index=0;
           }

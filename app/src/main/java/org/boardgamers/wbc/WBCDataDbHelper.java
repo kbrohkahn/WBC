@@ -640,16 +640,19 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   public long mergeUserData(int userId) {
     ContentValues values=new ContentValues();
-    values.put(UserTournamentDataEntry.COLUMN_USER_ID, MainActivity.PRIMARY_USER_ID);
+
+    values.put("user_id", MainActivity.PRIMARY_USER_ID);
 
     String where=UserEventDataEntry.COLUMN_USER_ID+"="+String.valueOf(userId);
-    int result=sqLiteDatabase.update(UserEventDataEntry.TABLE_NAME, values, where, null);
+    int result=sqLiteDatabase.updateWithOnConflict(UserEventDataEntry.TABLE_NAME, values, where, null, SQLiteDatabase.CONFLICT_REPLACE);
 
     where=UserTournamentDataEntry.COLUMN_USER_ID+"="+String.valueOf(userId);
-    result+=sqLiteDatabase.update(UserTournamentDataEntry.TABLE_NAME, values, where, null);
+    result+=sqLiteDatabase.updateWithOnConflict(UserTournamentDataEntry.TABLE_NAME, values, where,
+        null, SQLiteDatabase.CONFLICT_REPLACE);
 
     where=UserCreatedEventEntry.COLUMN_USER_ID+"="+String.valueOf(userId);
-    result+=sqLiteDatabase.update(UserCreatedEventEntry.TABLE_NAME, values, where, null);
+    result+=sqLiteDatabase.updateWithOnConflict(UserCreatedEventEntry.TABLE_NAME, values, where,
+        null, SQLiteDatabase.CONFLICT_REPLACE);
 
     return result;
   }

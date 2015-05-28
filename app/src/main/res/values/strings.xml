@@ -8,7 +8,7 @@
   <string name="notification_title">WBC: Events starting soon</string>
 
   <!-- COMMON AND MENUS -->
-  <string name="ok">Ok</string>
+  <string name="ok">OK</string>
   <string name="edit">Edit</string>
   <string name="delete">Delete</string>
   <string name="close">Close</string>
@@ -35,14 +35,6 @@
   <string
     name="initial_dialog_text">Star events in the full schedule to add them to your schedule</string>
   <string name="initial_load_title">Saving events on device</string>
-  <string name="schedule_import_merge_message">How do you want to merge with My Schedule?</string>
-  <string name="schedule_import_neither">Neither</string>
-  <string name="schedule_import_merge">Merge</string>
-  <string name="schedule_import_replace">Replace</string>
-  <string name="schedule_import_name_message">Enter a schedule name for others to identify your schedule. File
-  will also be saved on your device in "WBC" folder.</string>
-  <string name="schedule_import_name_hint">Schedule name</string>
-  <string name="schedule_import_view">Set as current schedule</string>
 
   <!-- ACTIVITY TITLES -->
   <string name="activity_tournament">Tournament</string>
@@ -124,11 +116,17 @@
   <string name="settings_schedule">Schedules</string>
   <string name="settings_schedule_select">Select schedule</string>
   <string name="settings_schedule_import">Import</string>
-  <string name="settings_schedule_import_summary">Load a WBC schedule from .txt.wbc file</string>
+  <string name="settings_schedule_import_summary">Load a WBC schedule from .wbc file</string>
   <string name="settings_schedule_merge">Save as My Schedule</string>
   <string name="settings_schedule_delete">Delete</string>
-  <string name="settings_schedule_export">Export</string>
+  <string name="settings_schedule_export">Export and share</string>
   <string name="settings_schedule_name_check">wbc_data_file_2015</string>
+  <string name="schedule_import_merge_message">How do you want to merge with My Schedule?</string>
+  <string name="schedule_import_neither">Neither</string>
+  <string name="schedule_import_merge">Merge</string>
+  <string name="schedule_import_replace">Replace</string>
+  <string name="schedule_import_name_message">Enter a name for the schedule (N/A if merging)</string>
+  <string name="schedule_import_name_hint">Schedule name</string>
 
   <!-- PREFERENCES FILES -->
   <string name="user_data_file">UserDataPrefFile</string>
@@ -215,26 +213,37 @@
     <item>SOG</item>
   </string-array>
   <string-array name="daysForParsing">
-    <item>2014-08-02</item>
-    <item>2014-08-03</item>
-    <item>2014-08-04</item>
-    <item>2014-08-05</item>
-    <item>2014-08-06</item>
-    <item>2014-08-07</item>
-    <item>2014-08-08</item>
-    <item>2014-08-09</item>
-    <item>2014-08-10</item>
+    <item>2014&#45;08&#45;02</item>
+    <item>2014&#45;08&#45;03</item>
+    <item>2014&#45;08&#45;04</item>
+    <item>2014&#45;08&#45;05</item>
+    <item>2014&#45;08&#45;06</item>
+    <item>2014&#45;08&#45;07</item>
+    <item>2014&#45;08&#45;08</item>
+    <item>2014&#45;08&#45;09</item>
+    <item>2014&#45;08&#45;10</item>
+  </string-array>
+  <string-array name="daysForParsing_2015">
+    <item>2015&#45;08&#45;01</item>
+    <item>2015&#45;08&#45;02</item>
+    <item>2015&#45;08&#45;03</item>
+    <item>2015&#45;08&#45;04</item>
+    <item>2015&#45;08&#45;05</item>
+    <item>2015&#45;08&#45;06</item>
+    <item>2015&#45;08&#45;07</item>
+    <item>2015&#45;08&#45;08</item>
+    <item>2015&#45;08&#45;09</item>
   </string-array>
   <string-array name="days">
-    <item>PC Sa 8/2</item>
-    <item>PC Su 8/3</item>
-    <item>Mo 8/4</item>
-    <item>Tu 8/5</item>
-    <item>We 8/6</item>
-    <item>Th 8/7</item>
-    <item>Fr 8/8</item>
-    <item>Sa 8/9</item>
-    <item>Su 8/10</item>
+    <item>PC Sa 8/1</item>
+    <item>PC Su 8/2</item>
+    <item>Mo 8/3</item>
+    <item>Tu 8/4</item>
+    <item>We 8/5</item>
+    <item>Th 8/6</item>
+    <item>Fr 8/7</item>
+    <item>Sa 8/8</item>
+    <item>Su 8/9</item>
   </string-array>
   <string-array name="rooms_upstairs">
     <item>Conestoga 1</item>

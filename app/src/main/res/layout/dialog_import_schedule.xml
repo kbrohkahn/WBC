@@ -2,13 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical">
-
-  <CheckBox
-    android:id="@+id/schedule_import_view"
-    style="@style/medium_text"
-    android:layout_marginTop="@dimen/layout_margin_small"
-    android:text="@string/schedule_import_view"/>
+  android:orientation="vertical"
+  android:descendantFocusability="beforeDescendants"
+  android:focusableInTouchMode="true">
 
   <TextView
     style="@style/medium_text"

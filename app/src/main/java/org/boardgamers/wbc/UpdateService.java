@@ -32,7 +32,7 @@ public class UpdateService extends Service {
 
     // GET CALENDAR FOR FIRST DAY
     String[] daysForParsing=getResources().getStringArray(R.array.daysForParsing);
-    SimpleDateFormat dateFormatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z", Locale.US);
+    SimpleDateFormat dateFormatter=new SimpleDateFormat("yyyy\u002DMM\u002Ddd HH:mm:ss z", Locale.US);
     String firstDayString=daysForParsing[0]+" 12:00:00 GMT+7";
     Calendar firstDayCalendar=Calendar.getInstance();
     try {
