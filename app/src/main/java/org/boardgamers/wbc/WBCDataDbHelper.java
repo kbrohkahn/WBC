@@ -601,21 +601,25 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return users;
   }
 
-  public long deleteUserData(int userId) {
+  public long deleteUser(int userId) {
     String where;
     if (userId==-1) {
       where="";
     } else {
       where=UserEntry.COLUMN_NAME_USER_ID+"="+String.valueOf(userId);
     }
-    int result=sqLiteDatabase.delete(UserEntry.TABLE_NAME, where, null);
+    return sqLiteDatabase.delete(UserEntry.TABLE_NAME, where, null);
+  }
+
+  public long deleteUserData(int userId) {
+    String where;
 
     if (userId==-1) {
       where="";
     } else {
       where=UserEventDataEntry.COLUMN_USER_ID+"="+String.valueOf(userId);
     }
-    result+=sqLiteDatabase.delete(UserEventDataEntry.TABLE_NAME, where, null);
+    int result=sqLiteDatabase.delete(UserEventDataEntry.TABLE_NAME, where, null);
 
     if (userId==-1) {
       where="";
@@ -636,7 +640,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   public long mergeUserData(int userId) {
     ContentValues values=new ContentValues();
-    values.put(UserTournamentDataEntry.COLUMN_USER_ID, 0);
+    values.put(UserTournamentDataEntry.COLUMN_USER_ID, MainActivity.PRIMARY_USER_ID);
 
     String where=UserEventDataEntry.COLUMN_USER_ID+"="+String.valueOf(userId);
     int result=sqLiteDatabase.update(UserEventDataEntry.TABLE_NAME, values, where, null);

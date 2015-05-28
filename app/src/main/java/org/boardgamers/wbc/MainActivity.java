@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
       differentUser=false;
 
       recreate();
+
       // TODO better implementation
       //loadUserData();
       //pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());

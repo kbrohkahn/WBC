@@ -156,9 +156,9 @@ public class SettingsActivity extends AppCompatActivity {
               @Override
               public void onClick(DialogInterface dialog, int which) {
                 if (radioGroup.getCheckedRadioButtonId()==R.id.schedule_import_replace) {
-                  mergeSchedule(true, currentUserId);
+                  mergeSchedule(true);
                 } else if (radioGroup.getCheckedRadioButtonId()==R.id.schedule_import_merge) {
-                  mergeSchedule(false, currentUserId);
+                  mergeSchedule(false);
                 } else {
                   String scheduleName=editText.getText().toString();
                   if (scheduleName.equalsIgnoreCase("")) {
@@ -350,13 +350,13 @@ public class SettingsActivity extends AppCompatActivity {
         .setPositiveButton("Replace", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            mergeSchedule(true, currentUserId);
+            mergeSchedule(true);
             dialog.dismiss();
           }
         }).setNegativeButton("Merge", new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        mergeSchedule(false, currentUserId);
+        mergeSchedule(false);
         dialog.dismiss();
       }
     }).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
@@ -368,8 +368,8 @@ public class SettingsActivity extends AppCompatActivity {
     builder.create().show();
   }
 
-  public void mergeSchedule(boolean overwrite, int uId) {
-    new MergeScheduleTask(this).execute(uId, overwrite ? 1 : 0);
+  public void mergeSchedule(boolean overwrite) {
+    new MergeScheduleTask(this).execute(overwrite ? 1 : 0);
   }
 
   class MergeScheduleTask extends AsyncTask<Integer, Void, Void> {
@@ -394,15 +394,15 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected Void doInBackground(Integer... params) {
-      int userId=params[0];
       boolean overwrite=params[0]==1;
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(context);
       dbHelper.getWritableDatabase();
       if (overwrite) {
-        dbHelper.deleteUserData(userId);
+        dbHelper.deleteUserData(MainActivity.PRIMARY_USER_ID);
       }
-      dbHelper.mergeUserData(userId);
+      dbHelper.mergeUserData(currentUserId);
+      dbHelper.deleteUser(currentUserId);
       dbHelper.close();
 
       return null;
@@ -500,9 +500,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public static void updatePreferences() {
-      int defaultUserId=MainActivity.PRIMARY_USER_ID;
-
-      if (currentUserId==defaultUserId) {
+      if (currentUserId==MainActivity.PRIMARY_USER_ID) {
         scheduleMerge.setEnabled(false);
         scheduleDelete.setEnabled(false);
       } else {
@@ -511,7 +509,7 @@ public class SettingsActivity extends AppCompatActivity {
       }
 
       scheduleMerge.setSummary("Merge "+users.get(currentUserId).name+" with "+
-          users.get(defaultUserId).name+".");
+          users.get(MainActivity.PRIMARY_USER_ID).name+".");
       scheduleDelete.setSummary("Remove "+users.get(currentUserId).name+" from schedules");
       scheduleExport
           .setSummary("Export "+users.get(currentUserId).name+" to device storage and share");
@@ -519,11 +517,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void showDeleteScheduleDialog() {
-      String newSchedule=users.get(currentUserId).name;
+      String scheduleName=users.get(currentUserId).name;
 
       AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
       builder.setTitle(getResources().getString(R.string.settings_schedule_delete))
-          .setMessage("Are you sure you want to delete the schedule "+newSchedule+
+          .setMessage("Are you sure you want to delete the schedule "+scheduleName+
               "?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -542,6 +540,7 @@ public class SettingsActivity extends AppCompatActivity {
     public void deleteSchedule() {
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getWritableDatabase();
+      dbHelper.deleteUser(currentUserId);
       dbHelper.deleteUserData(currentUserId);
       dbHelper.close();
 
@@ -553,7 +552,6 @@ public class SettingsActivity extends AppCompatActivity {
 
       updatePreferences();
     }
-
   }
 
   @Override
@@ -593,7 +591,8 @@ public class SettingsActivity extends AppCompatActivity {
     String contentBreak="~~~";
     String delimitter=";;;";
 
-    String outputString=getResources().getString(R.string.settings_schedule_name_check)+contentBreak;
+    String outputString=
+        getResources().getString(R.string.settings_schedule_name_check)+contentBreak;
 
     String email="Unknown user";
     Pattern emailPattern=Patterns.EMAIL_ADDRESS;

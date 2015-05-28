@@ -308,7 +308,8 @@ public class EventFragment extends Fragment {
         hideNonTournamentViews();
       }
     }
-    scrollView.fullScroll(ScrollView.FOCUS_UP);
+
+    noteET.clearFocus();
   }
 
   public void hideNonTournamentViews() {

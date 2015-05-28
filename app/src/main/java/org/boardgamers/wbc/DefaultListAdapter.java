@@ -189,7 +189,11 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     try {
       id=getGroupId(groupPosition)+events.get(groupPosition).get(childPosition).id;
     } catch (NullPointerException e) {
+      e.printStackTrace();
       id=-1;
+    } catch (IndexOutOfBoundsException e) {
+      e.printStackTrace();
+      id=-2;
     }
     return id;
   }
