@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -73,7 +72,6 @@ public class EventFragment extends Fragment {
   private RadioButton[] finishButtons;
   // views
   private LinearLayout timeLayout;
-  private ScrollView scrollView;
   private ToggleButton mapOverlayToggle;
   private ImageView map;
   private ImageView mapOverlay;
@@ -89,7 +87,6 @@ public class EventFragment extends Fragment {
     View view=inflater.inflate(R.layout.event_fragment, container, false);
 
     timeLayout=(LinearLayout) view.findViewById(R.id.ef_time_layout);
-    scrollView=(ScrollView) view.findViewById(R.id.ef_scroll_view);
     titleTV=(TextView) view.findViewById(R.id.ef_title);
     dayTV=(TextView) view.findViewById(R.id.ef_day);
     timeTV=(TextView) view.findViewById(R.id.ef_time);
@@ -124,9 +121,9 @@ public class EventFragment extends Fragment {
     mapOverlayToggle.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        if (mapOverlayToggle.isChecked() && !runnableActive) {
+        if (mapOverlayToggle.isChecked()) {
           startOverlayUpdate();
-        } else if (!mapOverlayToggle.isChecked()) {
+        } else {
           stopOverlayUpdate();
         }
       }
@@ -170,10 +167,7 @@ public class EventFragment extends Fragment {
   }
 
   public void setEvent(long id) {
-    if (event!=null) {
-      saveEventData();
-    }
-
+    saveEventData();
     stopOverlayUpdate();
 
     if (id==-1) {
@@ -193,9 +187,7 @@ public class EventFragment extends Fragment {
       setRoom("");
       mapOverlay.setImageResource(0);
       map.setImageResource(0);
-      if (runnableActive) {
-        stopOverlayUpdate();
-      }
+      stopOverlayUpdate();
 
       noteET.setEnabled(false);
       clearButton.setEnabled(false);
@@ -309,9 +301,6 @@ public class EventFragment extends Fragment {
         hideNonTournamentViews();
       }
     }
-
-    scrollView.fullScroll(View.FOCUS_UP);
-    noteET.clearFocus();
   }
 
   public void openPreviewLink() {
@@ -355,45 +344,42 @@ public class EventFragment extends Fragment {
   }
 
   public void saveEventData() {
-    String note=noteET.getText().toString();
-    int finish;
+    if (event!=null) {
+      String note=noteET.getText().toString();
+      int finish;
 
-    if (event.tournamentID<MainActivity.USER_EVENT_ID && tournament.isTournament) {
-      finish=0;
-      for (int i=0; i<finishButtons.length; i++) {
-        if (finishButtons[i].isChecked()) {
-          finish=i;
-          break;
+      if (event.tournamentID<MainActivity.USER_EVENT_ID && tournament.isTournament) {
+        finish=0;
+        for (int i=0; i<finishButtons.length; i++) {
+          if (finishButtons[i].isChecked()) {
+            finish=i;
+            break;
+          }
         }
+      } else {
+        finish=-1;
       }
-    } else {
-      finish=-1;
+
+      if (note.equalsIgnoreCase(event.note) && (tournament==null || finish==tournament.finish))
+        return;
+
+      // save data
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
+      dbHelper.getWritableDatabase();
+      dbHelper.insertUserEventData(MainActivity.userId, event.id, event.starred, note);
+      if (finish>-1 && finish!=initialFinish) {
+        dbHelper.insertUserTournamentData(MainActivity.userId, event.tournamentID, finish);
+      }
+      dbHelper.close();
+
+      MainActivity.updateUserData(event.id, note, event.tournamentID, finish);
     }
-
-    if (note.equalsIgnoreCase(event.note) && (tournament==null || finish==tournament.finish))
-      return;
-
-    // save data
-    WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
-    dbHelper.getWritableDatabase();
-    dbHelper.insertUserEventData(MainActivity.userId, event.id, event.starred, note);
-    if (finish>-1 && finish!=initialFinish) {
-      dbHelper.insertUserTournamentData(MainActivity.userId, event.tournamentID, finish);
-    }
-    dbHelper.close();
-
-    MainActivity.updateUserData(event.id, note, event.tournamentID, finish);
   }
 
   @Override
   public void onPause() {
-    if (event!=null) {
-      saveEventData();
-    }
-
-    if (runnableActive) {
-      stopOverlayUpdate();
-    }
+    saveEventData();
+    stopOverlayUpdate();
 
     super.onPause();
   }
@@ -445,10 +431,12 @@ public class EventFragment extends Fragment {
   }
 
   private void stopOverlayUpdate() {
-    mapOverlay.setVisibility(View.GONE);
-    mapOverlayToggle.setChecked(false);
-    runnableActive=false;
-    handler.removeCallbacks(runnable);
+    if (runnableActive) {
+      mapOverlay.setVisibility(View.GONE);
+      mapOverlayToggle.setChecked(false);
+      runnableActive=false;
+      handler.removeCallbacks(runnable);
+    }
   }
 
   private final Runnable runnable=new Runnable() {

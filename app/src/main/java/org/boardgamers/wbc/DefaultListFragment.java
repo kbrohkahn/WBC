@@ -40,10 +40,12 @@ public class DefaultListFragment extends Fragment {
 
   public void updateEvents(Event[] events) {
     listAdapter.updateEvents(events);
+    listAdapter.notifyDataSetChanged();
   }
 
   public void removeEvents(Event[] events) {
     listAdapter.removeEvents(events);
+    listAdapter.notifyDataSetChanged();
   }
 
   class PopulateAdapterTask extends AsyncTask<Integer, Integer, Integer> {

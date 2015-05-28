@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Kevin
  */
 public class DefaultListAdapter extends BaseExpandableListAdapter {
-  //private final String TAG="Default Adapter";
+  private final String TAG="Default Adapter";
 
   private int COLOR_JUNIOR;
   private int COLOR_SEMINAR;

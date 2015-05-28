@@ -85,18 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
     SlidingTabLayout tabs=(SlidingTabLayout) findViewById(R.id.sliding_layout);
     tabs.setViewPager(viewPager);
-    tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-      @Override
-      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
-      @Override
-      public void onPageSelected(int position) {
-        pagerAdapter.getItem(position).refreshAdapter();
-      }
-
-      @Override
-      public void onPageScrollStateChanged(int state) {}
-    });
 
     SharedPreferences sp=getSharedPreferences(getResources().getString(R.string.user_data_file),
         Context.MODE_PRIVATE);
@@ -180,11 +168,6 @@ public class MainActivity extends AppCompatActivity {
       if (j!=currentPage) {
         pagerAdapter.getItem(j).updateEvents(events);
       }
-    }
-
-    // sent from create event dialog, so refresh UserData list
-    if (currentPage==3) {
-      pagerAdapter.getItem(2).refreshAdapter();
     }
   }
 
