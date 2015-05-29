@@ -37,6 +37,13 @@ public class UserDataListAdapter extends DefaultListAdapter {
 
       return view;
     } else {
+      String titleString;
+
+      if (groupPosition==UserDataListFragment.FINISHES_INDEX) {
+        titleString=event.title;
+      } else {
+        titleString=event.title+": "+event.note;
+      }
 
       view.findViewById(R.id.li_star).setVisibility(View.INVISIBLE);
       view.findViewById(R.id.li_hour).setVisibility(View.GONE);
@@ -44,7 +51,7 @@ public class UserDataListAdapter extends DefaultListAdapter {
       view.findViewById(R.id.li_location).setVisibility(View.GONE);
 
       TextView title=(TextView) view.findViewById(R.id.li_title);
-      title.setText(event.title+": "+event.note);
+      title.setText(titleString);
 
       return view;
     }

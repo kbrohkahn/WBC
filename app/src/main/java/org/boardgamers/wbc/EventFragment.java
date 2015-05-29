@@ -151,6 +151,7 @@ public class EventFragment extends Fragment {
     finishButtons=new RadioButton[finishIDs.length];
     for (int i=0; i<finishIDs.length; i++) {
       finishButtons[i]=(RadioButton) view.findViewById(finishIDs[i]);
+      finishButtons[i].setText(String.valueOf(i));
     }
 
     setEvent(MainActivity.selectedEventId);

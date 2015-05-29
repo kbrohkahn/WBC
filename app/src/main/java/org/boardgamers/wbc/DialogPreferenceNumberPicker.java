@@ -24,9 +24,7 @@ public class DialogPreferenceNumberPicker extends DialogPreference {
 
   @Override
   protected View onCreateDialogView() {
-    LayoutInflater inflater=
-        (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View view=inflater.inflate(R.layout.dialog_notify_time, null);
+    View view=View.inflate(getContext(), R.layout.dialog_notify_time, null);
 
     picker=(NumberPicker) view.findViewById(R.id.dialog_notify_time_picker);
     picker.setMaxValue(MAX_VALUE);

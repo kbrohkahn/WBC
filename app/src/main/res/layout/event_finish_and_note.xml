@@ -29,43 +29,37 @@
       android:id="@+id/ef_finish_1"
       style="@style/medium_text"
       android:layout_width="0dip"
-      android:layout_weight="1"
-      android:text="@string/first_short"/>
+      android:layout_weight="1"/>
 
     <RadioButton
       android:id="@+id/ef_finish_2"
       style="@style/medium_text"
       android:layout_width="0dip"
-      android:layout_weight="1"
-      android:text="@string/second_short"/>
+      android:layout_weight="1"/>
 
     <RadioButton
       android:id="@+id/ef_finish_3"
       style="@style/medium_text"
       android:layout_width="0dip"
-      android:layout_weight="1"
-      android:text="@string/third_short"/>
+      android:layout_weight="1"/>
 
     <RadioButton
       android:id="@+id/ef_finish_4"
       style="@style/medium_text"
       android:layout_width="0dip"
-      android:layout_weight="1"
-      android:text="@string/fourth_short"/>
+      android:layout_weight="1"/>
 
     <RadioButton
       android:id="@+id/ef_finish_5"
       style="@style/medium_text"
       android:layout_width="0dip"
-      android:layout_weight="1"
-      android:text="@string/fifth_short"/>
+      android:layout_weight="1"/>
 
     <RadioButton
       android:id="@+id/ef_finish_6"
       style="@style/medium_text"
       android:layout_width="0dip"
-      android:layout_weight="1"
-      android:text="@string/sixth_short"/>
+      android:layout_weight="1"/>
   </RadioGroup>
 
   <TextView

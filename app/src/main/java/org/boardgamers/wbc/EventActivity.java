@@ -4,13 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class EventActivity extends AppCompatActivity {
-  private final String TAG="Event Activity";
+  //private final String TAG="Event Activity";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +62,6 @@ public class EventActivity extends AppCompatActivity {
       dbHelper.close();
 
       MainActivity.changeEventsInLists(new Event[] {event}, -1);
-    } else {
-      Log.d(TAG, "ERROR: Could not get event fragment");
     }
 
     SearchListFragment fragment=

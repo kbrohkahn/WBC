@@ -75,20 +75,17 @@
   <string name="preview"><u>Preview</u></string>
   <string name="report"><u>Report</u></string>
   <string name="zero">-</string>
-  <string name="first_short">1</string>
-  <string name="second_short">2</string>
-  <string name="third_short">3</string>
-  <string name="fourth_short">4</string>
-  <string name="fifth_short">5</string>
-  <string name="sixth_short">6</string>
-  <string name="first">1st</string>
-  <string name="second">2nd</string>
-  <string name="third">3rd</string>
-  <string name="fourth">4th</string>
-  <string name="fifth">5th</string>
-  <string name="sixth">6th</string>
   <string name="map_overlay_on">Room showing</string>
   <string name="map_overlay_off">Room hidden</string>
+
+  <string-array name="finish_strings">
+    <item>1st</item>
+    <item>2nd</item>
+    <item>3rd</item>
+    <item>4th</item>
+    <item>5th</item>
+    <item>6th</item>
+  </string-array>
 
   <!-- CREATE EVENT DIALOG -->
   <string name="ce_days">Days (must have at least 1)</string>
@@ -204,15 +201,6 @@
   </string-array>
 
   <!-- APP SPECIFIC STRINGS AND ARRAYS -->
-  <string-array name="search_formats">
-    <item>Demo</item>
-    <item>Meeting</item>
-    <item>Preview</item>
-    <item>Sales</item>
-    <item>Seminar</item>
-    <item>Sign-In</item>
-    <item>SOG</item>
-  </string-array>
   <string-array name="daysForParsing">
     <item>2015&#45;08&#45;01</item>
     <item>2015&#45;08&#45;02</item>
@@ -326,28 +314,19 @@
   </string-array>
 
   <string-array name="help_texts">
-  <item>DAYS &amp; TIMES: The app displays ongoing events with a green background,
+  <item>DAYS &amp; SCHEDULE: The app displays ongoing events with a green background,
     future events yellow, and ended events gray.
-    \n\nCUSTOMIZE SCHEDULE: Touch the star to the left of an event to add it to "My Events"
-    list at the top of each day. Use the main menu to access "Created Events,"
-    where you can add custom events to your schedule, and "Filter,"
-    where you can select which tournaments and convention events are displayed
-    in your schedule. Touch an hour group to show/hide all events
-    starting that hour, or long press to additionally show/hide all following
-    hour groups. Ongoing events for a given hour are included in the group header.
-    \n\nMAP: To view the hotel map,
-    select an event location, which is underlined like a link,
-    or search for a room via "Search" in the main menu.
-    If the room is in the hotel, it will flash on the map.
-    \n\nSAVING: Schedule filter, app settings, tournament finishes, event notes, etc.
+    Touch the star to the left of an event to add it to "My Events"
+    list at the top of each day and the "Starred" tab to the left.
+    Create custom events and view your event notes and tournament finishes
+    by swiping to the right to the "My Data" tab.
+    \n\nSAVING: App settings, tournament finishes, event notes, etc.
     are all saved automatically, so do not worry about losing your settings!
-    \n\nOTHER: If an event does not have a format or class (i.e. non-tournament events),
-    then that text field will not be shown. For tournament finishes,
+    \n\nOTHER: For tournament finishes,
     finishes awarding plaques are in bold while laurels are in italics.
-    \n\nPlease contact dev@boardgamers.org with any further questions.
+    \n\nPlease contact Kevin Broh-Kann at dev@boardgamers.org with any further questions.
   </item>
-  <item>The
-    schedule on the main screen is a chronological
+  <item>The schedule on the main screen is a chronological
     listing of events by order of appearance.
     Junior Events are listed first, highlighted by a
     symbol and are in green. Open Gaming, including

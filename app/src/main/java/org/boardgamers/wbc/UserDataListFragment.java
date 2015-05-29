@@ -21,6 +21,8 @@ public class UserDataListFragment extends DefaultListFragment {
   public static final int NOTES_INDEX=1;
   public static final int FINISHES_INDEX=2;
 
+  public String[] finishStrings;
+
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
@@ -43,6 +45,8 @@ public class UserDataListFragment extends DefaultListFragment {
         }
       });
     }
+
+    finishStrings=getResources().getStringArray(R.array.finish_strings);
 
     new PopulateUserDataAdapterTask(this, 3).execute(0, 0, 0);
     return view;
@@ -120,9 +124,8 @@ public class UserDataListFragment extends DefaultListFragment {
   }
 
   public Event getEventFromTournament(Tournament tournament) {
-    Event event=
-        new Event(tournament.finalEventId, tournament.id, 0, 0, tournament.title, "", "", false, 0,
-            false, 0, "");
+    Event event=new Event(tournament.finalEventId, tournament.id, 0, 0,
+        tournament.title+": "+finishStrings[tournament.finish], "", "", false, 0, false, 0, "");
 
     event.note=String.valueOf(tournament.finish);
     return event;
@@ -172,7 +175,6 @@ public class UserDataListFragment extends DefaultListFragment {
     dbHelper.getWritableDatabase();
     dbHelper.deleteAllUserEvents(MainActivity.userId);
     dbHelper.close();
-
 
     int count=listAdapter.events.get(EVENTS_INDEX).size();
     Event[] events=new Event[count];
