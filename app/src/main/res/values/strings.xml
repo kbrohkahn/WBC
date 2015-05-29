@@ -316,7 +316,8 @@
   <string-array name="help_texts">
   <item>DAYS &amp; SCHEDULE: The app displays ongoing events with a green background,
     future events yellow, and ended events gray. Start scrolling to view a scrollbar
-    on the right side of the page, the quickly jump to any day.
+    on the right side of the page, the quickly jump to any day. Select an entire day
+    to expand or collapse every hour for that day and view your schedule for each hour.
     Touch the star to the left of an event to add it to "My Events"
     list at the top of each day and the "Starred" tab to the left.
     Create custom events and view your event notes and tournament finishes

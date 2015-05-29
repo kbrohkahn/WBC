@@ -323,8 +323,7 @@ public class EventFragment extends Fragment {
     finishTV.setVisibility(View.GONE);
     previewTV.setVisibility(View.GONE);
     reportTV.setVisibility(View.GONE);
-    boxIV.setImageResource(0);
-    boxIV.setVisibility(View.INVISIBLE);
+    boxIV.setImageResource(R.drawable.box_iv_no_image_text);
   }
 
   private void share() {
@@ -456,6 +455,12 @@ public class EventFragment extends Fragment {
 
   private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
+      boxIV.setImageResource(R.drawable.box_iv_no_image_text);
+    }
+
     protected Bitmap doInBackground(String... urls) {
       String urldisplay=urls[0];
       Bitmap bitmap=null;
@@ -470,8 +475,9 @@ public class EventFragment extends Fragment {
     }
 
     protected void onPostExecute(Bitmap result) {
-      boxIV.setImageBitmap(result);
-      boxIV.setVisibility(View.VISIBLE);
+      if (result!=null) {
+        boxIV.setImageBitmap(result);
+      }
     }
   }
 }
