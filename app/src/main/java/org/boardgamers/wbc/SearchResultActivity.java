@@ -95,6 +95,8 @@ public class SearchResultActivity extends AppCompatActivity {
       }
     });
 
+
+
     return true;
 
   }

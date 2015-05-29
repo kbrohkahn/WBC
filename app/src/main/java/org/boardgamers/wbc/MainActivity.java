@@ -185,6 +185,14 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  public static String getBoxNameFromLabel(String label) {
+    String fixedLabel=label.toLowerCase();
+    fixedLabel=fixedLabel.replace("&", "and");
+    fixedLabel=fixedLabel.replace("!", "exc");
+
+    return "drawable/box_"+fixedLabel;
+  }
+
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();

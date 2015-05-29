@@ -1,12 +1,9 @@
 package org.boardgamers.wbc;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -22,8 +19,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
-import java.io.InputStream;
 
 public class EventFragment extends Fragment {
   //private final String TAG="Event Fragment";
@@ -284,7 +279,15 @@ public class EventFragment extends Fragment {
         previewTV.setVisibility(View.VISIBLE);
         reportTV.setVisibility(View.VISIBLE);
 
-        new DownloadImageTask().execute("http://boardgamers.org/boxart/"+tournament.label+".jpg");
+        int boxId=getResources()
+            .getIdentifier(MainActivity.getBoxNameFromLabel(tournament.label), null,
+                getActivity().getApplicationContext().getPackageName());
+        if (boxId==0) {
+          boxIV.setImageResource(R.drawable.box_iv_no_image_text);
+          Log.d("", "not found");
+        } else {
+          boxIV.setImageResource(boxId);
+        }
 
         // if last event started, allow finish
         for (int i=0; i<=6; i++) {
@@ -451,33 +454,5 @@ public class EventFragment extends Fragment {
     mapOverlay.setVisibility(overlayOn ? View.GONE : View.VISIBLE);
     overlayOn=!overlayOn;
     startOverlayUpdate();
-  }
-
-  private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-    @Override
-    protected void onPreExecute() {
-      super.onPreExecute();
-      boxIV.setImageResource(R.drawable.box_iv_no_image_text);
-    }
-
-    protected Bitmap doInBackground(String... urls) {
-      String urldisplay=urls[0];
-      Bitmap bitmap=null;
-      try {
-        InputStream in=new java.net.URL(urldisplay).openStream();
-        bitmap=BitmapFactory.decodeStream(in);
-      } catch (Exception e) {
-        Log.e("Error", e.getMessage());
-        e.printStackTrace();
-      }
-      return bitmap;
-    }
-
-    protected void onPostExecute(Bitmap result) {
-      if (result!=null) {
-        boxIV.setImageBitmap(result);
-      }
-    }
   }
 }
