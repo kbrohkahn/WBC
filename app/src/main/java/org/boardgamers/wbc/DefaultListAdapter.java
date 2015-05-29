@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,49 +56,53 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
   public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view,
                            ViewGroup parent) {
 
-    final Event event=(Event) getChild(groupPosition, childPosition);
+    final Event event=getChild(groupPosition, childPosition);
 
     if (view==null) {
       view=inflater.inflate(R.layout.list_item, parent, false);
-
-      int tColor=getTextColor(event);
-      int tType=getTextStyle(event);
-
-      TextView title=(TextView) view.findViewById(R.id.li_title);
-      title.setText(event.title);
-      title.setTypeface(null, tType);
-      title.setTextColor(tColor);
-
-      if (event.title.contains("Junior")) {
-        title.setCompoundDrawablesWithIntrinsicBounds(R.drawable.junior_icon, 0, 0, 0);
+    } else {
+      if (this.id==0) {
+        Log.d("LIST", "View for event "+event.title+" is not null");
       }
-
-      TextView hour=(TextView) view.findViewById(R.id.li_hour);
-      hour.setText(String.valueOf(event.hour*100));
-      hour.setTypeface(null, tType);
-      hour.setTextColor(tColor);
-
-      TextView duration=(TextView) view.findViewById(R.id.li_duration);
-      duration.setText(String.valueOf(event.duration));
-      duration.setTypeface(null, tType);
-      duration.setTextColor(tColor);
-
-      if (event.continuous) {
-        duration.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
-      }
-
-      TextView location=(TextView) view.findViewById(R.id.li_location);
-      location.setText(event.location);
-      location.setTypeface(null, tType);
-      location.setTextColor(tColor);
-
-      view.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          selectEvent(event);
-        }
-      });
     }
+
+    int tColor=getTextColor(event);
+    int tType=getTextStyle(event);
+
+    TextView title=(TextView) view.findViewById(R.id.li_title);
+    title.setText(event.title);
+    title.setTypeface(null, tType);
+    title.setTextColor(tColor);
+
+    if (event.title.contains("Junior")) {
+      title.setCompoundDrawablesWithIntrinsicBounds(R.drawable.junior_icon, 0, 0, 0);
+    }
+
+    TextView hour=(TextView) view.findViewById(R.id.li_hour);
+    hour.setText(String.valueOf(event.hour*100));
+    hour.setTypeface(null, tType);
+    hour.setTextColor(tColor);
+
+    TextView duration=(TextView) view.findViewById(R.id.li_duration);
+    duration.setText(String.valueOf(event.duration));
+    duration.setTypeface(null, tType);
+    duration.setTextColor(tColor);
+
+    if (event.continuous) {
+      duration.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
+    }
+
+    TextView location=(TextView) view.findViewById(R.id.li_location);
+    location.setText(event.location);
+    location.setTypeface(null, tType);
+    location.setTextColor(tColor);
+
+    view.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        selectEvent(event);
+      }
+    });
 
     ImageView starIV=(ImageView) view.findViewById(R.id.li_star);
     starIV.setImageResource(event.starred ? R.drawable.star_on : R.drawable.star_off);
@@ -185,16 +190,17 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public long getChildId(int groupPosition, int childPosition) {
-    if (childPosition<events.get(groupPosition).size()) {
-      return getGroupId(groupPosition)+events.get(groupPosition).get(childPosition).id;
-    } else {
-      return -1;
-    }
+    return getGroupId(groupPosition)+1000+events.get(groupPosition).get(childPosition).id;
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
   }
 
   @Override
   public long getGroupId(int groupPosition) {
-    return groupPosition*1000;
+    return id*500000+groupPosition*5000;
   }
 
   @Override
@@ -240,17 +246,17 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
   }
 
   @Override
-  public Object getChild(int groupPosition, int childPosition) {
+  public Event getChild(int groupPosition, int childPosition) {
     return events.get(groupPosition).get(childPosition);
   }
 
   @Override
   public int getChildrenCount(int groupPosition) {
-    return events.get(groupPosition).size();
+    return getGroup(groupPosition).size();
   }
 
   @Override
-  public Object getGroup(int groupPosition) {
+  public List<Event> getGroup(int groupPosition) {
     return events.get(groupPosition);
   }
 

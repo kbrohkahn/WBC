@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
   public static final int PRIMARY_USER_ID=0;
   public static final int TOTAL_DAYS=9;
-  public static final int USER_EVENT_ID=5000;
+  public static final int USER_EVENT_ID=2000;
   public static int selectedEventId=-1;
   public static long currentDay;
   public static int currentHour;

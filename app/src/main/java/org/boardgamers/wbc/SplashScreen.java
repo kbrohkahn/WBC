@@ -230,7 +230,7 @@ public class SplashScreen extends AppCompatActivity {
 
           }
 
-          // get tournament title and label and help short name
+          // get tournament title and label and event short name
           tempString=eventTitle;
 
           // search through extra strings

@@ -1,7 +1,6 @@
 package org.boardgamers.wbc;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +31,8 @@ public class HelpListAdapter extends BaseExpandableListAdapter {
       view=inflater.inflate(R.layout.list_item_text, parent, false);
 
     TextView title=(TextView) view.findViewById(R.id.li_text);
-    title.setGravity(Gravity.CENTER);
-    title.setText(textStrings[childPosition]);
+    //title.setGravity(Gravity.CENTER);
+    title.setText(textStrings[groupPosition]);
 
     return view;
   }

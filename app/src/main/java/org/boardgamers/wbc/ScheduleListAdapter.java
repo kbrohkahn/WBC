@@ -12,7 +12,8 @@ import java.util.List;
  * Adapter for full schedule ExpandableListAdapter
  */
 public class ScheduleListAdapter extends DefaultListAdapter implements SectionIndexer {
-  private final int GROUPS_PER_DAY=18+1;
+  private final int GROUPS_PER_DAY=18+1;      // 18 hours per day (0700 thru 2400) plus "My Events"
+  private final int GROUP_HOUR_OFFSET=7-1;    // first hour is 7, offset 1 hour for "My Events"
 
   private final String[] hours;
   private final String[] sections;
@@ -47,6 +48,26 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
   }
 
   @Override
+  public View getGroupView(final int groupPosition, final boolean isExpanded, View view,
+                           ViewGroup parent) {
+    view=super.getGroupView(groupPosition, isExpanded, view, parent);
+
+    if (groupPosition%GROUPS_PER_DAY==0) {
+      view.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          if (isExpanded) {
+            fragment.collapseGroups(groupPosition, GROUPS_PER_DAY);
+          } else {
+            fragment.expandGroups(groupPosition, GROUPS_PER_DAY);
+          }
+        }
+      });
+    }
+    return view;
+  }
+
+  @Override
   public int getGroupViewId(final int groupPosition) {
     if (groupPosition%GROUPS_PER_DAY==0) {
       return R.layout.list_group_large;
@@ -62,13 +83,12 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
     } else {
       String groupTitle=hours[(groupPosition%GROUPS_PER_DAY)-1]+": ";
 
-      int day;
-      for (int i=0; i<groupPosition/GROUPS_PER_DAY+1; i++) {
-        for (Event event : events.get(i*GROUPS_PER_DAY)) {
-          // check if starred help has started
-          day=groupPosition/GROUPS_PER_DAY;
-          if (day*24+groupPosition+6>=i*24+event.hour &&
-              day*24+groupPosition+6<i*24+event.hour+event.totalDuration) {
+      int groupHoursIntoConvention=
+          groupPosition/GROUPS_PER_DAY*24+groupPosition%GROUPS_PER_DAY+GROUP_HOUR_OFFSET;
+      for (int i=0; i<groupPosition; i+=GROUPS_PER_DAY) {
+        for (Event event : events.get(i)) {
+          if (event.day*24+event.hour<=groupHoursIntoConvention &&
+              event.day*24+event.hour+event.totalDuration>groupHoursIntoConvention) {
             groupTitle+=event.title+", ";
           }
         }
@@ -94,7 +114,7 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
   @Override
   public void updateEvents(Event[] updatedEvents) {
     for (Event event : updatedEvents) {
-      int group=event.day*GROUPS_PER_DAY+event.hour-6;
+      int group=event.day*GROUPS_PER_DAY+event.hour-GROUP_HOUR_OFFSET;
       Event tempEvent;
 
       boolean isInList=false;
@@ -139,7 +159,7 @@ public class ScheduleListAdapter extends DefaultListAdapter implements SectionIn
   public void removeEvents(Event[] deletedEvents) {
     int group;
     for (Event event : deletedEvents) {
-      group=event.day*GROUPS_PER_DAY+event.hour-6;
+      group=event.day*GROUPS_PER_DAY+event.hour-GROUP_HOUR_OFFSET;
       for (int i=0; i<events.get(group).size(); i++) {
         if (events.get(group).get(i).id==event.id) {
           events.get(group).remove(i);

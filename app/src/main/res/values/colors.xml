@@ -6,8 +6,9 @@
   <color name="primary_light">#d0aaaa</color>
   <color name="primary_lightest">#EFE1E1</color>
   <color name="secondary">#31428C</color>
-  <color name="secondary_light">#98A0BE</color>
+  <color name="secondary_light">#8490BC</color>
   <color name="secondary_dark">#192146</color>
+  <color name="window_background">#E3E6EF</color>
 
   <color name="gray">#aaaaaa</color>
   <color name="gray_light">#cccccc</color>
@@ -18,7 +19,7 @@
   <color name="white">#ffffff</color>
   <color name="black">#000000</color>
 
-  <!-- help text colors (from program) -->
+  <!-- event text colors (from program) -->
   <color name="junior">#278B43</color>
   <color name="open_tournament">#F37029</color>
   <color name="non_tournament">#004688</color>

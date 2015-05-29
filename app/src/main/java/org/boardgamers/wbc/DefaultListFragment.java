@@ -30,6 +30,19 @@ public class DefaultListFragment extends Fragment {
     return view;
   }
 
+  public void expandGroups(int group, int count) {
+    for (int i=group; i<group+count; i++) {
+      listView.expandGroup(i);
+    }
+  }
+
+
+  public void collapseGroups(int group, int count) {
+    for (int i=group; i<group+count; i++) {
+      listView.collapseGroup(i);
+    }
+  }
+
   public void refreshAdapter() {
     listAdapter.updateList();
   }

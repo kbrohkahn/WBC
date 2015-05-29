@@ -73,7 +73,7 @@ public class ScheduleListFragment extends DefaultListFragment {
         event=tempEvents.remove(0);
 
         if (event.day*GROUPS_PER_DAY+event.hour-6>=events.size()) {
-          Log.d("TEST", "Bad day for " + event.title);
+          Log.d("TEST", "Bad day for "+event.title);
         }
         events.get(event.day*GROUPS_PER_DAY+event.hour-6).add(event);
 

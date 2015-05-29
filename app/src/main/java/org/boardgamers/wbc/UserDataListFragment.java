@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Fragment containing user's WBC data, including tournament finishes, help notes, and created events
+ * Fragment containing user's WBC data, including tournament finishes, event notes, and created events
  */
 public class UserDataListFragment extends DefaultListFragment {
   //private final String TAG="My WBC Data Activity";

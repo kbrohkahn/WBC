@@ -13,3 +13,4 @@ local.properties
 # OS X files
 #*.DS_Store
 gradlew
+*.apk
