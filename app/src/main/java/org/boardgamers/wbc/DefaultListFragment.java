@@ -61,6 +61,10 @@ public class DefaultListFragment extends Fragment {
     listAdapter.notifyDataSetChanged();
   }
 
+  public void reloadAdapterData() {
+
+  }
+
   class PopulateAdapterTask extends AsyncTask<Integer, Integer, Integer> {
     protected DefaultListFragment fragment;
     protected List<List<Event>> events;

@@ -557,7 +557,7 @@ public class SettingsActivity extends AppCompatActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.menu_light_settings, menu);
+    inflater.inflate(R.menu.menu_settings, menu);
 
     return true;
   }

@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+  <item
+    android:id="@+id/filter_select_all"
+    android:title="@string/select_all"
+    app:showAsAction="never">
+  </item>
+  <item
+    android:id="@+id/filter_select_tournament"
+    android:title="@string/select_tournament"
+    app:showAsAction="never">
+  </item>
+  <item
+    android:id="@+id/filter_deselect_all"
+    android:title="@string/deselect_all"
+    app:showAsAction="never">
+  </item>
+  <item
+    android:id="@+id/filter_deselect_tournament"
+    android:title="@string/deselect_tournament"
+    app:showAsAction="never">
+  </item>
+</menu>

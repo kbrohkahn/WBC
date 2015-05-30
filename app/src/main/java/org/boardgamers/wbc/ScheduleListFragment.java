@@ -1,7 +1,6 @@
 package org.boardgamers.wbc;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,10 @@ public class ScheduleListFragment extends DefaultListFragment {
     new PopulateScheduleAdapterTask(this, GROUPS_PER_DAY*MainActivity.TOTAL_DAYS).execute(0, 0, 0);
 
     return view;
+  }
+
+  public void reloadAdapterData() {
+    new PopulateScheduleAdapterTask(this, GROUPS_PER_DAY*MainActivity.TOTAL_DAYS).execute(0, 0, 0);
   }
 
   /**
@@ -64,19 +67,24 @@ public class ScheduleListFragment extends DefaultListFragment {
 
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getReadableDatabase();
-      //List<Boolean> visible=dbHelper.getAllVisible();
+      List<Tournament> tournaments=dbHelper.getAllTournaments(MainActivity.userId);
       List<Event> tempEvents=dbHelper.getAllEvents(MainActivity.userId);
       dbHelper.close();
+
+      boolean[] visible=new boolean[tournaments.size()];
+      for (Tournament tournament : tournaments) {
+        visible[tournament.id]=tournament.visible;
+      }
 
       Event event;
       while (tempEvents.size()>0) {
         event=tempEvents.remove(0);
 
-        if (event.day*GROUPS_PER_DAY+event.hour-6>=events.size()) {
-          Log.d("TEST", "Bad day for "+event.title);
+        if (event.id<MainActivity.USER_EVENT_ID && !visible[event.tournamentID]) {
+          continue;
         }
-        events.get(event.day*GROUPS_PER_DAY+event.hour-6).add(event);
 
+        events.get(event.day*GROUPS_PER_DAY+event.hour-6).add(event);
         if (event.starred) {
           events.get(event.day*GROUPS_PER_DAY).add(event);
         }

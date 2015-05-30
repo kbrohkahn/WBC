@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
   public static int currentHour;
   public static int userId=-1;
 
+  public static String packageName;
   public static boolean differentUser=false;
+  public boolean fromFilter=false;
   public static boolean opened=false;
 
   private static ViewPager viewPager;
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     setContentView(R.layout.main_layout);
 
+    packageName=getApplicationContext().getPackageName();
     opened=true;
     pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
 
@@ -144,6 +148,11 @@ public class MainActivity extends AppCompatActivity {
       //pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
     }
 
+    if (fromFilter) {
+      fromFilter=false;
+      pagerAdapter.getItem(1).reloadAdapterData();
+    }
+
     super.onResume();
   }
 
@@ -185,18 +194,22 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  public static String getBoxNameFromLabel(String label) {
+  public static int getBoxIdFromLabel(String label, Resources r) {
     String fixedLabel=label.toLowerCase();
     fixedLabel=fixedLabel.replace("&", "and");
     fixedLabel=fixedLabel.replace("!", "exc");
 
-    return "drawable/box_"+fixedLabel;
+    fixedLabel="drawable/box_"+fixedLabel;
+
+    int id=r.getIdentifier(fixedLabel, null, packageName);
+
+    return id==0 ? R.drawable.ic_launcher : id;
   }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.menu_light_main, menu);
+    inflater.inflate(R.menu.menu_main, menu);
 
     SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
     final SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
@@ -359,8 +372,9 @@ public class MainActivity extends AppCompatActivity {
       startActivity(new Intent(this, HelpActivity.class));
     } else if (item.getItemId()==R.id.menu_about) {
       startActivity(new Intent(this, AboutActivity.class));
-      //    } else if (item.getItemId()==R.id.menu_filter) {
-      //      startActivity(new Intent(this, FilterActivity.class));
+    } else if (item.getItemId()==R.id.menu_filter) {
+      fromFilter=true;
+      startActivity(new Intent(this, FilterActivity.class));
     } else if (item.getItemId()==R.id.menu_settings) {
       startActivity(new Intent(this, SettingsActivity.class));
     } else {

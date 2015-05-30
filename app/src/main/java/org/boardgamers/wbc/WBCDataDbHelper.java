@@ -47,6 +47,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PRIZE="prize";
     public static final String COLUMN_GM="gm";
     public static final String COLUMN_FINAL_EVENT="final_event";
+    public static final String COLUMN_VISIBLE="visible";
     public static final String COLUMN_NULLABLE="null";
   }
 
@@ -72,7 +73,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_USER_ID="user_id";
     public static final String COLUMN_TOURNAMENT_ID="tournament_id";
     public static final String COLUMN_FINISH="finish";
-    public static final String COLUMN_VISIBLE="visible";
     public static final String COLUMN_NULLABLE="null";
   }
 
@@ -112,7 +112,8 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
           TournamentEntry.COLUMN_IS_TOURNAMENT+" INTEGER,"+
           TournamentEntry.COLUMN_PRIZE+" INTEGER,"+
           TournamentEntry.COLUMN_GM+" TEXT,"+
-          TournamentEntry.COLUMN_FINAL_EVENT+" INTEGER)";
+          TournamentEntry.COLUMN_FINAL_EVENT+" INTEGER,"+
+          TournamentEntry.COLUMN_VISIBLE+" INTEGER)";
 
   private static final String SQL_CREATE_USER_ENTRIES="CREATE TABLE "+UserEntry.TABLE_NAME+" ("+
       UserEntry._ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+
@@ -126,7 +127,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
           UserTournamentDataEntry.COLUMN_USER_ID+" INTEGER,"+
           UserTournamentDataEntry.COLUMN_TOURNAMENT_ID+" INTEGER,"+
           UserTournamentDataEntry.COLUMN_FINISH+" INTEGER,"+
-          UserTournamentDataEntry.COLUMN_VISIBLE+" INTEGER, "+
           "UNIQUE("+UserTournamentDataEntry.COLUMN_USER_ID+","+
           UserTournamentDataEntry.COLUMN_TOURNAMENT_ID+") ON CONFLICT REPLACE)";
 
@@ -246,6 +246,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     values.put(TournamentEntry.COLUMN_PRIZE, prize);
     values.put(TournamentEntry.COLUMN_GM, gm);
     values.put(TournamentEntry.COLUMN_FINAL_EVENT, eventId);
+    values.put(TournamentEntry.COLUMN_VISIBLE, 1);
 
     // Insert the new row, returning the primary key value of the new row
     return sqLiteDatabase
@@ -456,6 +457,11 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return getTournaments(userId, where);
   }
 
+  public List<Tournament> getAllTournaments(int userId) {
+    String where="";
+    return getTournaments(userId, where);
+  }
+
   public List<Tournament> getTournaments(int uId, String where) {
     String sortOrder=TournamentEntry.COLUMN_TITLE+" ASC";
 
@@ -492,9 +498,8 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
         gm=cursor.getString(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_GM));
         finalEventId=
             cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_FINAL_EVENT));
+        visible=cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_VISIBLE))==1;
         finish=cursor.getInt(cursor.getColumnIndexOrThrow(UserTournamentDataEntry.COLUMN_FINISH));
-        visible=
-            cursor.getInt(cursor.getColumnIndexOrThrow(UserTournamentDataEntry.COLUMN_VISIBLE))==1;
 
         tournament=new Tournament(id, title, label, isTournament, prize, gm, finalEventId);
         tournament.finish=finish;
@@ -638,6 +643,15 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return result;
   }
 
+  public long updateTournamentVisible(int tournamentId, boolean visible) {
+    ContentValues values=new ContentValues();
+    values.put(TournamentEntry.COLUMN_VISIBLE, visible ? 1 : 0);
+
+    String where=TournamentEntry.COLUMN_TOURNAMENT_ID+"="+String.valueOf(tournamentId);
+
+    return sqLiteDatabase.update(TournamentEntry.TABLE_NAME, values, where, null);
+  }
+
   public long insertUserTournamentData(int userId, int tournamentId, int finish) {
     ContentValues values=new ContentValues();
     values.put(UserTournamentDataEntry.COLUMN_FINISH, finish);
@@ -657,7 +671,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
               values);
     }
     return result;
-
   }
 
   public long insertUserEventData(int userId, int eventId, boolean starred, String note) {

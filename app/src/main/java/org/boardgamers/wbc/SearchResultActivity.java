@@ -60,7 +60,7 @@ public class SearchResultActivity extends AppCompatActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
-    inflater.inflate(R.menu.menu_light_search, menu);
+    inflater.inflate(R.menu.menu_search, menu);
 
     SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
     final SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();

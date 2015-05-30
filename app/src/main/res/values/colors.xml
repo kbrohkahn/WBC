@@ -42,12 +42,6 @@
   <color name="future_dark">@color/yellow</color>
   <color name="future_light">@color/yellow_light</color>
 
-  <!-- design -->
-  <color name="action_bar_background">@color/primary_light</color>
-  <color name="action_bar_text">@color/black</color>
-  <color name="menu_background">@color/primary_light</color>
-  <color name="menu_text">@color/black</color>
-
   <!-- buttons -->
   <color name="default_button_pressed">@color/secondary_dark</color>
   <color name="default_button_disabled">@color/secondary_light</color>

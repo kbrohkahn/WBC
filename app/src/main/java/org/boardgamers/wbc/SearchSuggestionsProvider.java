@@ -50,12 +50,11 @@ public class SearchSuggestionsProvider extends ContentProvider {
       title=c.getString(c.getColumnIndexOrThrow(WBCDataDbHelper.TournamentEntry.COLUMN_TITLE));
       label=c.getString(c.getColumnIndexOrThrow(WBCDataDbHelper.TournamentEntry.COLUMN_LABEL));
 
-      boxId=getContext().getResources().getIdentifier(MainActivity.getBoxNameFromLabel(label), null,
-          getContext().getApplicationContext().getPackageName());
+      boxId=MainActivity.getBoxIdFromLabel(label, getContext().getResources());
       if (boxId==0) {
         //boxId=R.drawable.box_iv_no_image_text;
         if (label.length()>0) {
-          Log.d("", "Box not found for "+title+ " label " + label);
+          Log.d("", "Box not found for "+title+" label "+label);
         }
       }
 

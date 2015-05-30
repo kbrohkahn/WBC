@@ -279,9 +279,7 @@ public class EventFragment extends Fragment {
         previewTV.setVisibility(View.VISIBLE);
         reportTV.setVisibility(View.VISIBLE);
 
-        int boxId=getResources()
-            .getIdentifier(MainActivity.getBoxNameFromLabel(tournament.label), null,
-                getActivity().getApplicationContext().getPackageName());
+        int boxId=MainActivity.getBoxIdFromLabel(tournament.label, getResources());
         if (boxId==0) {
           boxIV.setImageResource(R.drawable.box_iv_no_image_text);
           Log.d("", "not found");

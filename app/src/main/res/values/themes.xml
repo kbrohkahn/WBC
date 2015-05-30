@@ -15,6 +15,7 @@
 
   <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
     <item name="android:textSize">17sp</item>
+    <item name="android:textColor">#333333</item>
   </style>
 
   <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog">

@@ -12,8 +12,11 @@
 
     <ListView
       android:id="@+id/filter_list_view"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent">
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@+id/filter_batch_layout"
+      android:fadeScrollbars="true"
+      android:scrollbarFadeDuration="1000">
     </ListView>
 
     <LinearLayout
@@ -24,8 +27,7 @@
       android:layout_alignParentBottom="true"
       android:background="@color/primary_light"
       android:orientation="horizontal"
-      android:paddingBottom="@dimen/default_margin"
-      android:paddingTop="@dimen/default_margin">
+      android:visibility="gone">
 
       <Button
         android:id="@+id/filter_select_all"
@@ -34,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/select_all_new_line"/>
+        android:text="@string/select_all"/>
 
       <Button
         android:id="@+id/filter_select_tournament"
@@ -43,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/select_tournament_new_line"/>
+        android:text="@string/select_tournament"/>
 
       <Button
         android:id="@+id/filter_deselect_all"
@@ -52,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/deselect_all_new_line"/>
+        android:text="@string/deselect_all"/>
 
       <Button
         android:id="@+id/filter_deselect_tournament"
@@ -61,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/deselect_tournament_new_line"/>
+        android:text="@string/deselect_tournament"/>
     </LinearLayout>
   </RelativeLayout>
 </LinearLayout>

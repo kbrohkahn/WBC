@@ -51,10 +51,6 @@
   <string name="deselect_all">Deselect All</string>
   <string name="select_tournament">Select Tourneys</string>
   <string name="deselect_tournament">Deselect Tourneys</string>
-  <string name="select_all_new_line">Select\nAll</string>
-  <string name="deselect_all_new_line">Deselect\nAll</string>
-  <string name="select_tournament_new_line">Select\nTourneys</string>
-  <string name="deselect_tournament_new_line">Deselect\nTourneys</string>
 
   <!-- SCHEDULE FRAGMENT -->
   <string name="title">Title</string>

@@ -1,4 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
-  style="@style/medium_text"
-  android:id="@+id/filter_list_checkbox"/>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:gravity="center_vertical">
+
+  <CheckBox
+    android:id="@+id/filter_checkbox"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/default_margin"/>
+
+  <ImageView
+    android:id="@+id/filter_image_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_margin"
+    android:contentDescription="@string/box_iv"/>
+
+  <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+      android:id="@+id/filter_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+    <TextView
+      android:id="@+id/filter_label"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+
+  </LinearLayout>
+
+</LinearLayout>
+
