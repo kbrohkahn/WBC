@@ -8,11 +8,10 @@
   <ImageView
     android:id="@+id/sl_star"
     android:layout_width="wrap_content"
-    android:layout_height="1dip"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/activity_margin"
     android:background="@drawable/star_off"
-    android:contentDescription="@string/star"
-    android:visibility="invisible"/>
+    android:contentDescription="@string/star"/>
 
   <TextView
     style="@style/list_item"

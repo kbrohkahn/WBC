@@ -34,16 +34,16 @@ public class DialogEditEvent extends DialogCreateEvent {
     titleET.setText(event.title);
     locationET.setText(event.location);
 
-    add.setText(getResources().getString(R.string.save));
-    add.setOnClickListener(new View.OnClickListener() {
-
-      @Override
-      public void onClick(View v) {
-        saveEvent();
-        getDialog().dismiss();
-
-      }
-    });
+    //    add.setText(getResources().getString(R.string.save));
+    //    add.setOnClickListener(new View.OnClickListener() {
+    //
+    //      @Override
+    //      public void onClick(View v) {
+    //        saveEvent();
+    //        getDialog().dismiss();
+    //
+    //      }
+    //    });
   }
 
   public void saveEvent() {

@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
     int id=r.getIdentifier(fixedLabel, null, packageName);
 
-    return id==0 ? R.drawable.ic_launcher : id;
+    return id==0 ? R.drawable.box_iv_no_image_text : id;
   }
 
   @Override

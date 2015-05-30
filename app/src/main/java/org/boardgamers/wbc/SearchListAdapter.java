@@ -21,9 +21,4 @@ public class SearchListAdapter extends DefaultListAdapter {
     return R.layout.list_group_small;
   }
 
-  @Override
-  public void changeEventStar(Event event) {
-    super.changeEventStar(event);
-    ((SearchListFragment) fragment).setAllStared();
-  }
 }

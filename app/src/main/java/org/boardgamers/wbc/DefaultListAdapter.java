@@ -272,8 +272,11 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
 
   public void changeEventStar(Event event) {
     event.starred=!event.starred;
+
     updateEvents(new Event[] {event});
     notifyDataSetChanged();
+
+    fragment.setAllStared();
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(fragment.getActivity());
     dbHelper.getWritableDatabase();

@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Fragment containing user's WBC data, including tournament finishes, event notes, and created events
+ * Fragment containing user's WBC data, including tournament finishes, event notes, and created
+ * events
  */
 public class UserDataListFragment extends DefaultListFragment {
   //private final String TAG="My WBC Data Activity";
@@ -64,7 +65,9 @@ public class UserDataListFragment extends DefaultListFragment {
         if (note.equalsIgnoreCase("")) {
           listAdapter.events.get(NOTES_INDEX).remove(event);
         } else {
+          event.title=event.title.substring(0, event.title.length()-event.note.length());
           event.note=note;
+          event.title+=note;
         }
 
         break;
@@ -78,57 +81,51 @@ public class UserDataListFragment extends DefaultListFragment {
         if (finish==0) {
           listAdapter.events.get(FINISHES_INDEX).remove(event);
         } else {
+          event.title=event.title.substring(0, event.title.length()-3);
           event.note=String.valueOf(finish);
+          event.title+=finishStrings[finish-1];
         }
         break;
       }
     }
 
-    Event eventNote=null;
-    Tournament tournamentFinish=null;
-
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
     dbHelper.getReadableDatabase();
+
     if (!noteInList && !note.equalsIgnoreCase("")) {
-      eventNote=dbHelper.getEvent(MainActivity.userId, eventId);
+      Event eventNote=dbHelper.getEvent(MainActivity.userId, eventId);
+      eventNote.title+=": "+eventNote.note;
+
+      int noteIndex;
+      List<Event> notesSearchList=listAdapter.events.get(NOTES_INDEX);
+      noteIndex=0;
+      for (; noteIndex<notesSearchList.size(); noteIndex++) {
+        if (eventNote.title.compareToIgnoreCase(notesSearchList.get(noteIndex).title)==1) {
+          break;
+        }
+      }
+      notesSearchList.add(noteIndex, eventNote);
     }
 
     if (!finishInList && finish>0) {
-      tournamentFinish=dbHelper.getTournament(MainActivity.userId, tournamentId);
-    }
+      Tournament tournamentFinish=dbHelper.getTournament(MainActivity.userId, tournamentId);
+      Event eventFinish=dbHelper.getEvent(MainActivity.userId, tournamentFinish.finalEventId);
 
-    int index;
-    List<Event> searchList;
-    if (eventNote!=null) {
-      searchList=listAdapter.events.get(NOTES_INDEX);
-      index=0;
-      for (; index<searchList.size(); index++) {
-        if (eventNote.title.compareToIgnoreCase(searchList.get(index).title)==1) {
+      eventFinish.title+=": "+finishStrings[tournamentFinish.finish-1];
+      eventFinish.note=String.valueOf(tournamentFinish.finish);
+
+      List<Event> finishesSearchList=listAdapter.events.get(FINISHES_INDEX);
+      int finishIndex=0;
+      for (; finishIndex<finishesSearchList.size(); finishIndex++) {
+        if (tournamentFinish.title.compareToIgnoreCase(finishesSearchList.get(finishIndex).title)==
+            1) {
           break;
         }
       }
-      searchList.add(index, eventNote);
+      finishesSearchList.add(finishIndex, eventFinish);
     }
 
-    if (tournamentFinish!=null) {
-      searchList=listAdapter.events.get(FINISHES_INDEX);
-      index=0;
-      for (; index<searchList.size(); index++) {
-        if (tournamentFinish.title.compareToIgnoreCase(searchList.get(index).title)==1) {
-          break;
-        }
-      }
-      searchList.add(index, getEventFromTournament(tournamentFinish));
-    }
     dbHelper.close();
-  }
-
-  public Event getEventFromTournament(Tournament tournament) {
-    Event event=new Event(tournament.finalEventId, tournament.id, 0, 0,
-        tournament.title+": "+finishStrings[tournament.finish], "", "", false, 0, false, 0, "");
-
-    event.note=String.valueOf(tournament.finish);
-    return event;
   }
 
   @Override
@@ -205,16 +202,25 @@ public class UserDataListFragment extends DefaultListFragment {
 
       events=new ArrayList<>();
       events.add(dbHelper.getUserEvents(MainActivity.userId, ""));
-      events.add(dbHelper.getEventsWithNotes(MainActivity.userId));
-
+      List<Event> eventNotes=dbHelper.getEventsWithNotes(MainActivity.userId);
       List<Tournament> tournamentFinishes=dbHelper.getTournamentsWithFinishes(MainActivity.userId);
 
-      dbHelper.close();
+      for (Event event : eventNotes) {
+        event.title+=": "+event.note;
+      }
+      events.add(eventNotes);
 
       List<Event> eventFinishes=new ArrayList<>();
       for (Tournament tournament : tournamentFinishes) {
-        eventFinishes.add(getEventFromTournament(tournament));
+        Tournament tournamentFinish=dbHelper.getTournament(MainActivity.userId, tournament.id);
+        Event eventFinish=dbHelper.getEvent(MainActivity.userId, tournamentFinish.finalEventId);
+
+        eventFinish.title+=": "+finishStrings[tournamentFinish.finish-1];
+        eventFinish.note=String.valueOf(tournamentFinish.finish);
+
+        eventFinishes.add(eventFinish);
       }
+      dbHelper.close();
 
       events.add(eventFinishes);
 

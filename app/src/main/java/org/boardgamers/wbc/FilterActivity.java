@@ -2,6 +2,7 @@ package org.boardgamers.wbc;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,19 +21,29 @@ import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FilterActivity extends AppCompatActivity {
   private final String TAG="Filter Activity";
 
+  private final int SECTION_TOURNAMENT_ID=1000;
+
   private boolean[] initialVisible;
   private List<Tournament> tournaments;
+
+  private Character[] sections;
+  private Integer[] sectionIndices;
+
+  ProgressDialog dialog;
+
   private FilterListAdapter listAdapter;
 
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.filter);
+    dialog=new ProgressDialog(this);
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -46,15 +57,50 @@ public class FilterActivity extends AppCompatActivity {
     tournaments=dbHelper.getAllTournaments(MainActivity.userId);
     dbHelper.close();
 
+    List<Character> sectionsList=new ArrayList<>();
+    List<Integer> sectionIndicesList=new ArrayList<>();
+
+    // add first char so list is not empty
+    Character letter=tournaments.get(0).title.charAt(0);
+    sectionsList.add(letter);
+    sectionIndicesList.add(0);
+    tournaments.add(0, new Tournament(SECTION_TOURNAMENT_ID, ""+letter, "", false, 0, "", 0));
+
+    int numSections=1;
+    for (int i=1; i<tournaments.size(); i++) {
+      letter=tournaments.get(i).title.charAt(0);
+
+      if (sectionsList.get(numSections-1)!=letter) {
+        sectionsList.add(letter);
+        sectionIndicesList.add(i);
+        tournaments.add(i,
+            new Tournament(SECTION_TOURNAMENT_ID+numSections, ""+letter, "", false, 0, "", 0));
+
+        numSections++;
+        i++;
+      }
+    }
+
+    sections=new Character[sectionsList.size()];
+    sectionsList.toArray(sections);
+
+    sectionIndices=new Integer[sectionIndicesList.size()];
+    sectionIndicesList.toArray(sectionIndices);
+
     initialVisible=new boolean[tournaments.size()];
     for (int i=0; i<initialVisible.length; i++) {
       initialVisible[i]=tournaments.get(i).visible;
     }
 
     ListView listView=(ListView) findViewById(R.id.filter_list_view);
-    listView.setFastScrollEnabled(true);
+
+    //listView.setFastScrollEnabled(true);
     listAdapter=new FilterListAdapter();
+
     listView.setAdapter(listAdapter);
+
+    FilterSideSelector sideSelector=(FilterSideSelector) findViewById(R.id.filter_side_selector);
+    sideSelector.setListView(listView);
 
     // select all image button
     Button selectAll=(Button) findViewById(R.id.filter_select_all);
@@ -125,33 +171,6 @@ public class FilterActivity extends AppCompatActivity {
   }
 
   @Override
-  public void onPause() {
-    ProgressDialog dialog=new ProgressDialog(this);
-    dialog.setCancelable(false);
-    dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-    dialog.setTitle("Saving, please wait...");
-    dialog.setMax(initialVisible.length);
-    dialog.setProgress(0);
-    dialog.show();
-
-    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
-    dbHelper.getWritableDatabase();
-    Tournament tournament;
-    for (int i=0; i<initialVisible.length; i++) {
-      dialog.setProgress(i);
-      tournament=tournaments.get(i);
-      if (initialVisible[i]^tournament.visible) {
-        dbHelper.updateTournamentVisible(tournament.id, tournament.visible);
-      }
-    }
-    dbHelper.close();
-
-    dialog.dismiss();
-
-    super.onPause();
-  }
-
-  @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater=getMenuInflater();
     inflater.inflate(R.menu.menu_filter, menu);
@@ -163,7 +182,7 @@ public class FilterActivity extends AppCompatActivity {
     int id=item.getItemId();
 
     if (id==android.R.id.home) {
-      finish();
+      save();
       return true;
     } else if (id==R.id.filter_select_all) {
       selectAll();
@@ -182,11 +201,17 @@ public class FilterActivity extends AppCompatActivity {
     }
   }
 
+  @Override
+  public void onBackPressed() {
+    save();
+  }
+
+  public void save() {
+    new SaveEventData().execute();
+  }
+
   public class FilterListAdapter extends BaseAdapter implements SectionIndexer {
     private final LayoutInflater inflater;
-    private final String[] sections=
-        {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-            "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     public FilterListAdapter() {
       inflater=(LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -214,86 +239,121 @@ public class FilterActivity extends AppCompatActivity {
 
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
-      if (view==null) {
+      int sectionIndex=-1;
+      for (int i=0; i<sectionIndices.length; i++) {
+        if (sectionIndices[i]==position) {
+          sectionIndex=i;
+          break;
+        }
+      }
+
+      if (sectionIndex==-1) {
         view=inflater.inflate(R.layout.filter_list_item, parent, false);
-      }
+        Tournament tournament=tournaments.get(position);
 
-      Tournament tournament=tournaments.get(position);
+        TextView titleTV=(TextView) view.findViewById(R.id.filter_title);
+        titleTV.setText(tournament.title);
 
-      TextView titleTV=(TextView) view.findViewById(R.id.filter_title);
-      titleTV.setText(tournament.title);
-
-      TextView labelTV=(TextView) view.findViewById(R.id.filter_label);
-
-      if (tournament.isTournament) {
+        TextView labelTV=(TextView) view.findViewById(R.id.filter_label);
         labelTV.setText(tournament.label);
-        labelTV.setVisibility(View.VISIBLE);
+
+        ImageView boxIV=(ImageView) view.findViewById(R.id.filter_image_view);
+        boxIV.setImageResource(MainActivity.getBoxIdFromLabel(tournament.label, getResources()));
+
+        final CheckBox checkBox=(CheckBox) view.findViewById(R.id.filter_checkbox);
+        checkBox.setChecked(tournament.visible);
+        checkBox.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            Log.d(TAG, "View clicked");
+            tournaments.get(position).visible=((CheckBox) v).isChecked();
+          }
+        });
+
+        view.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            boolean newCheck=!checkBox.isChecked();
+            tournaments.get(position).visible=newCheck;
+            checkBox.setChecked(newCheck);
+          }
+        });
       } else {
-        labelTV.setVisibility(View.GONE);
+        view=inflater.inflate(R.layout.list_group_small, parent, false);
+        Character letter=sections[sectionIndex];
+
+        TextView textView=(TextView) view.findViewById(R.id.sg_name);
+        textView.setText(""+letter);
+
+        view.setBackgroundResource(R.drawable.group_collapsed);
       }
-
-      ImageView boxIV=(ImageView) view.findViewById(R.id.filter_image_view);
-      boxIV.setImageResource(MainActivity.getBoxIdFromLabel(tournament.label, getResources()));
-
-      final CheckBox checkBox=(CheckBox) view.findViewById(R.id.filter_checkbox);
-      checkBox.setChecked(tournament.visible);
-      checkBox.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          Log.d(TAG, "View clicked");
-          tournaments.get(position).visible=((CheckBox) v).isChecked();
-        }
-      });
-
-      view.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          boolean newCheck=!checkBox.isChecked();
-          tournaments.get(position).visible=newCheck;
-          checkBox.setChecked(newCheck);
-        }
-      });
 
       return view;
     }
 
-    @Override
-    public int getPositionForSection(int sectionIndex) {
-      int index;
-      if (sectionIndex>13) {
-        String letter=sections[sectionIndex-1];
-        for (index=tournaments.size()-1; index>=0; index--) {
-          if (tournaments.get(index).title.startsWith(letter)) {
-            break;
-          }
-        }
-        index++;
-      } else {
-        String letter=sections[sectionIndex];
-        for (index=0; index<tournaments.size(); index++) {
-          if (tournaments.get(index).title.startsWith(letter)) {
-            break;
-          }
-        }
-      }
-      return index;
-    }
-
-    public int getSectionForPosition(int position) {
-      String letter=tournaments.get(position).title.substring(0, 1);
-
-      int index;
-      for (index=0; index<sections.length; index++) {
-        if (sections[index].equals(letter))
-          break;
-      }
-      return index;
-    }
-
-    public String[] getSections() {
+    public Object[] getSections() {
       return sections;
     }
 
+    public int getPositionForSection(int i) {
+      return sectionIndices[i];
+    }
+
+    public int getSectionForPosition(int position) {
+      for (int i=0; i<sectionIndices.length; i++) {
+        if (sectionIndices[i]==position) {
+          return i;
+        }
+      }
+      return 0;
+    }
   }
 
+  class SaveEventData extends AsyncTask<Integer, Integer, Void> {
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+      super.onProgressUpdate(values);
+
+      dialog.setProgress(values[0]);
+    }
+
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
+
+      dialog.setCancelable(false);
+      dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+      dialog.setTitle("Saving, please wait...");
+      dialog.setMax(initialVisible.length);
+      dialog.setProgress(0);
+      dialog.show();
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      if (dialog.isShowing()) {
+        dialog.dismiss();
+      }
+      finish();
+
+      super.onPostExecute(aVoid);
+    }
+
+    @Override
+    protected Void doInBackground(Integer... params) {
+      WBCDataDbHelper dbHelper=new WBCDataDbHelper(getBaseContext());
+      dbHelper.getWritableDatabase();
+      Tournament tournament;
+      for (int i=0; i<initialVisible.length; i++) {
+        dialog.setProgress(i);
+        tournament=tournaments.get(i);
+        if (initialVisible[i]^tournament.visible && tournament.id<SECTION_TOURNAMENT_ID) {
+          dbHelper.updateTournamentVisible(tournament.id, tournament.visible);
+        }
+      }
+      dbHelper.close();
+
+      return null;
+    }
+  }
 }

@@ -84,7 +84,7 @@
   </string-array>
 
   <!-- CREATE EVENT DIALOG -->
-  <string name="ce_days">Days (must have at least 1)</string>
+  <string name="ce_days">Days</string>
   <string name="ce_at">At</string>
   <string name="ce_for">for</string>
   <string name="ce_hours">hours</string>
@@ -318,6 +318,14 @@
     list at the top of each day and the "Starred" tab to the left.
     Create custom events and view your event notes and tournament finishes
     by swiping to the right to the "My Data" tab.
+    \n\nSEARCHING: The search button allows you to view all the tournaments, and you
+    can search for and select a tournament to view and then star all of its events.
+    You can also search for specific events/formats by pressing search on your keyboard
+    instead of selecting events. For example, to find every Power Grid event, type "Power"
+    and select "Power Grid" from the list, or type "Power Grid" and hit search. Or to
+    view every demo event in the convention, type "Demo" and hit search. If you want to
+    view all the tournaments and filter down the list to your favorites,
+    use "Filter Schedule" from the main menu.
     \n\nSAVING: App settings, tournament finishes, event notes, etc.
     are all saved automatically, so do not worry about losing your settings!
     \n\nOTHER: For tournament finishes,

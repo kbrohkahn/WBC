@@ -29,7 +29,6 @@ public class DialogCreateEvent extends DialogFragment {
           R.id.ce_repeat_d4, R.id.ce_repeat_d5, R.id.ce_repeat_d6, R.id.ce_repeat_d7,
           R.id.ce_repeat_d8};
 
-  protected Button add;
   protected Spinner hourSpinner;
   protected Spinner durationSpinner;
   protected EditText titleET;
@@ -67,7 +66,7 @@ public class DialogCreateEvent extends DialogFragment {
     durationA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     durationSpinner.setAdapter(durationA);
 
-    add=(Button) view.findViewById(R.id.ce_add);
+    Button add=(Button) view.findViewById(R.id.ce_add);
     add.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

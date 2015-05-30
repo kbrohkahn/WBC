@@ -34,27 +34,8 @@ public class UserDataListAdapter extends DefaultListAdapter {
           return true;
         }
       });
-
-      return view;
-    } else {
-      String titleString;
-
-      if (groupPosition==UserDataListFragment.FINISHES_INDEX) {
-        titleString=event.title;
-      } else {
-        titleString=event.title+": "+event.note;
-      }
-
-      view.findViewById(R.id.li_star).setVisibility(View.INVISIBLE);
-      view.findViewById(R.id.li_hour).setVisibility(View.GONE);
-      view.findViewById(R.id.li_duration).setVisibility(View.GONE);
-      view.findViewById(R.id.li_location).setVisibility(View.GONE);
-
-      TextView title=(TextView) view.findViewById(R.id.li_title);
-      title.setText(titleString);
-
-      return view;
     }
+    return view;
   }
 
   @Override

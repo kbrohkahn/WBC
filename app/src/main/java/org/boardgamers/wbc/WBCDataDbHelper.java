@@ -201,6 +201,9 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   @Override
   public SQLiteDatabase getReadableDatabase() {
+    while (sqLiteDatabase!=null&&sqLiteDatabase.isOpen()) {
+
+    }
     sqLiteDatabase=super.getReadableDatabase();
     return sqLiteDatabase;
   }
