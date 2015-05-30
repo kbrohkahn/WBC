@@ -12,7 +12,7 @@ import java.util.List;
  * Adapter for full schedule ExpandableListAdapter
  */
 public class ScheduleListAdapter extends DefaultListAdapter implements SectionIndexer {
-  private final int GROUPS_PER_DAY=18+1;      // 18 hours per day (0700 thru 2400) plus "My Events"
+  public static final int GROUPS_PER_DAY=18+1;      // 18 hours per day (0700 thru 2400) plus "My Events"
   private final int GROUP_HOUR_OFFSET=7-1;    // first hour is 7, offset 1 hour for "My Events"
 
   private final String[] hours;

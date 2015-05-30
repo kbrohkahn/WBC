@@ -12,6 +12,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -289,4 +290,23 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
   public void updateEvents(Event[] events) {}
 
   public void removeEvents(Event[] deletedEvents) {}
+
+  public List<Event> getChangedEvents(boolean changedStar) {
+    List<Event> changedEvents=new ArrayList<>();
+
+    for (int i=0; i<events.size(); i++) {
+      if ((id==1 && i%ScheduleListAdapter.GROUPS_PER_DAY==0) ||
+          (id==2 && i!=UserDataListFragment.EVENTS_INDEX)) {
+        continue;
+      }
+
+      for (Event event : events.get(i)) {
+        if (event.starred^changedStar) {
+          changedEvents.add(event);
+        }
+      }
+    }
+
+    return changedEvents;
+  }
 }

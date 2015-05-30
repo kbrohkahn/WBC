@@ -11,13 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Kevin on 4/27/2015.
- * Database used for storing all data
+ * Created by Kevin on 4/27/2015. Database used for storing all data
  */
 public class WBCDataDbHelper extends SQLiteOpenHelper {
   //private final String TAG="Database";
 
-  public static final int DATABASE_VERSION=1;
+  public static final int DATABASE_VERSION=2;
 
   public static final String DATABASE_NAME="WBCdata.db";
 
@@ -184,13 +183,23 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
   }
 
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    db.execSQL(SQL_DELETE_EVENT_ENTRIES);
-    db.execSQL(SQL_DELETE_TOURNAMENT_ENTRIES);
-    db.execSQL(SQL_DELETE_USER_ENTRIES);
-    db.execSQL(SQL_DELETE_USER_EVENT_DATA_ENTRIES);
-    db.execSQL(SQL_DELETE_USER_TOURNAMENT_DATA_ENTRIES);
-    db.execSQL(SQL_DELETE_USER_EVENT_ENTRIES);
-    onCreate(db);
+    if (oldVersion<newVersion) {
+      db.execSQL(SQL_DELETE_EVENT_ENTRIES);
+      db.execSQL(SQL_DELETE_TOURNAMENT_ENTRIES);
+      db.execSQL(SQL_DELETE_USER_ENTRIES);
+      db.execSQL(SQL_DELETE_USER_EVENT_DATA_ENTRIES);
+      db.execSQL(SQL_DELETE_USER_TOURNAMENT_DATA_ENTRIES);
+      db.execSQL(SQL_DELETE_USER_EVENT_ENTRIES);
+
+      onCreate(db);
+    }
+  }
+
+  public int getVersion() {
+    sqLiteDatabase=super.getReadableDatabase();
+    int version=sqLiteDatabase.getVersion();
+    sqLiteDatabase.close();
+    return version;
   }
 
   @Override
@@ -201,9 +210,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   @Override
   public SQLiteDatabase getReadableDatabase() {
-    while (sqLiteDatabase!=null&&sqLiteDatabase.isOpen()) {
-
-    }
     sqLiteDatabase=super.getReadableDatabase();
     return sqLiteDatabase;
   }
@@ -646,13 +652,20 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return result;
   }
 
-  public long updateTournamentVisible(int tournamentId, boolean visible) {
-    ContentValues values=new ContentValues();
-    values.put(TournamentEntry.COLUMN_VISIBLE, visible ? 1 : 0);
+  public long updateTournamentsVisible(List<Tournament> tournaments) {
+    ContentValues values;
+    String where;
+    long result=0;
+    for (Tournament tournament : tournaments) {
 
-    String where=TournamentEntry.COLUMN_TOURNAMENT_ID+"="+String.valueOf(tournamentId);
+      values=new ContentValues();
+      values.put(TournamentEntry.COLUMN_VISIBLE, tournament.visible ? 1 : 0);
 
-    return sqLiteDatabase.update(TournamentEntry.TABLE_NAME, values, where, null);
+      where=TournamentEntry.COLUMN_TOURNAMENT_ID+"="+String.valueOf(tournament.id);
+
+      result+=sqLiteDatabase.update(TournamentEntry.TABLE_NAME, values, where, null);
+    }
+    return result;
   }
 
   public long insertUserTournamentData(int userId, int tournamentId, int finish) {
@@ -693,5 +706,17 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
           .insert(UserEventDataEntry.TABLE_NAME, UserEventDataEntry.COLUMN_NULLABLE, values);
     }
     return result;
+  }
+
+  public long insertUserEventData(int userId, List<Event> changedEvents) {
+    Event event;
+    long result=0;
+    for (int i=0; i<changedEvents.size(); i++) {
+      event=changedEvents.get(i);
+
+      result+=insertUserEventData(userId, event.id, event.starred, event.note);
+    }
+    return result;
+
   }
 }

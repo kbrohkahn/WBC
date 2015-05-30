@@ -48,32 +48,18 @@ public class DefaultListFragment extends Fragment {
   }
 
   public void showSaveDialog() {
-    int numChanges=0;
-
-    // update events in list
-    Event event;
-    changedEvents=new ArrayList<>();
-    for (int i=0; i<listAdapter.events.size(); i++) {
-      for (int j=0; j<listAdapter.events.get(i).size(); j++) {
-        event=listAdapter.events.get(i).get(j);
-        if (event.starred==allStarred) {
-          changedEvents.add(event);
-          numChanges++;
-        }
-      }
-    }
+    changedEvents=listAdapter.getChangedEvents(!allStarred);
 
     AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-
     builder.setTitle("Are you sure?").setMessage(
-        "Do you really want to change the star for "+String.valueOf(numChanges)+" events?")
-        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-            new SaveEventData().execute();
-          }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        "Do you really want to change the star for "+String.valueOf(changedEvents.size())+
+            " events?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+        new SaveEventData().execute();
+      }
+    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();
@@ -186,27 +172,22 @@ public class DefaultListFragment extends Fragment {
   }
 
   class SaveEventData extends AsyncTask<Integer, Integer, Void> {
-
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-      super.onProgressUpdate(values);
-
-      dialog.setProgress(values[0]);
-    }
-
     @Override
     protected void onPreExecute() {
       super.onPreExecute();
 
-      allStarred=!allStarred;
-      setGameStarIV();
-
       dialog=new ProgressDialog(getActivity());
-      dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+      dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
       dialog.setCancelable(false);
       dialog.setTitle("Saving, please wait...");
       dialog.show();
-      dialog.setMax(changedEvents.size());
+
+      allStarred=!allStarred;
+      setGameStarIV();
+
+      for (Event event : changedEvents) {
+        event.starred=!event.starred;
+      }
     }
 
     @Override
@@ -227,19 +208,19 @@ public class DefaultListFragment extends Fragment {
       // save events in DB
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getActivity());
       dbHelper.getWritableDatabase();
-      Event event;
-      for (int i=0; i<changedEvents.size(); i++) {
-        event=changedEvents.get(i);
-        event.starred=!event.starred;
-
-        dbHelper.insertUserEventData(MainActivity.userId, event.id, event.starred, event.note);
-
-        onProgressUpdate(i);
-      }
+      dbHelper.insertUserEventData(MainActivity.userId, changedEvents);
       dbHelper.close();
 
       return null;
     }
   }
 
+  @Override
+  public void onPause() {
+
+    if (dialog!=null&&dialog.isShowing()) {
+      dialog.dismiss();
+    }
+    super.onPause();
+  }
 }

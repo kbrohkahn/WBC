@@ -43,6 +43,7 @@ public class FilterActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.filter);
+
     dialog=new ProgressDialog(this);
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
@@ -202,12 +203,21 @@ public class FilterActivity extends AppCompatActivity {
   }
 
   @Override
+  protected void onPause() {
+    if (dialog!=null && dialog.isShowing()) {
+      dialog.dismiss();
+    }
+
+    super.onPause();
+  }
+
+  @Override
   public void onBackPressed() {
     save();
   }
 
   public void save() {
-    new SaveEventData().execute();
+    new SaveTournamentVisible().execute();
   }
 
   public class FilterListAdapter extends BaseAdapter implements SectionIndexer {
@@ -309,24 +319,26 @@ public class FilterActivity extends AppCompatActivity {
     }
   }
 
-  class SaveEventData extends AsyncTask<Integer, Integer, Void> {
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-      super.onProgressUpdate(values);
-
-      dialog.setProgress(values[0]);
-    }
+  class SaveTournamentVisible extends AsyncTask<Integer, Integer, Void> {
+    public List<Tournament> changedTournaments;
 
     @Override
     protected void onPreExecute() {
       super.onPreExecute();
 
       dialog.setCancelable(false);
-      dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+      dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
       dialog.setTitle("Saving, please wait...");
-      dialog.setMax(initialVisible.length);
-      dialog.setProgress(0);
       dialog.show();
+
+      changedTournaments=new ArrayList<>();
+      Tournament tournament;
+      for (int i=0; i<initialVisible.length; i++) {
+        tournament=tournaments.get(i);
+        if (initialVisible[i]^tournament.visible && tournament.id<SECTION_TOURNAMENT_ID) {
+          changedTournaments.add(tournament);
+        }
+      }
     }
 
     @Override
@@ -343,14 +355,7 @@ public class FilterActivity extends AppCompatActivity {
     protected Void doInBackground(Integer... params) {
       WBCDataDbHelper dbHelper=new WBCDataDbHelper(getBaseContext());
       dbHelper.getWritableDatabase();
-      Tournament tournament;
-      for (int i=0; i<initialVisible.length; i++) {
-        dialog.setProgress(i);
-        tournament=tournaments.get(i);
-        if (initialVisible[i]^tournament.visible && tournament.id<SECTION_TOURNAMENT_ID) {
-          dbHelper.updateTournamentVisible(tournament.id, tournament.visible);
-        }
-      }
+      dbHelper.updateTournamentsVisible(changedTournaments);
       dbHelper.close();
 
       return null;

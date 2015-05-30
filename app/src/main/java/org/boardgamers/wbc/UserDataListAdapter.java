@@ -24,8 +24,8 @@ public class UserDataListAdapter extends DefaultListAdapter {
     Event event=events.get(groupPosition).get(childPosition);
 
     if (groupPosition==UserDataListFragment.EVENTS_INDEX) {
-      TextView title=(TextView) view.findViewById(R.id.li_hour);
-      title.setText(dayStrings[event.day]+"\n"+String.valueOf(event.hour*100));
+      TextView hourTV=(TextView) view.findViewById(R.id.li_hour);
+      hourTV.setText(dayStrings[event.day]+"\n"+String.valueOf(event.hour*100));
 
       view.setOnLongClickListener(new View.OnLongClickListener() {
         @Override
@@ -34,6 +34,11 @@ public class UserDataListAdapter extends DefaultListAdapter {
           return true;
         }
       });
+    } else {
+      view.findViewById(R.id.li_star).setVisibility(View.INVISIBLE);
+      view.findViewById(R.id.li_hour).setVisibility(View.GONE);
+      view.findViewById(R.id.li_duration).setVisibility(View.GONE);
+      view.findViewById(R.id.li_location).setVisibility(View.GONE);
     }
     return view;
   }
