@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     viewPager=(ViewPager) findViewById(R.id.pager);
     viewPager.setAdapter(pagerAdapter);
-    viewPager.setOffscreenPageLimit(2);
+    viewPager.setOffscreenPageLimit(4);
 
     Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);

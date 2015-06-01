@@ -64,15 +64,16 @@
   <string name="event">Event</string>
 
   <!-- EVENT FRAGMENT -->
+  <string name="ef_tournament_text">View related events</string>
   <string name="box_iv">Tournament box image</string>
   <string name="note_hint">Add event note</string>
   <string name="finish">Finish</string>
   <string name="event_note">Event Note</string>
-  <string name="preview"><u>Preview</u></string>
-  <string name="report"><u>Report</u></string>
+  <string name="preview">Preview</string>
+  <string name="report">Report</string>
   <string name="zero">-</string>
-  <string name="map_overlay_on">Room showing</string>
-  <string name="map_overlay_off">Room hidden</string>
+  <string name="map_overlay_on">Room\nshowing</string>
+  <string name="map_overlay_off">Room\nhidden</string>
 
   <string-array name="finish_strings">
     <item>1st</item>

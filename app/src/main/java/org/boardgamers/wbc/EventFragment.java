@@ -56,6 +56,7 @@ public class EventFragment extends Fragment {
   private TextView gMTV;
   private TextView previewTV;
   private TextView reportTV;
+  private TextView tournamentTV;
   private ImageView boxIV;
 
   // user data
@@ -103,6 +104,14 @@ public class EventFragment extends Fragment {
       @Override
       public void onClick(View v) {
         openReportLink();
+      }
+    });
+
+    tournamentTV=(TextView) view.findViewById(R.id.ef_tournament_link);
+    tournamentTV.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        startSearchActivity();
       }
     });
 
@@ -168,6 +177,7 @@ public class EventFragment extends Fragment {
 
     if (id==-1) {
       event=null;
+
       titleTV.setVisibility(View.VISIBLE);
       titleTV.setText(getResources().getString(R.string.title));
       dayTV.setText(getResources().getString(R.string.day));
@@ -271,6 +281,11 @@ public class EventFragment extends Fragment {
         timeLayout.setBackgroundResource(R.drawable.future_light);
       }
 
+      if (tournament!=null) {
+        tournamentTV.setVisibility(View.VISIBLE);
+        //tournamentTV.setText("View all " + tournament.title + " events");
+      }
+
       // check if last event is class (is tournament)
       if (tournament!=null && tournament.isTournament) {
         finishTV.setText(getResources().getString(R.string.finish)+" in "+tournament.title);
@@ -305,6 +320,13 @@ public class EventFragment extends Fragment {
     }
   }
 
+  public void startSearchActivity() {
+    Intent intent=new Intent(getActivity(), SearchResultActivity.class);
+    intent.putExtra("query_title", tournament.title);
+    intent.putExtra("query_id", tournament.id);
+    startActivity(intent);
+  }
+
   public void openPreviewLink() {
     if (tournament!=null && tournament.isTournament) {
       getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
@@ -322,8 +344,8 @@ public class EventFragment extends Fragment {
   public void hideNonTournamentViews() {
     finishGroup.setVisibility(View.GONE);
     finishTV.setVisibility(View.GONE);
-    previewTV.setVisibility(View.GONE);
-    reportTV.setVisibility(View.GONE);
+    previewTV.setVisibility(View.INVISIBLE);
+    reportTV.setVisibility(View.INVISIBLE);
     boxIV.setImageResource(R.drawable.box_iv_no_image_text);
   }
 
