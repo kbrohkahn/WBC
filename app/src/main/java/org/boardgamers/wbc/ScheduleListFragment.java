@@ -77,6 +77,7 @@ public class ScheduleListFragment extends DefaultListFragment {
       }
 
       Event event;
+      int group;
       while (tempEvents.size()>0) {
         event=tempEvents.remove(0);
 
@@ -84,10 +85,16 @@ public class ScheduleListFragment extends DefaultListFragment {
           continue;
         }
 
-        events.get(event.day*GROUPS_PER_DAY+event.hour-6).add(event);
-        if (event.starred) {
-          events.get(event.day*GROUPS_PER_DAY).add(event);
+        group=event.day*GROUPS_PER_DAY+(int) event.hour-6;
+        if (event.hour<1) {
+          group+=24;
         }
+
+        events.get(group).add(event);
+//        if (event.starred) {
+//          group=event.day*GROUPS_PER_DAY;
+//          events.get(group).add(event);
+//        }
       }
 
       listAdapter.events=events;

@@ -224,14 +224,8 @@ public class EventFragment extends Fragment {
       String[] dayStrings=getResources().getStringArray(R.array.days);
       dayTV.setText(dayStrings[event.day]);
 
-      String minute;
-      if (event.duration<1) {
-        minute=String.valueOf((int) (event.duration*60+.5));
-      } else {
-        minute="00";
-      }
-      timeTV.setText(String.valueOf(event.hour)+"00 to "+
-          String.valueOf((event.hour+(int) event.duration)+minute));
+      timeTV.setText(MainActivity.getDisplayHour(event.hour, 0)+" to "+MainActivity.getDisplayHour(
+          event.hour, event.duration));
       if (event.continuous) {
         timeTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.continuous_icon, 0);
       } else {
@@ -270,7 +264,7 @@ public class EventFragment extends Fragment {
 
       int hoursIntoConvention=MainActivity.getHoursIntoConvention();
       boolean started=event.day*24+event.hour<=hoursIntoConvention;
-      boolean ended=event.day*24+event.hour+event.totalDuration<=hoursIntoConvention;
+      boolean ended=event.day*24+event.hour+event.duration<=hoursIntoConvention;
       boolean happening=started && !ended;
 
       if (ended) {

@@ -16,7 +16,7 @@ import java.util.List;
 public class WBCDataDbHelper extends SQLiteOpenHelper {
   //private final String TAG="Database";
 
-  public static final int DATABASE_VERSION=2;
+  public static final int DATABASE_VERSION=3;
 
   public static final String DATABASE_NAME="WBCdata.db";
 
@@ -93,7 +93,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
       EventEntry.COLUMN_TOURNAMENT_ID+" INTEGER,"+
       EventEntry.COLUMN_TITLE+" TEXT,"+
       EventEntry.COLUMN_DAY+" INTEGER,"+
-      EventEntry.COLUMN_HOUR+" INTEGER,"+
+      EventEntry.COLUMN_HOUR+" REAL,"+
       EventEntry.COLUMN_CLASS+" TEXT,"+
       EventEntry.COLUMN_FORMAT+" TEXT,"+
       EventEntry.COLUMN_QUALIFY+" INTEGER,"+
@@ -224,9 +224,9 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     onUpgrade(db, oldVersion, newVersion);
   }
 
-  public long insertEvent(int eId, int tId, int day, int hour, String title, String eClass,
-                          String eFormat, boolean qualify, double duration, boolean continuous,
-                          double totalDuration, String location) {
+  public long insertEvent(int eId, int tId, int day, float hour, String title, String eClass,
+                          String eFormat, boolean qualify, float duration, boolean continuous,
+                          float totalDuration, String location) {
     ContentValues values=new ContentValues();
     values.put(EventEntry.COLUMN_EVENT_ID, eId);
     values.put(EventEntry.COLUMN_TOURNAMENT_ID, tId);
@@ -294,7 +294,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
     String title, location, note;
     int id, day, hour;
-    double duration;
+    float duration;
     boolean starred;
 
     List<Event> events=new ArrayList<>();
@@ -308,7 +308,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
       hour=cursor.getInt(cursor.getColumnIndexOrThrow(UserCreatedEventEntry.COLUMN_HOUR));
       title=cursor.getString(cursor.getColumnIndexOrThrow(UserCreatedEventEntry.COLUMN_TITLE));
       duration=
-          cursor.getDouble(cursor.getColumnIndexOrThrow(UserCreatedEventEntry.COLUMN_DURATION));
+          cursor.getFloat(cursor.getColumnIndexOrThrow(UserCreatedEventEntry.COLUMN_DURATION));
       location=
           cursor.getString(cursor.getColumnIndexOrThrow(UserCreatedEventEntry.COLUMN_LOCATION));
 
@@ -403,8 +403,8 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     Cursor cursor=sqLiteDatabase.rawQuery(query, null);
 
     String title, eClass, format, location, note;
-    int id, tournamentId, day, hour;
-    double duration, totalDuration;
+    int id, tournamentId, day;
+    float hour, duration, totalDuration;
     boolean qualify, continuous, starred;
 
     Event event;
@@ -416,15 +416,15 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
       id=cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_EVENT_ID));
       tournamentId=cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_TOURNAMENT_ID));
       day=cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_DAY));
-      hour=cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_HOUR));
+      hour=cursor.getFloat(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_HOUR));
       title=cursor.getString(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_TITLE));
       eClass=cursor.getString(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_CLASS));
       format=cursor.getString(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_FORMAT));
       qualify=cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_QUALIFY))==1;
-      duration=cursor.getDouble(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_DURATION));
+      duration=cursor.getFloat(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_DURATION));
       continuous=cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_CONTINUOUS))==1;
       totalDuration=
-          cursor.getDouble(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_TOTAL_DURATION));
+          cursor.getFloat(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_TOTAL_DURATION));
       location=cursor.getString(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_LOCATION));
 
       starred=cursor.getInt(cursor.getColumnIndexOrThrow(UserEventDataEntry.COLUMN_STARRED))==1;
@@ -532,7 +532,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
 
   }
 
-  public long insertUserEvent(int eId, int uId, String title, int day, int hour, double duration,
+  public long insertUserEvent(int eId, int uId, String title, int day, int hour, float duration,
                               String location) {
     ContentValues values=new ContentValues();
     values.put(UserCreatedEventEntry.COLUMN_EVENT_ID, eId);

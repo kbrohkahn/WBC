@@ -26,7 +26,7 @@ public class SplashScreen extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    int TOTAL_EVENTS=785;
+    int TOTAL_EVENTS=1107;
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.onUpgrade(dbHelper.getWritableDatabase(), dbHelper.getVersion(),
@@ -151,8 +151,8 @@ public class SplashScreen extends AppCompatActivity {
         String line;
         String eventTitle, eClass, format, gm, tempString, location;
         String[] rowData;
-        int eventId=0, tournamentId, index, day, hour, prize;
-        double duration, totalDuration;
+        int eventId=0, tournamentId, index, day, prize;
+        float hour, duration, totalDuration;
         boolean continuous, qualify, isTournamentEvent;
 
         String tournamentTitle, tournamentLabel, shortEventTitle="";
@@ -177,15 +177,7 @@ public class SplashScreen extends AppCompatActivity {
           eventTitle=rowData[2];
 
           // time
-          boolean halfPast=false;
-          tempString=rowData[1];
-          if (tempString.length()>2) {
-            Log.d(TAG, rowData[2]+" starts at "+tempString);
-            tempString=tempString.substring(0, tempString.indexOf(":"));
-            halfPast=true;
-          }
-
-          hour=Integer.valueOf(tempString);
+          hour=Float.valueOf(rowData[1]);
 
           if (rowData.length<8) {
             prize=0;
@@ -213,11 +205,7 @@ public class SplashScreen extends AppCompatActivity {
             if (rowData[6].equalsIgnoreCase("") || rowData[6].equalsIgnoreCase("-")) {
               duration=0;
             } else {
-              duration=Double.valueOf(rowData[6]);
-            }
-
-            if (duration>.33 && duration<.34) {
-              duration=.33;
+              duration=(float) Math.round(Float.valueOf(rowData[6])*100)/100;
             }
 
             // continuous
@@ -326,7 +314,7 @@ public class SplashScreen extends AppCompatActivity {
               int startRound=Integer.valueOf(shortEventTitle.substring(1, dividerIndex));
               int endRound=Integer.valueOf(shortEventTitle.substring(dividerIndex+1));
 
-              int currentTime=hour;
+              float currentTime=hour;
               for (int round=0; round<endRound-startRound; round++) {
                 // if time passes midnight, next round starts at 9 the next currentDay
                 if (currentTime>24) {
@@ -342,10 +330,6 @@ public class SplashScreen extends AppCompatActivity {
             } else if (continuous) {
               Log.d(TAG, "Unknown continuous event: "+eventTitle);
             }
-          }
-
-          if (halfPast) {
-            eventTitle=eventTitle+" ("+rowData[1]+")";
           }
 
           dbHelper

@@ -80,12 +80,12 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     }
 
     TextView hour=(TextView) view.findViewById(R.id.li_hour);
-    hour.setText(String.valueOf(event.hour*100));
+    hour.setText(MainActivity.getDisplayHour(event.hour, 0));
     hour.setTypeface(null, tType);
     hour.setTextColor(tColor);
 
     TextView duration=(TextView) view.findViewById(R.id.li_duration);
-    duration.setText(String.valueOf(event.duration));
+    duration.setText(String.format("%.2f", event.duration));
     duration.setTypeface(null, tType);
     duration.setTextColor(tColor);
 
@@ -115,7 +115,7 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     });
 
     boolean started=event.day*24+event.hour<=hoursIntoConvention;
-    boolean ended=event.day*24+event.hour+event.totalDuration<=hoursIntoConvention;
+    boolean ended=event.day*24+event.hour+event.duration<=hoursIntoConvention;
     boolean happening=started && !ended;
 
     if (event.id==MainActivity.selectedEventId) {

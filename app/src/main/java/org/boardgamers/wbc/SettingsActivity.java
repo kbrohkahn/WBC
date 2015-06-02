@@ -233,7 +233,7 @@ public class SettingsActivity extends AppCompatActivity {
       // insert created events
       String title, location;
       int eId, day, hour;
-      double duration;
+      float duration;
       int newEId=MainActivity.USER_EVENT_ID+dbHelper.getNumUserEvents();
 
       int[] oldIds=new int[createdEvents.length/6];
@@ -247,7 +247,7 @@ public class SettingsActivity extends AppCompatActivity {
         title=createdEvents[i+1];
         day=Integer.valueOf(createdEvents[i+2]);
         hour=Integer.valueOf(createdEvents[i+3]);
-        duration=Double.valueOf(createdEvents[i+4]);
+        duration=Float.valueOf(createdEvents[i+4]);
         location=createdEvents[i+5];
 
         dbHelper.insertUserEvent(newEId, userId, title, day, hour, duration, location);

@@ -5,15 +5,15 @@ public class Event {
   public int tournamentID;
 
   public int day;
-  public int hour;
+  public float hour;
   public String title;
 
   public String eClass;
   public String format;
   public boolean qualify;
-  public double duration;
+  public float duration;
   public boolean continuous;
-  public double totalDuration;
+  public float totalDuration;
 
   public String location;
 
@@ -21,9 +21,9 @@ public class Event {
   public boolean starred;
   public String note;
 
-  public Event(int id, int tournamentID, int day, int hour, String title, String eClass,
-               String eFormat, boolean qualify, double duration, boolean continuous,
-               double totalDuration, String location) {
+  public Event(int id, int tournamentID, int day, float hour, String title, String eClass,
+               String eFormat, boolean qualify, float duration, boolean continuous,
+               float totalDuration, String location) {
     this.id=id;
     this.tournamentID=tournamentID;
 

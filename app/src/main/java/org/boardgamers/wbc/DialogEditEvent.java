@@ -5,8 +5,8 @@ import android.view.View;
 import java.util.List;
 
 /**
- * Created by Kevin on 4/24/2015.
- * Dialog shown for editing user events. Extended from DialogCreateEvent, just edit existing views
+ * Created by Kevin on 4/24/2015. Dialog shown for editing user events. Extended from
+ * DialogCreateEvent, just edit existing views
  */
 public class DialogEditEvent extends DialogCreateEvent {
   // private final String TAG="WBC EditEventDialog";
@@ -29,7 +29,7 @@ public class DialogEditEvent extends DialogCreateEvent {
       }
     }
 
-    hourSpinner.setSelection(event.hour-7);
+    hourSpinner.setSelection((int) event.hour-7);
     durationSpinner.setSelection((int) event.duration-1);
     titleET.setText(event.title);
     locationET.setText(event.location);
