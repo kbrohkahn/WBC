@@ -2,9 +2,11 @@ package org.boardgamers.wbc;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -37,35 +39,35 @@ import java.util.regex.Pattern;
  * Main Activity class
  */
 public class MainActivity extends AppCompatActivity {
-  private final static String TAG="Main Activity";
+  private final static String TAG = "Main Activity";
 
-  public static final int PRIMARY_USER_ID=0;
-  public static final int TOTAL_DAYS=9;
-  public static final int USER_EVENT_ID=2000;
-  public static int selectedEventId=-1;
+  public static final int PRIMARY_USER_ID = 0;
+  public static final int TOTAL_DAYS = 9;
+  public static final int USER_EVENT_ID = 2000;
+  public static int selectedEventId = -1;
   public static long currentDay;
   public static int currentHour;
-  public static int userId=-1;
+  public static int userId = -1;
 
   public static String packageName;
-  public static boolean differentUser=false;
-  public boolean fromFilter=false;
-  public static boolean opened=false;
+  public static boolean differentUser = false;
+  public boolean fromFilter = false;
+  public static boolean opened = false;
 
   private static ViewPager viewPager;
   private static TabsPagerAdapter pagerAdapter;
 
   public static void updateClock() {
     currentHour++;
-    if (currentHour==24) {
-      currentHour=0;
+    if (currentHour == 24) {
+      currentHour = 0;
       currentDay++;
     }
   }
 
   @Override
   public void finish() {
-    opened=false;
+    opened = false;
     super.finish();
   }
 
@@ -76,41 +78,46 @@ public class MainActivity extends AppCompatActivity {
 
     setContentView(R.layout.main_layout);
 
-    packageName=getApplicationContext().getPackageName();
-    opened=true;
-    pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
+    packageName = getApplicationContext().getPackageName();
+    opened = true;
+    pagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
 
-    viewPager=(ViewPager) findViewById(R.id.pager);
+    viewPager = (ViewPager) findViewById(R.id.pager);
     viewPager.setAdapter(pagerAdapter);
     viewPager.setOffscreenPageLimit(4);
 
-    Toolbar toolbar=(Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
-    SlidingTabLayout tabs=(SlidingTabLayout) findViewById(R.id.sliding_layout);
+    SlidingTabLayout tabs = (SlidingTabLayout) findViewById(R.id.sliding_layout);
     tabs.setViewPager(viewPager);
 
-    SharedPreferences sp=getSharedPreferences(getResources().getString(R.string.user_data_file),
+    // get version from last time app was opened
+    SharedPreferences sp = getSharedPreferences(getResources().getString(R.string.user_data_file),
         Context.MODE_PRIVATE);
-    int latestVersion=sp.getInt("last_app_version", 0);
+    int latestVersion = sp.getInt("last_app_version", 0);
+
+    // get current app version from version code
     int currentVersion;
     try {
-      currentVersion=getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+      currentVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
     } catch (PackageManager.NameNotFoundException e) {
       Log.d(TAG, "ERROR: Unable to not find version code");
       Toast.makeText(this,
-          "ERROR: Could not find version code, contact "+getResources().getString(R.string.email)+
+          "ERROR: Could not find version code, contact " + getResources().getString(R.string.email) +
               " for help.", Toast.LENGTH_LONG).show();
-      currentVersion=latestVersion; // TODO set as version code
+      currentVersion = 17; // TODO set as version code
       e.printStackTrace();
     }
 
-    if (latestVersion<currentVersion) {
-      Intent intent=new Intent(this, UpdateService.class);
+    showDialogs(latestVersion);
+
+    if (latestVersion < currentVersion) {
+      Intent intent = new Intent(this, UpdateService.class);
       stopService(intent);
       startService(intent);
 
-      SharedPreferences.Editor editor=sp.edit();
+      SharedPreferences.Editor editor = sp.edit();
       editor.putInt("last_app_version", currentVersion);
       editor.apply();
     }
@@ -118,19 +125,35 @@ public class MainActivity extends AppCompatActivity {
     loadUserData();
   }
 
+  public void showDialogs(int latestVersion) {
+    if (latestVersion < 17) {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setTitle(R.string.continuous_dialog_title)
+          .setMessage(R.string.continuous_dialog_message)
+          .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              dialog.dismiss();
+              showDialogs(17);
+            }
+          });
+      builder.create().show();
+    }
+  }
+
   public void loadUserData() {
     Log.d(TAG, "Loading");
-    userId=PreferenceManager.getDefaultSharedPreferences(this)
+    userId = PreferenceManager.getDefaultSharedPreferences(this)
         .getInt(getResources().getString(R.string.pref_key_schedule_select), PRIMARY_USER_ID);
 
-    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
+    WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
     dbHelper.getReadableDatabase();
-    int numStarredEvents=dbHelper.getStarredEvents(userId).size();
-    String scheduleName=dbHelper.getUser(userId).name;
-    setTitle("WBC: "+scheduleName);
+    int numStarredEvents = dbHelper.getStarredEvents(userId).size();
+    String scheduleName = dbHelper.getUser(userId).name;
+    setTitle("WBC: " + scheduleName);
     dbHelper.close();
 
-    if (numStarredEvents==0) {
+    if (numStarredEvents == 0) {
       viewPager.setCurrentItem(1);
     }
     Log.d(TAG, "Loading complete");
@@ -138,8 +161,11 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onResume() {
+    Log.d(TAG, "Day is " + String.valueOf(currentDay));
+    Log.d(TAG, "Hour is " + String.valueOf(currentHour));
+
     if (differentUser) {
-      differentUser=false;
+      differentUser = false;
 
       recreate();
 
@@ -149,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     if (fromFilter) {
-      fromFilter=false;
+      fromFilter = false;
       pagerAdapter.getItem(1).reloadAdapterData();
     }
 
@@ -158,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
   public static void removeEvents(Event[] events) {
     for (Event event : events) {
-      event.starred=false;
+      event.starred = false;
     }
 
     pagerAdapter.getItem(1).removeEvents(events);
@@ -173,8 +199,8 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public static void changeEventsInLists(Event[] events, int currentPage) {
-    for (int j=0; j<3; j++) {
-      if (j!=currentPage) {
+    for (int j = 0; j < 3; j++) {
+      if (j != currentPage) {
         pagerAdapter.getItem(j).updateEvents(events);
       }
     }
@@ -186,41 +212,41 @@ public class MainActivity extends AppCompatActivity {
    * @return hours elapsed since midnight of the first day
    */
   public static int getHoursIntoConvention() {
-    if (currentDay<0 || currentDay>TOTAL_DAYS) {
+    if (currentDay < 0 || currentDay > TOTAL_DAYS) {
       return -1;
     } else {
-      int day=(int) (long) currentDay;
-      return day*24+currentHour;
+      int day = (int) (long) currentDay;
+      return day * 24 + currentHour;
     }
   }
 
   public static int getBoxIdFromLabel(String label, Resources r) {
-    String fixedLabel=label.toLowerCase();
-    fixedLabel=fixedLabel.replace("&", "and");
-    fixedLabel=fixedLabel.replace("!", "exc");
+    String fixedLabel = label.toLowerCase();
+    fixedLabel = fixedLabel.replace("&", "and");
+    fixedLabel = fixedLabel.replace("!", "exc");
 
-    fixedLabel="drawable/box_"+fixedLabel;
+    fixedLabel = "drawable/box_" + fixedLabel;
 
-    int id=r.getIdentifier(fixedLabel, null, packageName);
+    int id = r.getIdentifier(fixedLabel, null, packageName);
 
-    return id==0 ? R.drawable.box_iv_no_image_text : id;
+    return id == 0 ? R.drawable.box_iv_no_image_text : id;
   }
 
   public static String getDisplayHour(float startHour, float duration) {
-    int hour=(int) (startHour+duration)%24;
-    float minute=(startHour+duration)%1;
-    float time=hour*100+minute*60;
+    int hour = (int) (startHour + duration) % 24;
+    float minute = (startHour + duration) % 1;
+    float time = hour * 100 + minute * 60;
 
     return String.format("%04d", (int) time);
   }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater=getMenuInflater();
+    MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.menu_main, menu);
 
-    SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
-    final SearchView searchView=(SearchView) menu.findItem(R.id.menu_search).getActionView();
+    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+    final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
     searchView.setSearchableInfo(
         searchManager.getSearchableInfo(new ComponentName(this, SearchResultActivity.class)));
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -244,9 +270,9 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public boolean onSuggestionClick(int position) {
         searchView.clearFocus();
-        Cursor cursor=(Cursor) searchView.getSuggestionsAdapter().getItem(position);
-        int id=cursor.getInt(cursor.getColumnIndex(BaseColumns._ID));
-        String title=cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+        Cursor cursor = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
+        int id = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID));
+        String title = cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
         startSearchActivity(id, title);
         return true;
       }
@@ -257,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void startSearchActivity(int id, String title) {
-    Intent intent=new Intent(this, SearchResultActivity.class);
+    Intent intent = new Intent(this, SearchResultActivity.class);
     intent.putExtra("query_title", title);
     intent.putExtra("query_id", id);
     startActivity(intent);
@@ -272,79 +298,79 @@ public class MainActivity extends AppCompatActivity {
     //    dbHelper.close();
     //    Log.d(TAG, "Received from DB");
 
-    UserDataListFragment userDataListFragment=(UserDataListFragment) pagerAdapter.getItem(2);
-    List<Event> notes=userDataListFragment.listAdapter.events.get(UserDataListFragment.NOTES_INDEX);
-    List<Event> eFinishes=
+    UserDataListFragment userDataListFragment = (UserDataListFragment) pagerAdapter.getItem(2);
+    List<Event> notes = userDataListFragment.listAdapter.events.get(UserDataListFragment.NOTES_INDEX);
+    List<Event> eFinishes =
         userDataListFragment.listAdapter.events.get(UserDataListFragment.FINISHES_INDEX);
-    List<Event> userEvents=
+    List<Event> userEvents =
         userDataListFragment.listAdapter.events.get(UserDataListFragment.EVENTS_INDEX);
-    SummaryListFragment summaryListFragment=(SummaryListFragment) pagerAdapter.getItem(0);
+    SummaryListFragment summaryListFragment = (SummaryListFragment) pagerAdapter.getItem(0);
 
-    List<List<Event>> starredGroups=summaryListFragment.listAdapter.events;
-    List<Event> starred=new ArrayList<>();
+    List<List<Event>> starredGroups = summaryListFragment.listAdapter.events;
+    List<Event> starred = new ArrayList<>();
     for (List<Event> events : starredGroups) {
       for (Event event : events) {
         starred.add(event);
       }
     }
 
-    String contentBreak="~~~";
-    String delimitter=";;;";
+    String contentBreak = "~~~";
+    String delimitter = ";;;";
 
-    String outputString=
-        getResources().getString(R.string.settings_schedule_name_check)+contentBreak;
+    String outputString =
+        getResources().getString(R.string.settings_schedule_name_check) + contentBreak;
 
-    String email="Unknown user";
-    Pattern emailPattern=Patterns.EMAIL_ADDRESS;
-    Account[] accounts=AccountManager.get(this).getAccounts();
+    String email = "Unknown user";
+    Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+    Account[] accounts = AccountManager.get(this).getAccounts();
     for (Account account : accounts) {
       if (emailPattern.matcher(account.name).matches()) {
-        email=account.name;
+        email = account.name;
         break;
       }
     }
-    outputString+=email+contentBreak+"0";
+    outputString += email + contentBreak + "0";
     for (Event event : userEvents) {
-      outputString+=String.valueOf(event.id)+delimitter+event.title+delimitter+event.day+delimitter+
-          event.hour+delimitter+event.duration+delimitter+event.location+delimitter;
+      outputString += String.valueOf(event.id) + delimitter + event.title + delimitter + event.day + delimitter +
+          event.hour + delimitter + event.duration + delimitter + event.location + delimitter;
     }
-    outputString+=contentBreak+"0";
+    outputString += contentBreak + "0";
     for (Event event : starred) {
-      outputString+=String.valueOf(event.id)+delimitter;
+      outputString += String.valueOf(event.id) + delimitter;
     }
 
-    outputString+=contentBreak+"0";
+    outputString += contentBreak + "0";
     for (Event event : notes) {
-      outputString+=String.valueOf(event.id)+delimitter+event.note+delimitter;
+      outputString += String.valueOf(event.id) + delimitter + event.note + delimitter;
     }
 
-    outputString+=contentBreak+"0";
+    outputString += contentBreak + "0";
     for (Event event : eFinishes) {
-      outputString+=String.valueOf(event.tournamentID)+delimitter+event.note+delimitter;
+      outputString += String.valueOf(event.tournamentID) + delimitter + event.note + delimitter;
     }
 
     File file;
-    String fileName="Schedule.wbc";
+    String fileName = "Schedule.wbc";
     if (isExternalStorageWritable()) {
       Log.d(TAG, "Saving in external");
-      File sdCard=Environment.getExternalStorageDirectory();
-      File dir=new File(sdCard.getAbsolutePath()+"/WBC/");
+      File sdCard = Environment.getExternalStorageDirectory();
+      File dir = new File(sdCard.getAbsolutePath() + "/WBC/");
 
       if (!dir.mkdirs()) {
         Log.d(TAG, "Directory not created");
       }
 
-      file=new File(dir, fileName);
+      file = new File(dir, fileName);
     } else {
       Log.d(TAG, "Saving in internal");
-      file=new File(getCacheDir(), fileName);
+      file = new File(getCacheDir(), fileName);
     }
 
-    Log.d(TAG, "File location: "+file.getAbsolutePath());
+    Log.d(TAG, "File location: " + file.getAbsolutePath());
 
     FileOutputStream fileOutputStream;
     try {
-      fileOutputStream=new FileOutputStream(file);
+      fileOutputStream = new FileOutputStream(file);
       fileOutputStream.write(outputString.getBytes());
       fileOutputStream.close();
 
@@ -352,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
       e.printStackTrace();
     }
 
-    Intent shareIntent=new Intent();
+    Intent shareIntent = new Intent();
     shareIntent.setAction(Intent.ACTION_SEND);
     shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
     shareIntent.setType("application/wbc");
@@ -372,18 +398,18 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId()==R.id.menu_map) {
+    if (item.getItemId() == R.id.menu_map) {
       startActivity(new Intent(this, MapActivity.class));
-    } else if (item.getItemId()==R.id.menu_share) {
+    } else if (item.getItemId() == R.id.menu_share) {
       share();
-    } else if (item.getItemId()==R.id.menu_help) {
+    } else if (item.getItemId() == R.id.menu_help) {
       startActivity(new Intent(this, HelpActivity.class));
-    } else if (item.getItemId()==R.id.menu_about) {
+    } else if (item.getItemId() == R.id.menu_about) {
       startActivity(new Intent(this, AboutActivity.class));
-    } else if (item.getItemId()==R.id.menu_filter) {
-      fromFilter=true;
+    } else if (item.getItemId() == R.id.menu_filter) {
+      fromFilter = true;
       startActivity(new Intent(this, FilterActivity.class));
-    } else if (item.getItemId()==R.id.menu_settings) {
+    } else if (item.getItemId() == R.id.menu_settings) {
       startActivity(new Intent(this, SettingsActivity.class));
     } else {
       return super.onOptionsItemSelected(item);
