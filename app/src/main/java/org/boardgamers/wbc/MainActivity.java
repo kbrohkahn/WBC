@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
   public static final int TOTAL_DAYS = 9;
   public static final int USER_EVENT_ID = 2000;
   public static int selectedEventId = -1;
-  public static long currentDay;
-  public static int currentHour;
   public static int userId = -1;
 
   public static String packageName;
@@ -56,14 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
   private static ViewPager viewPager;
   private static TabsPagerAdapter pagerAdapter;
-
-  public static void updateClock() {
-    currentHour++;
-    if (currentHour == 24) {
-      currentHour = 0;
-      currentDay++;
-    }
-  }
 
   @Override
   public void finish() {
@@ -95,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     // get version from last time app was opened
     SharedPreferences sp = getSharedPreferences(getResources().getString(R.string.user_data_file),
         Context.MODE_PRIVATE);
-    int latestVersion = sp.getInt("last_app_version", 0);
+    int latestVersion = sp.getInt("last_app_version", -1);
 
     // get current app version from version code
     int currentVersion;
@@ -138,6 +128,18 @@ public class MainActivity extends AppCompatActivity {
             }
           });
       builder.create().show();
+    } else if (latestVersion < 18) {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setTitle(R.string.beta_schedule_dialog_title)
+          .setMessage(R.string.beta_schedule_dialog_message)
+          .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              dialog.dismiss();
+              showDialogs(18);
+            }
+          });
+      builder.create().show();
     }
   }
 
@@ -161,9 +163,6 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onResume() {
-    Log.d(TAG, "Day is " + String.valueOf(currentDay));
-    Log.d(TAG, "Hour is " + String.valueOf(currentHour));
-
     if (differentUser) {
       differentUser = false;
 
@@ -203,20 +202,6 @@ public class MainActivity extends AppCompatActivity {
       if (j != currentPage) {
         pagerAdapter.getItem(j).updateEvents(events);
       }
-    }
-  }
-
-  /**
-   * Get hours elapsed since midnight on the first day
-   *
-   * @return hours elapsed since midnight of the first day
-   */
-  public static int getHoursIntoConvention() {
-    if (currentDay < 0 || currentDay > TOTAL_DAYS) {
-      return -1;
-    } else {
-      int day = (int) (long) currentDay;
-      return day * 24 + currentHour;
     }
   }
 

@@ -42,7 +42,7 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
     events=e;
     id=i;
 
-    hoursIntoConvention=MainActivity.getHoursIntoConvention();
+    hoursIntoConvention=UpdateService.getHoursIntoConvention();
     dayStrings=f.getResources().getStringArray(R.array.days);
 
     // get resources
@@ -267,7 +267,7 @@ public class DefaultListAdapter extends BaseExpandableListAdapter {
   }
 
   public void updateList() {
-    hoursIntoConvention=MainActivity.getHoursIntoConvention();
+    hoursIntoConvention=UpdateService.getHoursIntoConvention();
     notifyDataSetChanged();
   }
 

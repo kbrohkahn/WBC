@@ -99,9 +99,6 @@ public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected void onPostExecute(Integer result) {
-      Intent intent=new Intent(context, UpdateService.class);
-      startService(intent);
-
       if (result>0) {
         startMainActivity();
       } else if (result==-1) {

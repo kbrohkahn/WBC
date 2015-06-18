@@ -22,156 +22,188 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class UpdateService extends Service {
-    private final String TAG = "Notification Service";
+  private final String TAG = "Notification Service";
 
-    private static int notificationType;
+  private final long milliHour = 60 * 60 * 1000;
 
-    private final Handler handler = new Handler();
+  private static int notificationType;
+  public static long currentDay;
+  public static int currentHour;
 
+  private final Handler handler = new Handler();
+
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+    // GET CALENDAR FOR FIRST DAY
+    String[] daysForParsing = getResources().getStringArray(R.array.daysForParsing);
+    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy\u002DMM\u002Ddd HH:mm:ss z", Locale.ENGLISH);
+    String firstDayString = daysForParsing[0] + " 00:00:00 GMT-4";
+    Calendar firstDayCalendar = Calendar.getInstance();
+    try {
+      Date firstDayDate = dateFormatter.parse(firstDayString);
+      firstDayCalendar.setTime(firstDayDate);
+    } catch (java.text.ParseException e) {
+      Log.d(TAG, "Unable to parse firstDayString: " + firstDayString);
+    }
+
+    // GET CURRENT TIME IN EST
+    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT-4"));
+    currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+    currentDay = (calendar.getTimeInMillis() - firstDayCalendar.getTimeInMillis()) / (milliHour * 24);
+    if (currentDay<=0) {
+      currentDay--;
+    }
+
+    // TESTING: set currentDay to day of week
+    //MainActivity.currentDay=(calendar.get(Calendar.DAY_OF_WEEK));
+    Log.d(TAG, "Day is " + String.valueOf(currentDay));
+    Log.d(TAG, "Hour is " + String.valueOf(currentHour));
+
+    // SET DELAY TO NEXT HOUR, IN MILLIS, FOR UPDATE
+    calendar.setTimeInMillis(calendar.getTimeInMillis() / milliHour * milliHour + milliHour);
+    long delay = calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
+    handler.postDelayed(clockUpdate, delay);
+
+    // CHECK IF NOTIFICATION ACTIVE
+    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+    if (!sharedPref.getBoolean(getResources().getString(R.string.pref_key_notify), false)) {
+      Log.d(TAG, "No notifications");
+    } else {
+      int notificationTime =
+          sharedPref.getInt(getResources().getString(R.string.pref_key_notify_time), 5);
+      notificationType = Integer.valueOf(
+          sharedPref.getString(getResources().getString(R.string.pref_key_notify_type), "2"));
+
+      if (currentDay < 0) {
+        calendar = firstDayCalendar;
+      } else {
+        calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if (60 - notificationTime <= calendar.get(Calendar.MINUTE)) {
+          hour++;
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, 60 - notificationTime);
+        calendar.set(Calendar.SECOND, 0);
+      }
+      delay = calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
+      handler.postDelayed(notificationUpdate, delay);
+    }
+    return super.onStartCommand(intent, flags, startId);
+  }
+
+  private void checkEvents() {
+    WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
+    dbHelper.getReadableDatabase();
+    List<Event> starredEvents = dbHelper.getStarredEvents(MainActivity.userId);
+    dbHelper.close();
+
+    int hoursIntoConvention = UpdateService.getHoursIntoConvention();
+
+    String eventsString = "";
+    for (Event event : starredEvents) {
+      if (hoursIntoConvention + 1 == event.day * 24 + event.hour) {
+        MainActivity.selectedEventId = event.id;
+        eventsString += event.title + ", ";
+      }
+    }
+
+    if (eventsString.length() > 0) {
+      eventsString = eventsString.substring(0, eventsString.length() - 2);
+      sendNotification(eventsString);
+    }
+  }
+
+  private void sendNotification(String s) {
+    Log.d(TAG, "Events now: " + s);
+
+    int TYPE_VIBRATE = 0;
+    int TYPE_RING = 1;
+    int TYPE_BOTH = 2;
+
+    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+    mBuilder.setContentTitle(getResources().getString(R.string.notification_title))
+        .setContentText(s).setSmallIcon(R.drawable.ic_notification).setAutoCancel(true);
+
+    if (notificationType == TYPE_VIBRATE) {
+      mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+    } else if (notificationType == TYPE_RING) {
+      mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+    } else if (notificationType == TYPE_BOTH) {
+      mBuilder.setDefaults(Notification.DEFAULT_ALL);
+    }
+
+    // Creates an explicit intent for an Activity in your app
+    Intent resultIntent = new Intent(this, MainActivity.class);
+    TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+    stackBuilder.addParentStack(MainActivity.class);
+    stackBuilder.addNextIntent(resultIntent);
+
+    PendingIntent resultPendingIntent =
+        stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+    mBuilder.setContentIntent(resultPendingIntent);
+    NotificationManager mNotificationManager =
+        (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+    // mId allows you to update the notification later on.
+    mNotificationManager.notify(0, mBuilder.build());
+  }
+
+  @Override
+  public void onDestroy() {
+    handler.removeCallbacks(notificationUpdate);
+    handler.removeCallbacks(clockUpdate);
+    super.onDestroy();
+  }
+
+  @Override
+  public IBinder onBind(Intent arg0) {
+    return null;
+  }
+
+  /**
+   * Calls checkEvents every hour, at notificationTime minutes before the hour
+   */
+  private final Runnable notificationUpdate = new Runnable() {
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        // GET CALENDAR FOR FIRST DAY
-        String[] daysForParsing = getResources().getStringArray(R.array.daysForParsing);
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy\u002DMM\u002Ddd HH:mm:ss z", Locale.ENGLISH);
-        String firstDayString = daysForParsing[0] + " 12:00:00 GMT-4";
-        Calendar firstDayCalendar = Calendar.getInstance();
-        try {
-            Date firstDayDate = dateFormatter.parse(firstDayString);
-            firstDayCalendar.setTime(firstDayDate);
-        } catch (java.text.ParseException e) {
-            Log.d(TAG, "Unable to parse firstDayString: " + firstDayString);
-        }
-
-        double milliHour = 60 * 60 * 1000;
-
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT-4"));
-        MainActivity.currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        MainActivity.currentDay = (long) Math.floor(
-                (calendar.getTimeInMillis() - firstDayCalendar.getTimeInMillis()) / (milliHour * 24));
-
-        // TODO TESTING: set currentDay to day of week
-        //MainActivity.currentDay=(calendar.get(Calendar.DAY_OF_WEEK));
-
-        // set calendar to next hour
-        calendar.setTimeInMillis((long) (calendar.getTimeInMillis() / milliHour * milliHour + milliHour));
-        long delay = calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
-        handler.postDelayed(clockUpdate, delay);
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!sharedPref.getBoolean(getResources().getString(R.string.pref_key_notify), false)) {
-            Log.d(TAG, "No notifications");
-        } else {
-            int notificationTime =
-                    sharedPref.getInt(getResources().getString(R.string.pref_key_notify_time), 5);
-            notificationType = Integer.valueOf(
-                    sharedPref.getString(getResources().getString(R.string.pref_key_notify_type), "2"));
-
-            if (MainActivity.currentDay < 0) {
-                calendar = firstDayCalendar;
-            } else {
-                calendar = Calendar.getInstance();
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                if (60 - notificationTime <= calendar.get(Calendar.MINUTE)) {
-                    hour++;
-                }
-                calendar.set(Calendar.HOUR_OF_DAY, hour);
-                calendar.set(Calendar.MINUTE, 60 - notificationTime);
-                calendar.set(Calendar.SECOND, 0);
-            }
-            delay = calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
-            handler.postDelayed(notificationUpdate, delay);
-        }
-        return super.onStartCommand(intent, flags, startId);
+    public void run() {
+      handler.postDelayed(this, milliHour);
+      checkEvents();
     }
+  };
 
-    private void checkEvents() {
-        WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
-        dbHelper.getReadableDatabase();
-        List<Event> starredEvents = dbHelper.getStarredEvents(MainActivity.userId);
-        dbHelper.close();
-
-        int hoursIntoConvention = MainActivity.getHoursIntoConvention();
-
-        String eventsString = "";
-        for (Event event : starredEvents) {
-            if (hoursIntoConvention + 1 == event.day * 24 + event.hour) {
-                MainActivity.selectedEventId = event.id;
-                eventsString += event.title + ", ";
-            }
-        }
-
-        if (eventsString.length() > 0) {
-            eventsString = eventsString.substring(0, eventsString.length() - 2);
-            sendNotification(eventsString);
-        }
-    }
-
-    private void sendNotification(String s) {
-        Log.d(TAG, "Events now: " + s);
-
-        int TYPE_VIBRATE = 0;
-        int TYPE_RING = 1;
-        int TYPE_BOTH = 2;
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setContentTitle(getResources().getString(R.string.notification_title))
-                .setContentText(s).setSmallIcon(R.drawable.ic_notification).setAutoCancel(true);
-
-        if (notificationType == TYPE_VIBRATE) {
-            mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
-        } else if (notificationType == TYPE_RING) {
-            mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-        } else if (notificationType == TYPE_BOTH) {
-            mBuilder.setDefaults(Notification.DEFAULT_ALL);
-        }
-
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
-                (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
-        mNotificationManager.notify(0, mBuilder.build());
-    }
-
+  /**
+   * Calls updateClock every hour, on the hour
+   */
+  private final Runnable clockUpdate = new Runnable() {
     @Override
-    public void onDestroy() {
-        handler.removeCallbacks(notificationUpdate);
-        handler.removeCallbacks(clockUpdate);
-        super.onDestroy();
+    public void run() {
+      handler.postDelayed(this, milliHour);
+      updateClock();
     }
+  };
 
-    @Override
-    public IBinder onBind(Intent arg0) {
-        return null;
+  /**
+   * Increment hour, if hour is 24 (midnight), set hour to 0 and increment day
+   */
+  public void updateClock() {
+    currentHour++;
+    if (currentHour == 24) {
+      currentHour = 0;
+      currentDay++;
     }
+  }
 
-    /**
-     * Calls checkEvents every hour, at notificationTime minutes before the hour
-     */
-    private final Runnable notificationUpdate = new Runnable() {
-        @Override
-        public void run() {
-            handler.postDelayed(this, 60 * 60 * 1000);
-            checkEvents();
-        }
-    };
-
-    /**
-     * Calls updateClock every hour, on the hour
-     */
-    private final Runnable clockUpdate = new Runnable() {
-        @Override
-        public void run() {
-            handler.postDelayed(this, 60 * 60 * 1000);
-            MainActivity.updateClock();
-        }
-    };
+  /**
+   * Get hours elapsed since midnight on the first day
+   *
+   * @return hours elapsed since midnight of the first day
+   */
+  public static int getHoursIntoConvention() {
+    if (currentDay < 0 || currentDay > MainActivity.TOTAL_DAYS) {
+      return -1;
+    } else {
+      int day = (int) currentDay;
+      return day * 24 + currentHour;
+    }
+  }
 }

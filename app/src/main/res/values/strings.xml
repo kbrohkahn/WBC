@@ -35,6 +35,11 @@
         Starting times for these rounds shown in the app are merely approximations based on
         the first round start time and duration, and should be used to
         better plan a schedule and receive early notifications for each round.</string>
+    <string name="beta_schedule_dialog_title">Schedule Beta Version</string>
+    <string name="beta_schedule_dialog_message">The schedule is currently in a beta version
+        and may be subject to further changes. Until the schedule is finalized, we advise you
+        to not spend too much time creating a schedule, as your data will be erased if major
+           updates are made to the schedule in the coming weeks.</string>
     <string name="reset">Reset</string>s
     <string name="reset_message">Are you sure you want to reset all your settings?</string>
     <string name="initial_dialog_text">Star events in the full schedule to add them to your schedule</string>

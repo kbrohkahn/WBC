@@ -39,7 +39,7 @@ public class ScheduleListFragment extends DefaultListFragment {
    * @return groupNumber
    */
   public int getCurrentGroup() {
-    int hoursIntoConvention=MainActivity.getHoursIntoConvention();
+    int hoursIntoConvention=UpdateService.getHoursIntoConvention();
 
     if (hoursIntoConvention==-1) {
       return 0;

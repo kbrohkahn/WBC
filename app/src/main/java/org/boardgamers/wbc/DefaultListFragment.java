@@ -147,7 +147,7 @@ public class DefaultListFragment extends Fragment {
       }
 
       listAdapter.events=events;
-      listAdapter.hoursIntoConvention=MainActivity.getHoursIntoConvention();
+      listAdapter.hoursIntoConvention=UpdateService.getHoursIntoConvention();
       listAdapter.notifyDataSetChanged();
 
       setAllStared();
