@@ -444,6 +444,34 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     return events;
   }
 
+  public boolean eventExists(String title, int day, float hour) {
+    String where="("+EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_TITLE+"=\""+title+"\" AND "+
+        EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_DAY+"="+String.valueOf(day)+" AND "+
+        EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_HOUR+"="+String.valueOf(hour)+")";
+
+    String query="SELECT * FROM "+EventEntry.TABLE_NAME+" WHERE "+where;
+    Cursor cursor=sqLiteDatabase.rawQuery(query, null);
+    int count=cursor.getCount();
+    cursor.close();
+
+    return count==1;
+  }
+
+  public int getTournamentID(String title) {
+    String where=TournamentEntry.TABLE_NAME+"."+TournamentEntry.COLUMN_TITLE+"=\""+title+"\"";
+    String query="SELECT * FROM "+TournamentEntry.TABLE_NAME+" WHERE "+where;
+
+    Cursor cursor=sqLiteDatabase.rawQuery(query, null);
+    int returnValue;
+    if (cursor.moveToFirst()) {
+      returnValue=cursor.getInt(cursor.getColumnIndex(TournamentEntry.COLUMN_TOURNAMENT_ID));
+    } else {
+      returnValue=-1;
+    }
+    cursor.close();;
+    return returnValue;
+  }
+
   public Cursor getSearchCursor(String query) {
     String sortOrder=TournamentEntry.COLUMN_TITLE+" ASC";
     String selection=TournamentEntry.COLUMN_TITLE+" LIKE '%"+query+"%'";

@@ -21,21 +21,22 @@ import java.util.List;
 
 public class SplashScreen extends AppCompatActivity {
   private ProgressBar progressBar;
+  private int currentNumEvents;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    int TOTAL_EVENTS=1107;
+    int TOTAL_EVENTS=1127;
 
     WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
     dbHelper.onUpgrade(dbHelper.getWritableDatabase(), dbHelper.getVersion(),
         WBCDataDbHelper.DATABASE_VERSION);
     dbHelper.getReadableDatabase();
-    int totalEvents=dbHelper.getNumEvents();
+    currentNumEvents=dbHelper.getNumEvents();
     dbHelper.close();
 
-    if (totalEvents>=TOTAL_EVENTS) {
+    if (currentNumEvents==TOTAL_EVENTS) {
       checkForChanges();
     } else {
       setContentView(R.layout.splash);
@@ -45,7 +46,7 @@ public class SplashScreen extends AppCompatActivity {
       setTitle(getResources().getString(R.string.activity_splash));
 
       progressBar=(ProgressBar) findViewById(R.id.splash_progress);
-      progressBar.setMax(TOTAL_EVENTS);
+      progressBar.setMax(TOTAL_EVENTS-currentNumEvents);
 
       new LoadEventsTask(this).execute(0, 0, 0);
     }
@@ -148,7 +149,7 @@ public class SplashScreen extends AppCompatActivity {
         String line;
         String eventTitle, eClass, format, gm, tempString, location;
         String[] rowData;
-        int eventId=0, tournamentId, index, day, prize;
+        int eventId= currentNumEvents, tournamentId, index, day, prize;
         float hour, duration, totalDuration;
         boolean continuous, qualify, isTournamentEvent;
 
@@ -175,6 +176,13 @@ public class SplashScreen extends AppCompatActivity {
 
           // time
           hour=Float.valueOf(rowData[1]);
+
+          if (dbHelper.eventExists(eventTitle, day, hour)) {
+            Log.d(TAG, eventTitle + "exists");
+            continue;
+          }
+
+          Log.d(TAG, "Event " + eventTitle + " DOES NOT EXIST in DB");
 
           if (rowData.length<8) {
             prize=0;
@@ -276,7 +284,7 @@ public class SplashScreen extends AppCompatActivity {
             }
           }
 
-          tournamentId=index;
+          tournamentId=dbHelper.getTournamentID(tournamentTitle);
           if (tournamentId==-1) {
             tournamentId=tournamentTitles.size();
             tournamentTitles.add(tournamentTitle);
@@ -333,7 +341,7 @@ public class SplashScreen extends AppCompatActivity {
               .insertEvent(eventId, tournamentId, day, hour, eventTitle, eClass, format, qualify,
                   duration, continuous, totalDuration, location);
 
-          progressBar.setProgress(eventId);
+          progressBar.setProgress(eventId- currentNumEvents);
           eventId++;
         }
 
