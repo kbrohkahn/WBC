@@ -140,6 +140,18 @@ public class MainActivity extends AppCompatActivity {
             }
           });
       builder.create().show();
+    } else if (latestVersion < 19) {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setTitle(R.string.schedule_changed_dialog_title)
+          .setMessage(R.string.schedule_changed_dialog_message)
+          .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              dialog.dismiss();
+              showDialogs(19);
+            }
+          });
+      builder.create().show();
     }
   }
 

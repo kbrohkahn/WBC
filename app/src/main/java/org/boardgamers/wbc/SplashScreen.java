@@ -177,13 +177,6 @@ public class SplashScreen extends AppCompatActivity {
           // time
           hour=Float.valueOf(rowData[1]);
 
-          if (dbHelper.eventExists(eventTitle, day, hour)) {
-            Log.d(TAG, eventTitle + "exists");
-            continue;
-          }
-
-          Log.d(TAG, "Event " + eventTitle + " DOES NOT EXIST in DB");
-
           if (rowData.length<8) {
             prize=0;
             eClass="";
@@ -284,14 +277,15 @@ public class SplashScreen extends AppCompatActivity {
             }
           }
 
-          tournamentId=dbHelper.getTournamentID(tournamentTitle);
-          if (tournamentId==-1) {
+          if (index==-1) {
             tournamentId=tournamentTitles.size();
             tournamentTitles.add(tournamentTitle);
 
             dbHelper
                 .insertTournament(tournamentId, tournamentTitle, tournamentLabel, isTournamentEvent,
                     prize, gm, eventId);
+          } else {
+            tournamentId=index;
           }
 
           // Log.d(TAG, String.valueOf(tournamentId)+": "+tournamentTitle

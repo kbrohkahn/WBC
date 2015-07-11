@@ -40,6 +40,12 @@
         and may be subject to further changes. Until the schedule is finalized, we advise you
         to not spend too much time creating a schedule, as your data will be erased if major
            updates are made to the schedule in the coming weeks.</string>
+    <string name="schedule_changed_dialog_title">Schedule Changed</string>
+    <string name="schedule_changed_dialog_message">Unfortunately
+        the schedule has undergone many changes and the app\'s data needs to be completely
+        reset to accommodate the new schedule. We apologize for any inconvenience this may
+        have caused, but hopefully you took notice of previous message stating that the schedule is
+        still in its beta version!</string>
     <string name="reset">Reset</string>s
     <string name="reset_message">Are you sure you want to reset all your settings?</string>
     <string name="initial_dialog_text">Star events in the full schedule to add them to your schedule</string>

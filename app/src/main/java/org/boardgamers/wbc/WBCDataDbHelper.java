@@ -16,7 +16,7 @@ import java.util.List;
 public class WBCDataDbHelper extends SQLiteOpenHelper {
   //private final String TAG="Database";
 
-  public static final int DATABASE_VERSION=4;
+  public static final int DATABASE_VERSION=5;
 
   public static final String DATABASE_NAME="WBCdata.db";
 
@@ -442,19 +442,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     cursor.close();
 
     return events;
-  }
-
-  public boolean eventExists(String title, int day, float hour) {
-    String where="("+EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_TITLE+"=\""+title+"\" AND "+
-        EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_DAY+"="+String.valueOf(day)+" AND "+
-        EventEntry.TABLE_NAME+"."+EventEntry.COLUMN_HOUR+"="+String.valueOf(hour)+")";
-
-    String query="SELECT * FROM "+EventEntry.TABLE_NAME+" WHERE "+where;
-    Cursor cursor=sqLiteDatabase.rawQuery(query, null);
-    int count=cursor.getCount();
-    cursor.close();
-
-    return count==1;
   }
 
   public int getTournamentID(String title) {
