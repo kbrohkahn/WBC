@@ -25,345 +25,345 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilterActivity extends AppCompatActivity {
-  private final String TAG = "Filter Activity";
+    private final String TAG = "Filter Activity";
 
-  private final int SECTION_TOURNAMENT_ID = 1000;
+    private final int SECTION_TOURNAMENT_ID = 1000;
 
-  private List<Tournament> tournaments;
-  private List<Tournament> changedTournaments;
+    private List<Tournament> tournaments;
+    private List<Tournament> changedTournaments;
 
-  private Character[] sections;
-  private Integer[] sectionIndices;
+    private Character[] sections;
+    private Integer[] sectionIndices;
 
-  private ProgressDialog dialog;
-  private WBCDataDbHelper dbHelper;
+    private ProgressDialog dialog;
+    private WBCDataDbHelper dbHelper;
 
-  private FilterListAdapter listAdapter;
+    private FilterListAdapter listAdapter;
 
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.filter);
+        setContentView(R.layout.filter);
 
-    dialog = new ProgressDialog(this);
-    dialog.setCancelable(false);
-    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    dialog.setTitle("Saving, please wait...");
+        dialog = new ProgressDialog(this);
+        dialog.setCancelable(false);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setTitle("Saving, please wait...");
 
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
-    if (getSupportActionBar() != null) {
-      getSupportActionBar().setDisplayShowHomeEnabled(true);
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-    dbHelper = new WBCDataDbHelper(this);
-    dbHelper.getWritableDatabase();
-    tournaments = dbHelper.getAllTournaments(MainActivity.userId);
-    dbHelper.close();
+        dbHelper = new WBCDataDbHelper(this);
+        dbHelper.getWritableDatabase();
+        tournaments = dbHelper.getAllTournaments(MainActivity.userId);
+        dbHelper.close();
 
-    List<Character> sectionsList = new ArrayList<>();
-    List<Integer> sectionIndicesList = new ArrayList<>();
+        List<Character> sectionsList = new ArrayList<>();
+        List<Integer> sectionIndicesList = new ArrayList<>();
 
-    // add first char so list is not empty
-    Character letter = tournaments.get(0).title.charAt(0);
-    sectionsList.add(letter);
-    sectionIndicesList.add(0);
-    tournaments.add(0, new Tournament(SECTION_TOURNAMENT_ID, "" + letter, "", false, 0, "", 0));
-
-    int numSections = 1;
-    for (int i = 1; i < tournaments.size(); i++) {
-      letter = tournaments.get(i).title.charAt(0);
-
-      if (sectionsList.get(numSections - 1) != letter) {
+        // add first char so list is not empty
+        Character letter = tournaments.get(0).title.charAt(0);
         sectionsList.add(letter);
-        sectionIndicesList.add(i);
-        tournaments.add(i,
-            new Tournament(SECTION_TOURNAMENT_ID + numSections, "" + letter, "", false, 0, "", 0));
+        sectionIndicesList.add(0);
+        tournaments.add(0, new Tournament(SECTION_TOURNAMENT_ID, "" + letter, "", false, 0, "", 0));
 
-        numSections++;
-        i++;
-      }
-    }
+        int numSections = 1;
+        for (int i = 1; i < tournaments.size(); i++) {
+            letter = tournaments.get(i).title.charAt(0);
 
-    sections = new Character[sectionsList.size()];
-    sectionsList.toArray(sections);
+            if (sectionsList.get(numSections - 1) != letter) {
+                sectionsList.add(letter);
+                sectionIndicesList.add(i);
+                tournaments.add(i,
+                        new Tournament(SECTION_TOURNAMENT_ID + numSections, "" + letter, "", false, 0, "", 0));
 
-    sectionIndices = new Integer[sectionIndicesList.size()];
-    sectionIndicesList.toArray(sectionIndices);
-
-    ListView listView = (ListView) findViewById(R.id.filter_list_view);
-
-    //listView.setFastScrollEnabled(true);
-    listAdapter = new FilterListAdapter();
-
-    listView.setAdapter(listAdapter);
-
-    FilterSideSelector sideSelector = (FilterSideSelector) findViewById(R.id.filter_side_selector);
-    sideSelector.setListView(listView);
-
-    // select all image button
-    Button selectAll = (Button) findViewById(R.id.filter_select_all);
-    selectAll.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        selectAll();
-      }
-    });
-
-    // select non tournament image button
-    Button selectTournaments = (Button) findViewById(R.id.filter_select_tournament);
-    selectTournaments.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        selectTournaments();
-      }
-    });
-
-    // deselect all image button
-    Button deselectAll = (Button) findViewById(R.id.filter_deselect_all);
-    deselectAll.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        deselectAll();
-      }
-    });
-
-    Button deselectTournaments = (Button) findViewById(R.id.filter_deselect_tournament);
-    deselectTournaments.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        deselectTournaments();
-      }
-    });
-  }
-
-  @Override
-  protected void onResume() {
-    dbHelper.getWritableDatabase();
-    super.onResume();
-  }
-
-  public void selectAll() {
-    changedTournaments = new ArrayList<>();
-
-    for (Tournament tournament : tournaments) {
-      if (!tournament.visible) {
-        tournament.visible = true;
-        changedTournaments.add(tournament);
-      }
-    }
-
-    listAdapter.notifyDataSetChanged();
-    save();
-  }
-
-  public void selectTournaments() {
-    changedTournaments = new ArrayList<>();
-
-    for (Tournament tournament : tournaments) {
-      if (tournament.isTournament && !tournament.visible) {
-        tournament.visible = true;
-        changedTournaments.add(tournament);
-      }
-    }
-
-    listAdapter.notifyDataSetChanged();
-    save();
-  }
-
-  public void deselectAll() {
-    changedTournaments = new ArrayList<>();
-
-    for (Tournament tournament : tournaments) {
-      if (tournament.visible) {
-        tournament.visible = false;
-        changedTournaments.add(tournament);
-      }
-    }
-
-    listAdapter.notifyDataSetChanged();
-    save();
-  }
-
-  public void deselectTournaments() {
-    changedTournaments = new ArrayList<>();
-
-    for (Tournament tournament : tournaments) {
-      if (tournament.isTournament && tournament.visible) {
-        tournament.visible = false;
-        changedTournaments.add(tournament);
-      }
-    }
-
-    listAdapter.notifyDataSetChanged();
-    save();
-  }
-
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.menu_filter, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
-
-    if (id == android.R.id.home) {
-      finish();
-      return true;
-    } else if (id == R.id.filter_select_all) {
-      selectAll();
-      return true;
-    } else if (id == R.id.filter_select_tournament) {
-      selectTournaments();
-      return true;
-    } else if (id == R.id.filter_deselect_all) {
-      deselectAll();
-      return true;
-    } else if (id == R.id.filter_deselect_tournament) {
-      deselectTournaments();
-      return true;
-    } else {
-      return super.onOptionsItemSelected(item);
-    }
-  }
-
-  @Override
-  protected void onPause() {
-    dbHelper.close();
-
-    super.onPause();
-  }
-
-  public void save() {
-    new SaveTask().execute();
-  }
-
-  public class SaveTask extends AsyncTask<Void, Void, Void> {
-    @Override
-    protected void onPreExecute() {
-      if (changedTournaments.size() > 1) {
-        dialog.show();
-      }
-      super.onPreExecute();
-    }
-
-    @Override
-    protected void onPostExecute(Void result) {
-      if (changedTournaments.size() > 1) {
-        dialog.dismiss();
-      }
-      super.onPostExecute(result);
-    }
-
-    @Override
-    protected Void doInBackground(Void... params) {
-      dbHelper.updateTournamentsVisible(changedTournaments);
-      return null;
-    }
-  }
-
-  public class FilterListAdapter extends BaseAdapter implements SectionIndexer {
-    private final LayoutInflater inflater;
-
-    public FilterListAdapter() {
-      inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-
-    @Override
-    public int getCount() {
-      return tournaments.size();
-    }
-
-    @Override
-    public boolean hasStableIds() {
-      return true;
-    }
-
-    @Override
-    public long getItemId(int position) {
-      return position;
-    }
-
-    @Override
-    public Object getItem(int position) {
-      return tournaments.get(position);
-    }
-
-    @Override
-    public View getView(final int position, View view, ViewGroup parent) {
-      int sectionIndex = -1;
-      for (int i = 0; i < sectionIndices.length; i++) {
-        if (sectionIndices[i] == position) {
-          sectionIndex = i;
-          break;
+                numSections++;
+                i++;
+            }
         }
-      }
 
-      if (sectionIndex == -1) {
-        view = inflater.inflate(R.layout.filter_list_item, parent, false);
-        Tournament tournament = tournaments.get(position);
+        sections = new Character[sectionsList.size()];
+        sectionsList.toArray(sections);
 
-        TextView titleTV = (TextView) view.findViewById(R.id.filter_title);
-        titleTV.setText(tournament.title);
+        sectionIndices = new Integer[sectionIndicesList.size()];
+        sectionIndicesList.toArray(sectionIndices);
 
-        TextView labelTV = (TextView) view.findViewById(R.id.filter_label);
-        labelTV.setText(tournament.label);
+        ListView listView = (ListView) findViewById(R.id.filter_list_view);
 
-        ImageView boxIV = (ImageView) view.findViewById(R.id.filter_image_view);
-        boxIV.setImageResource(MainActivity.getBoxIdFromLabel(tournament.label, getResources()));
+        //listView.setFastScrollEnabled(true);
+        listAdapter = new FilterListAdapter();
 
-        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.filter_checkbox);
-        checkBox.setChecked(tournament.visible);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-          @Override
-          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            tournaments.get(position).visible = isChecked;
+        listView.setAdapter(listAdapter);
 
-            changedTournaments = new ArrayList<>();
-            changedTournaments.add(tournaments.get(position));
-            save();
-          }
+        FilterSideSelector sideSelector = (FilterSideSelector) findViewById(R.id.filter_side_selector);
+        sideSelector.setListView(listView);
+
+        // select all image button
+        Button selectAll = (Button) findViewById(R.id.filter_select_all);
+        selectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectAll();
+            }
         });
 
-        view.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            checkBox.setChecked(!checkBox.isChecked());
-          }
+        // select non tournament image button
+        Button selectTournaments = (Button) findViewById(R.id.filter_select_tournament);
+        selectTournaments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectTournaments();
+            }
         });
-      } else {
-        view = inflater.inflate(R.layout.list_group_small, parent, false);
-        Character letter = sections[sectionIndex];
 
-        TextView textView = (TextView) view.findViewById(R.id.sg_name);
-        textView.setText("" + letter);
+        // deselect all image button
+        Button deselectAll = (Button) findViewById(R.id.filter_deselect_all);
+        deselectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deselectAll();
+            }
+        });
 
-        view.setBackgroundResource(R.drawable.group_collapsed);
-      }
-
-      return view;
+        Button deselectTournaments = (Button) findViewById(R.id.filter_deselect_tournament);
+        deselectTournaments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deselectTournaments();
+            }
+        });
     }
 
-    public Object[] getSections() {
-      return sections;
+    @Override
+    protected void onResume() {
+        dbHelper.getWritableDatabase();
+        super.onResume();
     }
 
-    public int getPositionForSection(int i) {
-      return sectionIndices[i];
-    }
+    public void selectAll() {
+        changedTournaments = new ArrayList<>();
 
-    public int getSectionForPosition(int position) {
-      for (int i = 0; i < sectionIndices.length; i++) {
-        if (sectionIndices[i] == position) {
-          return i;
+        for (Tournament tournament : tournaments) {
+            if (!tournament.visible) {
+                tournament.visible = true;
+                changedTournaments.add(tournament);
+            }
         }
-      }
-      return 0;
+
+        listAdapter.notifyDataSetChanged();
+        save();
     }
-  }
+
+    public void selectTournaments() {
+        changedTournaments = new ArrayList<>();
+
+        for (Tournament tournament : tournaments) {
+            if (tournament.isTournament && !tournament.visible) {
+                tournament.visible = true;
+                changedTournaments.add(tournament);
+            }
+        }
+
+        listAdapter.notifyDataSetChanged();
+        save();
+    }
+
+    public void deselectAll() {
+        changedTournaments = new ArrayList<>();
+
+        for (Tournament tournament : tournaments) {
+            if (tournament.visible) {
+                tournament.visible = false;
+                changedTournaments.add(tournament);
+            }
+        }
+
+        listAdapter.notifyDataSetChanged();
+        save();
+    }
+
+    public void deselectTournaments() {
+        changedTournaments = new ArrayList<>();
+
+        for (Tournament tournament : tournaments) {
+            if (tournament.isTournament && tournament.visible) {
+                tournament.visible = false;
+                changedTournaments.add(tournament);
+            }
+        }
+
+        listAdapter.notifyDataSetChanged();
+        save();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_filter, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        } else if (id == R.id.filter_select_all) {
+            selectAll();
+            return true;
+        } else if (id == R.id.filter_select_tournament) {
+            selectTournaments();
+            return true;
+        } else if (id == R.id.filter_deselect_all) {
+            deselectAll();
+            return true;
+        } else if (id == R.id.filter_deselect_tournament) {
+            deselectTournaments();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        dbHelper.close();
+
+        super.onPause();
+    }
+
+    public void save() {
+        new SaveTask().execute();
+    }
+
+    public class SaveTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            if (changedTournaments.size() > 1) {
+                dialog.show();
+            }
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (changedTournaments.size() > 1) {
+                dialog.dismiss();
+            }
+            super.onPostExecute(result);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            dbHelper.updateTournamentsVisible(changedTournaments);
+            return null;
+        }
+    }
+
+    public class FilterListAdapter extends BaseAdapter implements SectionIndexer {
+        private final LayoutInflater inflater;
+
+        public FilterListAdapter() {
+            inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public int getCount() {
+            return tournaments.size();
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return tournaments.get(position);
+        }
+
+        @Override
+        public View getView(final int position, View view, ViewGroup parent) {
+            int sectionIndex = -1;
+            for (int i = 0; i < sectionIndices.length; i++) {
+                if (sectionIndices[i] == position) {
+                    sectionIndex = i;
+                    break;
+                }
+            }
+
+            if (sectionIndex == -1) {
+                view = inflater.inflate(R.layout.filter_list_item, parent, false);
+                Tournament tournament = tournaments.get(position);
+
+                TextView titleTV = (TextView) view.findViewById(R.id.filter_title);
+                titleTV.setText(tournament.title);
+
+                TextView labelTV = (TextView) view.findViewById(R.id.filter_label);
+                labelTV.setText(tournament.label);
+
+                ImageView boxIV = (ImageView) view.findViewById(R.id.filter_image_view);
+                boxIV.setImageResource(MainActivity.getBoxIdFromLabel(tournament.label, getResources()));
+
+                final CheckBox checkBox = (CheckBox) view.findViewById(R.id.filter_checkbox);
+                checkBox.setChecked(tournament.visible);
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        tournaments.get(position).visible = isChecked;
+
+                        changedTournaments = new ArrayList<>();
+                        changedTournaments.add(tournaments.get(position));
+                        save();
+                    }
+                });
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        checkBox.setChecked(!checkBox.isChecked());
+                    }
+                });
+            } else {
+                view = inflater.inflate(R.layout.list_group_small, parent, false);
+                Character letter = sections[sectionIndex];
+
+                TextView textView = (TextView) view.findViewById(R.id.sg_name);
+                textView.setText("" + letter);
+
+                view.setBackgroundResource(R.drawable.group_collapsed);
+            }
+
+            return view;
+        }
+
+        public Object[] getSections() {
+            return sections;
+        }
+
+        public int getPositionForSection(int i) {
+            return sectionIndices[i];
+        }
+
+        public int getSectionForPosition(int position) {
+            for (int i = 0; i < sectionIndices.length; i++) {
+                if (sectionIndices[i] == position) {
+                    return i;
+                }
+            }
+            return 0;
+        }
+    }
 
 }

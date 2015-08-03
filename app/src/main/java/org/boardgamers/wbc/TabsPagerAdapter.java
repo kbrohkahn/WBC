@@ -9,40 +9,42 @@ import android.support.v4.app.FragmentPagerAdapter;
  * and UserDataFragment
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
-  private SummaryListFragment summaryListFragment;
-  private ScheduleListFragment scheduleListFragment;
-  private UserDataListFragment userDataListFragment;
+    private SummaryListFragment summaryListFragment;
+    private ScheduleListFragment scheduleListFragment;
+    private UserDataListFragment userDataListFragment;
 
-  private final String[] tabTitles={"Starred", "Schedule", "My Data"};
+    private final String[] tabTitles = {"Starred", "Schedule", "My Data"};
 
-  public TabsPagerAdapter(FragmentManager fm) {
-    super(fm);
+    public TabsPagerAdapter(FragmentManager fm) {
+        super(fm);
 
-    summaryListFragment=new SummaryListFragment();
-    scheduleListFragment=new ScheduleListFragment();
-    userDataListFragment=new UserDataListFragment();
-  }
-
-  @Override
-  public DefaultListFragment getItem(int index) {
-    switch (index) {
-      case 0:
-        return summaryListFragment;
-      case 1:
-        return scheduleListFragment;
-      case 2:
-        return userDataListFragment;
+        summaryListFragment = new SummaryListFragment();
+        scheduleListFragment = new ScheduleListFragment();
+        userDataListFragment = new UserDataListFragment();
     }
 
-    return null;
-  }
+    @Override
+    public DefaultListFragment getItem(int index) {
+        switch (index) {
+            case 0:
+                return summaryListFragment;
+            case 1:
+                return scheduleListFragment;
+            case 2:
+                return userDataListFragment;
+        }
 
-  @Override
-  public int getCount() { return tabTitles.length; }
+        return null;
+    }
 
-  @Override
-  public CharSequence getPageTitle(int position) {
-    return tabTitles[position];
-  }
+    @Override
+    public int getCount() {
+        return tabTitles.length;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return tabTitles[position];
+    }
 }
 
