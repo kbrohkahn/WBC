@@ -8,7 +8,7 @@
   <color name="secondary">#31428C</color>
   <color name="secondary_light">#8490BC</color>
   <color name="secondary_dark">#192146</color>
-  <color name="window_background">#E3E6EF</color>
+  <color name="window_background">#ffffff</color>
 
   <color name="gray">#aaaaaa</color>
   <color name="gray_light">#cccccc</color>

@@ -456,7 +456,6 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
             returnValue = -1;
         }
         cursor.close();
-        ;
         return returnValue;
     }
 

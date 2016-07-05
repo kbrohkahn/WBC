@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 24
     buildToolsVersion '22.0.1'
 
     defaultConfig {
         applicationId "org.boardgamers.wbc"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 24
     }
 
     buildTypes {
@@ -22,5 +22,5 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:22.1.1"
+    compile "com.android.support:appcompat-v7:24.0.0"
 }
