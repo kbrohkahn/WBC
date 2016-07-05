@@ -16,7 +16,7 @@ import java.util.List;
 public class WBCDataDbHelper extends SQLiteOpenHelper {
     //private final String TAG="Database";
 
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
 
     public static final String DATABASE_NAME = "WBCdata.db";
 
@@ -315,7 +315,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
             starred = cursor.getInt(cursor.getColumnIndexOrThrow(UserEventDataEntry.COLUMN_STARRED)) == 1;
             note = cursor.getString(cursor.getColumnIndexOrThrow(UserEventDataEntry.COLUMN_NOTE));
 
-            event = new Event(id, MainActivity.USER_EVENT_ID + uId, day, hour, title, "", "", false, duration,
+            event = new Event(id, Constants.USER_EVENT_ID + uId, day, hour, title, "", "", false, duration,
                     false, duration, location);
 
             event.starred = starred;
@@ -650,7 +650,7 @@ public class WBCDataDbHelper extends SQLiteOpenHelper {
     public long mergeUserData(int userId) {
         ContentValues values = new ContentValues();
 
-        values.put("user_id", MainActivity.PRIMARY_USER_ID);
+        values.put("user_id", Constants.PRIMARY_USER_ID);
 
         String where = UserEventDataEntry.COLUMN_USER_ID + "=" + String.valueOf(userId);
         int result = sqLiteDatabase

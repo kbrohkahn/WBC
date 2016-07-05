@@ -61,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (currentUserId == -1) {
             currentUserId = PreferenceManager.getDefaultSharedPreferences(this)
                     .getInt(getResources().getString(R.string.pref_key_schedule_select),
-                            MainActivity.PRIMARY_USER_ID);
+                            Constants.PRIMARY_USER_ID);
         }
 
         getFragmentManager().beginTransaction().replace(R.id.setings_content, new SettingsFragment())
@@ -234,7 +234,7 @@ public class SettingsActivity extends AppCompatActivity {
             String title, location;
             int eId, day, hour;
             float duration;
-            int newEId = MainActivity.USER_EVENT_ID + dbHelper.getNumUserEvents();
+            int newEId = Constants.USER_EVENT_ID + dbHelper.getNumUserEvents();
 
             int[] oldIds = new int[createdEvents.length / 6];
             int[] newEIds = new int[createdEvents.length / 6];
@@ -269,7 +269,7 @@ public class SettingsActivity extends AppCompatActivity {
                 note = eventNotes[i + 1];
 
                 newEId = -1;
-                if (eId >= MainActivity.USER_EVENT_ID) {
+                if (eId >= Constants.USER_EVENT_ID) {
                     for (int j = 0; j < oldIds.length; j++) {
                         if (oldIds[j] == eId) {
                             newEId = newEIds[j];
@@ -301,7 +301,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
                 eId = Integer.valueOf(eIdString);
                 newEId = -1;
-                if (eId >= MainActivity.USER_EVENT_ID) {
+                if (eId >= Constants.USER_EVENT_ID) {
                     for (int i = 0; i < oldIds.length; i++) {
                         if (oldIds[i] == eId) {
                             newEId = newEIds[i];
@@ -381,7 +381,7 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             MainActivity.differentUser = true;
-            currentUserId = MainActivity.PRIMARY_USER_ID;
+            currentUserId = Constants.PRIMARY_USER_ID;
 
             PreferenceManager.getDefaultSharedPreferences(context).edit()
                     .putInt(getResources().getString(R.string.pref_key_schedule_select), currentUserId)
@@ -399,7 +399,7 @@ public class SettingsActivity extends AppCompatActivity {
             WBCDataDbHelper dbHelper = new WBCDataDbHelper(context);
             dbHelper.getWritableDatabase();
             if (overwrite) {
-                dbHelper.deleteUserData(MainActivity.PRIMARY_USER_ID);
+                dbHelper.deleteUserData(Constants.PRIMARY_USER_ID);
             }
             dbHelper.mergeUserData(currentUserId);
             dbHelper.deleteUser(currentUserId);
@@ -500,7 +500,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         public static void updatePreferences() {
-            if (currentUserId == MainActivity.PRIMARY_USER_ID) {
+            if (currentUserId == Constants.PRIMARY_USER_ID) {
                 scheduleMerge.setEnabled(false);
                 scheduleDelete.setEnabled(false);
             } else {
@@ -509,7 +509,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             scheduleMerge.setSummary("Merge " + users.get(currentUserId).name + " with " +
-                    users.get(MainActivity.PRIMARY_USER_ID).name + ".");
+                    users.get(Constants.PRIMARY_USER_ID).name + ".");
             scheduleDelete.setSummary("Remove " + users.get(currentUserId).name + " from schedules");
             scheduleExport
                     .setSummary("Export " + users.get(currentUserId).name + " to device storage (" + folder + ") and share");
@@ -544,7 +544,7 @@ public class SettingsActivity extends AppCompatActivity {
             dbHelper.deleteUserData(currentUserId);
             dbHelper.close();
 
-            currentUserId = MainActivity.PRIMARY_USER_ID;
+            currentUserId = Constants.PRIMARY_USER_ID;
 
             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
                     .putInt(getResources().getString(R.string.pref_key_schedule_select), currentUserId)

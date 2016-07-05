@@ -15,7 +15,7 @@ public class SummaryListFragment extends DefaultListFragment {
                              Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        new PopulateSummaryAdapterTask(getActivity(), MainActivity.TOTAL_DAYS).execute(0, 0, 0);
+        new PopulateSummaryAdapterTask(getActivity(), Constants.TOTAL_DAYS).execute(0, 0, 0);
 
         return view;
     }

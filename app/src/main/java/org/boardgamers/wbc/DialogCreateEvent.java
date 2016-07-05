@@ -104,14 +104,14 @@ public class DialogCreateEvent extends DialogFragment {
         WBCDataDbHelper dbHelper = new WBCDataDbHelper(getActivity());
         dbHelper.getWritableDatabase();
 
-        int id = MainActivity.USER_EVENT_ID + dbHelper.getNumUserEvents();
+        int id = Constants.USER_EVENT_ID + dbHelper.getNumUserEvents();
         List<Event> newEvents = new ArrayList<>();
         Event event;
         for (int day = 0; day < days.length; day++) {
             if (days[day].isChecked()) {
                 dbHelper.insertUserEvent(id, MainActivity.userId, title, day, hour, duration, location);
                 event =
-                        new Event(id, MainActivity.USER_EVENT_ID + MainActivity.userId, day, hour, title, "", "",
+                        new Event(id, Constants.USER_EVENT_ID + MainActivity.userId, day, hour, title, "", "",
                                 false, duration, false, duration, location);
                 newEvents.add(event);
                 id++;

@@ -27,7 +27,7 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int TOTAL_EVENTS = 1127;
+        int TOTAL_EVENTS = 1096;
 
         WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
         dbHelper.onUpgrade(dbHelper.getWritableDatabase(), dbHelper.getVersion(),
@@ -140,7 +140,7 @@ public class SplashScreen extends AppCompatActivity {
             WBCDataDbHelper dbHelper = new WBCDataDbHelper(context);
             dbHelper.getWritableDatabase();
             MainActivity.userId =
-                    (int) dbHelper.insertUser(MainActivity.PRIMARY_USER_ID, "My Schedule", "");
+                    (int) dbHelper.insertUser(Constants.PRIMARY_USER_ID, "My Schedule", "");
 
             // parse schedule file
             BufferedReader reader = new BufferedReader(isr);

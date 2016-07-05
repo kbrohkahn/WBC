@@ -60,7 +60,7 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
-        return a.getInteger(index, MainActivity.PRIMARY_USER_ID);
+        return a.getInteger(index, Constants.PRIMARY_USER_ID);
     }
 
     @Override

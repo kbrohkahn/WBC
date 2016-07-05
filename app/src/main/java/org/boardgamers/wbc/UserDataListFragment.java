@@ -284,7 +284,7 @@ public class UserDataListFragment extends DefaultListFragment {
             Event tempEvent;
 
             for (Event event : updatedEvents) {
-                if (event.id < MainActivity.USER_EVENT_ID) {
+                if (event.id < Constants.USER_EVENT_ID) {
                     continue;
                 }
 

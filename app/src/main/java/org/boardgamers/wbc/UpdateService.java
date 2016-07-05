@@ -24,8 +24,6 @@ import java.util.TimeZone;
 public class UpdateService extends Service {
     private final String TAG = "Notification Service";
 
-    private final long milliHour = 60 * 60 * 1000;
-
     private static int notificationType;
     public static long currentDay;
     public static int currentHour;
@@ -36,7 +34,7 @@ public class UpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // GET CALENDAR FOR FIRST DAY
         String[] daysForParsing = getResources().getStringArray(R.array.daysForParsing);
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy\u002DMM\u002Ddd HH:mm:ss z", Locale.ENGLISH);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("M/dd/yyyy HH:mm:ss z", Locale.ENGLISH);
         String firstDayString = daysForParsing[0] + " 00:00:00 GMT-4";
         Calendar firstDayCalendar = Calendar.getInstance();
         try {
@@ -47,6 +45,7 @@ public class UpdateService extends Service {
         }
 
         // GET CURRENT TIME IN EST
+        long milliHour = Constants.milliHour;
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT-4"));
         currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         currentDay = (calendar.getTimeInMillis() - firstDayCalendar.getTimeInMillis()) / (milliHour * 24);
@@ -164,7 +163,7 @@ public class UpdateService extends Service {
     private final Runnable notificationUpdate = new Runnable() {
         @Override
         public void run() {
-            handler.postDelayed(this, milliHour);
+            handler.postDelayed(this, Constants.milliHour);
             checkEvents();
         }
     };
@@ -175,7 +174,7 @@ public class UpdateService extends Service {
     private final Runnable clockUpdate = new Runnable() {
         @Override
         public void run() {
-            handler.postDelayed(this, milliHour);
+            handler.postDelayed(this, Constants.milliHour);
             updateClock();
         }
     };
@@ -200,7 +199,7 @@ public class UpdateService extends Service {
      */
     public static int getHoursIntoConvention() {
         Log.d("US", "Day is " + String.valueOf(currentDay) + " and hour is " + String.valueOf(currentHour));
-        if (currentDay < 0 || currentDay > MainActivity.TOTAL_DAYS) {
+        if (currentDay < 0 || currentDay > Constants.TOTAL_DAYS) {
             return -1;
         } else {
             int day = (int) currentDay;

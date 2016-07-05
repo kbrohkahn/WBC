@@ -37,7 +37,7 @@ public class SearchListFragment extends DefaultListFragment {
         query = q;
         tournamentId = i;
 
-        new PopulateSearchAdapterTask(getActivity(), MainActivity.TOTAL_DAYS).execute(0, 0, 0);
+        new PopulateSearchAdapterTask(getActivity(), Constants.TOTAL_DAYS).execute(0, 0, 0);
     }
 
     class PopulateSearchAdapterTask extends PopulateAdapterTask {

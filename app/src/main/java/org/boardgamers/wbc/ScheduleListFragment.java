@@ -45,7 +45,7 @@ public class ScheduleListFragment extends DefaultListFragment {
                 }
             }
         });
-        new PopulateScheduleAdapterTask(getActivity(), GROUPS_PER_DAY * MainActivity.TOTAL_DAYS).execute(0, 0, 0);
+        new PopulateScheduleAdapterTask(getActivity(), GROUPS_PER_DAY * Constants.TOTAL_DAYS).execute(0, 0, 0);
 
         return view;
     }
@@ -54,7 +54,7 @@ public class ScheduleListFragment extends DefaultListFragment {
         listAdapter = null;
         listView.setAdapter(listAdapter);
 
-        new PopulateScheduleAdapterTask(getActivity(), GROUPS_PER_DAY * MainActivity.TOTAL_DAYS).execute(0, 0, 0);
+        new PopulateScheduleAdapterTask(getActivity(), GROUPS_PER_DAY * Constants.TOTAL_DAYS).execute(0, 0, 0);
     }
 
     /**
@@ -108,7 +108,7 @@ public class ScheduleListFragment extends DefaultListFragment {
             while (tempEvents.size() > 0) {
                 event = tempEvents.remove(0);
 
-                if (event.id < MainActivity.USER_EVENT_ID && !visible[event.tournamentID]) {
+                if (event.id < Constants.USER_EVENT_ID && !visible[event.tournamentID]) {
                     continue;
                 }
 
