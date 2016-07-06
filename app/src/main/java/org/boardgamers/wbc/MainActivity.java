@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 		String fixedLabel = label.toLowerCase();
 		fixedLabel = fixedLabel.replace("&", "and");
 		fixedLabel = fixedLabel.replace("!", "exc");
-		fixedLabel = fixedLabel.replace("-", "dash\");
+		fixedLabel = fixedLabel.replace("-", "dash");
 
 		fixedLabel = "drawable/box_" + fixedLabel;
 
