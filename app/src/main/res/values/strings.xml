@@ -3,7 +3,7 @@
 
 	<!-- APP DETAILS -->
 	<string name="app_name_long">World Boardgaming Championships</string>
-	<string name="app_name_short">WBC</string>
+	<string name="app_name_short">WBC 2016</string>
 	<string name="email">dev@boardgamers.org</string>
 	<string name="notification_title">WBC: Events starting soon</string>
 
