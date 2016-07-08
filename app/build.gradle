@@ -1,26 +1,26 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '22.0.1'
+	compileSdkVersion 23
+	buildToolsVersion '22.0.1'
 
-    defaultConfig {
-        applicationId "org.boardgamers.wbc"
-        minSdkVersion 14
-        targetSdkVersion 24
-    }
+	defaultConfig {
+		vectorDrawables.useSupportLibrary = true
+		minSdkVersion 14
+		targetSdkVersion 23
+	}
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-        }
-        debug {
-            debuggable true
-        }
-    }
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+		}
+		debug {
+			debuggable true
+		}
+	}
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:24.0.0"
+	compile "com.android.support:appcompat-v7:23.1.1"
 }

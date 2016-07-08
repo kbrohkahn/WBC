@@ -10,6 +10,9 @@ local.properties
 .idea/
 *.iml
 
+# Log files
+*.log
+
 # OS X files
 #*.DS_Store
 gradlew
