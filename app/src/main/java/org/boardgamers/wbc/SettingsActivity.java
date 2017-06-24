@@ -38,10 +38,11 @@ public class SettingsActivity extends AppCompatActivity {
 
 	private static final int GET_FILE_REQUEST_CODE = 0;
 
-	private static List<User> users;
-	public static int currentUserId;
-	public static boolean notifyChanged = false;
+	//	private static List<User> users;
+//	public static long currentUserId;
 	private static final String folder = Environment.getExternalStorageDirectory().getAbsolutePath() + "/WBC/";
+
+	private String scheduleName;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,12 +58,6 @@ public class SettingsActivity extends AppCompatActivity {
 		setTitle(R.string.activity_settings);
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-		currentUserId = MainActivity.userId;
-		if (currentUserId == -1) {
-			currentUserId = PreferenceManager.getDefaultSharedPreferences(this)
-					.getInt(getResources().getString(R.string.pref_key_schedule_select),
-							Constants.PRIMARY_USER_ID);
-		}
 
 		getFragmentManager().beginTransaction().replace(R.id.setings_content, new SettingsFragment())
 				.commit();
@@ -122,13 +117,13 @@ public class SettingsActivity extends AppCompatActivity {
 		}
 	}
 
-	class SaveScheduleTask extends AsyncTask<String, Void, Integer> {
+	private class SaveScheduleTask extends AsyncTask<String, Void, Integer> {
 		private String scheduleSource;
-		private int userId;
+//		private int userId;
 
 		private final Context context;
 
-		public SaveScheduleTask(Context c) {
+		private SaveScheduleTask(Context c) {
 			context = c;
 		}
 
@@ -158,29 +153,12 @@ public class SettingsActivity extends AppCompatActivity {
 						.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								String scheduleName = editText.getText().toString();
-								if (scheduleName.equalsIgnoreCase("")) {
-									scheduleName = "WBC Schedule " + String.valueOf(userId);
-								}
-								WBCDataDbHelper dbHelper = new WBCDataDbHelper(context);
-								dbHelper.getWritableDatabase();
-								dbHelper.insertUser(userId, scheduleName, scheduleSource);
-								dbHelper.close();
-
-								users.add(new User(userId, editText.getText().toString(), scheduleSource));
-
-								PreferenceManager.getDefaultSharedPreferences(context).edit()
-										.putInt(getResources().getString(R.string.pref_key_schedule_select), userId)
-										.apply();
-
-								currentUserId = userId;
+								scheduleName = editText.getText().toString();
 
 								if (radioGroup.getCheckedRadioButtonId() == R.id.schedule_import_replace) {
 									mergeSchedule(true);
 								} else if (radioGroup.getCheckedRadioButtonId() == R.id.schedule_import_merge) {
 									mergeSchedule(false);
-								} else {
-									SettingsFragment.updatePreferences();
 								}
 
 								dialog.dismiss();
@@ -226,16 +204,19 @@ public class SettingsActivity extends AppCompatActivity {
 			dbHelper.getWritableDatabase();
 
 			// insert new user
-			if (users == null) {
-				users = dbHelper.getUsers(null);
-			}
-			userId = users.size();
+			long userId = dbHelper.insertUser(scheduleName, scheduleSource);
+			dbHelper.close();
+			PreferenceManager.getDefaultSharedPreferences(context).edit()
+					.putLong(getResources().getString(R.string.pref_key_schedule_select), userId)
+					.apply();
+
+			MainActivity.userId = userId;
 
 			// insert created events
 			String title, location;
 			int eId, day, hour;
 			float duration;
-			int newEId = Constants.USER_EVENT_ID + dbHelper.getNumUserEvents();
+			int newEId = dbHelper.getNumUserEvents();
 
 			int[] oldIds = new int[createdEvents.length / 6];
 			int[] newEIds = new int[createdEvents.length / 6];
@@ -270,16 +251,12 @@ public class SettingsActivity extends AppCompatActivity {
 				note = eventNotes[i + 1];
 
 				newEId = -1;
-				if (eId >= Constants.USER_EVENT_ID) {
 					for (int j = 0; j < oldIds.length; j++) {
 						if (oldIds[j] == eId) {
 							newEId = newEIds[j];
 							break;
 						}
 					}
-				} else {
-					newEId = eId;
-				}
 
 				// check if event is also starred
 				starred = false;
@@ -302,16 +279,13 @@ public class SettingsActivity extends AppCompatActivity {
 				}
 				eId = Integer.valueOf(eIdString);
 				newEId = -1;
-				if (eId >= Constants.USER_EVENT_ID) {
-					for (int i = 0; i < oldIds.length; i++) {
-						if (oldIds[i] == eId) {
-							newEId = newEIds[i];
-							break;
-						}
+				for (int i = 0; i < oldIds.length; i++) {
+					if (oldIds[i] == eId) {
+						newEId = newEIds[i];
+						break;
 					}
-				} else {
-					newEId = eId;
 				}
+
 
 				// if star added in notes, don't edit event and erase note
 				if (newEId > -1) {
@@ -340,13 +314,17 @@ public class SettingsActivity extends AppCompatActivity {
 	}
 
 	private void showMergeScheduleDialog() {
-		String newSchedule = users.get(currentUserId).name;
-		String mySchedule = users.get(0).name;
+		WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
+		dbHelper.getReadableDatabase();
+		User defaultUser = dbHelper.getUsers("").get(0);
+		User currentUser = dbHelper.getUser(MainActivity.userId);
+		dbHelper.close();
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(getResources().getString(R.string.settings_schedule_merge)).setMessage(
-				"How do you want to save " + newSchedule + "? Do you want to merge with " + mySchedule + " or" +
-						"replace it? This operation cannot be undone.")
+				"How do you want to save " + currentUser.name + "? "
+						+ "Do you want to merge with " + defaultUser.name
+						+ " or replace it? This operation cannot be undone.")
 				.setPositiveButton("Replace", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -369,41 +347,38 @@ public class SettingsActivity extends AppCompatActivity {
 	}
 
 	private void mergeSchedule(boolean overwrite) {
-		new MergeScheduleTask(this).execute(overwrite ? 1 : 0);
+		new MergeScheduleTask(this).execute(overwrite);
 	}
 
-	class MergeScheduleTask extends AsyncTask<Integer, Void, Void> {
+	private class MergeScheduleTask extends AsyncTask<Boolean, Void, Void> {
 		private final Context context;
 
-		public MergeScheduleTask(Context c) {
+		private MergeScheduleTask(Context c) {
 			context = c;
 		}
 
 		@Override
 		protected void onPostExecute(Void aVoid) {
-			MainActivity.differentUser = true;
-			currentUserId = Constants.PRIMARY_USER_ID;
-
 			PreferenceManager.getDefaultSharedPreferences(context).edit()
-					.putInt(getResources().getString(R.string.pref_key_schedule_select), currentUserId)
+					.putLong(getResources().getString(R.string.pref_key_schedule_select), MainActivity.userId)
 					.apply();
 
-			SettingsFragment.updatePreferences();
+//			SettingsFragment.updatePreferences();
 
 			super.onPostExecute(aVoid);
 		}
 
 		@Override
-		protected Void doInBackground(Integer... params) {
-			boolean overwrite = params[0] == 1;
+		protected Void doInBackground(Boolean... params) {
+			boolean overwrite = params[0];
 
 			WBCDataDbHelper dbHelper = new WBCDataDbHelper(context);
 			dbHelper.getWritableDatabase();
 			if (overwrite) {
-				dbHelper.deleteUserData(Constants.PRIMARY_USER_ID);
+				dbHelper.deleteUserData(MainActivity.userId);
 			}
-			dbHelper.mergeUserData(currentUserId);
-			dbHelper.deleteUser(currentUserId);
+			dbHelper.mergeUserData(MainActivity.userId);
+//			dbHelper.deleteUser(MainActivity.userId);
 			dbHelper.close();
 
 			return null;
@@ -411,10 +386,10 @@ public class SettingsActivity extends AppCompatActivity {
 	}
 
 	public static class SettingsFragment extends PreferenceFragment {
-		private static Preference scheduleSelect;
-		private static Preference scheduleMerge;
-		private static Preference scheduleDelete;
-		private static Preference scheduleExport;
+		private Preference scheduleSelect;
+		private Preference scheduleMerge;
+		private Preference scheduleDelete;
+		private Preference scheduleExport;
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
@@ -422,18 +397,12 @@ public class SettingsActivity extends AppCompatActivity {
 
 			addPreferencesFromResource(R.xml.preferences);
 
-			WBCDataDbHelper dbHelper = new WBCDataDbHelper(getActivity());
-			dbHelper.getReadableDatabase();
-			users = dbHelper.getUsers(null);
-			dbHelper.close();
-
 			SharedPreferences sp = getPreferenceManager().getSharedPreferences();
 
 			Preference notify = findPreference(getResources().getString(R.string.pref_key_notify));
 			notify.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
-					notifyChanged = true;
 					return true;
 				}
 			});
@@ -451,7 +420,6 @@ public class SettingsActivity extends AppCompatActivity {
 			notifyType.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
-					notifyChanged = true;
 					preference.setSummary(notifyTypeEntries[Integer.valueOf((String) newValue)]);
 					return true;
 				}
@@ -496,29 +464,34 @@ public class SettingsActivity extends AppCompatActivity {
 				}
 			});
 
-			updatePreferences();
+//			updatePreferences();
 
 		}
 
-		public static void updatePreferences() {
-			if (currentUserId == Constants.PRIMARY_USER_ID) {
-				scheduleMerge.setEnabled(false);
-				scheduleDelete.setEnabled(false);
-			} else {
-				scheduleMerge.setEnabled(true);
-				scheduleDelete.setEnabled(true);
-			}
-
-			scheduleMerge.setSummary("Merge " + users.get(currentUserId).name + " with " +
-					users.get(Constants.PRIMARY_USER_ID).name + ".");
-			scheduleDelete.setSummary("Remove " + users.get(currentUserId).name + " from schedules");
-			scheduleExport
-					.setSummary("Export " + users.get(currentUserId).name + " to device storage (" + folder + ") and share");
-			scheduleSelect.setSummary("Current: " + users.get(currentUserId).name);
-		}
+//		public static void updatePreferences() {
+//			if (currentUserId == MainActivity.userId) {
+//				scheduleMerge.setEnabled(false);
+//				scheduleDelete.setEnabled(false);
+//			} else {
+//				scheduleMerge.setEnabled(true);
+//				scheduleDelete.setEnabled(true);
+//			}
+//
+//			scheduleMerge.setSummary("Merge " + users.get(currentUserId).name + " with " +
+//					users.get(MainActivity.userId).name + ".");
+//			scheduleDelete.setSummary("Remove " + users.get(currentUserId).name + " from schedules");
+//			scheduleExport
+//					.setSummary("Export " + users.get(currentUserId).name + " to device storage (" + folder + ") and share");
+//			scheduleSelect.setSummary("Current: " + users.get(currentUserId).name);
+//		}
 
 		public void showDeleteScheduleDialog() {
-			String scheduleName = users.get(currentUserId).name;
+			WBCDataDbHelper dbHelper = new WBCDataDbHelper(getActivity());
+			dbHelper.getReadableDatabase();
+			User currentUser = dbHelper.getUsers("").get(0);
+			dbHelper.close();
+
+			String scheduleName = currentUser.name;
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setTitle(getResources().getString(R.string.settings_schedule_delete))
@@ -541,17 +514,18 @@ public class SettingsActivity extends AppCompatActivity {
 		public void deleteSchedule() {
 			WBCDataDbHelper dbHelper = new WBCDataDbHelper(getActivity());
 			dbHelper.getWritableDatabase();
-			dbHelper.deleteUser(currentUserId);
-			dbHelper.deleteUserData(currentUserId);
+			dbHelper.deleteUser(MainActivity.userId);
+			dbHelper.deleteUserData(MainActivity.userId);
+
+			User currentUser = dbHelper.getUsers("").get(0);
 			dbHelper.close();
 
-			currentUserId = Constants.PRIMARY_USER_ID;
+
+			MainActivity.userId = currentUser.id;
 
 			PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-					.putInt(getResources().getString(R.string.pref_key_schedule_select), currentUserId)
-					.apply();
+					.putLong(getResources().getString(R.string.pref_key_schedule_select), MainActivity.userId).apply();
 
-			updatePreferences();
 		}
 	}
 
@@ -579,7 +553,7 @@ public class SettingsActivity extends AppCompatActivity {
 	}
 
 	private void share() {
-		int uId = currentUserId;
+		long uId = MainActivity.userId;
 		WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
 		dbHelper.getReadableDatabase();
 		List<Event> starred = dbHelper.getStarredEvents(uId);
@@ -697,15 +671,10 @@ public class SettingsActivity extends AppCompatActivity {
 
 	@Override
 	protected void onPause() {
-		if (notifyChanged) {
-			Intent intent = new Intent(this, UpdateService.class);
-			stopService(intent);
-			startService(intent);
-		}
+		Intent intent = new Intent(this, UpdateService.class);
+		stopService(intent);
+		startService(intent);
 
-		if (currentUserId != MainActivity.userId) {
-			MainActivity.differentUser = true;
-		}
 		super.onPause();
 	}
 

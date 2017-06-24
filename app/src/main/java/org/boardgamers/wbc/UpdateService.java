@@ -22,20 +22,15 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class UpdateService extends Service {
-	private final String TAG = "Notification Service";
+	private static final String TAG = "Notification Service";
 
 	private static int notificationType;
-	public static long currentDay;
-	public static int currentHour;
 
 	private final Handler handler = new Handler();
 
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		// GET CALENDAR FOR FIRST DAY
-		String[] daysForParsing = getResources().getStringArray(R.array.daysForParsing);
+	private static Calendar getFirstDayCalendar() {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("M/dd/yyyy HH:mm:ss z", Locale.ENGLISH);
-		String firstDayString = daysForParsing[0] + " 00:00:00 GMT-4";
+		String firstDayString = "7/22/2017 00:00:00 GMT-4";
 		Calendar firstDayCalendar = Calendar.getInstance();
 		try {
 			Date firstDayDate = dateFormatter.parse(firstDayString);
@@ -44,22 +39,22 @@ public class UpdateService extends Service {
 			Log.d(TAG, "Unable to parse firstDayString: " + firstDayString);
 		}
 
+		return firstDayCalendar;
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+
+
 		// GET CURRENT TIME IN EST
 		long milliHour = Constants.milliHour;
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT-4"));
-		currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-		currentDay = (calendar.getTimeInMillis() - firstDayCalendar.getTimeInMillis()) / (milliHour * 24);
-		if (currentDay <= 0) {
-			currentDay--;
-		}
 
 		// TESTING: set currentDay to day of week
 		//MainActivity.currentDay=(calendar.get(Calendar.DAY_OF_WEEK));
 
 		// SET DELAY TO NEXT HOUR, IN MILLIS, FOR UPDATE
 		calendar.setTimeInMillis(calendar.getTimeInMillis() / milliHour * milliHour + milliHour);
-		long delay = calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
-		handler.postDelayed(clockUpdate, delay);
 
 		// CHECK IF NOTIFICATION ACTIVE
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -71,8 +66,8 @@ public class UpdateService extends Service {
 			notificationType = Integer.valueOf(
 					sharedPref.getString(getResources().getString(R.string.pref_key_notify_type), "2"));
 
-			if (currentDay < 0) {
-				calendar = firstDayCalendar;
+			if (getHoursIntoConvention() < 0) {
+				calendar = getFirstDayCalendar();
 			} else {
 				calendar = Calendar.getInstance();
 				int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -83,7 +78,7 @@ public class UpdateService extends Service {
 				calendar.set(Calendar.MINUTE, 60 - notificationTime);
 				calendar.set(Calendar.SECOND, 0);
 			}
-			delay = calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
+			long delay = calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
 			handler.postDelayed(notificationUpdate, delay);
 		}
 		return super.onStartCommand(intent, flags, startId);
@@ -95,7 +90,7 @@ public class UpdateService extends Service {
 		List<Event> starredEvents = dbHelper.getStarredEvents(MainActivity.userId);
 		dbHelper.close();
 
-		int hoursIntoConvention = getHoursIntoConvention();
+		long hoursIntoConvention = getHoursIntoConvention();
 
 		String eventsString = "";
 		for (Event event : starredEvents) {
@@ -148,7 +143,6 @@ public class UpdateService extends Service {
 	@Override
 	public void onDestroy() {
 		handler.removeCallbacks(notificationUpdate);
-		handler.removeCallbacks(clockUpdate);
 		super.onDestroy();
 	}
 
@@ -168,36 +162,21 @@ public class UpdateService extends Service {
 		}
 	};
 
-	/**
-	 * Calls updateClock every hour, on the hour
-	 */
-	private final Runnable clockUpdate = new Runnable() {
-		@Override
-		public void run() {
-			handler.postDelayed(this, Constants.milliHour);
-			updateClock();
-		}
-	};
-
-	/**
-	 * Increment hour, if hour is 24 (midnight), set hour to 0 and increment day
-	 */
-	private void updateClock() {
-		Log.d("UPDATE", "Day is " + String.valueOf(currentDay) + " and hour is " + String.valueOf(currentHour));
-		currentHour++;
-		if (currentHour == 24) {
-			currentHour = 0;
-			currentDay++;
-		}
-		Log.d("UPDATE", "Update clock to " + String.valueOf(currentDay) + " and " + String.valueOf(currentHour));
-	}
 
 	/**
 	 * Get hours elapsed since midnight on the first day
 	 *
 	 * @return hours elapsed since midnight of the first day
 	 */
-	public static int getHoursIntoConvention() {
+	public static long getHoursIntoConvention() {
+
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT-4"));
+		long currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+		long currentDay = (calendar.getTimeInMillis() - getFirstDayCalendar().getTimeInMillis()) / (Constants.milliHour * 24);
+		if (currentDay <= 0) {
+			currentDay--;
+		}
+
 		Log.d("US", "Day is " + String.valueOf(currentDay) + " and hour is " + String.valueOf(currentHour));
 		if (currentDay < 0 || currentDay > Constants.TOTAL_DAYS) {
 			return -1;

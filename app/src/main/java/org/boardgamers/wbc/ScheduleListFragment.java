@@ -63,7 +63,7 @@ public class ScheduleListFragment extends DefaultListFragment {
 	 * @return groupNumber
 	 */
 	private int getCurrentGroup() {
-		int hoursIntoConvention = UpdateService.getHoursIntoConvention();
+		int hoursIntoConvention = (int) UpdateService.getHoursIntoConvention();
 
 		if (hoursIntoConvention == -1) {
 			return 0;
@@ -72,8 +72,8 @@ public class ScheduleListFragment extends DefaultListFragment {
 		}
 	}
 
-	class PopulateScheduleAdapterTask extends PopulateAdapterTask {
-		public PopulateScheduleAdapterTask(Context c, int g) {
+	private class PopulateScheduleAdapterTask extends PopulateAdapterTask {
+		private PopulateScheduleAdapterTask(Context c, int g) {
 			context = c;
 			numGroups = g;
 
@@ -97,18 +97,16 @@ public class ScheduleListFragment extends DefaultListFragment {
 			List<Event> tempEvents = dbHelper.getAllEvents(MainActivity.userId);
 			dbHelper.close();
 
-			boolean[] visible = new boolean[tournaments.size()];
-			for (Tournament tournament : tournaments) {
-				visible[tournament.id] = tournament.visible;
-			}
-
 			Event event;
 			int group;
+			A:
 			while (tempEvents.size() > 0) {
 				event = tempEvents.remove(0);
 
-				if (event.id < Constants.USER_EVENT_ID && !visible[event.tournamentID]) {
-					continue;
+				for (Tournament tournament : tournaments) {
+					if (tournament.id == event.tournamentID && !tournament.visible) {
+						continue A;
+					}
 				}
 
 				group = event.day * GROUPS_PER_DAY + (int) event.hour - 6;
@@ -129,14 +127,14 @@ public class ScheduleListFragment extends DefaultListFragment {
 		}
 	}
 
-	class ScheduleListAdapter extends DefaultListAdapter implements SectionIndexer {
+	private class ScheduleListAdapter extends DefaultListAdapter implements SectionIndexer {
 		// 18 hours per day (0700 thru 2400) plus "My Events"
 		private final int GROUP_HOUR_OFFSET = 7 - 1;    // first hour is 7, offset 1 hour for "My Events"
 
 		private final String[] hours;
 		private final String[] sections;
 
-		public ScheduleListAdapter(Context c, List<List<Event>> e, int i) {
+		private ScheduleListAdapter(Context c, List<List<Event>> e, int i) {
 			super(c, e, i);
 
 			hours = c.getResources().getStringArray(R.array.hours_24);

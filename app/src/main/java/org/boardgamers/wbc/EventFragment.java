@@ -190,11 +190,7 @@ public class EventFragment extends Fragment {
 			dbHelper.getReadableDatabase();
 			event = dbHelper.getEvent(MainActivity.userId, id);
 
-			if (event.id < Constants.USER_EVENT_ID) {
-				tournament = dbHelper.getTournament(MainActivity.userId, event.tournamentID);
-			} else {
-				tournament = null;
-			}
+			tournament = dbHelper.getTournament(MainActivity.userId, event.tournamentID);
 
 			dbHelper.close();
 
@@ -252,7 +248,7 @@ public class EventFragment extends Fragment {
 			clearButton.setEnabled(true);
 			shareButton.setEnabled(true);
 
-			int hoursIntoConvention = UpdateService.getHoursIntoConvention();
+			long hoursIntoConvention = UpdateService.getHoursIntoConvention();
 			boolean started = event.day * 24 + event.hour <= hoursIntoConvention;
 			boolean ended = event.day * 24 + event.hour + event.duration <= hoursIntoConvention;
 			boolean happening = started && !ended;
@@ -351,7 +347,7 @@ public class EventFragment extends Fragment {
 			String note = noteET.getText().toString();
 			int finish;
 
-			if (event.tournamentID < Constants.USER_EVENT_ID && tournament.isTournament) {
+			if (tournament != null && tournament.isTournament) {
 				finish = 0;
 				for (int i = 0; i < finishButtons.length; i++) {
 					if (finishButtons[i].isChecked()) {

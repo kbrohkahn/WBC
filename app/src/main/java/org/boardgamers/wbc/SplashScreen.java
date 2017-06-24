@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class SplashScreen extends AppCompatActivity {
+	private static final String TAG = "SplashScreen";
+
 	private ProgressBar progressBar;
 	private int currentNumEvents;
 
@@ -25,7 +28,7 @@ public class SplashScreen extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		int TOTAL_EVENTS = 1096;
+		int TOTAL_EVENTS = 751;
 
 		WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
 		dbHelper.onUpgrade(dbHelper.getWritableDatabase(), dbHelper.getVersion(),
@@ -34,7 +37,9 @@ public class SplashScreen extends AppCompatActivity {
 		currentNumEvents = dbHelper.getNumEvents();
 		dbHelper.close();
 
-		if (currentNumEvents == TOTAL_EVENTS) {
+		Log.d(TAG, "There are currently " + String.valueOf(currentNumEvents) + " events in DB");
+
+		if (currentNumEvents >= TOTAL_EVENTS) {
 			checkForChanges();
 		} else {
 			setContentView(R.layout.splash);
@@ -44,7 +49,7 @@ public class SplashScreen extends AppCompatActivity {
 			setTitle(getResources().getString(R.string.activity_splash));
 
 			progressBar = (ProgressBar) findViewById(R.id.splash_progress);
-			progressBar.setMax(TOTAL_EVENTS - currentNumEvents);
+			progressBar.setMax(TOTAL_EVENTS);
 
 			new LoadEventsTask(this).execute(0, 0, 0);
 		}
@@ -144,8 +149,10 @@ public class SplashScreen extends AppCompatActivity {
 
 			WBCDataDbHelper dbHelper = new WBCDataDbHelper(context);
 			dbHelper.getWritableDatabase();
-			MainActivity.userId =
-					(int) dbHelper.insertUser(Constants.PRIMARY_USER_ID, "My Schedule", "");
+			MainActivity.userId = (int) dbHelper.insertUser("My Schedule", "");
+			PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()
+					.putLong(getResources().getString(R.string.pref_key_schedule_select), MainActivity.userId).apply();
+
 
 			// parse schedule file
 			BufferedReader reader = new BufferedReader(isr);
@@ -190,7 +197,13 @@ public class SplashScreen extends AppCompatActivity {
 					eventTitle = rowData[2];
 
 					// time
-					hour = Float.valueOf(rowData[1]);
+					int colonIndex = rowData[1].indexOf(":");
+					if (colonIndex == -1) {
+						hour = Float.valueOf(rowData[1]);
+					} else {
+						hour = Float.valueOf(rowData[1].substring(0, colonIndex))
+								+ Float.valueOf(rowData[1].substring(colonIndex + 1)) / 60;
+					}
 
 					if (rowData.length < 8) {
 						prize = 0;
@@ -344,8 +357,8 @@ public class SplashScreen extends AppCompatActivity {
 				reader.close();
 
 				// get total count
-				int tournamentCount = dbHelper.getAllTournaments(Constants.PRIMARY_USER_ID).size();
-				int eventCount = dbHelper.getAllEvents(Constants.PRIMARY_USER_ID).size();
+				int tournamentCount = dbHelper.getAllTournaments(MainActivity.userId).size();
+				int eventCount = dbHelper.getAllEvents(MainActivity.userId).size();
 				dbHelper.close();
 
 				// log statistics

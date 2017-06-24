@@ -520,7 +520,7 @@ public class DefaultListFragment extends Fragment {
 		dbHelper.close();
 	}
 
-	private void setSelectedEvent(int id) {
+	private void setSelectedEvent(long id) {
 		EventFragment eventFragment = (EventFragment) this.getFragmentManager()
 				.findFragmentById(R.id.eventFragment);
 		if (eventFragment != null) {

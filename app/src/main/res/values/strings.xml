@@ -3,7 +3,7 @@
 
 	<!-- APP DETAILS -->
 	<string name="app_name_long">World Boardgaming Championships</string>
-	<string name="app_name_short">WBC 2016</string>
+	<string name="app_name_short">WBC 2017</string>
 	<string name="email">dev@boardgamers.org</string>
 	<string name="notification_title">WBC: Events starting soon</string>
 
@@ -202,26 +202,26 @@
 
 	<!-- APP SPECIFIC STRINGS AND ARRAYS -->
 	<string-array name="daysForParsing">
-		<item>7/23/2016</item>
-		<item>7/24/2016</item>
-		<item>7/25/2016</item>
-		<item>7/26/2016</item>
-		<item>7/27/2016</item>
-		<item>7/28/2016</item>
-		<item>7/29/2016</item>
-		<item>7/30/2016</item>
-		<item>7/31/2016</item>
+		<item>7/22/2017</item>
+		<item>7/23/2017</item>
+		<item>7/24/2017</item>
+		<item>7/25/2017</item>
+		<item>7/26/2017</item>
+		<item>7/27/2017</item>
+		<item>7/28/2017</item>
+		<item>7/29/2017</item>
+		<item>7/30/2017</item>
 	</string-array>
 	<string-array name="days">
-		<item>PC Sa 7/23/1</item>
-		<item>PC Su 7/24</item>
-		<item>Mo 7/25</item>
-		<item>Tu 7/26</item>
-		<item>We 7/27</item>
-		<item>Th 7/28</item>
-		<item>Fr 7/29</item>
-		<item>Sa 7/30</item>
-		<item>Su 7/31</item>
+		<item>PC Sa 7/22/1</item>
+		<item>PC Su 7/23</item>
+		<item>Mo 7/24</item>
+		<item>Tu 7/25</item>
+		<item>We 7/26</item>
+		<item>Th 7/27</item>
+		<item>Fr 7/28</item>
+		<item>Sa 7/29</item>
+		<item>Su 7/30</item>
 	</string-array>
 	<string-array name="rooms_convention_center">
 		<item>Alpine</item>
@@ -247,14 +247,14 @@
 		<item>Hemlock</item>
 		<item>Laurel</item>
 		<item>Seasons 1</item>
-		<item>Seasons 1-2</item>
+		<item>Seasons 1&#8211;2</item>
 		<item>Seasons 2</item>
-		<item>Seasons 2-4</item>
-		<item>Seasons 2-5</item>
+		<item>Seasons 2&#8211;4</item>
+		<item>Seasons 2&#8211;5</item>
 		<item>Seasons 3</item>
-		<item>Seasons 3-4</item>
-		<item>Seasons 3-5</item>
-		<item>Seasons 4-5</item>
+		<item>Seasons 3&#8211;4</item>
+		<item>Seasons 3&#8211;5</item>
+		<item>Seasons 4&#8211;5</item>
 		<item>Seasons 5</item>
 		<item>Snowflake Forum</item>
 		<item>Stag Pass</item>
@@ -304,10 +304,10 @@
 		<item>Maple Room</item>
 		<item>Rathskeller</item>
 		<item>Seasons 1</item>
-		<item>Seasons 1-2</item>
+		<item>Seasons 1&#8211;2</item>
 		<item>Seasons 2</item>
-		<item>Seasons 2-4</item>
-		<item>Seasons 2-5</item>
+		<item>Seasons 2&#8211;4</item>
+		<item>Seasons 25</item>
 		<item>Seasons 3</item>
 		<item>Seasons 3-4</item>
 		<item>Seasons 3-5</item>

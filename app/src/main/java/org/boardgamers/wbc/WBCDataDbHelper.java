@@ -17,7 +17,7 @@ import java.util.List;
 class WBCDataDbHelper extends SQLiteOpenHelper {
 	private final String TAG = "WBCDataDbHelper";
 
-	static final int DATABASE_VERSION = 6;
+	static final int DATABASE_VERSION = 12;
 
 	private static final String DATABASE_NAME = "WBCdata.db";
 
@@ -53,7 +53,7 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 
 	static abstract class UserEntry implements BaseColumns {
 		static final String TABLE_NAME = "user";
-		static final String COLUMN_USER_ID = "u_id";
+		//		static final String COLUMN_USER_ID = "u_id";
 		static final String COLUMN_NAME = "name";
 		static final String COLUMN_EMAIL = "email";
 		static final String COLUMN_NULLABLE = "null";
@@ -119,7 +119,7 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 
 	private static final String SQL_CREATE_USER_ENTRIES = "CREATE TABLE " + UserEntry.TABLE_NAME + " (" +
 			UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-			UserEntry.COLUMN_USER_ID + " INTEGER UNIQUE," +
+//			UserEntry.COLUMN_USER_ID + " INTEGER UNIQUE," +
 			UserEntry.COLUMN_NAME + " TEXT," +
 			UserEntry.COLUMN_EMAIL + " TEXT)";
 
@@ -184,10 +184,13 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		db.execSQL(SQL_CREATE_USER_TOURNAMENT_DATA_ENTRIES);
 
 		String SQL_CREATE_USER_EVENT_ENTRIES = SQL_CREATE_EVENT_ENTRIES.replace(
-				EventEntry.TABLE_NAME, UserEventDataEntry.TABLE_NAME);
+				EventEntry.TABLE_NAME, UserCreatedEventEntry.TABLE_NAME);
 		SQL_CREATE_USER_EVENT_ENTRIES = SQL_CREATE_USER_EVENT_ENTRIES.replace(
-				");",
-				"," + UserCreatedEventEntry.COLUMN_USER_ID + " INTEGER);");
+				UserCreatedEventEntry.TABLE_NAME + " (",
+				UserCreatedEventEntry.TABLE_NAME + " (" + UserCreatedEventEntry.COLUMN_USER_ID + " INTEGER, ");
+
+		Log.d(TAG, "User created event table code: " + SQL_CREATE_USER_EVENT_ENTRIES);
+
 		db.execSQL(SQL_CREATE_USER_EVENT_ENTRIES);
 	}
 
@@ -279,37 +282,37 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		return count;
 	}
 
-	List<Event> getUserEvents(int userId) {
+	List<Event> getUserEvents(long userId) {
 		return getEvents(userId, true, false, "");
 	}
 
-	List<Event> getAllEvents(int userId) {
+	List<Event> getAllEvents(long userId) {
 		return getEvents(userId, true, true, "");
 	}
 
-	List<Event> getStarredEvents(int userId) {
+	List<Event> getStarredEvents(long userId) {
 		return getEvents(userId, true, true,
 				UserEventDataEntry.TABLE_NAME + "." + UserEventDataEntry.COLUMN_STARRED + "=1");
 	}
 
-	List<Event> getEventsWithNotes(int userId) {
+	List<Event> getEventsWithNotes(long userId) {
 		return getEvents(userId, true, true,
 				"ifnull(" + UserEventDataEntry.TABLE_NAME + "." + UserEventDataEntry.COLUMN_NOTE + ", '') !='' ");
 	}
 
-	List<Event> getEventsFromSearchString(int userId, String searchString) {
+	List<Event> getEventsFromSearchString(long userId, String searchString) {
 		return getEvents(userId, true, true,
 				EventEntry.TABLE_NAME + "." + EventEntry.COLUMN_TITLE + " LIKE '%" + searchString + "%' OR " +
 						EventEntry.TABLE_NAME + "." + EventEntry.COLUMN_FORMAT + " LIKE '%" + searchString + "%')");
 	}
 
-	List<Event> getTournamentEvents(int userId, long tournamentId) {
+	List<Event> getTournamentEvents(long userId, long tournamentId) {
 		String where = EventEntry.TABLE_NAME + "." + EventEntry.COLUMN_TOURNAMENT_ID + "=" +
 				String.valueOf(tournamentId);
 		return getEvents(userId, true, true, where);
 	}
 
-	Event getFinalEvent(int userId, long tournamentId) {
+	Event getFinalEvent(long userId, long tournamentId) {
 		String where = EventEntry.TABLE_NAME + "." + EventEntry.COLUMN_TOURNAMENT_ID + "=" + String.valueOf(tournamentId)
 				+ " AND (" + EventEntry.COLUMN_TITLE + "= 'SF/F' "
 				+ " OR " + EventEntry.COLUMN_TITLE + "= 'F' )";
@@ -322,7 +325,7 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		}
 	}
 
-	Event getEvent(int userId, long eventId) {
+	Event getEvent(long userId, long eventId) {
 		String where = EventEntry.TABLE_NAME + "." + EventEntry._ID + "=" + String.valueOf(eventId);
 		List<Event> events = getEvents(userId, true, true, where);
 
@@ -333,19 +336,19 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		}
 	}
 
-	private List<Event> getEvents(int uId, boolean includeUserEvents, boolean includeTournaments, String whereClause) {
+	private List<Event> getEvents(long uId, boolean includeUserEvents, boolean includeTournaments, String whereClause) {
 		if (!whereClause.equalsIgnoreCase("")) {
 			whereClause += " AND ";
 		}
 
-		whereClause += "( ifnull(" + UserEventDataEntry.TABLE_NAME + "." + UserEventDataEntry.COLUMN_USER_ID
-				+ ", " + String.valueOf(uId) + ") = " + String.valueOf(uId) + " )";
+		whereClause += " ifnull(" + UserEventDataEntry.TABLE_NAME + "." + UserEventDataEntry.COLUMN_USER_ID
+				+ ", " + String.valueOf(uId) + ") = " + String.valueOf(uId) + " ";
 
 		String sortOrder = EventEntry.COLUMN_DAY + " ASC, " + EventEntry.COLUMN_HOUR + " ASC, " +
 				EventEntry.COLUMN_QUALIFY + " ASC, " + EventEntry.COLUMN_TITLE + " ASC";
 
 		String columnsQuery = "SELECT "
-				+ EventEntry._ID + ", "
+				+ EventEntry.TABLE_NAME + "." + EventEntry._ID + " as " + EventEntry._ID + ", "
 				+ EventEntry.COLUMN_TOURNAMENT_ID + ", "
 				+ EventEntry.COLUMN_DAY + ", "
 				+ EventEntry.COLUMN_HOUR + ", "
@@ -363,21 +366,24 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		if (includeTournaments && includeUserEvents) {
 			query = columnsQuery + " (" + columnsQuery + EventEntry.TABLE_NAME +
 					" UNION ALL " + columnsQuery + UserCreatedEventEntry.TABLE_NAME
-					+ " WHERE " + UserCreatedEventEntry.TABLE_NAME + "."
-					+ UserCreatedEventEntry.COLUMN_USER_ID + "=" + String.valueOf(uId) + ") )";
+					+ " AS " + EventEntry.TABLE_NAME + " WHERE " + EventEntry.TABLE_NAME + "."
+					+ UserCreatedEventEntry.COLUMN_USER_ID + "=" + String.valueOf(uId) + " ) as "
+					+ EventEntry.TABLE_NAME;
 		} else if (includeTournaments) {
 			query = columnsQuery + EventEntry.TABLE_NAME;
 		} else if (includeUserEvents) {
-			query = columnsQuery + UserCreatedEventEntry.TABLE_NAME
-					+ " WHERE " + UserCreatedEventEntry.TABLE_NAME + "."
-					+ UserCreatedEventEntry.COLUMN_USER_ID + "=" + String.valueOf(uId) + ") ";
+			query = columnsQuery + " ( " + columnsQuery + UserCreatedEventEntry.TABLE_NAME + " AS " + EventEntry.TABLE_NAME
+					+ " WHERE " + EventEntry.TABLE_NAME + "."
+					+ UserCreatedEventEntry.COLUMN_USER_ID + "=" + String.valueOf(uId) + " ) as "
+					+ EventEntry.TABLE_NAME;
 		} else {
 			return null;
 		}
 
+
 		query = "SELECT "
 				+ UserEventDataEntry.COLUMN_STARRED + ", "
-				+ UserEventDataEntry.COLUMN_NOTE + query.substring(7)
+				+ UserEventDataEntry.COLUMN_NOTE + ", " + query.substring(6)
 				+ " LEFT JOIN " + UserEventDataEntry.TABLE_NAME
 				+ " ON " + EventEntry.TABLE_NAME + "." + EventEntry._ID
 				+ "=" + UserEventDataEntry.TABLE_NAME + "." + UserEventDataEntry.COLUMN_EVENT_ID
@@ -394,11 +400,11 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		Event event;
 		List<Event> events = new ArrayList<>();
 
-//		cursor.moveToFirst();
-//		cursor.moveToPrevious();
 
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
-		do {
+		cursor.moveToFirst();
+		cursor.moveToPrevious();
+		while (cursor.moveToNext()) {
 			id = cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry._ID));
 			tournamentId = cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_TOURNAMENT_ID));
 			day = cursor.getInt(cursor.getColumnIndexOrThrow(EventEntry.COLUMN_DAY));
@@ -424,7 +430,8 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 
 			events.add(event);
 
-		} while (cursor.moveToNext());
+		}
+		;
 
 		cursor.close();
 
@@ -432,7 +439,7 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 	}
 
 	long getTournamentID(String title) {
-		String where = TournamentEntry.TABLE_NAME + "." + TournamentEntry.COLUMN_TITLE + "=\"" + title + "\"";
+		String where = TournamentEntry.TABLE_NAME + "." + TournamentEntry.COLUMN_TITLE + "='" + title.replace("'", "''") + "'";
 		String query = "SELECT * FROM " + TournamentEntry.TABLE_NAME + " WHERE " + where;
 
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
@@ -453,27 +460,31 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 				.query(TournamentEntry.TABLE_NAME, null, selection, null, null, null, sortOrder);
 	}
 
-	Tournament getTournament(int userId, long tournamentId) {
+	Tournament getTournament(long userId, long tournamentId) {
 		String where = TournamentEntry.TABLE_NAME + "." + TournamentEntry._ID + "=" +
 				String.valueOf(tournamentId);
 		List<Tournament> tournaments = getTournaments(userId, where);
 
-		return tournaments.get(0);
+		if (tournaments != null && tournaments.size() > 0) {
+			return tournaments.get(0);
+		} else {
+			return null;
+		}
 	}
 
-	List<Tournament> getTournamentsWithFinishes(int userId) {
+	List<Tournament> getTournamentsWithFinishes(long userId) {
 		String where = UserTournamentDataEntry.TABLE_NAME + "." + UserTournamentDataEntry.COLUMN_FINISH +
 				"!=0 AND " + UserTournamentDataEntry.TABLE_NAME + "." +
 				UserTournamentDataEntry.COLUMN_FINISH + " IS NOT NULL";
 		return getTournaments(userId, where);
 	}
 
-	List<Tournament> getAllTournaments(int userId) {
+	List<Tournament> getAllTournaments(long userId) {
 		String where = "";
 		return getTournaments(userId, where);
 	}
 
-	private List<Tournament> getTournaments(int uId, String where) {
+	private List<Tournament> getTournaments(long uId, String where) {
 		String sortOrder = TournamentEntry.COLUMN_TITLE + " ASC";
 
 		if (!where.equalsIgnoreCase("")) {
@@ -533,7 +544,7 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 
 	}
 
-	long insertUserEvent(int uId, String title, int day, int hour, float duration, String location) {
+	long insertUserEvent(long uId, String title, int day, int hour, float duration, String location) {
 		ContentValues values = new ContentValues();
 		values.put(UserCreatedEventEntry.COLUMN_USER_ID, uId);
 		values.put(EventEntry.COLUMN_TITLE, title);
@@ -547,19 +558,19 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 				.insert(UserCreatedEventEntry.TABLE_NAME, EventEntry.COLUMN_NULLABLE, values);
 	}
 
-	long deleteUserEvent(int eId) {
+	long deleteUserEvent(long eId) {
 		String where = UserCreatedEventEntry._ID + "=" + String.valueOf(eId);
 		return sqLiteDatabase.delete(UserCreatedEventEntry.TABLE_NAME, where, null);
 	}
 
-	long deleteAllUserEvents(int uID) {
+	long deleteAllUserEvents(long uID) {
 		String where = UserCreatedEventEntry.COLUMN_USER_ID + "=" + String.valueOf(uID);
 		return sqLiteDatabase.delete(UserCreatedEventEntry.TABLE_NAME, where, null);
 	}
 
-	long insertUser(int uId, String name, String email) {
+	long insertUser(String name, String email) {
 		ContentValues values = new ContentValues();
-		values.put(UserEntry.COLUMN_USER_ID, uId);
+//		values.put(UserEntry.COLUMN_USER_ID, uId);
 		values.put(UserEntry.COLUMN_NAME, name);
 		values.put(UserEntry.COLUMN_EMAIL, email);
 
@@ -567,8 +578,8 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		return sqLiteDatabase.insert(UserEntry.TABLE_NAME, UserEntry.COLUMN_NULLABLE, values);
 	}
 
-	User getUser(int id) {
-		List<User> users = getUsers(UserEntry.COLUMN_USER_ID + "=" + String.valueOf(id));
+	User getUser(long id) {
+		List<User> users = getUsers(UserEntry._ID + "=" + String.valueOf(id));
 
 		return users.get(0);
 	}
@@ -581,7 +592,7 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		String name, email;
 		if (cursor.moveToFirst()) {
 			do {
-				id = cursor.getInt(cursor.getColumnIndex(UserEntry.COLUMN_USER_ID));
+				id = cursor.getInt(cursor.getColumnIndex(UserEntry._ID));
 				name = cursor.getString(cursor.getColumnIndex(UserEntry.COLUMN_NAME));
 				email = cursor.getString(cursor.getColumnIndex(UserEntry.COLUMN_EMAIL));
 
@@ -592,17 +603,17 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		return users;
 	}
 
-	long deleteUser(int userId) {
+	long deleteUser(long userId) {
 		String where;
 		if (userId == -1) {
 			where = "";
 		} else {
-			where = UserEntry.COLUMN_USER_ID + "=" + String.valueOf(userId);
+			where = UserEntry._ID + "=" + String.valueOf(userId);
 		}
 		return sqLiteDatabase.delete(UserEntry.TABLE_NAME, where, null);
 	}
 
-	long deleteUserData(int userId) {
+	long deleteUserData(long userId) {
 		String where;
 
 		if (userId == -1) {
@@ -629,10 +640,10 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
-	long mergeUserData(int userId) {
+	long mergeUserData(long userId) {
 		ContentValues values = new ContentValues();
 
-		values.put("user_id", Constants.PRIMARY_USER_ID);
+		values.put("user_id", MainActivity.userId);
 
 		String where = UserEventDataEntry.COLUMN_USER_ID + "=" + String.valueOf(userId);
 		int result = sqLiteDatabase
@@ -666,7 +677,7 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
-	long insertUserTournamentData(int userId, int tournamentId, int finish) {
+	long insertUserTournamentData(long userId, long tournamentId, int finish) {
 		ContentValues values = new ContentValues();
 		values.put(UserTournamentDataEntry.COLUMN_FINISH, finish);
 
@@ -687,7 +698,7 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
-	long insertUserEventData(int userId, int eventId, boolean starred, String note) {
+	long insertUserEventData(long userId, long eventId, boolean starred, String note) {
 		ContentValues values = new ContentValues();
 		values.put(UserEventDataEntry.COLUMN_STARRED, starred ? 1 : 0);
 		values.put(UserEventDataEntry.COLUMN_NOTE, note);
@@ -706,7 +717,7 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
-	long insertUserEventData(int userId, List<Event> changedEvents) {
+	long insertUserEventData(long userId, List<Event> changedEvents) {
 		Event event;
 		long result = 0;
 		for (int i = 0; i < changedEvents.size(); i++) {

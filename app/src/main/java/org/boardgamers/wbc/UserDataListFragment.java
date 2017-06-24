@@ -232,8 +232,8 @@ public class UserDataListFragment extends DefaultListFragment {
 		}
 	}
 
-	class UserDataListAdapter extends DefaultListAdapter {
-		public UserDataListAdapter(Context c, List<List<Event>> e, int i) {
+	private class UserDataListAdapter extends DefaultListAdapter {
+		private UserDataListAdapter(Context c, List<List<Event>> e, int i) {
 			super(c, e, i);
 		}
 
@@ -285,7 +285,7 @@ public class UserDataListFragment extends DefaultListFragment {
 			Event tempEvent;
 
 			for (Event event : updatedEvents) {
-				if (event.id < Constants.USER_EVENT_ID) {
+				if (event.tournamentID == 0) {
 					continue;
 				}
 

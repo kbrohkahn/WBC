@@ -42,11 +42,10 @@ import java.util.regex.Pattern;
 public class MainActivity extends AppCompatActivity {
 	private final static String TAG = "Main Activity";
 
-	public static int selectedEventId = -1;
-	public static int userId = -1;
+	public static long selectedEventId = -1;
+	public static long userId = -1;
 
 	private static String packageName;
-	public static boolean differentUser = false;
 	private boolean fromFilter = false;
 	public static boolean opened = false;
 
@@ -128,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 	private void loadUserData() {
 		Log.d(TAG, "Loading");
 		userId = PreferenceManager.getDefaultSharedPreferences(this)
-				.getInt(getResources().getString(R.string.pref_key_schedule_select), Constants.PRIMARY_USER_ID);
+				.getLong(getResources().getString(R.string.pref_key_schedule_select), MainActivity.userId);
 
 		WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
 		dbHelper.getReadableDatabase();
@@ -145,25 +144,18 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onResume() {
-		if (differentUser) {
-			differentUser = false;
+		// TODO better implementation
+		//loadUserData();
+		//pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
 
-			recreate();
+		if (fromFilter) {
+			fromFilter = false;
+			pagerAdapter.getItem(1).reloadAdapterData();
+		}
 
-			// TODO better implementation
-			//loadUserData();
-			//pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
-		} else {
-			if (fromFilter) {
-				fromFilter = false;
-				pagerAdapter.getItem(1).reloadAdapterData();
-			}
-
-			Log.d("Main", "Day is " + String.valueOf(UpdateService.currentDay) + " and hour is " + String.valueOf(UpdateService.currentHour));
-			for (int j = 0; j < 3; j++) {
-				if (pagerAdapter.getItem(j) != null) {
-					pagerAdapter.getItem(j).refreshAdapter();
-				}
+		for (int j = 0; j < 3; j++) {
+			if (pagerAdapter.getItem(j) != null) {
+				pagerAdapter.getItem(j).refreshAdapter();
 			}
 		}
 
@@ -212,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
 
 		return id == 0 ? R.drawable.box_iv_no_image_text : id;
 	}
-
 
 
 	public static String getDisplayHour(float startHour, float duration) {
