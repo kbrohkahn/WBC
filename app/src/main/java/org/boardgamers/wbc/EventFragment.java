@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +60,7 @@ public class EventFragment extends Fragment {
 	private int roomID;
 	private boolean overlayOn;
 	private boolean runnableActive;
-	private Handler handler = new Handler();
+	private final Handler handler = new Handler();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -281,12 +280,7 @@ public class EventFragment extends Fragment {
 				reportTV.setVisibility(View.VISIBLE);
 
 				int boxId = MainActivity.getBoxIdFromLabel(tournament.label, getResources());
-				if (boxId == 0) {
-					boxIV.setImageResource(R.drawable.box_iv_no_image_text);
-					Log.d("", "not found");
-				} else {
-					boxIV.setImageResource(boxId);
-				}
+				boxIV.setImageResource(boxId);
 
 				// if last event started, allow finish
 				for (int i = 0; i <= 6; i++) {

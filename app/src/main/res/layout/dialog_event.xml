@@ -15,7 +15,7 @@
 			android:layout_marginTop="@dimen/layout_margin_small"
 			android:hint="@string/title"
 			android:imeOptions="actionNext"
-			android:singleLine="true"/>
+			android:maxLines="1"/>
 
 		<LinearLayout
 			android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
 			android:layout_marginTop="@dimen/layout_margin_large"
 			android:hint="@string/location"
 			android:imeOptions="actionDone"
-			android:singleLine="true"/>
+			android:maxLines="1"/>
 
 		<TextView
 			android:id="@+id/ce_days"

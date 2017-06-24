@@ -111,7 +111,7 @@ public class DialogCreateEvent extends DialogFragment {
 		Event event;
 		for (int day = 0; day < days.length; day++) {
 			if (days[day].isChecked()) {
-				dbHelper.insertUserEvent(id, MainActivity.userId, title, day, hour, duration, location);
+				dbHelper.insertUserEvent(MainActivity.userId, title, day, hour, duration, location);
 				event =
 						new Event(id, Constants.USER_EVENT_ID + MainActivity.userId, day, hour, title, "", "",
 								false, duration, false, duration, location);

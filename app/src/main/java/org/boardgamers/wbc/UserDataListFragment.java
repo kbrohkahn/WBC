@@ -111,7 +111,7 @@ public class UserDataListFragment extends DefaultListFragment {
 
 		if (!finishInList && finish > 0) {
 			Tournament tournamentFinish = dbHelper.getTournament(MainActivity.userId, tournamentId);
-			Event eventFinish = dbHelper.getEvent(MainActivity.userId, tournamentFinish.finalEventId);
+			Event eventFinish = dbHelper.getFinalEvent(MainActivity.userId, tournamentFinish.id);
 
 			eventFinish.title += ": " + finishStrings[tournamentFinish.finish - 1];
 			eventFinish.note = String.valueOf(tournamentFinish.finish);
@@ -203,7 +203,7 @@ public class UserDataListFragment extends DefaultListFragment {
 			dbHelper.getReadableDatabase();
 
 			events = new ArrayList<>();
-			events.add(dbHelper.getUserEvents(MainActivity.userId, ""));
+			events.add(dbHelper.getUserEvents(MainActivity.userId));
 			List<Event> eventNotes = dbHelper.getEventsWithNotes(MainActivity.userId);
 			List<Tournament> tournamentFinishes = dbHelper.getTournamentsWithFinishes(MainActivity.userId);
 
@@ -215,7 +215,7 @@ public class UserDataListFragment extends DefaultListFragment {
 			List<Event> eventFinishes = new ArrayList<>();
 			for (Tournament tournament : tournamentFinishes) {
 				Tournament tournamentFinish = dbHelper.getTournament(MainActivity.userId, tournament.id);
-				Event eventFinish = dbHelper.getEvent(MainActivity.userId, tournamentFinish.finalEventId);
+				Event eventFinish = dbHelper.getFinalEvent(MainActivity.userId, tournamentFinish.id);
 
 				eventFinish.title += ": " + finishStrings[tournamentFinish.finish - 1];
 				eventFinish.note = String.valueOf(tournamentFinish.finish);
@@ -345,8 +345,7 @@ public class UserDataListFragment extends DefaultListFragment {
 	private void deleteEvent(int index) {
 		WBCDataDbHelper dbHelper = new WBCDataDbHelper(getActivity());
 		dbHelper.getWritableDatabase();
-		dbHelper.deleteUserEvent(MainActivity.userId,
-				listAdapter.events.get(UserDataListFragment.EVENTS_INDEX).get(index).id);
+		dbHelper.deleteUserEvent(listAdapter.events.get(UserDataListFragment.EVENTS_INDEX).get(index).id);
 		dbHelper.close();
 
 		Event[] deletedEvents = new Event[]{listAdapter.events.get(UserDataListFragment.EVENTS_INDEX).remove(index)};

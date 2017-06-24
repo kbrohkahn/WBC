@@ -242,11 +242,11 @@ public class DefaultListFragment extends Fragment {
 	class DefaultListAdapter extends BaseExpandableListAdapter {
 		//private final String TAG="Default Adapter";
 
-		private int COLOR_JUNIOR;
-		private int COLOR_SEMINAR;
-		private int COLOR_QUALIFY;
-		private int COLOR_OPEN_TOURNAMENT;
-		private int COLOR_NON_TOURNAMENT;
+		private final int COLOR_JUNIOR;
+		private final int COLOR_SEMINAR;
+		private final int COLOR_QUALIFY;
+		private final int COLOR_OPEN_TOURNAMENT;
+		private final int COLOR_NON_TOURNAMENT;
 
 		final LayoutInflater inflater;
 		final String[] dayStrings;

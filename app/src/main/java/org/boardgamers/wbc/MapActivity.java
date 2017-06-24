@@ -14,7 +14,7 @@ public class MapActivity extends AppCompatActivity {
 	private ImageView skiLodgeIV;
 	private ImageView conventionCenterIV;
 	private int roomID;
-	private Handler handler = new Handler();
+	private final Handler handler = new Handler();
 	private boolean on;
 
 	@Override

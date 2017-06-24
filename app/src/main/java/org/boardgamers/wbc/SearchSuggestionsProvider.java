@@ -47,7 +47,7 @@ public class SearchSuggestionsProvider extends ContentProvider {
 		String title, label;
 		int id, boxId = 0;
 		while (c.moveToNext()) {
-			id = c.getInt(c.getColumnIndexOrThrow(WBCDataDbHelper.TournamentEntry.COLUMN_TOURNAMENT_ID));
+			id = c.getInt(c.getColumnIndexOrThrow(WBCDataDbHelper.TournamentEntry._ID));
 			title = c.getString(c.getColumnIndexOrThrow(WBCDataDbHelper.TournamentEntry.COLUMN_TITLE));
 			label = c.getString(c.getColumnIndexOrThrow(WBCDataDbHelper.TournamentEntry.COLUMN_LABEL));
 

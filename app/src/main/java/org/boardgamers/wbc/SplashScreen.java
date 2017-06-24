@@ -16,8 +16,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SplashScreen extends AppCompatActivity {
 	private ProgressBar progressBar;
@@ -97,7 +95,7 @@ public class SplashScreen extends AppCompatActivity {
 	private class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
 		private final static String TAG = "Load Events Task";
 
-		private Context context;
+		private final Context context;
 
 		private LoadEventsTask(Context c) {
 			context = c;
@@ -158,30 +156,35 @@ public class SplashScreen extends AppCompatActivity {
 
 				final String daysForParsing[] = getResources().getStringArray(R.array.daysForParsing);
 
-				String line;
 				String eventTitle, eClass, format, gm, tempString, location;
 				String[] rowData;
-				int eventId = currentNumEvents, tournamentId, index, day, prize;
+				int day, prize;
 				float hour, duration, totalDuration;
 				boolean continuous, qualify, isTournamentEvent;
 
 				String tournamentTitle, tournamentLabel, shortEventTitle = "";
-				List<String> tournamentTitles = new ArrayList<>();
+//				List<String> tournamentTitles = new ArrayList<>();
+
+				String line;
+				int rowCount = 0;
 				while ((line = reader.readLine()) != null) {
 					rowData = line.split("~");
 
 					// currentDay
 					tempString = rowData[0];
-					for (index = 0; index < daysForParsing.length; index++) {
-						if (daysForParsing[index].equalsIgnoreCase(tempString)) {
+
+					day = -1;
+					for (int i = 0; i < daysForParsing.length; i++) {
+						if (daysForParsing[i].equalsIgnoreCase(tempString)) {
+							day = i;
 							break;
 						}
 					}
-					if (index == daysForParsing.length) {
-						Log.d(TAG, "Unknown date: " + rowData[2] + " in " + line);
-						index = 0;
+					if (day == -1) {
+						Log.e(TAG, "Unknown date: " + rowData[2] + " in " + line);
+						continue;
+//						day = 0;
 					}
-					day = index;
 
 					// title
 					eventTitle = rowData[2];
@@ -232,35 +235,30 @@ public class SplashScreen extends AppCompatActivity {
 					// get tournament title and label and event short name
 					tempString = eventTitle;
 
-					// search through extra strings
+					// remove post pre event extra strings
 					for (String eventExtraString : preExtraStrings) {
-						index = tempString.indexOf(eventExtraString);
-						if (index > -1) {
-							tempString = tempString.substring(0, index) +
-									tempString.substring(index + eventExtraString.length());
-						}
+						tempString = tempString.replace(eventExtraString, "");
+					}
+
+					// remove post event extra strings
+					for (String eventExtraString : postExtraStrings) {
+						tempString = tempString.replace(eventExtraString, "");
 					}
 
 					isTournamentEvent = eClass.length() > 0;
 					if (isTournamentEvent || format.equalsIgnoreCase("Preview")) {
-						index = tempString.lastIndexOf(" ");
-						shortEventTitle = tempString.substring(index + 1);
-						tempString = tempString.substring(0, index);
+						int spaceIndex = tempString.lastIndexOf(" ");
+						shortEventTitle = tempString.substring(spaceIndex + 1);
+						tempString = tempString.substring(0, spaceIndex);
 					}
 
-					if (eventTitle.contains("Junior") || eventTitle.indexOf("COIN series") == 0 ||
-							format.equalsIgnoreCase("SOG") || format.equalsIgnoreCase("Preview")) {
+					if (eventTitle.contains("Junior")
+							|| eventTitle.indexOf("COIN series") == 0
+							|| format.equalsIgnoreCase("SOG")
+							|| format.equalsIgnoreCase("Preview")) {
 						tournamentTitle = tempString;
 						tournamentLabel = "";
-
 					} else if (isTournamentEvent) {
-						for (String eventExtraString : postExtraStrings) {
-							index = tempString.indexOf(eventExtraString);
-							if (index > -1) {
-								tempString = tempString.substring(0, index);
-							}
-						}
-
 						tournamentLabel = rowData[10];
 						tournamentTitle = tempString;
 					} else {
@@ -283,21 +281,11 @@ public class SplashScreen extends AppCompatActivity {
 						}
 					}
 
-					for (index = tournamentTitles.size() - 1; index > -1; index--) {
-						if (tournamentTitles.get(index).equalsIgnoreCase(tournamentTitle)) {
-							break;
-						}
-					}
-
-					if (index == -1) {
-						tournamentId = tournamentTitles.size();
-						tournamentTitles.add(tournamentTitle);
-
-						dbHelper
-								.insertTournament(tournamentId, tournamentTitle, tournamentLabel, isTournamentEvent,
-										prize, gm, eventId);
-					} else {
-						tournamentId = index;
+					long tID = dbHelper.getTournamentID(tournamentTitle);
+					if (tID == -1) {
+						tID = dbHelper
+								.insertTournament(tournamentTitle, tournamentLabel, isTournamentEvent,
+										prize, gm);
 					}
 
 					// Log.d(TAG, String.valueOf(tournamentId)+": "+tournamentTitle
@@ -343,24 +331,28 @@ public class SplashScreen extends AppCompatActivity {
 						}
 					}
 
-					dbHelper.insertEvent(eventId, tournamentId, day, hour, eventTitle, eClass, format, qualify,
-									duration, continuous, totalDuration, location);
+					dbHelper.insertEvent(tID, day, hour, eventTitle, eClass, format, qualify,
+							duration, continuous, totalDuration, location);
 
-					publishProgress(eventId - currentNumEvents);
-					eventId++;
+					publishProgress(rowCount);
+					rowCount++;
 				}
 
 				// close streams and number of events
 				isr.close();
 				is.close();
 				reader.close();
+
+				// get total count
+				int tournamentCount = dbHelper.getAllTournaments(Constants.PRIMARY_USER_ID).size();
+				int eventCount = dbHelper.getAllEvents(Constants.PRIMARY_USER_ID).size();
 				dbHelper.close();
 
 				// log statistics
-				Log.d(TAG,
-						"Finished load, " + String.valueOf(tournamentTitles.size()) + " total tournaments and " +
-								String.valueOf(eventId) + " total events");
-				return eventId;
+				Log.d(TAG, "Finished load, "
+						+ String.valueOf(tournamentCount) + " total tournaments and "
+						+ String.valueOf(eventCount) + " total events");
+				return rowCount;
 			} catch (IOException e) {
 				e.printStackTrace();
 				return -1;

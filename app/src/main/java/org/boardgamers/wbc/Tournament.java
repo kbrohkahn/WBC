@@ -2,15 +2,15 @@ package org.boardgamers.wbc;
 
 public class Tournament {
 
-	public int id;
+	public final int id;
 
-	public String title;
-	public String label;
-	public boolean isTournament;
+	public final String title;
+	public final String label;
+	public final boolean isTournament;
 
-	public int finalEventId;
-	public int prize;
-	public String gm;
+	//	public final int finalEventId;
+	public final int prize;
+	public final String gm;
 
 	public boolean visible;
 	public int finish;
@@ -23,7 +23,7 @@ public class Tournament {
 	 * @param p  - prize
 	 * @param g  - game manager
 	 */
-	public Tournament(int id, String t, String l, boolean i, int p, String g, int f) {
+	public Tournament(int id, String t, String l, boolean i, int p, String g) {
 		this.id = id;
 
 		this.title = t;
@@ -32,7 +32,7 @@ public class Tournament {
 
 		this.prize = p;
 		this.gm = g;
-		this.finalEventId = f;
+//		this.finalEventId = f;
 
 	}
 }

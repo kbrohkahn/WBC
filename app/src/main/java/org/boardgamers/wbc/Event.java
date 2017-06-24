@@ -1,19 +1,19 @@
 package org.boardgamers.wbc;
 
 public class Event {
-	public int id;
-	public int tournamentID;
+	public final int id;
+	public final int tournamentID;
 
-	public int day;
+	public final int day;
 	public float hour;
 	public String title;
 
-	public String eClass;
-	public String format;
-	public boolean qualify;
+	public final String eClass;
+	public final String format;
+	public final boolean qualify;
 	public float duration;
-	public boolean continuous;
-	private float totalDuration;
+	public final boolean continuous;
+	private final float totalDuration;
 
 	public String location;
 

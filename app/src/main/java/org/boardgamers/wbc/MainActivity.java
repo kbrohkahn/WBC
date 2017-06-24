@@ -213,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
 		return id == 0 ? R.drawable.box_iv_no_image_text : id;
 	}
 
+
+
 	public static String getDisplayHour(float startHour, float duration) {
 		int hour = (int) (startHour + duration) % 24;
 		float minute = (startHour + duration) % 1;

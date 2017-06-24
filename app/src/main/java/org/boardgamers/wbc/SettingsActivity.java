@@ -41,7 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
 	private static List<User> users;
 	public static int currentUserId;
 	public static boolean notifyChanged = false;
-	private static String folder = Environment.getExternalStorageDirectory().getAbsolutePath() + "/WBC/";
+	private static final String folder = Environment.getExternalStorageDirectory().getAbsolutePath() + "/WBC/";
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -126,7 +126,7 @@ public class SettingsActivity extends AppCompatActivity {
 		private String scheduleSource;
 		private int userId;
 
-		private Context context;
+		private final Context context;
 
 		public SaveScheduleTask(Context c) {
 			context = c;
@@ -251,7 +251,7 @@ public class SettingsActivity extends AppCompatActivity {
 				duration = Float.valueOf(createdEvents[i + 4]);
 				location = createdEvents[i + 5];
 
-				dbHelper.insertUserEvent(newEId, userId, title, day, hour, duration, location);
+				dbHelper.insertUserEvent(userId, title, day, hour, duration, location);
 
 				oldIds[i / 6] = eId;
 				newEIds[i / 6] = newEId;
@@ -373,7 +373,7 @@ public class SettingsActivity extends AppCompatActivity {
 	}
 
 	class MergeScheduleTask extends AsyncTask<Integer, Void, Void> {
-		private Context context;
+		private final Context context;
 
 		public MergeScheduleTask(Context c) {
 			context = c;
@@ -585,7 +585,7 @@ public class SettingsActivity extends AppCompatActivity {
 		List<Event> starred = dbHelper.getStarredEvents(uId);
 		List<Event> notes = dbHelper.getEventsWithNotes(uId);
 		List<Tournament> tFinishes = dbHelper.getTournamentsWithFinishes(uId);
-		List<Event> userEvents = dbHelper.getUserEvents(uId, "");
+		List<Event> userEvents = dbHelper.getUserEvents(uId);
 		dbHelper.close();
 		Log.d(TAG, "Received from DB");
 
@@ -691,7 +691,7 @@ public class SettingsActivity extends AppCompatActivity {
 	}
 
 	private void resetPrefs() {
-		PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
+		PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
 		recreate();
 	}
 

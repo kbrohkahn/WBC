@@ -57,7 +57,7 @@ public class SearchListFragment extends DefaultListFragment {
 			if (tournamentId > -1) {
 				tempEvents = dbHelper.getTournamentEvents(MainActivity.userId, tournamentId);
 			} else {
-				tempEvents = dbHelper.getEventsFromQuery(MainActivity.userId, query);
+				tempEvents = dbHelper.getEventsFromSearchString(MainActivity.userId, query);
 			}
 			dbHelper.close();
 

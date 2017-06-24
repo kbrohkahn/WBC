@@ -69,7 +69,7 @@ public class FilterActivity extends AppCompatActivity {
 		Character letter = tournaments.get(0).title.charAt(0);
 		sectionsList.add(letter);
 		sectionIndicesList.add(0);
-		tournaments.add(0, new Tournament(SECTION_TOURNAMENT_ID, "" + letter, "", false, 0, "", 0));
+		tournaments.add(0, new Tournament(SECTION_TOURNAMENT_ID, "" + letter, "", false, 0, ""));
 
 		int numSections = 1;
 		for (int i = 1; i < tournaments.size(); i++) {
@@ -79,7 +79,7 @@ public class FilterActivity extends AppCompatActivity {
 				sectionsList.add(letter);
 				sectionIndicesList.add(i);
 				tournaments.add(i,
-						new Tournament(SECTION_TOURNAMENT_ID + numSections, "" + letter, "", false, 0, "", 0));
+						new Tournament(SECTION_TOURNAMENT_ID + numSections, "" + letter, "", false, 0, ""));
 
 				numSections++;
 				i++;

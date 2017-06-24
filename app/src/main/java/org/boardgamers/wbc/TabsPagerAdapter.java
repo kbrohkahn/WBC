@@ -9,9 +9,9 @@ import android.support.v4.app.FragmentPagerAdapter;
  * and UserDataFragment
  */
 class TabsPagerAdapter extends FragmentPagerAdapter {
-	private SummaryListFragment summaryListFragment;
-	private ScheduleListFragment scheduleListFragment;
-	private UserDataListFragment userDataListFragment;
+	private final SummaryListFragment summaryListFragment;
+	private final ScheduleListFragment scheduleListFragment;
+	private final UserDataListFragment userDataListFragment;
 
 	private final String[] tabTitles = {"Starred", "Schedule", "My Data"};
 
