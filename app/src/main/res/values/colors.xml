@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <!-- main app colors -->
-  <color name="primary">#600000</color>
-  <color name="primary_light">#d0aaaa</color>
-  <color name="primary_lightest">#EFE1E1</color>
-  <color name="secondary">#31428C</color>
-  <color name="secondary_light">#8490BC</color>
-  <color name="secondary_dark">#192146</color>
-  <color name="window_background">#ffffff</color>
+	<!-- main app colors -->
+	<color name="primary">#600000</color>
+	<color name="primary_light">#d0aaaa</color>
+	<color name="primary_lightest">#EFE1E1</color>
+	<color name="secondary">#31428C</color>
+	<color name="secondary_light">#8490BC</color>
+	<color name="secondary_dark">#192146</color>
+	<color name="window_background">#ffffff</color>
 
-  <color name="gray">#aaaaaa</color>
-  <color name="gray_light">#cccccc</color>
-  <color name="green">#BFFFBF</color>
-  <color name="green_light">#E5FFE5</color>
-  <color name="yellow">#FFFFBF</color>
-  <color name="yellow_light">#FFFFE5</color>
-  <color name="white">#ffffff</color>
-  <color name="black">#000000</color>
+	<color name="gray">#aaaaaa</color>
+	<color name="gray_light">#cccccc</color>
+	<color name="green">#BFFFBF</color>
+	<color name="green_light">#E5FFE5</color>
+	<color name="yellow">#FFFFBF</color>
+	<color name="yellow_light">#FFFFE5</color>
+	<color name="white">#ffffff</color>
+	<color name="black">#000000</color>
 
-  <!-- event text colors (from program) -->
-  <color name="junior">#278B43</color>
-  <color name="open_tournament">#F37029</color>
-  <color name="non_tournament">#004688</color>
-  <color name="seminar">#6B0B68</color>
-  <color name="qualify">#ED2024</color>
-  <color name="divider">@android:color/darker_gray</color>
+	<!-- event text colors (from program) -->
+	<color name="junior">#278B43</color>
+	<color name="open_tournament">#F37029</color>
+	<color name="non_tournament">#004688</color>
+	<color name="seminar">#6B0B68</color>
+	<color name="qualify">#ED2024</color>
+	<color name="divider">@android:color/darker_gray</color>
 
-  <!-- list -->
-  <color name="item_focused">@color/secondary</color>
-  <color name="item_pressed">@color/primary</color>
-  <color name="item_selected">@color/primary_light</color>
-  <color name="group_default_expanded">@color/secondary_light</color>
-  <color name="group_default_collapsed">@color/secondary</color>
-  <color name="group_focused">@color/secondary</color>
-  <color name="group_pressed">@color/secondary_dark</color>
-  <color name="ended_light">@color/gray_light</color>
-  <color name="ended_dark">@color/gray</color>
-  <color name="current_dark">@color/green</color>
-  <color name="current_light">@color/green_light</color>
-  <color name="future_dark">@color/yellow</color>
-  <color name="future_light">@color/yellow_light</color>
+	<!-- list -->
+	<color name="item_focused">@color/secondary</color>
+	<color name="item_pressed">@color/primary</color>
+	<color name="item_selected">@color/primary_light</color>
+	<color name="group_default_expanded">@color/secondary_light</color>
+	<color name="group_default_collapsed">@color/secondary</color>
+	<color name="group_focused">@color/secondary</color>
+	<color name="group_pressed">@color/secondary_dark</color>
+	<color name="ended_light">@color/gray_light</color>
+	<color name="ended_dark">@color/gray</color>
+	<color name="current_dark">@color/green</color>
+	<color name="current_light">@color/green_light</color>
+	<color name="future_dark">@color/yellow</color>
+	<color name="future_light">@color/yellow_light</color>
 
-  <!-- buttons -->
-  <color name="default_button_pressed">@color/secondary_dark</color>
-  <color name="default_button_disabled">@color/secondary_light</color>
-  <color name="default_button_enabled">@color/secondary</color>
+	<!-- buttons -->
+	<color name="default_button_pressed">@color/secondary_dark</color>
+	<color name="default_button_disabled">@color/secondary_light</color>
+	<color name="default_button_enabled">@color/secondary</color>
 
 </resources>

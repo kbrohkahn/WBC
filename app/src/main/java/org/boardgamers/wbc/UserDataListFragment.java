@@ -24,7 +24,7 @@ public class UserDataListFragment extends DefaultListFragment {
 	public static final int NOTES_INDEX = 1;
 	public static final int FINISHES_INDEX = 2;
 
-	public String[] finishStrings;
+	private String[] finishStrings;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,7 +32,7 @@ public class UserDataListFragment extends DefaultListFragment {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 
 		if (view != null) {
-			Button addEvent = (Button) view.findViewById(R.id.add_event);
+			Button addEvent = view.findViewById(R.id.add_event);
 			addEvent.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -40,7 +40,7 @@ public class UserDataListFragment extends DefaultListFragment {
 				}
 			});
 
-			Button deleteAll = (Button) view.findViewById(R.id.delete_all);
+			Button deleteAll = view.findViewById(R.id.delete_all);
 			deleteAll.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -141,13 +141,13 @@ public class UserDataListFragment extends DefaultListFragment {
 	//    editNameDialog.show(getFragmentManager(), "edit_event_dialog");
 	//  }
 
-	public void showCreateDialog() {
+	private void showCreateDialog() {
 		DialogCreateEvent dialog = new DialogCreateEvent();
 		dialog.setTargetFragment(this, 0);
 		dialog.show(getFragmentManager(), "create_event_dialog");
 	}
 
-	public void showDeleteDialog() {
+	private void showDeleteDialog() {
 		String title = "Confirm";
 		String message = "Are you sure you want to delete all your events";
 
@@ -169,7 +169,7 @@ public class UserDataListFragment extends DefaultListFragment {
 
 	}
 
-	public void deleteAllEvents() {
+	private void deleteAllEvents() {
 		WBCDataDbHelper dbHelper = new WBCDataDbHelper(getActivity());
 		dbHelper.getWritableDatabase();
 		dbHelper.deleteAllUserEvents(MainActivity.userId);
@@ -185,12 +185,12 @@ public class UserDataListFragment extends DefaultListFragment {
 		deleteEvents(events);
 	}
 
-	public void deleteEvents(Event[] events) {
+	private void deleteEvents(Event[] events) {
 		MainActivity.removeEvents(events);
 	}
 
-	class PopulateUserDataAdapterTask extends PopulateAdapterTask {
-		public PopulateUserDataAdapterTask(Context c, int g) {
+	private class PopulateUserDataAdapterTask extends PopulateAdapterTask {
+		private PopulateUserDataAdapterTask(Context c, int g) {
 			context = c;
 			numGroups = g;
 		}
@@ -245,7 +245,7 @@ public class UserDataListFragment extends DefaultListFragment {
 			Event event = events.get(groupPosition).get(childPosition);
 
 			if (groupPosition == UserDataListFragment.EVENTS_INDEX) {
-				TextView hourTV = (TextView) view.findViewById(R.id.li_hour);
+				TextView hourTV = view.findViewById(R.id.li_hour);
 				String hourString = dayStrings[event.day] + "\n" + String.valueOf(event.hour * 100);
 				hourTV.setText(hourString);
 
@@ -316,7 +316,7 @@ public class UserDataListFragment extends DefaultListFragment {
 		}
 	}
 
-	public void showDeleteDialog(final int index) {
+	private void showDeleteDialog(final int index) {
 		Event event = listAdapter.events.get(UserDataListFragment.EVENTS_INDEX).get(index);
 
 		String dayString = getResources().getStringArray(R.array.days)[event.day];
@@ -342,7 +342,7 @@ public class UserDataListFragment extends DefaultListFragment {
 
 	}
 
-	public void deleteEvent(int index) {
+	private void deleteEvent(int index) {
 		WBCDataDbHelper dbHelper = new WBCDataDbHelper(getActivity());
 		dbHelper.getWritableDatabase();
 		dbHelper.deleteUserEvent(MainActivity.userId,

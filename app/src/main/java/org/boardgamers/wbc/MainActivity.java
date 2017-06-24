@@ -33,6 +33,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
@@ -44,12 +45,12 @@ public class MainActivity extends AppCompatActivity {
 	public static int selectedEventId = -1;
 	public static int userId = -1;
 
-	public static String packageName;
+	private static String packageName;
 	public static boolean differentUser = false;
-	public boolean fromFilter = false;
+	private boolean fromFilter = false;
 	public static boolean opened = false;
 
-	private static ViewPager viewPager;
+	private ViewPager viewPager;
 	private static TabsPagerAdapter pagerAdapter;
 
 	@Override
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 		loadUserData();
 	}
 
-	public void showDialogs(int latestVersion) {
+	private void showDialogs(int latestVersion) {
 		if (latestVersion < 17) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.continuous_dialog_title)
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
-	public void loadUserData() {
+	private void loadUserData() {
 		Log.d(TAG, "Loading");
 		userId = PreferenceManager.getDefaultSharedPreferences(this)
 				.getInt(getResources().getString(R.string.pref_key_schedule_select), Constants.PRIMARY_USER_ID);
@@ -217,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
 		float minute = (startHour + duration) % 1;
 		float time = hour * 100 + minute * 60;
 
-		return String.format("%04d", (int) time);
+		return String.format(Locale.US, "%04d", (int) time);
 	}
 
 	@Override
@@ -262,14 +263,14 @@ public class MainActivity extends AppCompatActivity {
 
 	}
 
-	public void startSearchActivity(int id, String title) {
+	private void startSearchActivity(int id, String title) {
 		Intent intent = new Intent(this, SearchResultActivity.class);
 		intent.putExtra("query_title", title);
 		intent.putExtra("query_id", id);
 		startActivity(intent);
 	}
 
-	public void share() {
+	private void share() {
 		//    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
 		//    dbHelper.getReadableDatabase();
 		//    List<Event> starred=dbHelper.getStarredEvents();
@@ -367,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
 
   /* Checks if external storage is available for read and write */
 
-	public boolean isExternalStorageWritable() {
+	private boolean isExternalStorageWritable() {
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 			return true;
 		} else {

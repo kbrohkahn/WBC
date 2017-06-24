@@ -10,88 +10,88 @@ import android.widget.TextView;
 /**
  * Created by Kevin
  */
-public class HelpListAdapter extends BaseExpandableListAdapter {
-    protected final LayoutInflater inflater;
+class HelpListAdapter extends BaseExpandableListAdapter {
+	private final LayoutInflater inflater;
 
-    protected final String[] headerStrings;
-    protected final String[] textStrings;
+	private final String[] headerStrings;
+	private final String[] textStrings;
 
-    public HelpListAdapter(Context c) {
-        inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	public HelpListAdapter(Context c) {
+		inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        headerStrings = c.getResources().getStringArray(R.array.help_headers);
-        textStrings = c.getResources().getStringArray(R.array.help_texts);
+		headerStrings = c.getResources().getStringArray(R.array.help_headers);
+		textStrings = c.getResources().getStringArray(R.array.help_texts);
 
-    }
+	}
 
-    @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view,
-                             ViewGroup parent) {
-        if (view == null)
-            view = inflater.inflate(R.layout.list_item_text, parent, false);
+	@Override
+	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view,
+							 ViewGroup parent) {
+		if (view == null)
+			view = inflater.inflate(R.layout.list_item_text, parent, false);
 
-        TextView title = (TextView) view.findViewById(R.id.li_text);
-        //title.setGravity(Gravity.CENTER);
-        title.setText(textStrings[groupPosition]);
+		TextView title = view.findViewById(R.id.li_text);
+		//title.setGravity(Gravity.CENTER);
+		title.setText(textStrings[groupPosition]);
 
-        return view;
-    }
+		return view;
+	}
 
-    @Override
-    public View getGroupView(final int groupPosition, final boolean isExpanded, View view,
-                             ViewGroup parent) {
-        if (view == null)
-            view = inflater.inflate(R.layout.list_group_large, parent, false);
+	@Override
+	public View getGroupView(final int groupPosition, final boolean isExpanded, View view,
+							 ViewGroup parent) {
+		if (view == null)
+			view = inflater.inflate(R.layout.list_group_large, parent, false);
 
-        TextView name = (TextView) view.findViewById(R.id.sg_name);
-        name.setText(headerStrings[groupPosition]);
+		TextView name = view.findViewById(R.id.sg_name);
+		name.setText(headerStrings[groupPosition]);
 
-        if (isExpanded) {
-            view.setBackgroundResource(R.drawable.group_expanded);
-        } else {
-            view.setBackgroundResource(R.drawable.group_collapsed);
-        }
+		if (isExpanded) {
+			view.setBackgroundResource(R.drawable.group_expanded);
+		} else {
+			view.setBackgroundResource(R.drawable.group_collapsed);
+		}
 
-        return view;
-    }
+		return view;
+	}
 
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
-    }
+	@Override
+	public boolean isChildSelectable(int groupPosition, int childPosition) {
+		return false;
+	}
 
-    @Override
-    public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
-    }
+	@Override
+	public long getChildId(int groupPosition, int childPosition) {
+		return childPosition;
+	}
 
-    @Override
-    public long getGroupId(int groupPosition) {
-        return groupPosition;
-    }
+	@Override
+	public long getGroupId(int groupPosition) {
+		return groupPosition;
+	}
 
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
+	@Override
+	public boolean hasStableIds() {
+		return false;
+	}
 
-    @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        return textStrings[childPosition];
-    }
+	@Override
+	public Object getChild(int groupPosition, int childPosition) {
+		return textStrings[childPosition];
+	}
 
-    @Override
-    public int getChildrenCount(int groupPosition) {
-        return 1;
-    }
+	@Override
+	public int getChildrenCount(int groupPosition) {
+		return 1;
+	}
 
-    @Override
-    public Object getGroup(int groupPosition) {
-        return headerStrings[groupPosition];
-    }
+	@Override
+	public Object getGroup(int groupPosition) {
+		return headerStrings[groupPosition];
+	}
 
-    @Override
-    public int getGroupCount() {
-        return headerStrings.length;
-    }
+	@Override
+	public int getGroupCount() {
+		return headerStrings.length;
+	}
 }

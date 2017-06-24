@@ -30,7 +30,7 @@
 	<string name="search_hint">Search title or format</string>
 	<string name="changes_dialog_title">Schedule Changes</string>
 	<string name="continuous_dialog_title">Continuous Events</string>
-    <string name="continuous_dialog_message">The first round for continuous events starts
+	<string name="continuous_dialog_message">The first round for continuous events starts
         at the designated time. All subsequent rounds start at a time designated by the GM.
         Starting times for these rounds shown in the app are merely approximations based on
         the first round start time and duration, and should be used to
@@ -366,7 +366,7 @@
     finishes awarding plaques are in bold while laurels are in italics.
     \n\nPlease contact Kevin Broh-Kann at dev@boardgamers.org with any further questions.
   </item>
-  <item>The schedule on the main screen is a chronological
+		<item>The schedule on the main screen is a chronological
     listing of events by order of appearance.
     Junior Events are listed first, highlighted by a
     symbol and are in green. Open Gaming, including
@@ -387,7 +387,7 @@
     order. An alphabetical list of tournaments
     can be found in search screen via the main menu.
   </item>
-  <item>Abbreviations for dates are Mo:
+		<item>Abbreviations for dates are Mo:
     Monday, Tu: Tuesday, We: Wednesday,
     Th: Thursday, Fr: Friday, Sa: Saturday, Su:
     Sunday. “PC Sa” or “PC Su” indicates
@@ -396,7 +396,7 @@
     is required for Non-Tribune Members for
     all Pre-Cons.
   </item>
-  <item>Times are listed in military time;
+		<item>Times are listed in military time;
     e.g., 11 or 1100 is 11 am and 13 or 1300 is 1 pm. Tournament
     play commences at the scheduled times for
     each event and may run past midnight. No
@@ -405,7 +405,7 @@
     before 9 am without the consent of all remaining
     players.
   </item>
-  <item>“H1/3” indicates the
+		<item>“H1/3” indicates the
     heat number out of the total number of
     heats. “R1/6” indicates the round number
     out of the estimated total number of rounds.
@@ -425,7 +425,7 @@
     an event that begins during the Pre-Con but
     may end during WBC proper.
   </item>
-  <item>Play is restricted
+		<item>Play is restricted
     to players who have qualified for these
     rounds. For “SF/F,” the Final immediately follows
     the semifinal. Final rounds may be rescheduled
@@ -439,11 +439,11 @@
     or laurels that pass instead to those who advance
     in their place.
   </item>
-  <item>1, 2, 3, 4, 5 or 6 is the number
+		<item>1, 2, 3, 4, 5 or 6 is the number
     of places receiving plaques; 2 through 6 are
     Century events.
   </item>
-  <item>There are three classes of tournaments:
+		<item>There are three classes of tournaments:
     \n\nA: Experienced Players Only—red Kiosks;
     rules are not taught before or during play;
     \n\nB: Beginners Allowed—yellow kiosks;
@@ -454,7 +454,7 @@
     in event location. Once past the Preliminary
     round, the Class is always A.
   </item>
-  <item>All teaching sessions take
+		<item>All teaching sessions take
     place in Paradise Terrace at the listed Table
     #. For B Class Events, anyone new to a game
     must attend. For C Class Event s, attending a
@@ -474,7 +474,7 @@
     opportunities to gather players without
     tying up tables trolling for interest.
   </item>
-  <item>SOG makes
+		<item>SOG makes
     use of the demo tables in Paradise Assembly
     during down times to allow players to schedule
     multi-player Open Gaming opportunities which
@@ -486,7 +486,7 @@
     game’s signup block on the yellow Schedule kiosk
     for that table in Paradise assembly.
   </item>
-  <item>FORMAT: Before playing an event, check the
+		<item>FORMAT: Before playing an event, check the
     Event Preview at boardgamers.org/yearbkex,
     the event kiosk, or via the tournament screen in the app by selecting
     an event or searching for that tournament. The Event Preview contains
@@ -552,14 +552,14 @@
     event.
     \n\nPreview: Non-event demonstration.
   </item>
-  <item>
+		<item>
     The duration of the event in hours.
     Round lengths are rounded up to the next hour.
     Actual allowed playing time is determined by
     the GM and should always be less than the
     scheduled period.
   </item>
-  <item>
+		<item>
     If an image of two rotating
     arrows appears in the
     Length column, the event continues immediately
@@ -574,7 +574,7 @@
     not be allowed a break that allows them to trail
     the rest of the field and delay the tournament).
   </item>
-  <item>
+		<item>
     A map—displaying a multilevel
     floorplan of the Lancaster Host—can be found
     by selecting an underlined room location

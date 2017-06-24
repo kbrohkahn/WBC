@@ -3,11 +3,11 @@ package org.boardgamers.wbc;
 /**
  * Constants class
  */
-public class Constants {
+class Constants {
 
 	public static final int[] conventionCenterIDs = {R.drawable.room_alpine_room, R.drawable.room_grand_ballroom_stage,
 			R.drawable.room_grand_ballroom, R.drawable.room_bavarian_lounge, R.drawable.room_chestnut,
-			R.drawable.room_dogwood,R.drawable.room_evergreen, R.drawable.room_evergreen_and_chestnut,
+			R.drawable.room_dogwood, R.drawable.room_evergreen, R.drawable.room_evergreen_and_chestnut,
 			R.drawable.room_exhibit_annex, R.drawable.room_exhibit_annex, R.drawable.room_exhibit_annex,
 			R.drawable.room_exhibit_annex, R.drawable.room_exhibit_annex, R.drawable.room_exhibit_annex,
 			R.drawable.room_exhibit_annex, R.drawable.room_exhibit_annex, R.drawable.room_exhibit_annex,

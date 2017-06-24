@@ -20,345 +20,351 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SplashScreen extends AppCompatActivity {
-    private ProgressBar progressBar;
-    private int currentNumEvents;
+	private ProgressBar progressBar;
+	private int currentNumEvents;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        int TOTAL_EVENTS = 1096;
+		int TOTAL_EVENTS = 1096;
 
-        WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
-        dbHelper.onUpgrade(dbHelper.getWritableDatabase(), dbHelper.getVersion(),
-                WBCDataDbHelper.DATABASE_VERSION);
-        dbHelper.getReadableDatabase();
-        currentNumEvents = dbHelper.getNumEvents();
-        dbHelper.close();
+		WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
+		dbHelper.onUpgrade(dbHelper.getWritableDatabase(), dbHelper.getVersion(),
+				WBCDataDbHelper.DATABASE_VERSION);
+		dbHelper.getReadableDatabase();
+		currentNumEvents = dbHelper.getNumEvents();
+		dbHelper.close();
 
-        if (currentNumEvents == TOTAL_EVENTS) {
-            checkForChanges();
-        } else {
-            setContentView(R.layout.splash);
+		if (currentNumEvents == TOTAL_EVENTS) {
+			checkForChanges();
+		} else {
+			setContentView(R.layout.splash);
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            setTitle(getResources().getString(R.string.activity_splash));
+			Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+			setSupportActionBar(toolbar);
+			setTitle(getResources().getString(R.string.activity_splash));
 
-            progressBar = (ProgressBar) findViewById(R.id.splash_progress);
-            progressBar.setMax(TOTAL_EVENTS - currentNumEvents);
+			progressBar = (ProgressBar) findViewById(R.id.splash_progress);
+			progressBar.setMax(TOTAL_EVENTS - currentNumEvents);
 
-            new LoadEventsTask(this).execute(0, 0, 0);
-        }
-    }
+			new LoadEventsTask(this).execute(0, 0, 0);
+		}
+	}
 
-    @Override
-    public void onBackPressed() {
-        showToast("Please wait until all events have loaded");
-    }
+	@Override
+	public void onBackPressed() {
+		showToast("Please wait until all events have loaded");
+	}
 
-    public void checkForChanges() {
-        String changes = "";
+	private void checkForChanges() {
+		String changes = "";
 
-        // TODO add changes to database and string here
+		// TODO add changes to database and string here
 
-        if (changes.equalsIgnoreCase("")) {
-            startMainActivity();
-        } else {
-            AlertDialog.Builder changesBuilder = new AlertDialog.Builder(this);
-            changesBuilder.setTitle(R.string.changes_dialog_title).setMessage(changes)
-                    .setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                            startMainActivity();
-                        }
-                    }).setCancelable(false);
-            changesBuilder.create().show();
-        }
-    }
+		if (changes.equalsIgnoreCase("")) {
+			startMainActivity();
+		} else {
+			AlertDialog.Builder changesBuilder = new AlertDialog.Builder(this);
+			changesBuilder.setTitle(R.string.changes_dialog_title).setMessage(changes)
+					.setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.dismiss();
+							startMainActivity();
+						}
+					}).setCancelable(false);
+			changesBuilder.create().show();
+		}
+	}
 
-    public void startMainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
+	private void startMainActivity() {
+		startActivity(new Intent(this, MainActivity.class));
 
-        Intent intent = new Intent(this, UpdateService.class);
-        stopService(intent);
-        startService(intent);
+		Intent intent = new Intent(this, UpdateService.class);
+		stopService(intent);
+		startService(intent);
 
-        finish();
-    }
+		finish();
+	}
 
-    public void showToast(String string) {
-        Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
-    }
+	private void showToast(String string) {
+		Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
+	}
 
-    /**
-     * Load Events Task to load schedule
-     */
-    public class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
-        private final static String TAG = "Load Events Task";
+	/**
+	 * Load Events Task to load schedule
+	 */
+	private class LoadEventsTask extends AsyncTask<Integer, Integer, Integer> {
+		private final static String TAG = "Load Events Task";
 
-        private Context context;
+		private Context context;
 
-        public LoadEventsTask(Context c) {
-            context = c;
-        }
+		private LoadEventsTask(Context c) {
+			context = c;
+		}
 
-        @Override
-        protected void onPostExecute(Integer result) {
-            if (result > 0) {
-                startMainActivity();
-            } else if (result == -1) {
-                showToast("ERROR: Could not parse schedule file, contact dev@boardgamers.org for help.");
-            } else if (result == -2) {
-                showToast("ERROR: Could not find schedule file, contact dev@boardgamers.org for help.");
-            } else if (result == -3) {
-                showToast("ERROR: Could not open schedule file, contact dev@boardgamers.org for help.");
-            }
+		@Override
+		protected void onPostExecute(Integer result) {
+			if (result > 0) {
+				startMainActivity();
+			} else if (result == -1) {
+				showToast("ERROR: Could not parse schedule file, contact dev@boardgamers.org for help.");
+			} else if (result == -2) {
+				showToast("ERROR: Could not find schedule file, contact dev@boardgamers.org for help.");
+			} else if (result == -3) {
+				showToast("ERROR: Could not open schedule file, contact dev@boardgamers.org for help.");
+			}
 
-            super.onPostExecute(result);
-        }
+			super.onPostExecute(result);
+		}
 
-        @Override
-        protected Integer doInBackground(Integer... params) {
-            // find schedule file
-            InputStream is;
-            try {
-                is = getAssets().open("schedule.txt");
-            } catch (IOException e2) {
-                e2.printStackTrace();
-                return -2;
-            }
-            // read schedule file
-            InputStreamReader isr;
-            try {
-                isr = new InputStreamReader(is);
-            } catch (IllegalStateException e1) {
-                e1.printStackTrace();
-                return -3;
-            }
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			progressBar.setProgress(values[0] - currentNumEvents);
 
-            WBCDataDbHelper dbHelper = new WBCDataDbHelper(context);
-            dbHelper.getWritableDatabase();
-            MainActivity.userId =
-                    (int) dbHelper.insertUser(Constants.PRIMARY_USER_ID, "My Schedule", "");
+			super.onProgressUpdate(values);
+		}
 
-            // parse schedule file
-            BufferedReader reader = new BufferedReader(isr);
-            try {
-                final String preExtraStrings[] =
-                        {" AFC", " NFC", " FF", " PC", " Circus", " After Action", " Aftermath"};
-                final String postExtraStrings[] = {" Demo"};
+		@Override
+		protected Integer doInBackground(Integer... params) {
+			// find schedule file
+			InputStream is;
+			try {
+				is = getAssets().open("schedule2017.txt");
+			} catch (IOException e2) {
+				e2.printStackTrace();
+				return -2;
+			}
+			// read schedule file
+			InputStreamReader isr;
+			try {
+				isr = new InputStreamReader(is);
+			} catch (IllegalStateException e1) {
+				e1.printStackTrace();
+				return -3;
+			}
 
-                final String daysForParsing[] = getResources().getStringArray(R.array.daysForParsing);
+			WBCDataDbHelper dbHelper = new WBCDataDbHelper(context);
+			dbHelper.getWritableDatabase();
+			MainActivity.userId =
+					(int) dbHelper.insertUser(Constants.PRIMARY_USER_ID, "My Schedule", "");
 
-                String line;
-                String eventTitle, eClass, format, gm, tempString, location;
-                String[] rowData;
-                int eventId = currentNumEvents, tournamentId, index, day, prize;
-                float hour, duration, totalDuration;
-                boolean continuous, qualify, isTournamentEvent;
+			// parse schedule file
+			BufferedReader reader = new BufferedReader(isr);
+			try {
+				final String preExtraStrings[] =
+						{" AFC", " NFC", " FF", " PC", " Circus", " After Action", " Aftermath"};
+				final String postExtraStrings[] = {" Demo"};
 
-                String tournamentTitle, tournamentLabel, shortEventTitle = "";
-                List<String> tournamentTitles = new ArrayList<>();
-                while ((line = reader.readLine()) != null) {
-                    rowData = line.split("~");
+				final String daysForParsing[] = getResources().getStringArray(R.array.daysForParsing);
 
-                    // currentDay
-                    tempString = rowData[0];
-                    for (index = 0; index < daysForParsing.length; index++) {
-                        if (daysForParsing[index].equalsIgnoreCase(tempString)) {
-                            break;
-                        }
-                    }
-                    if (index == daysForParsing.length) {
-                        Log.d(TAG, "Unknown date: " + rowData[2] + " in " + line);
-                        index = 0;
-                    }
-                    day = index;
+				String line;
+				String eventTitle, eClass, format, gm, tempString, location;
+				String[] rowData;
+				int eventId = currentNumEvents, tournamentId, index, day, prize;
+				float hour, duration, totalDuration;
+				boolean continuous, qualify, isTournamentEvent;
 
-                    // title
-                    eventTitle = rowData[2];
+				String tournamentTitle, tournamentLabel, shortEventTitle = "";
+				List<String> tournamentTitles = new ArrayList<>();
+				while ((line = reader.readLine()) != null) {
+					rowData = line.split("~");
 
-                    // time
-                    hour = Float.valueOf(rowData[1]);
+					// currentDay
+					tempString = rowData[0];
+					for (index = 0; index < daysForParsing.length; index++) {
+						if (daysForParsing[index].equalsIgnoreCase(tempString)) {
+							break;
+						}
+					}
+					if (index == daysForParsing.length) {
+						Log.d(TAG, "Unknown date: " + rowData[2] + " in " + line);
+						index = 0;
+					}
+					day = index;
 
-                    if (rowData.length < 8) {
-                        prize = 0;
-                        eClass = "";
-                        format = "";
-                        duration = 0;
-                        continuous = false;
-                        gm = "";
-                        location = "";
-                    } else {
-                        // prize
-                        tempString = rowData[3];
-                        if (tempString.equalsIgnoreCase("") || tempString.equalsIgnoreCase("-")) {
-                            tempString = "0";
-                        }
-                        prize = Integer.valueOf(tempString);
+					// title
+					eventTitle = rowData[2];
 
-                        // class
-                        eClass = rowData[4];
+					// time
+					hour = Float.valueOf(rowData[1]);
 
-                        // format
-                        format = rowData[5];
+					if (rowData.length < 8) {
+						prize = 0;
+						eClass = "";
+						format = "";
+						duration = 0;
+						continuous = false;
+						gm = "";
+						location = "";
+					} else {
+						// prize
+						tempString = rowData[3];
+						if (tempString.equalsIgnoreCase("") || tempString.equalsIgnoreCase("-")) {
+							tempString = "0";
+						}
+						prize = Integer.valueOf(tempString);
 
-                        // duration
-                        if (rowData[6].equalsIgnoreCase("") || rowData[6].equalsIgnoreCase("-")) {
-                            duration = 0;
-                        } else {
-                            duration = (float) Math.round(Float.valueOf(rowData[6]) * 100) / 100;
-                        }
+						// class
+						eClass = rowData[4];
 
-                        // continuous
-                        continuous = rowData[7].equalsIgnoreCase("Y");
+						// format
+						format = rowData[5];
 
-                        // gm
-                        gm = rowData[8];
+						// duration
+						if (rowData[6].equalsIgnoreCase("") || rowData[6].equalsIgnoreCase("-")) {
+							duration = 0;
+						} else {
+							duration = (float) Math.round(Float.valueOf(rowData[6]) * 100) / 100;
+						}
 
-                        // location
-                        location = rowData[9];
+						// continuous
+						continuous = rowData[7].equalsIgnoreCase("Y");
 
-                    }
+						// gm
+						gm = rowData[8];
 
-                    // get tournament title and label and event short name
-                    tempString = eventTitle;
+						// location
+						location = rowData[9];
 
-                    // search through extra strings
-                    for (String eventExtraString : preExtraStrings) {
-                        index = tempString.indexOf(eventExtraString);
-                        if (index > -1) {
-                            tempString = tempString.substring(0, index) +
-                                    tempString.substring(index + eventExtraString.length());
-                        }
-                    }
+					}
 
-                    isTournamentEvent = eClass.length() > 0;
-                    if (isTournamentEvent || format.equalsIgnoreCase("Preview")) {
-                        index = tempString.lastIndexOf(" ");
-                        shortEventTitle = tempString.substring(index + 1);
-                        tempString = tempString.substring(0, index);
-                    }
+					// get tournament title and label and event short name
+					tempString = eventTitle;
 
-                    if (eventTitle.contains("Junior") || eventTitle.indexOf("COIN series") == 0 ||
-                            format.equalsIgnoreCase("SOG") || format.equalsIgnoreCase("Preview")) {
-                        tournamentTitle = tempString;
-                        tournamentLabel = "";
+					// search through extra strings
+					for (String eventExtraString : preExtraStrings) {
+						index = tempString.indexOf(eventExtraString);
+						if (index > -1) {
+							tempString = tempString.substring(0, index) +
+									tempString.substring(index + eventExtraString.length());
+						}
+					}
 
-                    } else if (isTournamentEvent) {
-                        for (String eventExtraString : postExtraStrings) {
-                            index = tempString.indexOf(eventExtraString);
-                            if (index > -1) {
-                                tempString = tempString.substring(0, index);
-                            }
-                        }
+					isTournamentEvent = eClass.length() > 0;
+					if (isTournamentEvent || format.equalsIgnoreCase("Preview")) {
+						index = tempString.lastIndexOf(" ");
+						shortEventTitle = tempString.substring(index + 1);
+						tempString = tempString.substring(0, index);
+					}
 
-                        tournamentLabel = rowData[10];
-                        tournamentTitle = tempString;
-                    } else {
-                        tournamentTitle = tempString;
-                        tournamentLabel = "";
+					if (eventTitle.contains("Junior") || eventTitle.indexOf("COIN series") == 0 ||
+							format.equalsIgnoreCase("SOG") || format.equalsIgnoreCase("Preview")) {
+						tournamentTitle = tempString;
+						tournamentLabel = "";
 
-                        if (eventTitle.indexOf("Auction") == 0) {
-                            tournamentTitle = "AuctionStore";
-                        }
+					} else if (isTournamentEvent) {
+						for (String eventExtraString : postExtraStrings) {
+							index = tempString.indexOf(eventExtraString);
+							if (index > -1) {
+								tempString = tempString.substring(0, index);
+							}
+						}
 
-                        // search for non tournament main titles
-                        String[] nonTournamentStrings =
-                                {"Open Gaming", "Registration", "Vendors Area", "World at War", "Wits & Wagers",
-                                        "Texas Roadhouse BPA Fundraiser", "Memoir: D-Day"};
-                        for (String nonTournamentString : nonTournamentStrings) {
-                            if (tempString.indexOf(nonTournamentString) == 0) {
-                                tournamentTitle = nonTournamentString;
-                                break;
-                            }
-                        }
-                    }
+						tournamentLabel = rowData[10];
+						tournamentTitle = tempString;
+					} else {
+						tournamentTitle = tempString;
+						tournamentLabel = "";
 
-                    for (index = tournamentTitles.size() - 1; index > -1; index--) {
-                        if (tournamentTitles.get(index).equalsIgnoreCase(tournamentTitle)) {
-                            break;
-                        }
-                    }
+						if (eventTitle.indexOf("Auction") == 0) {
+							tournamentTitle = "AuctionStore";
+						}
 
-                    if (index == -1) {
-                        tournamentId = tournamentTitles.size();
-                        tournamentTitles.add(tournamentTitle);
+						// search for non tournament main titles
+						String[] nonTournamentStrings =
+								{"Open Gaming", "Registration", "Vendors Area", "World at War", "Wits & Wagers",
+										"Texas Roadhouse BPA Fundraiser", "Memoir: D-Day"};
+						for (String nonTournamentString : nonTournamentStrings) {
+							if (tempString.indexOf(nonTournamentString) == 0) {
+								tournamentTitle = nonTournamentString;
+								break;
+							}
+						}
+					}
 
-                        dbHelper
-                                .insertTournament(tournamentId, tournamentTitle, tournamentLabel, isTournamentEvent,
-                                        prize, gm, eventId);
-                    } else {
-                        tournamentId = index;
-                    }
+					for (index = tournamentTitles.size() - 1; index > -1; index--) {
+						if (tournamentTitles.get(index).equalsIgnoreCase(tournamentTitle)) {
+							break;
+						}
+					}
 
-                    // Log.d(TAG, String.valueOf(tournamentId)+": "+tournamentTitle
-                    // +";;;E: "+eventTitle);
+					if (index == -1) {
+						tournamentId = tournamentTitles.size();
+						tournamentTitles.add(tournamentTitle);
 
-                    totalDuration = duration;
-                    qualify = false;
+						dbHelper
+								.insertTournament(tournamentId, tournamentTitle, tournamentLabel, isTournamentEvent,
+										prize, gm, eventId);
+					} else {
+						tournamentId = index;
+					}
 
-                    if (isTournamentEvent || format.equalsIgnoreCase("Junior")) {
-                        if (shortEventTitle.equals("SF")) {
-                            qualify = true;
-                        } else if (shortEventTitle.equals("QF")) {
-                            qualify = true;
-                        } else if (shortEventTitle.equals("F")) {
-                            qualify = true;
-                        } else if (shortEventTitle.equals("QF/SF/F")) {
-                            qualify = true;
-                            totalDuration *= 3;
-                        } else if (shortEventTitle.equals("SF/F")) {
-                            qualify = true;
-                            totalDuration *= 2;
-                        } else if (continuous && shortEventTitle.indexOf("R") == 0 &&
-                                shortEventTitle.contains("/")) {
-                            int dividerIndex = shortEventTitle.indexOf("/");
-                            int startRound = Integer.valueOf(shortEventTitle.substring(1, dividerIndex));
-                            int endRound = Integer.valueOf(shortEventTitle.substring(dividerIndex + 1));
+					// Log.d(TAG, String.valueOf(tournamentId)+": "+tournamentTitle
+					// +";;;E: "+eventTitle);
 
-                            float currentTime = hour;
-                            for (int round = 0; round < endRound - startRound; round++) {
-                                // if time passes midnight, next round starts at 9 the next currentDay
-                                if (currentTime > 24) {
-                                    if (currentTime >= 24 + 9) {
-                                        Log.d(TAG, "Event " + eventTitle + " goes past 9");
-                                    }
-                                    totalDuration += 9 - (currentTime - 24);
-                                    currentTime = 9;
-                                }
-                                totalDuration += duration;
-                                currentTime += duration;
-                            }
-                        } else if (continuous) {
-                            Log.d(TAG, "Unknown continuous event: " + eventTitle);
-                        }
-                    }
+					totalDuration = duration;
+					qualify = false;
 
-                    dbHelper
-                            .insertEvent(eventId, tournamentId, day, hour, eventTitle, eClass, format, qualify,
-                                    duration, continuous, totalDuration, location);
+					if (isTournamentEvent || format.equalsIgnoreCase("Junior")) {
+						if (shortEventTitle.equals("SF")) {
+							qualify = true;
+						} else if (shortEventTitle.equals("QF")) {
+							qualify = true;
+						} else if (shortEventTitle.equals("F")) {
+							qualify = true;
+						} else if (shortEventTitle.equals("QF/SF/F")) {
+							qualify = true;
+							totalDuration *= 3;
+						} else if (shortEventTitle.equals("SF/F")) {
+							qualify = true;
+							totalDuration *= 2;
+						} else if (continuous && shortEventTitle.indexOf("R") == 0 &&
+								shortEventTitle.contains("/")) {
+							int dividerIndex = shortEventTitle.indexOf("/");
+							int startRound = Integer.valueOf(shortEventTitle.substring(1, dividerIndex));
+							int endRound = Integer.valueOf(shortEventTitle.substring(dividerIndex + 1));
 
-                    progressBar.setProgress(eventId - currentNumEvents);
-                    eventId++;
-                }
+							float currentTime = hour;
+							for (int round = 0; round < endRound - startRound; round++) {
+								// if time passes midnight, next round starts at 9 the next currentDay
+								if (currentTime > 24) {
+									if (currentTime >= 24 + 9) {
+										Log.d(TAG, "Event " + eventTitle + " goes past 9");
+									}
+									totalDuration += 9 - (currentTime - 24);
+									currentTime = 9;
+								}
+								totalDuration += duration;
+								currentTime += duration;
+							}
+						} else if (continuous) {
+							Log.d(TAG, "Unknown continuous event: " + eventTitle);
+						}
+					}
 
-                // close streams and number of events
-                isr.close();
-                is.close();
-                reader.close();
-                dbHelper.close();
+					dbHelper.insertEvent(eventId, tournamentId, day, hour, eventTitle, eClass, format, qualify,
+									duration, continuous, totalDuration, location);
 
-                // log statistics
-                Log.d(TAG,
-                        "Finished load, " + String.valueOf(tournamentTitles.size()) + " total tournaments and " +
-                                String.valueOf(eventId) + " total events");
-                return eventId;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return -1;
-            }
-        }
-    }
+					publishProgress(eventId - currentNumEvents);
+					eventId++;
+				}
+
+				// close streams and number of events
+				isr.close();
+				is.close();
+				reader.close();
+				dbHelper.close();
+
+				// log statistics
+				Log.d(TAG,
+						"Finished load, " + String.valueOf(tournamentTitles.size()) + " total tournaments and " +
+								String.valueOf(eventId) + " total events");
+				return eventId;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
+	}
 }

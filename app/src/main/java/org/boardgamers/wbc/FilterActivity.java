@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilterActivity extends AppCompatActivity {
-	private final String TAG = "Filter Activity";
+//	private final String TAG = "Filter Activity";
 
 	private final int SECTION_TOURNAMENT_ID = 1000;
 
@@ -144,7 +144,7 @@ public class FilterActivity extends AppCompatActivity {
 		super.onResume();
 	}
 
-	public void selectAll() {
+	private void selectAll() {
 		changedTournaments = new ArrayList<>();
 
 		for (Tournament tournament : tournaments) {
@@ -158,7 +158,7 @@ public class FilterActivity extends AppCompatActivity {
 		save();
 	}
 
-	public void selectTournaments() {
+	private void selectTournaments() {
 		changedTournaments = new ArrayList<>();
 
 		for (Tournament tournament : tournaments) {
@@ -172,7 +172,7 @@ public class FilterActivity extends AppCompatActivity {
 		save();
 	}
 
-	public void deselectAll() {
+	private void deselectAll() {
 		changedTournaments = new ArrayList<>();
 
 		for (Tournament tournament : tournaments) {
@@ -186,7 +186,7 @@ public class FilterActivity extends AppCompatActivity {
 		save();
 	}
 
-	public void deselectTournaments() {
+	private void deselectTournaments() {
 		changedTournaments = new ArrayList<>();
 
 		for (Tournament tournament : tournaments) {
@@ -238,11 +238,11 @@ public class FilterActivity extends AppCompatActivity {
 		super.onPause();
 	}
 
-	public void save() {
+	private void save() {
 		new SaveTask().execute();
 	}
 
-	public class SaveTask extends AsyncTask<Void, Void, Void> {
+	private class SaveTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected void onPreExecute() {
 			if (changedTournaments.size() > 1) {
@@ -307,16 +307,16 @@ public class FilterActivity extends AppCompatActivity {
 				view = inflater.inflate(R.layout.filter_list_item, parent, false);
 				Tournament tournament = tournaments.get(position);
 
-				TextView titleTV = (TextView) view.findViewById(R.id.filter_title);
+				TextView titleTV = view.findViewById(R.id.filter_title);
 				titleTV.setText(tournament.title);
 
-				TextView labelTV = (TextView) view.findViewById(R.id.filter_label);
+				TextView labelTV = view.findViewById(R.id.filter_label);
 				labelTV.setText(tournament.label);
 
-				ImageView boxIV = (ImageView) view.findViewById(R.id.filter_image_view);
+				ImageView boxIV = view.findViewById(R.id.filter_image_view);
 				boxIV.setImageResource(MainActivity.getBoxIdFromLabel(tournament.label, getResources()));
 
-				final CheckBox checkBox = (CheckBox) view.findViewById(R.id.filter_checkbox);
+				final CheckBox checkBox = view.findViewById(R.id.filter_checkbox);
 				checkBox.setChecked(tournament.visible);
 				checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					@Override
@@ -339,7 +339,7 @@ public class FilterActivity extends AppCompatActivity {
 				view = inflater.inflate(R.layout.list_group_small, parent, false);
 				String letter = sections[sectionIndex].toString();
 
-				TextView textView = (TextView) view.findViewById(R.id.sg_name);
+				TextView textView = view.findViewById(R.id.sg_name);
 				textView.setText(letter);
 
 				view.setBackgroundResource(R.drawable.group_collapsed);
@@ -353,7 +353,7 @@ public class FilterActivity extends AppCompatActivity {
 		}
 
 		public int getPositionForSection(int i) {
-			int fixedIndex = Math.max(Math.min(sectionIndices.length-1, i), 0);
+			int fixedIndex = Math.max(Math.min(sectionIndices.length - 1, i), 0);
 			return sectionIndices[fixedIndex];
 		}
 

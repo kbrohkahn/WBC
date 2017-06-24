@@ -9,53 +9,53 @@ import android.widget.NumberPicker;
 
 public class DialogPreferenceNumberPicker extends DialogPreference {
 
-    public static final int MAX_VALUE = 60;
-    public static final int MIN_VALUE = 0;
-    public static final int DEFAULT_VALUE = 5;
+	private static final int MAX_VALUE = 60;
+	private static final int MIN_VALUE = 0;
+	private static final int DEFAULT_VALUE = 5;
 
-    private NumberPicker picker;
+	private NumberPicker picker;
 
-    int value;
+	private int value;
 
-    public DialogPreferenceNumberPicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+	public DialogPreferenceNumberPicker(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
 
-    @Override
-    protected View onCreateDialogView() {
-        View view = View.inflate(getContext(), R.layout.dialog_notify_time, null);
+	@Override
+	protected View onCreateDialogView() {
+		View view = View.inflate(getContext(), R.layout.dialog_notify_time, null);
 
-        picker = (NumberPicker) view.findViewById(R.id.dialog_notify_time_picker);
-        picker.setMaxValue(MAX_VALUE);
-        picker.setMinValue(MIN_VALUE);
-        picker.setValue(getPersistedInt(DEFAULT_VALUE));
-        picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-        picker.setWrapSelectorWheel(false);
+		picker = view.findViewById(R.id.dialog_notify_time_picker);
+		picker.setMaxValue(MAX_VALUE);
+		picker.setMinValue(MIN_VALUE);
+		picker.setValue(getPersistedInt(DEFAULT_VALUE));
+		picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+		picker.setWrapSelectorWheel(false);
 
-        return view;
-    }
+		return view;
+	}
 
-    @Override
-    protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        if (restorePersistedValue) {
-            value = getPersistedInt(DEFAULT_VALUE);
-        } else {
-            value = (Integer) defaultValue;
-            persistInt(value);
-        }
-    }
+	@Override
+	protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
+		if (restorePersistedValue) {
+			value = getPersistedInt(DEFAULT_VALUE);
+		} else {
+			value = (Integer) defaultValue;
+			persistInt(value);
+		}
+	}
 
-    @Override
-    protected Object onGetDefaultValue(TypedArray a, int index) {
-        return a.getInteger(index, DEFAULT_VALUE);
-    }
+	@Override
+	protected Object onGetDefaultValue(TypedArray a, int index) {
+		return a.getInteger(index, DEFAULT_VALUE);
+	}
 
-    @Override
-    protected void onDialogClosed(boolean positiveResult) {
-        if (positiveResult) {
-            SettingsActivity.notifyChanged = true;
-            persistInt(picker.getValue());
-            setSummary(String.valueOf(picker.getValue()));
-        }
-    }
+	@Override
+	protected void onDialogClosed(boolean positiveResult) {
+		if (positiveResult) {
+			SettingsActivity.notifyChanged = true;
+			persistInt(picker.getValue());
+			setSummary(String.valueOf(picker.getValue()));
+		}
+	}
 }

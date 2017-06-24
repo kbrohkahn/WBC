@@ -1,15 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto">
+	  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <item
-    android:id="@+id/menu_star"
-    android:icon="@drawable/star_off"
-    android:title="@string/star"
-    app:showAsAction="ifRoom"/>
-  <item
-    android:id="@+id/menu_help"
-    android:icon="@drawable/ic_action_help"
-    android:title="@string/activity_help"
-    app:showAsAction="ifRoom"/>
+	<item
+		android:id="@+id/menu_star"
+		android:icon="@drawable/star_off"
+		android:title="@string/star"
+		app:showAsAction="ifRoom"/>
+	<item
+		android:id="@+id/menu_help"
+		android:icon="@drawable/ic_action_help"
+		android:title="@string/activity_help"
+		app:showAsAction="ifRoom"/>
 
 </menu>

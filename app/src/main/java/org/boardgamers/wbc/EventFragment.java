@@ -68,16 +68,16 @@ public class EventFragment extends Fragment {
 							 Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.event_fragment, container, false);
 
-		timeLayout = (LinearLayout) view.findViewById(R.id.ef_time_layout);
-		titleTV = (TextView) view.findViewById(R.id.ef_title);
-		dayTV = (TextView) view.findViewById(R.id.ef_day);
-		timeTV = (TextView) view.findViewById(R.id.ef_time);
-		formatTV = (TextView) view.findViewById(R.id.ef_format);
-		classTV = (TextView) view.findViewById(R.id.ef_class);
-		locationTV = (TextView) view.findViewById(R.id.ef_location);
-		gMTV = (TextView) view.findViewById(R.id.ef_gm);
+		timeLayout = view.findViewById(R.id.ef_time_layout);
+		titleTV = view.findViewById(R.id.ef_title);
+		dayTV = view.findViewById(R.id.ef_day);
+		timeTV = view.findViewById(R.id.ef_time);
+		formatTV = view.findViewById(R.id.ef_format);
+		classTV = view.findViewById(R.id.ef_class);
+		locationTV = view.findViewById(R.id.ef_location);
+		gMTV = view.findViewById(R.id.ef_gm);
 
-		previewTV = (TextView) view.findViewById(R.id.ef_preview_link);
+		previewTV = view.findViewById(R.id.ef_preview_link);
 		previewTV.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -85,7 +85,7 @@ public class EventFragment extends Fragment {
 			}
 		});
 
-		reportTV = (TextView) view.findViewById(R.id.ef_report_link);
+		reportTV = view.findViewById(R.id.ef_report_link);
 		reportTV.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -93,7 +93,7 @@ public class EventFragment extends Fragment {
 			}
 		});
 
-		tournamentTV = (TextView) view.findViewById(R.id.ef_tournament_link);
+		tournamentTV = view.findViewById(R.id.ef_tournament_link);
 		tournamentTV.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -101,13 +101,13 @@ public class EventFragment extends Fragment {
 			}
 		});
 
-		boxIV = (ImageView) view.findViewById(R.id.ef_box_image);
+		boxIV = view.findViewById(R.id.ef_box_image);
 
-		map = (ImageView) view.findViewById(R.id.ef_map);
-		mapOverlay = (ImageView) view.findViewById(R.id.ef_map_overlay);
+		map = view.findViewById(R.id.ef_map);
+		mapOverlay = view.findViewById(R.id.ef_map_overlay);
 
 		runnableActive = false;
-		mapOverlayToggle = (ToggleButton) view.findViewById(R.id.ef_map_toggle_button);
+		mapOverlayToggle = view.findViewById(R.id.ef_map_toggle_button);
 		mapOverlayToggle.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -118,9 +118,9 @@ public class EventFragment extends Fragment {
 				}
 			}
 		});
-		noteET = (EditText) view.findViewById(R.id.ef_note);
+		noteET = view.findViewById(R.id.ef_note);
 
-		shareButton = (Button) view.findViewById(R.id.ef_share);
+		shareButton = view.findViewById(R.id.ef_share);
 		shareButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -128,7 +128,7 @@ public class EventFragment extends Fragment {
 			}
 		});
 
-		clearButton = (Button) view.findViewById(R.id.ef_clear);
+		clearButton = view.findViewById(R.id.ef_clear);
 		clearButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -136,11 +136,11 @@ public class EventFragment extends Fragment {
 			}
 		});
 
-		finishTV = (TextView) view.findViewById(R.id.ef_finish_text);
-		finishGroup = (RadioGroup) view.findViewById(R.id.ef_finish_group);
+		finishTV = view.findViewById(R.id.ef_finish_text);
+		finishGroup = view.findViewById(R.id.ef_finish_group);
 		finishButtons = new RadioButton[finishIDs.length];
 		for (int i = 0; i < finishIDs.length; i++) {
-			finishButtons[i] = (RadioButton) view.findViewById(finishIDs[i]);
+			finishButtons[i] = view.findViewById(finishIDs[i]);
 			finishButtons[i].setText(String.valueOf(i));
 		}
 
@@ -306,28 +306,28 @@ public class EventFragment extends Fragment {
 		}
 	}
 
-	public void startSearchActivity() {
+	private void startSearchActivity() {
 		Intent intent = new Intent(getActivity(), SearchResultActivity.class);
 		intent.putExtra("query_title", tournament.title);
 		intent.putExtra("query_id", tournament.id);
 		startActivity(intent);
 	}
 
-	public void openPreviewLink() {
+	private void openPreviewLink() {
 		if (tournament != null && tournament.isTournament) {
 			getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
 					Uri.parse("http://boardgamers.org/yearbkex/" + tournament.label + "pge.htm")));
 		}
 	}
 
-	public void openReportLink() {
+	private void openReportLink() {
 		if (tournament != null && tournament.isTournament) {
 			getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
 					Uri.parse("http://boardgamers.org/yearbook14/" + tournament.label + "pge.htm")));
 		}
 	}
 
-	public void hideNonTournamentViews() {
+	private void hideNonTournamentViews() {
 		finishGroup.setVisibility(View.GONE);
 		finishTV.setVisibility(View.GONE);
 		previewTV.setVisibility(View.INVISIBLE);
@@ -352,7 +352,7 @@ public class EventFragment extends Fragment {
 
 	}
 
-	public void saveEventData() {
+	private void saveEventData() {
 		if (event != null) {
 			String note = noteET.getText().toString();
 			int finish;
@@ -393,7 +393,7 @@ public class EventFragment extends Fragment {
 		super.onPause();
 	}
 
-	public void setRoom(String room) {
+	private void setRoom(String room) {
 		mapOverlayToggle.setVisibility(View.GONE);
 		roomID = -1;
 		String[] roomsDownstairs = getResources().getStringArray(R.array.rooms_ski_lodge);
@@ -415,7 +415,7 @@ public class EventFragment extends Fragment {
 		}
 	}
 
-	public void setImageViews() {
+	private void setImageViews() {
 		mapOverlayToggle.setVisibility(View.VISIBLE);
 
 		if (roomID >= 50) {

@@ -85,7 +85,8 @@
 				<category android:name="android.intent.category.DEFAULT"/>
 				<data
 					android:host="*"
-					android:mimeType="application/wbc"/>
+					android:mimeType="application/wbc"
+					android:scheme="file"/>
 			</intent-filter>
 
 			<intent-filter>
