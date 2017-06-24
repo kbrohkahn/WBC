@@ -156,7 +156,7 @@ public class DefaultListFragment extends Fragment {
 		protected void onPostExecute(Integer integer) {
 			listView.setAdapter(listAdapter);
 
-			for (int i = 0; i < numGroups; i++) {
+			for (int i = 0; i < listAdapter.getGroupCount(); i++) {
 				listView.expandGroup(i);
 			}
 
@@ -471,7 +471,7 @@ public class DefaultListFragment extends Fragment {
 		}
 
 		public void updateList() {
-			hoursIntoConvention = UpdateService.getHoursIntoConvention();
+			hoursIntoConvention = Helpers.getHoursIntoConvention();
 			notifyDataSetChanged();
 		}
 

@@ -248,7 +248,7 @@ public class EventFragment extends Fragment {
 			clearButton.setEnabled(true);
 			shareButton.setEnabled(true);
 
-			long hoursIntoConvention = UpdateService.getHoursIntoConvention();
+			long hoursIntoConvention = Helpers.getHoursIntoConvention();
 			boolean started = event.day * 24 + event.hour <= hoursIntoConvention;
 			boolean ended = event.day * 24 + event.hour + event.duration <= hoursIntoConvention;
 			boolean happening = started && !ended;

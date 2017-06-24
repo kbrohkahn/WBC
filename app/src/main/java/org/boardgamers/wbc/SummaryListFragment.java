@@ -20,8 +20,8 @@ public class SummaryListFragment extends DefaultListFragment {
 		return view;
 	}
 
-	class PopulateSummaryAdapterTask extends PopulateAdapterTask {
-		public PopulateSummaryAdapterTask(Context c, int g) {
+	private class PopulateSummaryAdapterTask extends PopulateAdapterTask {
+		private PopulateSummaryAdapterTask(Context c, int g) {
 			context = c;
 			numGroups = g;
 		}
@@ -46,8 +46,8 @@ public class SummaryListFragment extends DefaultListFragment {
 		}
 	}
 
-	class SummaryListAdapter extends DefaultListAdapter {
-		public SummaryListAdapter(Context c, List<List<Event>> e, int i) {
+	private class SummaryListAdapter extends DefaultListAdapter {
+		private SummaryListAdapter(Context c, List<List<Event>> e, int i) {
 			super(c, e, i);
 		}
 

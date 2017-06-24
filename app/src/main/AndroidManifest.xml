@@ -18,15 +18,15 @@
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
 
-		<receiver android:name=".ServiceStarter">
+		<receiver android:name=".ServiceStarterReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED"/>
 			</intent-filter>
 		</receiver>
-		<service
-			android:name=".UpdateService"
-			android:enabled="true">
-		</service>
+
+		<service android:name=".UpdateService"/>
+
+		<service android:name=".CheckEventService"/>
 
 		<activity
 			android:name=".SplashScreen"

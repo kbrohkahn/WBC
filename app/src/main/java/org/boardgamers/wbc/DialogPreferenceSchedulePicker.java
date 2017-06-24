@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DialogPreferenceSchedulePicker extends DialogPreference {
 	private RadioGroup group;
-	private int value;
+	private long value;
 
 	public DialogPreferenceSchedulePicker(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -48,10 +48,10 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
 	@Override
 	protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
 		if (restorePersistedValue) {
-			value = getPersistedInt((int) MainActivity.userId);
+			value = getPersistedLong(MainActivity.userId);
 		} else {
-			value = (Integer) defaultValue;
-			if (persistInt(value)) {
+			value = (Long) defaultValue;
+			if (persistLong(value)) {
 				Log.d("", "Success");
 			}
 		}
@@ -66,7 +66,7 @@ public class DialogPreferenceSchedulePicker extends DialogPreference {
 	protected void onDialogClosed(boolean positiveResult) {
 		if (positiveResult) {
 			value = group.getCheckedRadioButtonId();
-			persistInt(value);
+			persistLong(value);
 
 			MainActivity.userId = value;
 //			SettingsActivity.SettingsFragment.updatePreferences();

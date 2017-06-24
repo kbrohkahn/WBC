@@ -40,8 +40,8 @@ public class SearchListFragment extends DefaultListFragment {
 		new PopulateSearchAdapterTask(getActivity(), Constants.TOTAL_DAYS).execute(0, 0, 0);
 	}
 
-	class PopulateSearchAdapterTask extends PopulateAdapterTask {
-		public PopulateSearchAdapterTask(Context c, int g) {
+	private class PopulateSearchAdapterTask extends PopulateAdapterTask {
+		private PopulateSearchAdapterTask(Context c, int g) {
 			context = c;
 			numGroups = g;
 		}
@@ -74,9 +74,9 @@ public class SearchListFragment extends DefaultListFragment {
 		}
 	}
 
-	class SearchListAdapter extends DefaultListAdapter {
+	private class SearchListAdapter extends DefaultListAdapter {
 
-		public SearchListAdapter(Context c, List<List<Event>> e, int i) {
+		private SearchListAdapter(Context c, List<List<Event>> e, int i) {
 			super(c, e, i);
 		}
 

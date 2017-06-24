@@ -63,7 +63,7 @@ public class ScheduleListFragment extends DefaultListFragment {
 	 * @return groupNumber
 	 */
 	private int getCurrentGroup() {
-		int hoursIntoConvention = (int) UpdateService.getHoursIntoConvention();
+		int hoursIntoConvention = (int) Helpers.getHoursIntoConvention();
 
 		if (hoursIntoConvention == -1) {
 			return 0;
@@ -167,12 +167,13 @@ public class ScheduleListFragment extends DefaultListFragment {
 			} else {
 				String groupTitle = hours[(groupPosition % GROUPS_PER_DAY) - 1] + ": ";
 
-				int groupHoursIntoConvention =
-						groupPosition / GROUPS_PER_DAY * 24 + groupPosition % GROUPS_PER_DAY + GROUP_HOUR_OFFSET;
+				int groupHoursIntoConvention = groupPosition / GROUPS_PER_DAY * 24
+						+ groupPosition % GROUPS_PER_DAY + GROUP_HOUR_OFFSET;
 				for (int i = 0; i <= groupPosition; i++) {
 					for (Event event : events.get(i)) {
-						if (event.starred && event.day * 24 + event.hour <= groupHoursIntoConvention &&
-								event.day * 24 + event.hour + event.duration > groupHoursIntoConvention) {
+						if (event.starred
+								&& event.day * 24 + event.hour <= groupHoursIntoConvention
+								&& event.day * 24 + event.hour + event.duration > groupHoursIntoConvention) {
 							groupTitle += event.title + ", ";
 						}
 					}

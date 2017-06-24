@@ -202,6 +202,7 @@
 
 	<!-- APP SPECIFIC STRINGS AND ARRAYS -->
 	<string-array name="daysForParsing">
+		<item>7/21/2017</item>
 		<item>7/22/2017</item>
 		<item>7/23/2017</item>
 		<item>7/24/2017</item>
@@ -213,6 +214,7 @@
 		<item>7/30/2017</item>
 	</string-array>
 	<string-array name="days">
+		<item>Fr 7/21</item>
 		<item>PC Sa 7/22/1</item>
 		<item>PC Su 7/23</item>
 		<item>Mo 7/24</item>

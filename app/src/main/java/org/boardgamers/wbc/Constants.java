@@ -24,9 +24,9 @@ class Constants {
 			R.drawable.room_foggy_goggle, R.drawable.room_foggy_goggle, R.drawable.room_maple_room,
 			R.drawable.room_rathskeller, R.drawable.room_timberstone};
 
-//	public static final int PRIMARY_USER_ID = 0;
-	public static final int TOTAL_DAYS = 9;
-//	public static final int USER_EVENT_ID = 2000;
+	//	public static final int PRIMARY_USER_ID = 0;
+	public static final int TOTAL_DAYS = 10;
+	//	public static final int USER_EVENT_ID = 2000;
 	public static final long milliHour = 60 * 60 * 1000;
 
 }
