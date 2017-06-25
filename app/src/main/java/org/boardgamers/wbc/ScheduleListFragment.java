@@ -199,69 +199,42 @@ public class ScheduleListFragment extends DefaultListFragment {
 		}
 
 		@Override
-		public void updateEvents(Event[] updatedEvents) {
-			for (Event event : updatedEvents) {
-				int group = event.day * GROUPS_PER_DAY + (int) event.hour - GROUP_HOUR_OFFSET;
-				Event tempEvent;
+		public void updateEvent(Event updatedEvent) {
+			int group = updatedEvent.day * GROUPS_PER_DAY + (int) updatedEvent.hour - GROUP_HOUR_OFFSET;
+			Event tempEvent;
 
-				boolean isInList = false;
-				for (int i = 0; i < events.get(group).size(); i++) {
-					tempEvent = events.get(group).get(i);
-					if (tempEvent.id == event.id) {
-						tempEvent.starred = event.starred;
-						isInList = true;
-						break;
-					}
+			boolean isInList = false;
+			for (int i = 0; i < events.get(group).size(); i++) {
+				tempEvent = events.get(group).get(i);
+				if (tempEvent.id == updatedEvent.id) {
+					tempEvent.starred = updatedEvent.starred;
+					isInList = true;
+					break;
 				}
+			}
 
-				if (!isInList) {
-					events.get(group).add(0, event);
-				}
-
-				// add or remove from my events in full schedule
-				//      group=event.day*GROUPS_PER_DAY;
-				//      if (event.starred) {
-				//        int index;
-				//        for (index=0; index<events.get(group).size(); index++) {
-				//          tempEvent=events.get(group).get(index);
-				//          if (event.hour<tempEvent.hour ||
-				//              (event.hour==tempEvent.hour && event.title.compareToIgnoreCase(tempEvent.title)==1)) {
-				//            break;
-				//          }
-				//        }
-				//        events.get(group).add(index, event);
-				//      } else {
-				//        for (int i=0; i<events.get(group).size(); i++) {
-				//          tempEvent=events.get(group).get(i);
-				//          if (tempEvent.id==event.id) {
-				//            events.get(group).remove(tempEvent);
-				//            break;
-				//          }
-				//        }
-				//      }
+			if (!isInList) {
+				events.get(group).add(0, updatedEvent);
 			}
 		}
 
 		@Override
-		public void removeEvents(Event[] deletedEvents) {
+		public void removeEvent(Event deletedEvent) {
 			int group;
-			for (Event event : deletedEvents) {
-				group = event.day * GROUPS_PER_DAY + (int) event.hour - GROUP_HOUR_OFFSET;
-				for (int i = 0; i < events.get(group).size(); i++) {
-					if (events.get(group).get(i).id == event.id) {
-						events.get(group).remove(i);
-						break;
-					}
+			group = deletedEvent.day * GROUPS_PER_DAY + (int) deletedEvent.hour - GROUP_HOUR_OFFSET;
+			for (int i = 0; i < events.get(group).size(); i++) {
+				if (events.get(group).get(i).id == deletedEvent.id) {
+					events.get(group).remove(i);
+					break;
 				}
+			}
 
-				group = event.day * GROUPS_PER_DAY;
-				for (int i = 0; i < events.get(group).size(); i++) {
-					if (events.get(group).get(i).id == event.id) {
-						events.get(group).remove(i);
-						break;
-					}
+			group = deletedEvent.day * GROUPS_PER_DAY;
+			for (int i = 0; i < events.get(group).size(); i++) {
+				if (events.get(group).get(i).id == deletedEvent.id) {
+					events.get(group).remove(i);
+					break;
 				}
-
 			}
 		}
 	}

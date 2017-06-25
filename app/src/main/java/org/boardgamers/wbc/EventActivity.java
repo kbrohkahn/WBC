@@ -60,8 +60,6 @@ public class EventActivity extends AppCompatActivity {
 			dbHelper.getWritableDatabase();
 			dbHelper.insertUserEventData(MainActivity.userId, event.id, event.starred, event.note);
 			dbHelper.close();
-
-			MainActivity.changeEventsInLists(new Event[]{event}, -1);
 		}
 
 		SearchListFragment fragment =

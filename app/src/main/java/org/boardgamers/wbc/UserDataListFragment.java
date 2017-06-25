@@ -55,21 +55,21 @@ public class UserDataListFragment extends DefaultListFragment {
 		return view;
 	}
 
-	public void updateUserData(long eventId, String note, long tournamentId, int finish) {
+	public void updateUserEventData(Event e, int finish) {
 		if (listAdapter == null || listAdapter.events == null) {
 			return;
 		}
 
 		boolean noteInList = false;
 		for (Event event : listAdapter.events.get(NOTES_INDEX)) {
-			if (event.id == eventId) {
+			if (e.id == event.id) {
 				noteInList = true;
-				if (note.equalsIgnoreCase("")) {
+				if (e.note.equalsIgnoreCase("")) {
 					listAdapter.events.get(NOTES_INDEX).remove(event);
 				} else {
 					event.title = event.title.substring(0, event.title.length() - event.note.length());
-					event.note = note;
-					event.title += note;
+					event.note = e.note;
+					event.title += e.note;
 				}
 
 				break;
@@ -78,7 +78,7 @@ public class UserDataListFragment extends DefaultListFragment {
 
 		boolean finishInList = false;
 		for (Event event : listAdapter.events.get(FINISHES_INDEX)) {
-			if (event.tournamentID == tournamentId) {
+			if (event.tournamentID == e.tournamentID) {
 				finishInList = true;
 				if (finish == 0) {
 					listAdapter.events.get(FINISHES_INDEX).remove(event);
@@ -94,8 +94,8 @@ public class UserDataListFragment extends DefaultListFragment {
 		WBCDataDbHelper dbHelper = new WBCDataDbHelper(getActivity());
 		dbHelper.getReadableDatabase();
 
-		if (!noteInList && !note.equalsIgnoreCase("")) {
-			Event eventNote = dbHelper.getEvent(MainActivity.userId, eventId);
+		if (!noteInList && !e.note.equalsIgnoreCase("")) {
+			Event eventNote = dbHelper.getEvent(MainActivity.userId, e.id);
 			eventNote.title += ": " + eventNote.note;
 
 			int noteIndex;
@@ -110,7 +110,7 @@ public class UserDataListFragment extends DefaultListFragment {
 		}
 
 		if (!finishInList && finish > 0) {
-			Tournament tournamentFinish = dbHelper.getTournament(MainActivity.userId, tournamentId);
+			Tournament tournamentFinish = dbHelper.getTournament(MainActivity.userId, e.tournamentID);
 			Event eventFinish = dbHelper.getFinalEvent(MainActivity.userId, tournamentFinish.id);
 
 			eventFinish.title += ": " + finishStrings[tournamentFinish.finish - 1];
@@ -186,7 +186,11 @@ public class UserDataListFragment extends DefaultListFragment {
 	}
 
 	private void deleteEvents(Event[] events) {
-		MainActivity.removeEvents(events);
+		for (Event event : events) {
+			((MainActivity) getActivity()).removeEvent(event);
+
+		}
+
 	}
 
 	private class PopulateUserDataAdapterTask extends PopulateAdapterTask {
@@ -280,38 +284,36 @@ public class UserDataListFragment extends DefaultListFragment {
 		}
 
 		@Override
-		public void updateEvents(Event[] updatedEvents) {
+		public void updateEvent(Event updatedEvent) {
 			boolean inList;
 			Event tempEvent;
 
-			for (Event event : updatedEvents) {
-				if (event.tournamentID == 0) {
-					continue;
-				}
+			if (updatedEvent.tournamentID == 0) {
+				return;
+			}
 
-				inList = false;
-				for (int i = 0; i < events.get(UserDataListFragment.EVENTS_INDEX).size(); i++) {
-					tempEvent = events.get(UserDataListFragment.EVENTS_INDEX).get(i);
-					if (tempEvent.id == event.id) {
-						tempEvent.starred = event.starred;
-						inList = true;
+			inList = false;
+			for (int i = 0; i < events.get(UserDataListFragment.EVENTS_INDEX).size(); i++) {
+				tempEvent = events.get(UserDataListFragment.EVENTS_INDEX).get(i);
+				if (tempEvent.id == updatedEvent.id) {
+					tempEvent.starred = updatedEvent.starred;
+					inList = true;
+					break;
+				}
+			}
+
+			if (!inList) {
+				int index;
+				for (index = 0; index < events.get(UserDataListFragment.EVENTS_INDEX).size(); index++) {
+					tempEvent = events.get(0).get(index);
+					if (tempEvent.day * 24 + tempEvent.hour > updatedEvent.day * 24 + updatedEvent.hour ||
+							(tempEvent.day * 24 + tempEvent.hour == updatedEvent.day * 24 + updatedEvent.hour &&
+									tempEvent.title.compareToIgnoreCase(updatedEvent.title) == -1)) {
+						tempEvent.starred = updatedEvent.starred;
 						break;
 					}
 				}
-
-				if (!inList) {
-					int index;
-					for (index = 0; index < events.get(UserDataListFragment.EVENTS_INDEX).size(); index++) {
-						tempEvent = events.get(0).get(index);
-						if (tempEvent.day * 24 + tempEvent.hour > event.day * 24 + event.hour ||
-								(tempEvent.day * 24 + tempEvent.hour == event.day * 24 + event.hour &&
-										tempEvent.title.compareToIgnoreCase(event.title) == -1)) {
-							tempEvent.starred = event.starred;
-							break;
-						}
-					}
-					events.get(UserDataListFragment.EVENTS_INDEX).add(index, event);
-				}
+				events.get(UserDataListFragment.EVENTS_INDEX).add(index, updatedEvent);
 			}
 		}
 	}

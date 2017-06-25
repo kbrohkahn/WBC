@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 	public static boolean opened = false;
 
 	private ViewPager viewPager;
-	private static TabsPagerAdapter pagerAdapter;
+	private TabsPagerAdapter pagerAdapter;
 
 	@Override
 	public void finish() {
@@ -144,50 +144,47 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onResume() {
-		// TODO better implementation
-		//loadUserData();
-		//pagerAdapter=new TabsPagerAdapter(getSupportFragmentManager());
 
 		if (fromFilter) {
 			fromFilter = false;
 			pagerAdapter.getItem(1).reloadAdapterData();
 		}
 
-		for (int j = 0; j < 3; j++) {
-			if (pagerAdapter.getItem(j) != null) {
-				pagerAdapter.getItem(j).refreshAdapter();
+		if (selectedEventId > -1) {
+			WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
+			dbHelper.getReadableDatabase();
+			Event event = dbHelper.getEvent(userId, selectedEventId);
+			Tournament tournament = dbHelper.getTournament(userId, event.tournamentID);
+			dbHelper.close();
+
+			changeEventInLists(event);
+
+			if (pagerAdapter.getItem(2) != null) {
+				((UserDataListFragment) pagerAdapter.getItem(2))
+						.updateUserEventData(event, tournament.finish);
 			}
 		}
+
 
 		super.onResume();
 	}
 
-	public static void removeEvents(Event[] events) {
-		for (Event event : events) {
-			event.starred = false;
-		}
+	public void removeEvent(Event removedEvent) {
+		removedEvent.starred = false;
 
 		if (pagerAdapter.getItem(1) != null) {
-			pagerAdapter.getItem(1).removeEvents(events);
+			pagerAdapter.getItem(1).removeEvent(removedEvent);
 		}
 
 		if (pagerAdapter.getItem(0) != null) {
-			pagerAdapter.getItem(0).updateEvents(events);
+			pagerAdapter.getItem(0).updateEvent(removedEvent);
 		}
 	}
 
-	public static void updateUserData(long eventId, String note, long tournamentId, int finish) {
-		if (pagerAdapter.getItem(2) != null) {
-			((UserDataListFragment) pagerAdapter.getItem(2))
-					.updateUserData(eventId, note, tournamentId, finish);
-			pagerAdapter.getItem(2).refreshAdapter();
-		}
-	}
-
-	public static void changeEventsInLists(Event[] events, int currentPage) {
+	public void changeEventInLists(Event event) {
 		for (int j = 0; j < 3; j++) {
-			if (j != currentPage && pagerAdapter.getItem(j) != null) {
-				pagerAdapter.getItem(j).updateEvents(events);
+			if (pagerAdapter.getItem(j) != null) {
+				pagerAdapter.getItem(j).updateEvent(event);
 			}
 		}
 	}

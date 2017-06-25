@@ -57,27 +57,25 @@ public class SummaryListFragment extends DefaultListFragment {
 		}
 
 		@Override
-		public void updateEvents(Event[] updatedEvents) {
+		public void updateEvent(Event updatedEvent) {
 			Event tempEvent;
 
-			for (Event event : updatedEvents) {
-				if (event.starred) {
-					int index;
-					for (index = 0; index < events.get(event.day).size(); index++) {
-						tempEvent = events.get(event.day).get(index);
-						if (event.hour < tempEvent.hour ||
-								(event.hour == tempEvent.hour && event.title.compareToIgnoreCase(tempEvent.title) == 1)) {
-							break;
-						}
+			if (updatedEvent.starred) {
+				int index;
+				for (index = 0; index < events.get(updatedEvent.day).size(); index++) {
+					tempEvent = events.get(updatedEvent.day).get(index);
+					if (updatedEvent.hour < tempEvent.hour ||
+							(updatedEvent.hour == tempEvent.hour && updatedEvent.title.compareToIgnoreCase(tempEvent.title) == 1)) {
+						break;
 					}
-					events.get(event.day).add(index, event);
-				} else {
-					for (int i = 0; i < events.get(event.day).size(); i++) {
-						tempEvent = events.get(event.day).get(i);
-						if (tempEvent.id == event.id) {
-							events.get(event.day).remove(tempEvent);
-							break;
-						}
+				}
+				events.get(updatedEvent.day).add(index, updatedEvent);
+			} else {
+				for (int i = 0; i < events.get(updatedEvent.day).size(); i++) {
+					tempEvent = events.get(updatedEvent.day).get(i);
+					if (tempEvent.id == updatedEvent.id) {
+						events.get(updatedEvent.day).remove(tempEvent);
+						break;
 					}
 				}
 			}

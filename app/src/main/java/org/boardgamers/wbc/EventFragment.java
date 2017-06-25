@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class EventFragment extends Fragment {
-	//private final String TAG="Event Fragment";
+	private final String TAG = "EventFragment";
 
 	private int initialFinish = -1;
 
@@ -371,7 +372,13 @@ public class EventFragment extends Fragment {
 			}
 			dbHelper.close();
 
-			MainActivity.updateUserData(event.id, note, event.tournamentID, finish);
+			if (getActivity() instanceof MainActivity) {
+				try {
+					((MainActivity) getActivity()).changeEventInLists(event);
+				} catch (Exception e) {
+					Log.d(TAG, e.getMessage());
+				}
+			}
 		}
 	}
 

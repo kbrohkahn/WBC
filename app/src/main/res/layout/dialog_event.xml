@@ -131,6 +131,10 @@
 				<CheckBox
 					android:id="@+id/ce_repeat_d8"
 					style="@style/medium_text"/>
+
+				<CheckBox
+					android:id="@+id/ce_repeat_d9"
+					style="@style/medium_text"/>
 			</LinearLayout>
 		</LinearLayout>
 

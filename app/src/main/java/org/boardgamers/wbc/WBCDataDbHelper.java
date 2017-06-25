@@ -17,7 +17,7 @@ import java.util.List;
 class WBCDataDbHelper extends SQLiteOpenHelper {
 	private final String TAG = "WBCDataDbHelper";
 
-	static final int DATABASE_VERSION = 14;
+	static final int DATABASE_VERSION = 16;
 
 	private static final String DATABASE_NAME = "WBCdata.db";
 
@@ -79,49 +79,39 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 	static abstract class UserCreatedEventEntry implements BaseColumns {
 		static final String TABLE_NAME = "user_event";
 		static final String COLUMN_USER_ID = "user_id";
-//		static final String COLUMN_EVENT_ID = "e_id";
-//		static final String COLUMN_TITLE = "title";
-//		static final String COLUMN_DAY = "day";
-//		static final String COLUMN_HOUR = "hour";
-//		static final String COLUMN_DURATION = "duration";
-//		static final String COLUMN_LOCATION = "location";
-//		static final String COLUMN_NULLABLE = "null";
 	}
 
 	private static final String SQL_CREATE_EVENT_ENTRIES = "CREATE TABLE " + EventEntry.TABLE_NAME + " (" +
 			EventEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 //			EventEntry.COLUMN_EVENT_ID + " INTEGER UNIQUE," +
-			EventEntry.COLUMN_TOURNAMENT_ID + " INTEGER," +
-			EventEntry.COLUMN_TITLE + " TEXT," +
-			EventEntry.COLUMN_DAY + " INTEGER," +
-			EventEntry.COLUMN_HOUR + " REAL," +
-			EventEntry.COLUMN_CLASS + " TEXT," +
-			EventEntry.COLUMN_FORMAT + " TEXT," +
-			EventEntry.COLUMN_QUALIFY + " INTEGER," +
-			EventEntry.COLUMN_DURATION + " REAL," +
-			EventEntry.COLUMN_CONTINUOUS + " INTEGER," +
-			EventEntry.COLUMN_TOTAL_DURATION + " REAL," +
-			EventEntry.COLUMN_LOCATION + " TEXT," +
+			EventEntry.COLUMN_TOURNAMENT_ID + " INTEGER NOT NULL," +
+			EventEntry.COLUMN_TITLE + " TEXT NOT NULL," +
+			EventEntry.COLUMN_DAY + " INTEGER NOT NULL," +
+			EventEntry.COLUMN_HOUR + " REAL NOT NULL," +
+			EventEntry.COLUMN_CLASS + " TEXT NOT NULL," +
+			EventEntry.COLUMN_FORMAT + " TEXT NOT NULL," +
+			EventEntry.COLUMN_QUALIFY + " INTEGER NOT NULL," +
+			EventEntry.COLUMN_DURATION + " REAL NOT NULL," +
+			EventEntry.COLUMN_CONTINUOUS + " INTEGER NOT NULL," +
+			EventEntry.COLUMN_TOTAL_DURATION + " REAL NOT NULL," +
+			EventEntry.COLUMN_LOCATION + " TEXT NOT NULL," +
 			"FOREIGN KEY(" + EventEntry.COLUMN_TOURNAMENT_ID + ") REFERENCES "
 			+ TournamentEntry.TABLE_NAME + "(" + TournamentEntry._ID + "));";
 
 	private static final String SQL_CREATE_TOURNAMENT_ENTRIES =
 			"CREATE TABLE " + TournamentEntry.TABLE_NAME + " (" +
 					TournamentEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-//					TournamentEntry.COLUMN_TOURNAMENT_ID + " INTEGER UNIQUE," +
-					TournamentEntry.COLUMN_TITLE + " TEXT UNIQUE," +
-					TournamentEntry.COLUMN_LABEL + " TEXT," +
-					TournamentEntry.COLUMN_IS_TOURNAMENT + " INTEGER," +
-					TournamentEntry.COLUMN_PRIZE + " INTEGER," +
-					TournamentEntry.COLUMN_GM + " TEXT," +
-//					TournamentEntry.COLUMN_FINAL_EVENT + " INTEGER," +
-					TournamentEntry.COLUMN_VISIBLE + " INTEGER)";
+					TournamentEntry.COLUMN_TITLE + " TEXT UNIQUE NOT NULL," +
+					TournamentEntry.COLUMN_LABEL + " TEXT NOT NULL," +
+					TournamentEntry.COLUMN_IS_TOURNAMENT + " INTEGER NOT NULL," +
+					TournamentEntry.COLUMN_PRIZE + " INTEGER NOT NULL," +
+					TournamentEntry.COLUMN_GM + " TEXT NOT NULL," +
+					TournamentEntry.COLUMN_VISIBLE + " INTEGER NOT NULL)";
 
 	private static final String SQL_CREATE_USER_ENTRIES = "CREATE TABLE " + UserEntry.TABLE_NAME + " (" +
 			UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-//			UserEntry.COLUMN_USER_ID + " INTEGER UNIQUE," +
-			UserEntry.COLUMN_NAME + " TEXT," +
-			UserEntry.COLUMN_EMAIL + " TEXT)";
+			UserEntry.COLUMN_NAME + " TEXT NOT NULL," +
+			UserEntry.COLUMN_EMAIL + " TEXT NOT NULL)";
 
 	private static final String SQL_CREATE_USER_TOURNAMENT_DATA_ENTRIES =
 			"CREATE TABLE " + UserTournamentDataEntry.TABLE_NAME + " (" +
@@ -159,7 +149,8 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 	private static final String SQL_DELETE_TOURNAMENT_ENTRIES =
 			"DROP TABLE IF EXISTS " + TournamentEntry.TABLE_NAME;
 
-	private static final String SQL_DELETE_USER_ENTRIES = "DROP TABLE IF EXISTS " + UserEntry.TABLE_NAME;
+	private static final String SQL_DELETE_USER_ENTRIES =
+			"DROP TABLE IF EXISTS " + UserEntry.TABLE_NAME;
 
 	private static final String SQL_DELETE_USER_EVENT_DATA_ENTRIES =
 			"DROP TABLE IF EXISTS " + UserEventDataEntry.TABLE_NAME;
@@ -259,13 +250,11 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 
 	long insertTournament(String title, String label, boolean isTournament, int prize, String gm) {
 		ContentValues values = new ContentValues();
-//		values.put(TournamentEntry.COLUMN_TOURNAMENT_ID, tId);
 		values.put(TournamentEntry.COLUMN_TITLE, title);
 		values.put(TournamentEntry.COLUMN_LABEL, label);
 		values.put(TournamentEntry.COLUMN_IS_TOURNAMENT, isTournament ? 1 : 0);
 		values.put(TournamentEntry.COLUMN_PRIZE, prize);
 		values.put(TournamentEntry.COLUMN_GM, gm);
-//		values.put(TournamentEntry.COLUMN_FINAL_EVENT, eventId);
 		values.put(TournamentEntry.COLUMN_VISIBLE, 1);
 
 		// Insert the new row, returning the primary key value of the new row
@@ -551,6 +540,13 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		values.put(EventEntry.COLUMN_HOUR, hour);
 		values.put(EventEntry.COLUMN_DURATION, duration);
 		values.put(EventEntry.COLUMN_LOCATION, location);
+
+		values.put(EventEntry.COLUMN_TOURNAMENT_ID, -1);
+		values.put(EventEntry.COLUMN_CLASS, "");
+		values.put(EventEntry.COLUMN_FORMAT, "");
+		values.put(EventEntry.COLUMN_QUALIFY, 0);
+		values.put(EventEntry.COLUMN_CONTINUOUS, 0);
+		values.put(EventEntry.COLUMN_TOTAL_DURATION, duration);
 
 		// Insert the new row, returning the primary key value of the new row
 		return sqLiteDatabase

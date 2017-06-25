@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,13 +30,15 @@ import java.util.Locale;
 public class DefaultListFragment extends Fragment {
 	//private final String TAG="Default List Fragment";
 
-	DefaultListAdapter listAdapter;
-	ExpandableListView listView;
+	protected DefaultListAdapter listAdapter;
+	protected ExpandableListView listView;
+	private long hoursIntoConvention;
 
 	private boolean allStarred;
 	private ImageView star;
 	private List<Event> changedEvents;
 	private ProgressDialog dialog;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +54,8 @@ public class DefaultListFragment extends Fragment {
 				showSaveDialog();
 			}
 		});
+
+		hoursIntoConvention = Helpers.getHoursIntoConvention();
 
 		return view;
 	}
@@ -114,29 +119,23 @@ public class DefaultListFragment extends Fragment {
 		}
 	}
 
-	public void refreshAdapter() {
-		if (listAdapter != null) {
-			listAdapter.updateList();
-		}
-	}
-
 	int getLayoutId() {
 		return R.layout.default_list;
 	}
 
-	public void updateEvents(Event[] events) {
+	public void updateEvent(Event event) {
 		if (listAdapter != null) {
-			listAdapter.updateEvents(events);
-			listAdapter.updateList();
+			listAdapter.updateEvent(event);
+			listAdapter.notifyDataSetChanged();
 
 			setAllStarred();
 		}
 	}
 
-	public void removeEvents(Event[] events) {
+	public void removeEvent(Event event) {
 		if (listAdapter != null) {
-			listAdapter.removeEvents(events);
-			listAdapter.updateList();
+			listAdapter.removeEvent(event);
+			listAdapter.notifyDataSetChanged();
 
 			setAllStarred();
 		}
@@ -206,13 +205,10 @@ public class DefaultListFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(Void aVoid) {
-			// update events in Main lists
-			Event[] changedEventsArray = new Event[changedEvents.size()];
-			MainActivity.changeEventsInLists(changedEvents.toArray(changedEventsArray), -1);
-
 			if (dialog.isShowing()) {
 				dialog.dismiss();
 			}
+
 			refreshAdapter();
 			super.onPostExecute(aVoid);
 		}
@@ -225,19 +221,36 @@ public class DefaultListFragment extends Fragment {
 			dbHelper.insertUserEventData(MainActivity.userId, changedEvents);
 			dbHelper.close();
 
+			for (Event changedEvent : changedEvents) {
+				((MainActivity) getActivity()).changeEventInLists(changedEvent);
+			}
+
+
 			return null;
 		}
 	}
 
 	@Override
 	public void onPause() {
-
 		if (dialog != null && dialog.isShowing()) {
 			dialog.dismiss();
 		}
 		super.onPause();
 	}
 
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		refreshAdapter();
+	}
+
+	protected void refreshAdapter() {
+		hoursIntoConvention = Helpers.getHoursIntoConvention();
+		if (listAdapter != null) {
+			listAdapter.notifyDataSetChanged();
+		}
+	}
 
 	class DefaultListAdapter extends BaseExpandableListAdapter {
 		//private final String TAG="Default Adapter";
@@ -252,7 +265,6 @@ public class DefaultListFragment extends Fragment {
 		final String[] dayStrings;
 		private final int id;
 
-		long hoursIntoConvention;
 
 		List<List<Event>> events;
 
@@ -264,11 +276,11 @@ public class DefaultListFragment extends Fragment {
 			dayStrings = c.getResources().getStringArray(R.array.days);
 
 			// get resources
-			COLOR_JUNIOR = c.getResources().getColor(R.color.junior);
-			COLOR_SEMINAR = c.getResources().getColor(R.color.seminar);
-			COLOR_QUALIFY = c.getResources().getColor(R.color.qualify);
-			COLOR_NON_TOURNAMENT = c.getResources().getColor(R.color.non_tournament);
-			COLOR_OPEN_TOURNAMENT = c.getResources().getColor(R.color.open_tournament);
+			COLOR_JUNIOR = ContextCompat.getColor(getActivity(), R.color.junior);
+			COLOR_SEMINAR = ContextCompat.getColor(getActivity(), R.color.seminar);
+			COLOR_QUALIFY = ContextCompat.getColor(getActivity(), R.color.qualify);
+			COLOR_NON_TOURNAMENT = ContextCompat.getColor(getActivity(), R.color.non_tournament);
+			COLOR_OPEN_TOURNAMENT = ContextCompat.getColor(getActivity(), R.color.open_tournament);
 		}
 
 		@Override
@@ -470,27 +482,22 @@ public class DefaultListFragment extends Fragment {
 			return events.size();
 		}
 
-		void updateList() {
-			hoursIntoConvention = Helpers.getHoursIntoConvention();
-			notifyDataSetChanged();
-		}
-
 		void changeEventStar(Event event) {
 			event.starred = !event.starred;
 
-			updateEvents(new Event[]{event});
+			updateEvent(event);
 			notifyDataSetChanged();
 
 			setAllStarred();
-			MainActivity.changeEventsInLists(new Event[]{event}, id);
+			((MainActivity) getActivity()).changeEventInLists(event);
 
 			saveEvent(event);
 		}
 
-		void updateEvents(Event[] events) {
+		void updateEvent(Event event) {
 		}
 
-		void removeEvents(Event[] deletedEvents) {
+		void removeEvent(Event deletedEvent) {
 		}
 
 		List<Event> getChangedEvents(boolean changedStar) {

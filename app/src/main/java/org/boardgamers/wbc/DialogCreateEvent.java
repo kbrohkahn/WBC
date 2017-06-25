@@ -14,9 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Kevin on 4/24/2015
  * Dialog shown for creating user events
@@ -27,15 +24,13 @@ public class DialogCreateEvent extends DialogFragment {
 	private final int[] ceDayIDs =
 			{R.id.ce_repeat_d0, R.id.ce_repeat_d1, R.id.ce_repeat_d2, R.id.ce_repeat_d3,
 					R.id.ce_repeat_d4, R.id.ce_repeat_d5, R.id.ce_repeat_d6, R.id.ce_repeat_d7,
-					R.id.ce_repeat_d8};
+					R.id.ce_repeat_d8, R.id.ce_repeat_d9};
 
 	private Spinner hourSpinner;
 	private Spinner durationSpinner;
 	private EditText titleET;
 	private EditText locationET;
 
-	private TextView daysTV;
-	private LinearLayout daysLL;
 	private CheckBox[] days;
 
 	@Override
@@ -48,9 +43,9 @@ public class DialogCreateEvent extends DialogFragment {
 		titleET = view.findViewById(R.id.ce_title);
 		locationET = view.findViewById(R.id.ce_location);
 
-		daysTV = view.findViewById(R.id.ce_days);
+		TextView daysTV = view.findViewById(R.id.ce_days);
 		daysTV.setVisibility(View.VISIBLE);
-		daysLL = view.findViewById(R.id.ce_days_layout);
+		LinearLayout daysLL = view.findViewById(R.id.ce_days_layout);
 		daysLL.setVisibility(View.VISIBLE);
 
 		hourSpinner = view.findViewById(R.id.ce_hour);
@@ -106,21 +101,13 @@ public class DialogCreateEvent extends DialogFragment {
 		WBCDataDbHelper dbHelper = new WBCDataDbHelper(getActivity());
 		dbHelper.getWritableDatabase();
 
-		List<Event> newEvents = new ArrayList<>();
-		Event event;
 		for (int day = 0; day < days.length; day++) {
 			if (days[day].isChecked()) {
-				long id = dbHelper.insertUserEvent(MainActivity.userId, title, day, hour, duration, location);
-				event =
-						new Event(id, 0, day, hour, title, "", "",
-								false, duration, false, duration, location);
-				newEvents.add(event);
+				dbHelper.insertUserEvent(MainActivity.userId, title, day, hour, duration, location);
 			}
 		}
 
 		dbHelper.close();
-
-		MainActivity.changeEventsInLists(newEvents.toArray(new Event[newEvents.size()]), 3);
 
 		dismiss();
 	}
