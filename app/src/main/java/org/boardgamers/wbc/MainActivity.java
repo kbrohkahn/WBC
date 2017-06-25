@@ -328,10 +328,15 @@ public class MainActivity extends AppCompatActivity {
 		if (isExternalStorageWritable()) {
 			Log.d(TAG, "Saving in external");
 			File sdCard = Environment.getExternalStorageDirectory();
-			File dir = new File(sdCard.getAbsolutePath() + "/WBC/");
+			if (!sdCard.canWrite()) {
+				Log.e(TAG, "Can't write to storage");
+				return;
+			}
 
+			File dir = new File(sdCard.getAbsolutePath() + "/WBC/");
 			if (!dir.mkdirs()) {
-				Log.d(TAG, "Directory not created");
+				Log.e(TAG, "Directory not created: " + dir.getPath());
+				return;
 			}
 
 			file = new File(dir, fileName);

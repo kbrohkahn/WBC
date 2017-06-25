@@ -29,13 +29,13 @@ public class DialogCreateEvent extends DialogFragment {
 					R.id.ce_repeat_d4, R.id.ce_repeat_d5, R.id.ce_repeat_d6, R.id.ce_repeat_d7,
 					R.id.ce_repeat_d8};
 
-	Spinner hourSpinner;
-	Spinner durationSpinner;
-	EditText titleET;
-	EditText locationET;
+	private Spinner hourSpinner;
+	private Spinner durationSpinner;
+	private EditText titleET;
+	private EditText locationET;
 
-	TextView daysTV;
-	LinearLayout daysLL;
+	private TextView daysTV;
+	private LinearLayout daysLL;
 	private CheckBox[] days;
 
 	@Override

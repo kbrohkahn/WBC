@@ -252,11 +252,11 @@ public class DefaultListFragment extends Fragment {
 		final String[] dayStrings;
 		private final int id;
 
-		public long hoursIntoConvention;
+		long hoursIntoConvention;
 
 		List<List<Event>> events;
 
-		public DefaultListAdapter(Context c, List<List<Event>> e, int i) {
+		DefaultListAdapter(Context c, List<List<Event>> e, int i) {
 			inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			events = e;
 			id = i;
@@ -362,7 +362,7 @@ public class DefaultListFragment extends Fragment {
 			return view;
 		}
 
-		public void selectEvent(Event event) {
+		void selectEvent(Event event) {
 			setSelectedEvent(event.id);
 			notifyDataSetChanged();
 		}
@@ -417,7 +417,7 @@ public class DefaultListFragment extends Fragment {
 		 * @param event - event needed for format, title, class, and qualify
 		 * @return integer value of color
 		 */
-		public int getTextColor(Event event) {
+		int getTextColor(Event event) {
 			if (event.qualify) {
 				return COLOR_QUALIFY;
 			} else if (event.title.contains("Junior")) {
@@ -438,7 +438,7 @@ public class DefaultListFragment extends Fragment {
 		 * @param event - event needed for format, title, class, and qualify
 		 * @return integer value of typeface
 		 */
-		public int getTextStyle(Event event) {
+		int getTextStyle(Event event) {
 			if (event.qualify) {
 				return Typeface.BOLD;
 			} else if (event.title.contains("Junior")) {
@@ -470,12 +470,12 @@ public class DefaultListFragment extends Fragment {
 			return events.size();
 		}
 
-		public void updateList() {
+		void updateList() {
 			hoursIntoConvention = Helpers.getHoursIntoConvention();
 			notifyDataSetChanged();
 		}
 
-		public void changeEventStar(Event event) {
+		void changeEventStar(Event event) {
 			event.starred = !event.starred;
 
 			updateEvents(new Event[]{event});
@@ -487,13 +487,13 @@ public class DefaultListFragment extends Fragment {
 			saveEvent(event);
 		}
 
-		public void updateEvents(Event[] events) {
+		void updateEvents(Event[] events) {
 		}
 
-		public void removeEvents(Event[] deletedEvents) {
+		void removeEvents(Event[] deletedEvents) {
 		}
 
-		public List<Event> getChangedEvents(boolean changedStar) {
+		List<Event> getChangedEvents(boolean changedStar) {
 			List<Event> changedEvents = new ArrayList<>();
 
 			for (int i = 0; i < events.size(); i++) {

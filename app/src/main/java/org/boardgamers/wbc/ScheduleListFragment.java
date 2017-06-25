@@ -12,7 +12,7 @@ import android.widget.SectionIndexer;
 import java.util.List;
 
 public class ScheduleListFragment extends DefaultListFragment {
-	//private final String TAG="Schedule List Fragment";
+	private final String TAG = "Schedule List Fragment";
 
 	public static final int GROUPS_PER_DAY = 18 + 1;
 
@@ -167,6 +167,7 @@ public class ScheduleListFragment extends DefaultListFragment {
 			} else {
 				String groupTitle = hours[(groupPosition % GROUPS_PER_DAY) - 1] + ": ";
 
+				Log.d(TAG, "Group title is " + groupTitle);
 				int groupHoursIntoConvention = groupPosition / GROUPS_PER_DAY * 24
 						+ groupPosition % GROUPS_PER_DAY + GROUP_HOUR_OFFSET;
 				for (int i = 0; i <= groupPosition; i++) {
@@ -179,6 +180,7 @@ public class ScheduleListFragment extends DefaultListFragment {
 					}
 				}
 
+				Log.d(TAG, "Group title withe events is " + groupTitle);
 				return groupTitle.substring(0, groupTitle.length() - 2);
 			}
 		}

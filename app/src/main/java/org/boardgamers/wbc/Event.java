@@ -5,17 +5,17 @@ public class Event {
 	public final long tournamentID;
 
 	public final int day;
-	public float hour;
+	public final float hour;
 	public String title;
 
 	public final String eClass;
 	public final String format;
 	public final boolean qualify;
-	public float duration;
+	public final float duration;
 	public final boolean continuous;
 	private final float totalDuration;
 
-	public String location;
+	public final String location;
 
 	// user variables
 	public boolean starred;

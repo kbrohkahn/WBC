@@ -1,6 +1,6 @@
 package org.boardgamers.wbc;
 
-public class Tournament {
+class Tournament {
 
 	public final int id;
 
