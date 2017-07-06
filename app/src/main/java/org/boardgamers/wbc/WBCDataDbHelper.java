@@ -17,7 +17,7 @@ import java.util.List;
 class WBCDataDbHelper extends SQLiteOpenHelper {
 	private final String TAG = "WBCDataDbHelper";
 
-	static final int DATABASE_VERSION = 16;
+	static final int DATABASE_VERSION = 19;
 
 	private static final String DATABASE_NAME = "WBCdata.db";
 
