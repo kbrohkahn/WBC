@@ -94,7 +94,7 @@ public class UserDataListFragment extends DefaultListFragment {
 		WBCDataDbHelper dbHelper = new WBCDataDbHelper(getActivity());
 		dbHelper.getReadableDatabase();
 
-		if (!noteInList && !e.note.equalsIgnoreCase("")) {
+		if (!noteInList && e.note != null && e.note.equalsIgnoreCase("")) {
 			Event eventNote = dbHelper.getEvent(MainActivity.userId, e.id);
 			eventNote.title += ": " + eventNote.note;
 

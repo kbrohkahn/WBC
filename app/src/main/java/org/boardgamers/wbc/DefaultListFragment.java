@@ -222,7 +222,9 @@ public class DefaultListFragment extends Fragment {
 			dbHelper.close();
 
 			for (Event changedEvent : changedEvents) {
-				((MainActivity) getActivity()).changeEventInLists(changedEvent);
+				if (getActivity() instanceof MainActivity) {
+					((MainActivity) getActivity()).changeEventInLists(changedEvent);
+				}
 			}
 
 
@@ -489,7 +491,11 @@ public class DefaultListFragment extends Fragment {
 			notifyDataSetChanged();
 
 			setAllStarred();
-			((MainActivity) getActivity()).changeEventInLists(event);
+
+			// TODO what if not main activity (tournament list?)
+			if (getActivity() instanceof MainActivity) {
+				((MainActivity) getActivity()).changeEventInLists(event);
+			}
 
 			saveEvent(event);
 		}

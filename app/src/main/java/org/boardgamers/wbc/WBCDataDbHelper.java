@@ -576,6 +576,9 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 	User getUser(long id) {
 		List<User> users = getUsers(UserEntry._ID + "=" + String.valueOf(id));
 
+		if (users.size() == 0) {
+			users = getUsers("1=1");
+		}
 		return users.get(0);
 	}
 
