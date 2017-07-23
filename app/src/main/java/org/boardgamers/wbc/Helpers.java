@@ -34,10 +34,9 @@ class Helpers {
 		}
 	}
 
-
 	static Calendar getFirstDayCalendar() {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("M/dd/yyyy HH:mm:ss z", Locale.ENGLISH);
-		String firstDayString = "7/22/2017 00:00:00 GMT-4";
+		String firstDayString = "7/21/2017 00:00:00 EST";
 		Calendar firstDayCalendar = Calendar.getInstance();
 		try {
 			Date firstDayDate = dateFormatter.parse(firstDayString);

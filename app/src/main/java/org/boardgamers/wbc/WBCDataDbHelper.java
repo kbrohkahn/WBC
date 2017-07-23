@@ -248,6 +248,30 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		return sqLiteDatabase.insert(EventEntry.TABLE_NAME, EventEntry.COLUMN_NULLABLE, values);
 	}
 
+	long updateEvent(String tournamentTitle, String eventTitle, int day, float hour, String location) {
+		ContentValues values = new ContentValues();
+		if (day > -1)
+			values.put(EventEntry.COLUMN_DAY, day);
+		if (hour > -1)
+			values.put(EventEntry.COLUMN_HOUR, hour);
+		if (location != null)
+			values.put(EventEntry.COLUMN_LOCATION, location);
+
+
+		String whereClause;
+		if (tournamentTitle != null) {
+			long tournamentId = getTournamentID(tournamentTitle);
+			whereClause = EventEntry.COLUMN_TOURNAMENT_ID + "=" + String.valueOf(tournamentId)
+					+ " and " + EventEntry.COLUMN_TITLE + "='" + eventTitle +"'";
+		} else {
+			whereClause = EventEntry.COLUMN_TITLE + "='" + eventTitle +"'";
+		}
+
+		Log.d(TAG, whereClause);
+		// Insert the new row, returning the primary key value of the new row
+		return sqLiteDatabase.update(EventEntry.TABLE_NAME, values, whereClause, null);
+	}
+
 	long insertTournament(String title, String label, boolean isTournament, int prize, String gm) {
 		ContentValues values = new ContentValues();
 		values.put(TournamentEntry.COLUMN_TITLE, title);

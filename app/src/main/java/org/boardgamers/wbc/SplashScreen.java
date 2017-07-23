@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -62,8 +63,23 @@ public class SplashScreen extends AppCompatActivity {
 
 	private void checkForChanges() {
 		String changes = "";
+		WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
+		dbHelper.getWritableDatabase();
+
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		long lastVersionCode = preferences.getLong("lastVersionCode", -1);
 
 		// TODO add changes to database and string here
+		if (lastVersionCode < 263000300) {
+			changes += "Mega Civilization will now be on Monday At 9AM in Festival Hall.  It was originally scheduled for Monday at 12 in Hemlock.\n\n";
+			dbHelper.updateEvent(null, "Mega Civilization 1/1", -1, 9, "Festival Hall");
+		}
+
+		dbHelper.close();
+
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putLong("lastVersionCode", 263000300);
+		editor.apply();
 
 		if (changes.equalsIgnoreCase("")) {
 			startMainActivity();
