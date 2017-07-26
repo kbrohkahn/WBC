@@ -315,7 +315,7 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 
 	List<Event> getEventsFromSearchString(long userId, String searchString) {
 		return getEvents(userId, true, true,
-				EventEntry.TABLE_NAME + "." + EventEntry.COLUMN_TITLE + " LIKE '%" + searchString + "%' OR " +
+				"(" + EventEntry.TABLE_NAME + "." + EventEntry.COLUMN_TITLE + " LIKE '%" + searchString + "%' OR " +
 						EventEntry.TABLE_NAME + "." + EventEntry.COLUMN_FORMAT + " LIKE '%" + searchString + "%')");
 	}
 
@@ -403,7 +403,7 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 				+ " WHERE " + whereClause
 				+ " ORDER BY " + sortOrder;
 
-		Log.d(TAG, "Full query: " + query);
+		Log.d(TAG, "Full event query: " + query);
 
 		String title, eClass, format, location, note;
 		int id, tournamentId, day;
@@ -511,19 +511,20 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 				TournamentEntry._ID + "=" + UserTournamentDataEntry.TABLE_NAME + "." +
 				UserTournamentDataEntry.COLUMN_TOURNAMENT_ID + " WHERE " + where + " ORDER BY " + sortOrder;
 
-		//Log.d(TAG, "Full query: "+query);
+		Log.d(TAG, "Full tournament query: "+query);
 
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 
 		String title, label, gm;
-		int id, prize, finish;
+		long id;
+		int prize, finish;
 		boolean isTournament, visible;
 
 		List<Tournament> tournaments = new ArrayList<>();
 		Tournament tournament;
 		if (cursor.moveToFirst()) {
 			do {
-				id = cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry._ID));
+				id = cursor.getLong(cursor.getColumnIndexOrThrow(TournamentEntry._ID));
 				title = cursor.getString(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_TITLE));
 				label = cursor.getString(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_LABEL));
 				isTournament =
@@ -533,6 +534,8 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 //				finalEventId = cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_FINAL_EVENT));
 				visible = cursor.getInt(cursor.getColumnIndexOrThrow(TournamentEntry.COLUMN_VISIBLE)) == 1;
 				finish = cursor.getInt(cursor.getColumnIndexOrThrow(UserTournamentDataEntry.COLUMN_FINISH));
+
+				Log.d(TAG, "Id is " + String.valueOf(id));
 
 				tournament = new Tournament(id, title, label, isTournament, prize, gm);
 				tournament.finish = finish;

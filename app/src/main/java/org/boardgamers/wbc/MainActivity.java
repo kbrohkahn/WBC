@@ -31,7 +31,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -261,29 +260,14 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void share() {
-		//    WBCDataDbHelper dbHelper=new WBCDataDbHelper(this);
-		//    dbHelper.getReadableDatabase();
-		//    List<Event> starred=dbHelper.getStarredEvents();
-		//    List<Event> notes=dbHelper.getEventsWithNotes();
-		//    List<Tournament> tFinishes=dbHelper.getTournamentsWithFinishes();
-		//    dbHelper.close();
-		//    Log.d(TAG, "Received from DB");
-
-		UserDataListFragment userDataListFragment = (UserDataListFragment) pagerAdapter.getItem(2);
-		List<Event> notes = userDataListFragment.listAdapter.events.get(UserDataListFragment.NOTES_INDEX);
-		List<Event> eFinishes =
-				userDataListFragment.listAdapter.events.get(UserDataListFragment.FINISHES_INDEX);
-		List<Event> userEvents =
-				userDataListFragment.listAdapter.events.get(UserDataListFragment.EVENTS_INDEX);
-		SummaryListFragment summaryListFragment = (SummaryListFragment) pagerAdapter.getItem(0);
-
-		List<List<Event>> starredGroups = summaryListFragment.listAdapter.events;
-		List<Event> starred = new ArrayList<>();
-		for (List<Event> events : starredGroups) {
-			for (Event event : events) {
-				starred.add(event);
-			}
-		}
+		WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
+		dbHelper.getReadableDatabase();
+		List<Event> starred = dbHelper.getStarredEvents(userId);
+		List<Event> notes = dbHelper.getEventsWithNotes(userId);
+		List<Tournament> tFinishes = dbHelper.getTournamentsWithFinishes(userId);
+		List<Event> userEvents = dbHelper.getUserEvents(userId);
+		dbHelper.close();
+		Log.d(TAG, "Received from DB");
 
 		String contentBreak = "~~~";
 		String delimitter = ";;;";
@@ -316,8 +300,8 @@ public class MainActivity extends AppCompatActivity {
 		}
 
 		outputString += contentBreak + "0";
-		for (Event event : eFinishes) {
-			outputString += String.valueOf(event.tournamentID) + delimitter + event.note + delimitter;
+		for (Tournament tournament : tFinishes) {
+			outputString += String.valueOf(tournament.id) + delimitter + tournament.finish + delimitter;
 		}
 
 		File file;
