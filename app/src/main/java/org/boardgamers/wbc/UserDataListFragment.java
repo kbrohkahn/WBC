@@ -221,10 +221,12 @@ public class UserDataListFragment extends DefaultListFragment {
 				Tournament tournamentFinish = dbHelper.getTournament(MainActivity.userId, tournament.id);
 				Event eventFinish = dbHelper.getFinalEvent(MainActivity.userId, tournamentFinish.id);
 
-				eventFinish.title += ": " + finishStrings[tournamentFinish.finish - 1];
-				eventFinish.note = String.valueOf(tournamentFinish.finish);
+				if (eventFinish != null) {
+					eventFinish.title += ": " + finishStrings[tournamentFinish.finish - 1];
+					eventFinish.note = String.valueOf(tournamentFinish.finish);
 
-				eventFinishes.add(eventFinish);
+					eventFinishes.add(eventFinish);
+				}
 			}
 			dbHelper.close();
 
