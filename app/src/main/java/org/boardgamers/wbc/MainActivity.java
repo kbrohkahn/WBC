@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 			mNotificationManager.createNotificationChannel(channel);
 		}
 
+		Helpers.scheduleAlarms(this);
 
 		loadUserData();
 	}
@@ -279,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
 		for (List<Event> events : starredGroups) {
 			starred.addAll(events);
 		}
+
 
 		String contentBreak = "~~~";
 		String delimitter = ";;;";

@@ -225,7 +225,6 @@ public class UserDataListFragment extends DefaultListFragment {
 					eventFinish.title += ": " + finishStrings[tournamentFinish.finish - 1];
 					eventFinish.note = String.valueOf(tournamentFinish.finish);
 
-
 					eventFinishes.add(eventFinish);
 				}
 			}

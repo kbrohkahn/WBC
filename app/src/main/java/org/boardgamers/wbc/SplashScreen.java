@@ -98,11 +98,6 @@ public class SplashScreen extends AppCompatActivity {
 
 	private void startMainActivity() {
 		startActivity(new Intent(this, MainActivity.class));
-
-		Intent intent = new Intent(this, UpdateService.class);
-		stopService(intent);
-		startService(intent);
-
 		finish();
 	}
 

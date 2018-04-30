@@ -1,11 +1,12 @@
 package org.boardgamers.wbc;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.List;
 
 public class SearchListFragment extends DefaultListFragment {
-	//private final String TAG="Search Fragment";
+	private static final String TAG="Search Fragment";
 
 	private String query;
 	private int tournamentId;
@@ -52,6 +53,9 @@ public class SearchListFragment extends DefaultListFragment {
 
 			WBCDataDbHelper dbHelper = new WBCDataDbHelper(getActivity());
 			dbHelper.getReadableDatabase();
+
+			Log.d(TAG, String.valueOf(tournamentId));
+			Log.d(TAG, query);
 
 			List<Event> tempEvents;
 			if (tournamentId > -1) {
