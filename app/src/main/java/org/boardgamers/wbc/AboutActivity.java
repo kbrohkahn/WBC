@@ -20,14 +20,14 @@ public class AboutActivity extends AppCompatActivity {
 
 		setContentView(R.layout.about);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
-		TextView appVersion = (TextView) findViewById(R.id.about_app_version);
+		TextView appVersion = findViewById(R.id.about_app_version);
 
 		String versionString;
 		try {

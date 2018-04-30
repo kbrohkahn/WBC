@@ -534,7 +534,7 @@ public class DefaultListFragment extends Fragment {
 	}
 
 	private void setSelectedEvent(long id) {
-		EventFragment eventFragment = (EventFragment) this.getFragmentManager()
+		EventFragment eventFragment = (EventFragment) getFragmentManager()
 				.findFragmentById(R.id.eventFragment);
 		if (eventFragment != null) {
 			// don't call setEvent if it's the same event

@@ -23,7 +23,7 @@ public class MapActivity extends AppCompatActivity {
 
 		setContentView(R.layout.map);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -35,8 +35,8 @@ public class MapActivity extends AppCompatActivity {
 			selectedRoom = "";
 		}
 
-		skiLodgeIV = (ImageView) findViewById(R.id.ski_lodge_overlay);
-		conventionCenterIV = (ImageView) findViewById(R.id.convention_center_overlay);
+		skiLodgeIV = findViewById(R.id.ski_lodge_overlay);
+		conventionCenterIV = findViewById(R.id.convention_center_overlay);
 
 		roomID = -1;
 		String[] roomsDownstairs = getResources().getStringArray(R.array.rooms_ski_lodge);

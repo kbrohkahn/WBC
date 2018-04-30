@@ -8,8 +8,9 @@ public class ServiceStarterReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context arg0, Intent arg1) {
-		Intent intent = new Intent(arg0, UpdateService.class);
-		arg0.startService(intent);
+		String action;
+		if ((action = arg1.getAction()) != null && action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+			Helpers.scheduleAlarms(arg0);
+		}
 	}
-
 }

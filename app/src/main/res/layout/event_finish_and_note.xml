@@ -71,6 +71,7 @@
 		android:id="@+id/ef_note"
 		style="@style/medium_text"
 		android:background="@drawable/edit_text_back"
+		android:inputType="textMultiLine"
 		android:hint="@string/note_hint"
 		android:minLines="4"
 		android:padding="4dp"/>

@@ -27,6 +27,7 @@ class Constants {
 	static final int TOTAL_DAYS = 10;
 	static final long milliHour = 60 * 60 * 1000;
 
+	static final String channelId = "upcomingEvents";
 	//	static final int PRIMARY_USER_ID = 0;
 	//	 static final int USER_EVENT_ID = 2000;
 

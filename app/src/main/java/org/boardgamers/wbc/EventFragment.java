@@ -276,7 +276,7 @@ public class EventFragment extends Fragment {
 				previewTV.setVisibility(View.VISIBLE);
 				reportTV.setVisibility(View.VISIBLE);
 
-				int boxId = MainActivity.getBoxIdFromLabel(tournament.label, getResources());
+				int boxId = Helpers.getBoxIdFromLabel(tournament.label, getContext());
 				boxIV.setImageResource(boxId);
 
 				// if last event started, allow finish

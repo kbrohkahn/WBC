@@ -262,9 +262,9 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 		if (tournamentTitle != null) {
 			long tournamentId = getTournamentID(tournamentTitle);
 			whereClause = EventEntry.COLUMN_TOURNAMENT_ID + "=" + String.valueOf(tournamentId)
-					+ " and " + EventEntry.COLUMN_TITLE + "='" + eventTitle +"'";
+					+ " and " + EventEntry.COLUMN_TITLE + "='" + eventTitle + "'";
 		} else {
-			whereClause = EventEntry.COLUMN_TITLE + "='" + eventTitle +"'";
+			whereClause = EventEntry.COLUMN_TITLE + "='" + eventTitle + "'";
 		}
 
 		Log.d(TAG, whereClause);
@@ -326,13 +326,11 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 	}
 
 	Event getFinalEvent(long userId, long tournamentId) {
-		String where = EventEntry.TABLE_NAME + "." + EventEntry.COLUMN_TOURNAMENT_ID + "=" + String.valueOf(tournamentId)
-				+ " AND (" + EventEntry.COLUMN_TITLE + "= 'SF/F' "
-				+ " OR " + EventEntry.COLUMN_TITLE + "= 'F' )";
+		String where = EventEntry.TABLE_NAME + "." + EventEntry.COLUMN_TOURNAMENT_ID + "=" + String.valueOf(tournamentId);
 		List<Event> events = getEvents(userId, true, true, where);
 
 		if (events != null && events.size() > 0) {
-			return events.get(0);
+			return events.get(events.size() - 1);
 		} else {
 			return null;
 		}

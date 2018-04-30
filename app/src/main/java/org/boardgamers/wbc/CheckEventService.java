@@ -7,9 +7,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
@@ -38,28 +38,39 @@ public class CheckEventService extends IntentService {
 
 		long hoursIntoConvention = Helpers.getHoursIntoConvention();
 
-		String eventsString = "";
+		StringBuilder sb = new StringBuilder();
 		for (Event event : starredEvents) {
 			if (hoursIntoConvention + 1 == event.day * 24 + event.hour) {
 				MainActivity.selectedEventId = event.id;
-				eventsString += event.title + ", ";
+				sb.append(event.title);
+				sb.append(", ");
 			}
 		}
 
-		if (eventsString.length() > 0) {
-			eventsString = eventsString.substring(0, eventsString.length() - 2);
-			sendNotification(eventsString);
+		if (sb.length() > 0) {
+			sendNotification(sb.substring(0, sb.length() - 2));
 		}
 	}
 
 	private void sendNotification(String s) {
+		NotificationManager mNotificationManager =
+				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		if (mNotificationManager == null) {
+			Log.e(TAG, "Notification manager is null");
+			return;
+		}
+
 		Log.d(TAG, "Events now: " + s);
 
 		int TYPE_VIBRATE = 0;
 		int TYPE_RING = 1;
 		int TYPE_BOTH = 2;
 
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+
+		Notification.Builder mBuilder = new Notification.Builder(this);
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+			mBuilder.setChannelId(Constants.channelId);
+		}
 		mBuilder.setContentTitle(getResources().getString(R.string.notification_title))
 				.setContentText(s).setSmallIcon(R.drawable.ic_notification).setAutoCancel(true);
 
@@ -80,9 +91,6 @@ public class CheckEventService extends IntentService {
 		PendingIntent resultPendingIntent =
 				stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		mBuilder.setContentIntent(resultPendingIntent);
-		NotificationManager mNotificationManager =
-				(NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-		// mId allows you to update the notification later on.
 		mNotificationManager.notify(0, mBuilder.build());
 	}
 

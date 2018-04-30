@@ -3,6 +3,8 @@ package org.boardgamers.wbc;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,9 +12,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -45,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 	public static long selectedEventId = -1;
 	public static long userId = -1;
 
-	private static String packageName;
 	private boolean fromFilter = false;
 	public static boolean opened = false;
 
@@ -65,18 +66,17 @@ public class MainActivity extends AppCompatActivity {
 
 		setContentView(R.layout.main_layout);
 
-		packageName = getApplicationContext().getPackageName();
 		opened = true;
 		pagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
 
-		viewPager = (ViewPager) findViewById(R.id.pager);
+		viewPager = findViewById(R.id.pager);
 		viewPager.setAdapter(pagerAdapter);
 		viewPager.setOffscreenPageLimit(4);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		SlidingTabLayout tabs = (SlidingTabLayout) findViewById(R.id.sliding_layout);
+		SlidingTabLayout tabs = findViewById(R.id.sliding_layout);
 		tabs.setViewPager(viewPager);
 
 		// get version from last time app was opened
@@ -104,6 +104,16 @@ public class MainActivity extends AppCompatActivity {
 			editor.putInt("last_app_version", currentVersion);
 			editor.apply();
 		}
+
+		NotificationManager mNotificationManager =
+				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		if (mNotificationManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			NotificationChannel channel = new NotificationChannel(Constants.channelId,
+					"Notify for events",
+					NotificationManager.IMPORTANCE_DEFAULT);
+			mNotificationManager.createNotificationChannel(channel);
+		}
+
 
 		loadUserData();
 	}
@@ -189,19 +199,6 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
-	public static int getBoxIdFromLabel(String label, Resources r) {
-		String fixedLabel = label.toLowerCase();
-		fixedLabel = fixedLabel.replace("&", "and");
-		fixedLabel = fixedLabel.replace("!", "exc");
-		fixedLabel = fixedLabel.replace("-", "dash");
-
-		fixedLabel = "drawable/box_" + fixedLabel;
-
-		int id = r.getIdentifier(fixedLabel, null, packageName);
-
-		return id == 0 ? R.drawable.box_iv_no_image_text : id;
-	}
-
 
 	public static String getDisplayHour(float startHour, float duration) {
 		int hour = (int) (startHour + duration) % 24;
@@ -280,9 +277,7 @@ public class MainActivity extends AppCompatActivity {
 		List<List<Event>> starredGroups = summaryListFragment.listAdapter.events;
 		List<Event> starred = new ArrayList<>();
 		for (List<Event> events : starredGroups) {
-			for (Event event : events) {
-				starred.add(event);
-			}
+			starred.addAll(events);
 		}
 
 		String contentBreak = "~~~";
@@ -361,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
 		startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share)));
 	}
 
-  /* Checks if external storage is available for read and write */
+	/* Checks if external storage is available for read and write */
 
 	private boolean isExternalStorageWritable() {
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {

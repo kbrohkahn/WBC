@@ -52,7 +52,7 @@ public class SearchSuggestionsProvider extends ContentProvider {
 			label = c.getString(c.getColumnIndexOrThrow(WBCDataDbHelper.TournamentEntry.COLUMN_LABEL));
 
 			if (getContext() != null) {
-				boxId = MainActivity.getBoxIdFromLabel(label, getContext().getResources());
+				boxId = Helpers.getBoxIdFromLabel(label, getContext());
 			}
 			if (boxId == 0) {
 				//boxId=R.drawable.box_iv_no_image_text;

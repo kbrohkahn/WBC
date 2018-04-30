@@ -49,7 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 		setContentView(R.layout.settings);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -671,9 +671,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 	@Override
 	protected void onPause() {
-		Intent intent = new Intent(this, UpdateService.class);
-		stopService(intent);
-		startService(intent);
+		Helpers.scheduleAlarms(this);
 
 		super.onPause();
 	}

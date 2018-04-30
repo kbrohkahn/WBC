@@ -14,6 +14,7 @@
 			style="@style/medium_text"
 			android:layout_marginTop="@dimen/layout_margin_small"
 			android:hint="@string/title"
+			android:inputType="text"
 			android:imeOptions="actionNext"
 			android:maxLines="1"/>
 
@@ -64,6 +65,7 @@
 			android:id="@+id/ce_location"
 			style="@style/medium_text"
 			android:layout_marginTop="@dimen/layout_margin_large"
+			android:inputType="text"
 			android:hint="@string/location"
 			android:imeOptions="actionDone"
 			android:maxLines="1"/>

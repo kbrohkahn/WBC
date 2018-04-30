@@ -50,7 +50,7 @@ public class FilterActivity extends AppCompatActivity {
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		dialog.setTitle("Saving, please wait...");
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -92,18 +92,18 @@ public class FilterActivity extends AppCompatActivity {
 		sectionIndices = new Integer[sectionIndicesList.size()];
 		sectionIndicesList.toArray(sectionIndices);
 
-		ListView listView = (ListView) findViewById(R.id.filter_list_view);
+		ListView listView = findViewById(R.id.filter_list_view);
 
 		//listView.setFastScrollEnabled(true);
 		listAdapter = new FilterListAdapter();
 
 		listView.setAdapter(listAdapter);
 
-		FilterSideSelector sideSelector = (FilterSideSelector) findViewById(R.id.filter_side_selector);
+		FilterSideSelector sideSelector = findViewById(R.id.filter_side_selector);
 		sideSelector.setListView(listView);
 
 		// select all image button
-		Button selectAll = (Button) findViewById(R.id.filter_select_all);
+		Button selectAll = findViewById(R.id.filter_select_all);
 		selectAll.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -112,7 +112,7 @@ public class FilterActivity extends AppCompatActivity {
 		});
 
 		// select non tournament image button
-		Button selectTournaments = (Button) findViewById(R.id.filter_select_tournament);
+		Button selectTournaments = findViewById(R.id.filter_select_tournament);
 		selectTournaments.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -121,7 +121,7 @@ public class FilterActivity extends AppCompatActivity {
 		});
 
 		// deselect all image button
-		Button deselectAll = (Button) findViewById(R.id.filter_deselect_all);
+		Button deselectAll = findViewById(R.id.filter_deselect_all);
 		deselectAll.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -129,7 +129,7 @@ public class FilterActivity extends AppCompatActivity {
 			}
 		});
 
-		Button deselectTournaments = (Button) findViewById(R.id.filter_deselect_tournament);
+		Button deselectTournaments = findViewById(R.id.filter_deselect_tournament);
 		deselectTournaments.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -314,7 +314,7 @@ public class FilterActivity extends AppCompatActivity {
 				labelTV.setText(tournament.label);
 
 				ImageView boxIV = view.findViewById(R.id.filter_image_view);
-				boxIV.setImageResource(MainActivity.getBoxIdFromLabel(tournament.label, getResources()));
+				boxIV.setImageResource(Helpers.getBoxIdFromLabel(tournament.label, FilterActivity.this));
 
 				final CheckBox checkBox = view.findViewById(R.id.filter_checkbox);
 				checkBox.setChecked(tournament.visible);

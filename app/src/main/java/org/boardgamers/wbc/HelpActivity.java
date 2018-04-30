@@ -14,7 +14,7 @@ public class HelpActivity extends AppCompatActivity {
 
 		setContentView(R.layout.help);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -23,7 +23,7 @@ public class HelpActivity extends AppCompatActivity {
 
 		HelpListAdapter listAdapter = new HelpListAdapter(this);
 
-		ExpandableListView listView = (ExpandableListView) findViewById(R.id.help_list_view);
+		ExpandableListView listView = findViewById(R.id.help_list_view);
 
 		listView.setAdapter(listAdapter);
 	}

@@ -45,11 +45,11 @@ public class SplashScreen extends AppCompatActivity {
 		} else {
 			setContentView(R.layout.splash);
 
-			Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+			Toolbar toolbar = findViewById(R.id.toolbar);
 			setSupportActionBar(toolbar);
 			setTitle(getResources().getString(R.string.activity_splash));
 
-			progressBar = (ProgressBar) findViewById(R.id.splash_progress);
+			progressBar = findViewById(R.id.splash_progress);
 			progressBar.setMax(TOTAL_EVENTS);
 
 			new LoadEventsTask(this).execute(0, 0, 0);

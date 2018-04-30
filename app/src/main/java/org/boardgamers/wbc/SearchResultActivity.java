@@ -26,7 +26,7 @@ public class SearchResultActivity extends AppCompatActivity {
 
 		setContentView(R.layout.search_results);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
