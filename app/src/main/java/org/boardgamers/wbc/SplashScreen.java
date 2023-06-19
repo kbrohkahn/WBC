@@ -29,7 +29,8 @@ public class SplashScreen extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		int TOTAL_EVENTS = 751;
+	//	int TOTAL_EVENTS = 751;
+		int TOTAL_EVENTS = 1100;
 
 		WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
 		dbHelper.onUpgrade(dbHelper.getWritableDatabase(), dbHelper.getVersion(),
@@ -144,7 +145,7 @@ public class SplashScreen extends AppCompatActivity {
 			// find schedule file
 			InputStream is;
 			try {
-				is = getAssets().open("schedule2017.txt");
+				is = getAssets().open("schedule2023.txt");
 			} catch (IOException e2) {
 				e2.printStackTrace();
 				return -2;

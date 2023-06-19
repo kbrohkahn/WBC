@@ -3,7 +3,7 @@
 
 	<!-- APP DETAILS -->
 	<string name="app_name_long">World Boardgaming Championships</string>
-	<string name="app_name_short">WBC 2017</string>
+	<string name="app_name_short">WBC 2023</string>
 	<string name="email">dev@boardgamers.org</string>
 	<string name="notification_title">WBC: Events starting soon</string>
 
@@ -202,21 +202,22 @@
 
 	<!-- APP SPECIFIC STRINGS AND ARRAYS -->
 	<string-array name="daysForParsing">
-		<item>7/21/2017</item>
-		<item>7/22/2017</item>
-		<item>7/23/2017</item>
-		<item>7/24/2017</item>
-		<item>7/25/2017</item>
-		<item>7/26/2017</item>
-		<item>7/27/2017</item>
-		<item>7/28/2017</item>
-		<item>7/29/2017</item>
-		<item>7/30/2017</item>
+		<item>7/21/2023</item>
+		<item>7/22/2023</item>
+		<item>7/23/2023</item>
+		<item>7/24/2023</item>
+		<item>7/25/2023</item>
+		<item>7/26/2023</item>
+		<item>7/27/2023</item>
+		<item>7/28/2023</item>
+		<item>7/29/2023</item>
+		<item>7/30/2023</item>
+		<item>7/31/2023</item>
 	</string-array>
 	<string-array name="days">
 		<item>Fr 7/21</item>
-		<item>PC Sa 7/22/1</item>
-		<item>PC Su 7/23</item>
+		<item>Sa 7/22</item>
+		<item>Su 7/23</item>
 		<item>Mo 7/24</item>
 		<item>Tu 7/25</item>
 		<item>We 7/26</item>
@@ -224,6 +225,7 @@
 		<item>Fr 7/28</item>
 		<item>Sa 7/29</item>
 		<item>Su 7/30</item>
+		<item>SMo 7/31</item>
 	</string-array>
 	<string-array name="rooms_convention_center">
 		<item>Alpine</item>
@@ -244,7 +246,7 @@
 		<item>Exhibit Annex T8</item>
 		<item>Exhibit Annex T9</item>
 		<item>Exhibit Hall</item>
-		<item>Festival Hall</item>
+		<item>Winterberry</item>
 		<item>Fox Den</item>
 		<item>Hemlock</item>
 		<item>Laurel</item>
@@ -258,9 +260,9 @@
 		<item>Seasons 3&#8211;5</item>
 		<item>Seasons 4&#8211;5</item>
 		<item>Seasons 5</item>
-		<item>Snowflake Forum</item>
+		<item>Snowflake</item>
 		<item>Stag Pass</item>
-		<item>Sunburst Forum</item>
+		<item>Sunburst</item>
 		<item>Wintergreen</item>
 	</string-array>
 	<string-array name="rooms_ski_lodge">
@@ -293,7 +295,7 @@
 		<item>Exhibit Annex T8</item>
 		<item>Exhibit Annex T9</item>
 		<item>Exhibit Hall</item>
-		<item>Festival Hall</item>
+		<item>Winterberry</item>
 		<item>First Tracks Center</item>
 		<item>First Tracks Poolside</item>
 		<item>First Tracks Slopeside</item>
@@ -315,16 +317,16 @@
 		<item>Seasons 3-5</item>
 		<item>Seasons 4-5</item>
 		<item>Seasons 5</item>
-		<item>Snowflake Forum</item>
+		<item>Snowflake</item>
 		<item>Stag Pass</item>
-		<item>Sunburst Forum</item>
+		<item>Sunburst</item>
 		<item>Timberstone</item>
 		<item>Wintergreen</item>
 	</string-array>
 
 	<!-- ABOUT -->
-	<string name="about_developer_text">Created by Kevin Broh-Kahn\ndev@boardgamers.org</string>
-	<string name="about_others_text">Schedule file courtesy of Craig Trader\nMaps courtesy of Jason Long</string>
+	<string name="about_developer_text">Created by Jeff Finkeldey based on code by Kevin Broh-Kahn\ndev@boardgamers.org</string>
+	<string name="about_others_text">Schedule file courtesy of Jeff Finkeldey\nMaps courtesy of Jason Long</string>
 
 	<!-- HELP -->
 	<string name="how_to_help">Select a help topic to expand and show info</string>
