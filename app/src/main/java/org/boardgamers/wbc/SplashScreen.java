@@ -71,10 +71,12 @@ public class SplashScreen extends AppCompatActivity {
 		long lastVersionCode = preferences.getLong("lastVersionCode", -1);
 
 		// TODO add changes to database and string here
+		/* Removed for 2023
 		if (lastVersionCode < 263000300) {
 			changes += "Mega Civilization will now be on Monday At 9AM in Festival Hall.  It was originally scheduled for Monday at 12 in Hemlock.\n\n";
 			dbHelper.updateEvent(null, "Mega Civilization 1/1", -1, 9, "Festival Hall");
 		}
+		*/
 
 		dbHelper.close();
 
