@@ -229,7 +229,7 @@
 	</string-array>
 	<string-array name="rooms_convention_center">
 		<item>Alpine</item>
-		<item>Ballroom</item>
+		<item>Grand Ballroom</item>
 		<item>Ballroom Stage</item>
 		<item>Bavarian Lounge</item>
 		<item>Chestnut</item>
@@ -272,13 +272,13 @@
 		<item>Foggy Goggle Center</item>
 		<item>Foggy Goggle Front</item>
 		<item>Foggy Goggle Rear</item>
-		<item>Maple Room</item>
+		<item>Maple</item>
 		<item>Rathskeller</item>
 		<item>Timberstone</item>
 	</string-array>
 	<string-array name="rooms_available">
 		<item>Alpine</item>
-		<item>Ballroom</item>
+		<item>Grand Ballroom</item>
 		<item>Ballroom Stage</item>
 		<item>Bavarian Lounge</item>
 		<item>Chestnut</item>
@@ -305,7 +305,7 @@
 		<item>Fox Den</item>
 		<item>Hemlock</item>
 		<item>Laurel</item>
-		<item>Maple Room</item>
+		<item>Maple</item>
 		<item>Rathskeller</item>
 		<item>Seasons 1</item>
 		<item>Seasons 1&#8211;2</item>

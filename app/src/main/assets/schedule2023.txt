@@ -387,7 +387,7 @@
 7/25/2023~16~Juniors Event TBD --~~C~Jr SE~2~~ ~Hemlock~NA~
 7/25/2023~17~Benjamin's Journal ~~--~Demo~1~~ ~Exhibit Hall~--~
 7/25/2023~17~Commands & Colors: Napoleonics D1/1~~--~--~1~~T. Hitchings ~Exhibit Hall Annex #3~CCN~
-7/25/2023~17~Commands & Colors: Ancients D1/1~~--~--~1~~G. Heintzelman ~Exhibit Hall Annex #4~CTR~
+7/25/2023~17~Commands & Colors: Ancients D1/1~~--~--~1~~G. Heintzelman ~Exhibit Hall Annex #4~CCA~
 7/25/2023~17~Here I Stand D1/1~~--~--~1~~J. Rice ~Exhibit Hall Annex #7~HIS~
 7/25/2023~17~Kremlin D1/1~~--~--~1~~S. Cuccaro ~Exhibit Hall Annex #8~KRM~
 7/25/2023~17~Lords of Waterdeep D1/1~~--~--~1~~P. St. Pierre ~Exhibit Hall Annex #5~LWD~
@@ -595,7 +595,7 @@
 7/27/2023~8~Registration --~~--~--~12~~K. Gutermuth ~Stag Pass~NA~
 7/27/2023~9~878 Vikings F~~B~SEM~3~~S. Beall ~First Tracks Slopeside~878~
 7/27/2023~9~Afrika Korps R6/7~~A~FF~15~~B. Sinigaglio ~Winterberry~AFK~
-7/27/2023~9~B-17 R1/3~~A~SW~3~~M. Yoshikawa ~Wintergreen~B-17~
+7/27/2023~9~B-17 R1/3~~A~SW~3~~M. Yoshikawa ~Wintergreen~B17~
 7/27/2023~9~Battles of the American Revolution R5/6~~B~SwEl~3~~M. Miklos ~Winterberry~BAR~
 7/27/2023~9~Breakout Normandy SF~~B~SEM~5~~M. Gutfreund ~Maple~BKN~
 7/27/2023~9~Bitter Woods R6/7~~B~FF~15~~B. Sinigaglio ~Winterberry~BWD~
@@ -638,7 +638,7 @@
 7/27/2023~11~Up Front R2/5~~A~SE~2~~K. Whitesell ~Snowflake~UPF~
 7/27/2023~11~War at Sea R2/5~~A~SwEl~2~~V. Meconi ~Fox Den~WAS~
 7/27/2023~11~Juniors Event TBD --~~C~Jr SE~2~~ ~Hemlock~NA~
-7/27/2023~12~B-17 R2/3~~A~SW~3~~M. Yoshikawa ~Wintergreen~B-17~
+7/27/2023~12~B-17 R2/3~~A~SW~3~~M. Yoshikawa ~Wintergreen~B17~
 7/27/2023~12~Britannia H2/3~~B~HMW-P~5~~J. Jordan ~Rathskeller~BRI~
 7/27/2023~12~Combat Commander SF~~A~SwEl~3~~S. Myszak ~First Tracks Poolside~CBC~
 7/27/2023~12~Commands & Colors: Ancients R2/3~~B~SE~3~~G. Heintzelman ~First Tracks Poolside~CCA~
@@ -667,7 +667,7 @@
 7/27/2023~15~Golf'n Goofs ~~--~Demo~1~~ ~Exhibit Hall~--~
 7/27/2023~15~Ark Nova SF~~B~HMW-P~3~~C. Weaver ~Seasons~AKN~
 7/27/2023~15~Annapurna H3/3~~B~HMW-P~2~~B. Horovitz ~Grand Ballroom~ANP~
-7/27/2023~15~B-17 R3/3~~A~SW~3~~M. Yoshikawa ~Wintergreen~B-17~
+7/27/2023~15~B-17 R3/3~~A~SW~3~~M. Yoshikawa ~Wintergreen~B17~
 7/27/2023~15~Battles of the American Revolution R6/6~~B~SwEl~5~~M. Miklos ~Winterberry~BAR~
 7/27/2023~15~Commands & Colors: Ancients R3/3~~B~SE~3~~G. Heintzelman ~First Tracks Poolside~CCA~
 7/27/2023~15~Championship Formula Racing H1/3~~B~HMW-P~4~~C. Long ~Foggy Brews~CFR~
