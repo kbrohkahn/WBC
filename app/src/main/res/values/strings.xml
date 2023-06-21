@@ -340,7 +340,6 @@
 		<item>Prize</item>
 		<item>Class</item>
 		<item>Demo/Preview</item>
-		<item>Scheduled Open Gaming</item>
 		<item>Format</item>
 		<item>Length</item>
 		<item>Continuous</item>
@@ -350,16 +349,17 @@
 	<string-array name="help_texts">
   <item>DAYS &amp; SCHEDULE: The app displays ongoing events with a green background,
     future events yellow, and ended events gray. Start scrolling to view a scrollbar
-    on the right side of the page, the quickly jump to any day. Select an entire day
-    to expand or collapse every hour for that day and view your schedule for each hour.
+    on the right side of the page, then quickly jump to any day. Select a day
+	  to expand or collapse every hour for that day and view your schedule for
+	  each hour.
     Touch the star to the left of an event to add it to "My Events"
     list at the top of each day and the "Starred" tab to the left.
-    Create custom events and view your event notes and tournament finishes
-    by swiping to the right to the "My Data" tab.
-    \n\nSEARCHING: The search button allows you to view all the tournaments, and you
-    can search for and select a tournament to view and then star all of its events.
-    You can also search for specific events/formats by pressing search on your keyboard
-    instead of selecting events. For example, to find every Power Grid event, type "Power"
+    View your events, event notes and tournament finishes
+    by clicking on the "My Data" tab or swiping to the right from the Schedule tab.
+    \n\nSEARCHING: The magnifier icon shows a list of all games and allows you to
+	  either select a specific game or type in search words.  You can
+	  search for and select a tournament to view and/or star all of its events.
+    For example, to find every Power Grid event, type "Power"
     and select "Power Grid" from the list, or type "Power Grid" and hit search. Or to
     view every demo event in the convention, type "Demo" and hit search. If you want to
     view all the tournaments and filter down the list to your favorites,
@@ -368,7 +368,7 @@
     are all saved automatically, so do not worry about losing your settings!
     \n\nOTHER: For tournament finishes,
     finishes awarding plaques are in bold while laurels are in italics.
-    \n\nPlease contact Kevin Broh-Kann at dev@boardgamers.org with any further questions.
+    \n\nPlease contact Jeff Finkeldey at dev@boardgamers.org with any further questions.
   </item>
 		<item>The schedule on the main screen is a chronological
     listing of events by order of appearance.
@@ -381,10 +381,6 @@
     in purple. Demonstrations are listed in black, italics.
     Advanced rounds that require prior qualification,
     such as Finals, are listed in red.
-    “PC” indicates that an event is part of a Pre-
-    Con and is limited to Tribune members or
-    those with a badge good for that particular
-    “PC” day.
     \n\nWhen more than one event starts at the same
     time, non-tournament events are listed first,
     followed by tournaments—both in alphabetical
@@ -394,11 +390,8 @@
 		<item>Abbreviations for dates are Mo:
     Monday, Tu: Tuesday, We: Wednesday,
     Th: Thursday, Fr: Friday, Sa: Saturday, Su:
-    Sunday. “PC Sa” or “PC Su” indicates
-    that events occur on the Saturday or
-    Sunday before WBC begins. Separate admission
-    is required for Non-Tribune Members for
-    all Pre-Cons.
+    Sunday, SMo: Second Monday.  "SMo" indicates
+    that events occur on the Monday after WBC ends.
   </item>
 		<item>Times are listed in military time;
     e.g., 11 or 1100 is 11 am and 13 or 1300 is 1 pm. Tournament
@@ -425,9 +418,7 @@
     if they qualify for the next round should
     inform the GM. Players who wish to enter
     an event in an advanced round must have
-    the permission of the GM. “PC” indicates
-    an event that begins during the Pre-Con but
-    may end during WBC proper.
+    the permission of the GM.
   </item>
 		<item>Play is restricted
     to players who have qualified for these
@@ -448,50 +439,40 @@
     Century events.
   </item>
 		<item>There are three classes of tournaments:
-    \n\nA: Experienced Players Only—red Kiosks;
-    rules are not taught before or during play;
-    \n\nB: Beginners Allowed—yellow kiosks;
-    game will be taught ONLY at the listed Demo
-    time. For subsequent rounds, the Class is A;
-    \n\nC: Coached—green kiosks; game will
-    be taught during or just prior to event start
-    in event location. Once past the Preliminary
-    round, the Class is always A.
+    \n\nA: Advanced; Experienced players only. Rules will not
+			be explained. Neither GMs nor players will teach
+			the game to beginners during the event.;
+    \n\nB: Beginners welcome, Players must have read the rules,
+			played previously, or participated in a scheduled
+			teaching demonstration. For subsequent rounds,
+			the Class is A;
+    \n\nC: Coached, inexperienced players welcome. The game
+			will be taught to anyone present at the scheduled
+			starting time. GMs may also schedule a demonstration
+			for the Event.  Once past the Preliminary round, the
+			Class is always A.
   </item>
 		<item>All teaching sessions take
-    place in Paradise Terrace at the listed Table
+    place in the Exhibit Hall Annex at the listed Table
     #. For B Class Events, anyone new to a game
     must attend. For C Class Event s, attending a
     scheduled demo places less stress on the GM
     and the event. If no one arrives for a demo
     within 15 minutes of the scheduled starting
-    time, the demo is cancelled. This year, Previews
-    and Scheduled Open Gaming have been
-    added to the demo area. Previews are demos
+    time, the demo may be cancelled. This year, Previews
+    and have been added to the demo area. Previews are demos
     without a corresponding event; designers
     showing their upcoming games either as an
     adjunct to anticipated Kick Starter campaigns
     or extended playtesting opportunities. Doing
     so in the Demo area allows us to relieve pressure
     on the Open Gaming area while at the
-    same time benefitting everyone with scheduled
+    same time benefiting everyone with scheduled
     opportunities to gather players without
     tying up tables trolling for interest.
   </item>
-		<item>SOG makes
-    use of the demo tables in Paradise Assembly
-    during down times to allow players to schedule
-    multi-player Open Gaming opportunities which
-    actually get listed in the convention schedule
-    and have supporting signage and a reserved
-    table provided they have made the request before
-    June. To reserve a place in the referenced
-    game, you should list your badge number in the
-    game’s signup block on the yellow Schedule kiosk
-    for that table in Paradise assembly.
-  </item>
 		<item>FORMAT: Before playing an event, check the
-    Event Preview at boardgamers.org/yearbkex,
+    Event Preview at http://www.boardgamers.org/wbc23/previews-2023.html,
     the event kiosk, or via the tournament screen in the app by selecting
     an event or searching for that tournament. The Event Preview contains
     the details about how the event will run, any
@@ -505,11 +486,8 @@
     Guidelines page and in event Previews.
     \n\nFF: Free Form—Contact GM at the
     listed times for flexible scheduling.
-    SE: Single Elimination—play until you
+    \n\nSE: Single Elimination—play until you
     lose one game.
-    \n\nSwEl: Swiss Elimination—play all
-    preliminary rounds; qualifiers advance
-    to SE rounds.
     \n\nSEM: SE with Mulligan Round—the
     Mulligan is an optional Round 1 that
     forgives losses. Winners advance
@@ -518,43 +496,37 @@
     Round 1 with no penalty.
     \n\nSWISS: Play all rounds paired against
     those with same record.
-    HWO: Heat Winners Only—enter any
+    \n\nSwEl: Swiss Elimination—play all
+    preliminary rounds; qualifiers advance
+    to SE rounds.
+    \n\nHWO: Heat Winners Only—enter any
     number of preliminary heats; winners
-    only advance to next round.
-    \n\nHMW: Heats Most Wins—enter any
-    number of heats; qualifiers advance to SE
-    rounds; first tiebreaker is most wins (e.g.,
-    total in all heats entered). The remaining
-    tiebreakers are 2) win in first Heat
-    entered; 3) win in second Heat entered; 4)
-    win in third Heat entered; 5) win in fourth
-    Heat entered; 6) GM specific tiebreaker,
-    provided it has been clearly described in
-    the Event Preview; 7) average finish in all
-    heats entered (e.g., a 2nd and two 3rds =
-    2.67 and beats two 2nds and two 4ths = 3);
-    and 8) high dice roll.
-    \n\nHMWG: Heats Most Wins GM—enter
-    any number of heats; qualifiers advance
-    to SE rounds; first tiebreaker is most
-    wins; GM specifies other tiebreakers.
-    \n\nHSW: Heats Single Win—enter any
-    number of preliminary heats; qualifiers
-    advance to SE rounds; first tiebreaker
-    is win in first heat entered. The second
-    tiebreaker is 2) Most Wins (e.g., total
-    in all heats entered). The third through
-    eighth tiebreakers are the same as HMW.
+    advance to next round.
     \n\nHMSE: Heats Multiple SE—each heat
     is played SE in continuous rounds to
     determine one winner who advances to
     the next round.
-    \n\nSOG: Scheduled Multi-Player Open
-    Gaming. The number of possible
-    players is indicated by a number
-    followed by “P” after the name of the
-    event.
-    \n\nPreview: Non-event demonstration.
+    \n\nHMW-T: Heats Most Wins — Timing.  Enter any
+    number of heats; qualifiers advance to SE
+    rounds; first tiebreaker is most wins (e.g.,
+    total in all heats entered). The remaining
+    tiebreakers are 2) timing of first win (first,
+	second, third, fourth heat, etc.);
+	3) fewest number of heats entered;
+	4) most second places; 5) fewest total
+	points behind first place in second place
+	finishes; 6) Fewest total points behind
+	first place in all finishes; 7) highest
+	total points ahead of second place;
+	8) high dice roll.
+    \n\nHMW-P: Heats Most Wins — Points.  Enter any
+    number of heats; qualifiers advance to SE
+    rounds; first tiebreaker is most wins (e.g.,
+    total in all heats entered). The remaining
+    tiebreakers are 2) total points in all heats
+	(1000 for 1st place, 100 for 2nd, 10 for 3rd, 1 for 4th);
+	3) GM specific tie-breaker; 4) high dice roll.
+	\n\nPreview: Non-event demonstration.
   </item>
 		<item>
     The duration of the event in hours.
@@ -580,13 +552,12 @@
   </item>
 		<item>
     A map—displaying a multilevel
-    floorplan of the Lancaster Host—can be found
-    by selecting an underlined room location
-    from any screen of the app. GrognardCon Pre-Con events shift
-    from Heritage to Conestoga 1 beginning at 9 am
-    on Wednesday. Otherwise, continuous round
-    Events start again the next day in the same room
-    unless listed elsewhere in the schedule.
+    floorplan of Seven Springs Resort—is shown
+	on every event description screen.  The room
+	for the event will flash green.  Continuous
+	round Events spanning multiple days start again
+	the next day in the same room unless listed
+	elsewhere in the schedule.
   </item>
 	</string-array>
 
