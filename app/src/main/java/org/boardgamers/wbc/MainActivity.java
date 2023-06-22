@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 			Toast.makeText(this,
 					"ERROR: Could not find version code, contact " + getResources().getString(R.string.email) +
 							" for help.", Toast.LENGTH_LONG).show();
-			currentVersion = 17; // TODO set as version code
+			currentVersion = 263002023; // TODO set as version code
 			e.printStackTrace();
 		}
 

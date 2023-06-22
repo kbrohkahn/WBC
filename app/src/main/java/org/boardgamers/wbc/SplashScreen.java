@@ -29,7 +29,8 @@ public class SplashScreen extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		int TOTAL_EVENTS = 751;
+	//	int TOTAL_EVENTS = 751;
+		int TOTAL_EVENTS = 1100;
 
 		WBCDataDbHelper dbHelper = new WBCDataDbHelper(this);
 		dbHelper.onUpgrade(dbHelper.getWritableDatabase(), dbHelper.getVersion(),
@@ -70,10 +71,12 @@ public class SplashScreen extends AppCompatActivity {
 		long lastVersionCode = preferences.getLong("lastVersionCode", -1);
 
 		// TODO add changes to database and string here
+		/* Removed for 2023
 		if (lastVersionCode < 263000300) {
 			changes += "Mega Civilization will now be on Monday At 9AM in Festival Hall.  It was originally scheduled for Monday at 12 in Hemlock.\n\n";
 			dbHelper.updateEvent(null, "Mega Civilization 1/1", -1, 9, "Festival Hall");
 		}
+		*/
 
 		dbHelper.close();
 
@@ -144,7 +147,7 @@ public class SplashScreen extends AppCompatActivity {
 			// find schedule file
 			InputStream is;
 			try {
-				is = getAssets().open("schedule2017.txt");
+				is = getAssets().open("schedule2023.txt");
 			} catch (IOException e2) {
 				e2.printStackTrace();
 				return -2;
