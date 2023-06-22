@@ -32,6 +32,7 @@ public class UserDataListFragment extends DefaultListFragment {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 
 		if (view != null) {
+			/* Commenting out removed add event button
 			Button addEvent = view.findViewById(R.id.add_event);
 			addEvent.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -39,6 +40,8 @@ public class UserDataListFragment extends DefaultListFragment {
 					showCreateDialog();
 				}
 			});
+
+			 */
 
 			Button deleteAll = view.findViewById(R.id.delete_all);
 			deleteAll.setOnClickListener(new View.OnClickListener() {
