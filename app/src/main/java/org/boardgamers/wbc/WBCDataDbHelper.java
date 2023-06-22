@@ -727,25 +727,29 @@ class WBCDataDbHelper extends SQLiteOpenHelper {
 	}
 
 	long insertUserEventData(long userId, long eventId, boolean starred, String note) {
+		Log.d(TAG, "In insert#1 " );
 		ContentValues values = new ContentValues();
-		values.put(UserEventDataEntry.COLUMN_STARRED, starred ? 1 : 0);
-		values.put(UserEventDataEntry.COLUMN_NOTE, note);
+			values.put(UserEventDataEntry.COLUMN_STARRED, starred ? 1 : 0);
+			Log.d(TAG, "note " + note);
+			values.put(UserEventDataEntry.COLUMN_NOTE, note);
 
-		String where = UserEventDataEntry.COLUMN_EVENT_ID + "=" + String.valueOf(eventId) + " AND " +
-				UserEventDataEntry.COLUMN_USER_ID + "=" + String.valueOf(userId);
-		long result = sqLiteDatabase.update(UserEventDataEntry.TABLE_NAME, values, where, null);
+			String where = UserEventDataEntry.COLUMN_EVENT_ID + "=" + String.valueOf(eventId) + " AND " +
+					UserEventDataEntry.COLUMN_USER_ID + "=" + String.valueOf(userId);
+			Log.d(TAG, "Event " + String.valueOf(eventId) + " " + values + " " + where);
+			long result = sqLiteDatabase.update(UserEventDataEntry.TABLE_NAME, values, where, null);
 
-		if (result == 0) {
-			values.put(UserEventDataEntry.COLUMN_USER_ID, userId);
-			values.put(UserEventDataEntry.COLUMN_EVENT_ID, eventId);
+			if (result == 0) {
+				values.put(UserEventDataEntry.COLUMN_USER_ID, userId);
+				values.put(UserEventDataEntry.COLUMN_EVENT_ID, eventId);
 
-			result = sqLiteDatabase
-					.insert(UserEventDataEntry.TABLE_NAME, UserEventDataEntry.COLUMN_NULLABLE, values);
-		}
-		return result;
+				result = sqLiteDatabase
+						.insert(UserEventDataEntry.TABLE_NAME, UserEventDataEntry.COLUMN_NULLABLE, values);
+			}
+			return result;
 	}
 
 	long insertUserEventData(long userId, List<Event> changedEvents) {
+		Log.d(TAG, "In insert#2 " );
 		Event event;
 		long result = 0;
 		for (int i = 0; i < changedEvents.size(); i++) {
