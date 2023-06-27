@@ -8,7 +8,7 @@
 
 	<fragment
 		android:id="@+id/searchFragment"
-		class="org.boardgamers.wbc.SearchListFragment"
+		class="org.boardgamers.wbcscdmgr.SearchListFragment"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 	</fragment>

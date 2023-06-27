@@ -11,7 +11,7 @@
 			android:summary="@string/settings_notify_summary"
 			android:title="@string/settings_notify"/>
 
-		<org.boardgamers.wbc.DialogPreferenceNumberPicker
+		<org.boardgamers.wbcscdmgr.DialogPreferenceNumberPicker
 			android:dependency="notify_starred"
 			android:key="@string/pref_key_notify_time"
 			android:persistent="true"
@@ -31,7 +31,7 @@
 		android:key="pref_key_schedules"
 		android:title="@string/settings_schedule">
 
-		<org.boardgamers.wbc.DialogPreferenceSchedulePicker
+		<org.boardgamers.wbcscdmgr.DialogPreferenceSchedulePicker
 			android:key="@string/pref_key_schedule_select"
 			android:persistent="true"
 			android:title="@string/settings_schedule_select"/>

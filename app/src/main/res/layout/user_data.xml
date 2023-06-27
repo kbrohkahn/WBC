@@ -8,7 +8,8 @@
 		layout="@layout/default_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_above="@+id/user_data_action_layout"/>
+		android:layout_above="@+id/user_data_action_layout"
+		android:layout_marginBottom="-5dp" />
 
 	<LinearLayout
 		android:id="@+id/user_data_action_layout"

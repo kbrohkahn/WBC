@@ -11,9 +11,9 @@
 
 	<ExpandableListView
 		android:id="@+id/default_list_view"
-		android:scrollbarFadeDuration="1000"
-		android:fadeScrollbars="true"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
+		android:layout_height="match_parent"
+		android:fadeScrollbars="true"
+		android:scrollbarFadeDuration="1000" />
 
 </LinearLayout>

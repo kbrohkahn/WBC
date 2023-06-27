@@ -2,7 +2,7 @@
 <resources>
 
 	<!-- APP DETAILS -->
-	<string name="app_name_long">World Boardgaming Championships</string>
+	<string name="app_name_long">World Boardgaming Championships 2023</string>
 	<string name="app_name_short">WBC 2023</string>
 	<string name="email">dev@boardgamers.org</string>
 	<string name="notification_title">WBC: Events starting soon</string>
@@ -350,12 +350,19 @@
   <item>DAYS &amp; SCHEDULE: The app displays ongoing events with a green background,
     future events yellow, and ended events gray. Start scrolling to view a scrollbar
     on the right side of the page, then quickly jump to any day. Select a day
-	  to expand or collapse every hour for that day and view your schedule for
-	  each hour.
+	 to expand or collapse every hour for that day and view your schedule for
+	 each hour.
     Touch the star to the left of an event to add it to "My Events"
     list at the top of each day and the "Starred" tab to the left.
     View your events, event notes and tournament finishes
     by clicking on the "My Data" tab or swiping to the right from the Schedule tab.
+	\n\nMY DATA:  This screen shows events you have clicked on or starred, related
+	 notes, and	tournament finishes (you may save 1 finish per game, NOT per
+	 heat/round).  To clear a note, click on the note entry then click on Clear at
+	 lower left.  To clear a finish, click on either the event or the finish entry
+	 and set the finish to 0.  To remove all your events, click Delete All at bottom.
+	 Note - Delete all removes Events only, not finishes or notes.  Those must be
+	 removed separately.
     \n\nSEARCHING: The magnifier icon shows a list of all games and allows you to
 	  either select a specific game or type in search words.  You can
 	  search for and select a tournament to view and/or star all of its events.
@@ -366,26 +373,14 @@
     use "Filter Schedule" from the main menu.
     \n\nSAVING: App settings, tournament finishes, event notes, etc.
     are all saved automatically, so do not worry about losing your settings!
-    \n\nOTHER: For tournament finishes,
-    finishes awarding plaques are in bold while laurels are in italics.
-    \n\nPlease contact Jeff Finkeldey at dev@boardgamers.org with any further questions.
+    \n\nPlease contact dev@boardgamers.org with any further questions.
   </item>
 		<item>The schedule on the main screen is a chronological
-    listing of events by order of appearance.
-    Junior Events are listed first, highlighted by a
-    symbol and are in green. Open Gaming, including
-    Scheduled Open Games (SOG), and other
-    non-tournament games are listed in orange. Nongaming
-    events, such as meetings, registration, and
-    the auction, are listed in blue. Seminars are listed
-    in purple. Demonstrations are listed in black, italics.
+    listing of events by order of appearance.  Events are listed
+	in alphabetical order.  Junior Events are highlighted by a
+    symbol and are in green. Demonstrations are listed in black italics.
     Advanced rounds that require prior qualification,
     such as Finals, are listed in red.
-    \n\nWhen more than one event starts at the same
-    time, non-tournament events are listed first,
-    followed by tournaments—both in alphabetical
-    order. An alphabetical list of tournaments
-    can be found in search screen via the main menu.
   </item>
 		<item>Abbreviations for dates are Mo:
     Monday, Tu: Tuesday, We: Wednesday,

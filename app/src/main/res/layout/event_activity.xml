@@ -8,7 +8,7 @@
 
 	<fragment
 		android:id="@+id/eventFragment"
-		class="org.boardgamers.wbc.EventFragment"
+		class="org.boardgamers.wbcscdmgr.EventFragment"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"/>
 

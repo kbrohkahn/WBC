@@ -17,7 +17,7 @@
 			android:layout_above="@+id/filter_batch_layout"
 			android:scrollbars="none"/>
 
-		<org.boardgamers.wbc.FilterSideSelector
+		<org.boardgamers.wbcscdmgr.FilterSideSelector
 			android:id="@+id/filter_side_selector"
 			android:layout_width="30dp"
 			android:layout_height="match_parent"
